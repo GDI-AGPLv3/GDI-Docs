@@ -28,6 +28,34 @@ La tabla muestra todos los usuarios de la organizacion con paginacion.
 
 ---
 
+## Crear Usuario
+
+Al presionar **Nuevo Usuario** se abre el formulario de creacion.
+
+### Campos del formulario
+
+| Campo | Descripcion |
+|-------|-------------|
+| **Email** | Correo electronico del usuario (ej: `usuario@municipio.gob.ar`) |
+| **Nombre completo** | Nombre y apellido |
+| **Metodo de acceso** | Como va a iniciar sesion el usuario (ver abajo) |
+| **Sector** | Sector principal al que se asigna |
+
+### Metodo de acceso
+
+Al crear un usuario se elige como va a iniciar sesion:
+
+| Metodo | Descripcion |
+|--------|-------------|
+| **Login Social (Google / Microsoft)** | El usuario ingresa con su cuenta de Google o Microsoft. Ideal para emails institucionales con Google Workspace o Microsoft 365. Es la opcion por defecto |
+| **Email y Contrasena** | El usuario recibe un email con un link de activacion para crear su contrasena. El link vence en 5 dias. Usar para emails que no son Google ni Microsoft |
+
+!!! tip "Cuando usar cada metodo"
+    - **Login Social**: Para la mayoria de los casos. Si el email es de Google (`@gmail.com`, dominios con Google Workspace) o Microsoft (`@outlook.com`, dominios con Microsoft 365), elegir esta opcion.
+    - **Email y Contrasena**: Para dominios que no usan Google ni Microsoft como proveedor de email (ej: servidores de correo propios del municipio).
+
+---
+
 ## Detalle de Usuario
 
 Al hacer clic en un usuario se muestra su ficha completa:
@@ -40,7 +68,9 @@ Al hacer clic en un usuario se muestra su ficha completa:
 |-------|-------------|
 | **Nombre completo** | Nombre y apellido del usuario |
 | **Email** | Correo electronico institucional |
+| **Metodo de acceso** | Como inicia sesion: `Email y Contrasena`, `Google`, `Microsoft` o `Pendiente activacion` si todavia no activo su cuenta |
 | **Sector** | Sector principal asignado (ej: *Tesoreria # PRIV*) |
+| **Numero de Identificacion Nacional (ID)** | Documento de identidad del usuario (si fue cargado) |
 
 ### Responsable de Departamento
 
@@ -75,6 +105,14 @@ Roles asignados al usuario: `Funcionario`, `Administrador`.
 ### Estado
 
 Estado actual del usuario: `Activo` o `Inactivo`.
+
+### Activacion pendiente
+
+Si el usuario todavia no activo su cuenta, se muestra esta seccion con la opcion de reenviar la invitacion. Esto aplica para usuarios creados con el metodo **Email y Contrasena** que no completaron el proceso de activacion.
+
+| Accion | Descripcion |
+|--------|-------------|
+| **Reenviar invitacion** | Envia un nuevo email de activacion al usuario para que cree su contrasena |
 
 ### Zona de Peligro
 
