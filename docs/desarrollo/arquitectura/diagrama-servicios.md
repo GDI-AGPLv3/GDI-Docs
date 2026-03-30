@@ -139,3 +139,44 @@ graph TD
 
 !!! note "MCP Server integrado"
     El MCP Server (puerto 8005) esta integrado dentro del repositorio GDI-Backend en la carpeta `api_gateway/`. No es un servicio separado, sino un modulo del Backend que escucha en un puerto adicional.
+
+---
+
+## Security Hardening
+
+Medidas de seguridad implementadas transversalmente en los servicios.
+
+### XSS Prevention
+
+| Capa | Libreria | Uso |
+|------|----------|-----|
+| Backend (Python) | **nh3** | Sanitizacion de HTML en `save_document` y contenido generado por usuarios |
+| Frontend (JS) | **DOMPurify** | Sanitizacion de HTML antes de renderizar en el navegador |
+
+El backend sanitiza todo contenido HTML antes de persistirlo en la base de datos, eliminando tags y atributos peligrosos (scripts, event handlers, iframes, etc.). El frontend aplica una segunda capa de sanitizacion al renderizar contenido que proviene de la API.
+
+### Rate Limiting
+
+El Gateway implementa rate limiting dual:
+
+| Mecanismo | Tipo | Limite | Ventana |
+|-----------|------|--------|---------|
+| **In-memory** | Sliding window por IP | 60 requests | 1 minuto |
+| **Redis** | Distribuido (Upstash) | Configurable | Configurable |
+
+Implementado en `api_gateway/rate_limiter.py`. Usa `InMemoryRateLimiter` con sliding window. La IP del cliente se extrae considerando proxies de Fly.io (`fly-client-ip`, `x-forwarded-for`).
+
+Cuando se excede el limite, el servidor responde con `429 Too Many Requests` e incluye el header `Retry-After` con los segundos de espera.
+
+### Permission Enforcement en MCP Tools
+
+Las tools MCP verifican permisos del usuario autenticado antes de ejecutar cualquier operacion. El `MCPContext` incluye `user_id` y `schema_name`, que se propagan a los servicios de negocio para validar acceso a nivel de sector.
+
+### Sanitizacion de Datos Sensibles
+
+| Funcion | Ubicacion | Proposito |
+|---------|-----------|-----------|
+| `strip_storage_urls` | `api_gateway/tools/_sanitize.py` | Remueve URLs de storage (R2) de las respuestas MCP |
+| `search_users` | Tools MCP | Reduce datos privados en resultados de busqueda de usuarios |
+
+Las respuestas del Gateway nunca exponen URLs directas de Cloudflare R2 (`pdf_url`, `signed_pdf_url`). Estos campos se eliminan recursivamente antes de devolver datos al cliente MCP.

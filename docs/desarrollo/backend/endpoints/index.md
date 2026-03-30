@@ -81,6 +81,18 @@ Tabla resumen de todos los endpoints REST del backend. Organizados por dominio.
 | GET | `/api/v1/dashboard/feed` | Feed de actividad reciente | Si |
 | GET | `/api/v1/dashboard/stats` | Estadisticas del usuario | Si |
 
+## Legajos (RLM)
+
+| Metodo | Path | Descripcion | Auth |
+|--------|------|-------------|------|
+| GET | `/api/v1/records/` | Listar legajos con filtros y paginacion | Si |
+| POST | `/api/v1/records/` | Crear legajo | Si |
+| GET | `/api/v1/records/{id}` | Detalle de legajo | Si |
+| PATCH | `/api/v1/records/{id}` | Actualizar legajo | Si |
+| GET | `/api/v1/records/families` | Familias de registro disponibles | Si |
+
+Documentacion completa: [Legajos (RLM)](legajos.md)
+
 ## Sistema
 
 | Metodo | Path | Descripcion | Auth |

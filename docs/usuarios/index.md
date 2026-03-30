@@ -37,6 +37,14 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     [:octicons-arrow-right-24: Ver seccion](expedientes/index.md)
 
+-   :material-book-open-variant:{ .lg .middle } **Legajos (RLM)**
+
+    ---
+
+    Registrar, verificar y consultar legajos digitales organizados por familias de registro con campos configurables y vencimientos.
+
+    [:octicons-arrow-right-24: Ver seccion](legajos/index.md)
+
 -   :material-email:{ .lg .middle } **Notas**
 
     ---
@@ -72,6 +80,7 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 | **Catalogos** | Listas maestras: tipos de documento y tipos de expediente |
 | **Documentos** | Crear, editar, firmar y gestionar documentos oficiales |
 | **Expedientes** | Gestionar expedientes electronicos, vincular documentos, movimientos |
+| **Legajos (RLM)** | Registrar, verificar y consultar legajos digitales con campos configurables |
 | **Notas** | Enviar y recibir notas oficiales entre sectores |
 | **Busqueda** | Buscar documentos y expedientes en todo el sistema |
 | **Asistente AI** | Consultar documentos y expedientes con lenguaje natural |

@@ -169,3 +169,17 @@ Documentacion completa: [Sistema y Catalogos](sistema.md)
 | `PATCH` | `/notes/{note_id}/archive` | Archivar o desarchivar nota |
 
 Documentacion completa: [Notas](notas.md)
+
+---
+
+### Legajos - RLM (endpoints)
+
+| Metodo | Ruta | Descripcion |
+|--------|------|-------------|
+| `GET` | `/records/search` | Buscar legajos con filtros |
+| `GET` | `/records/{record_id}` | Detalle de un legajo |
+| `GET` | `/records/families` | Familias de registro disponibles |
+| `POST` | `/records/` | Crear legajo |
+| `PATCH` | `/records/{record_id}` | Actualizar legajo |
+
+Documentacion completa: [Legajos (RLM)](legajos.md)

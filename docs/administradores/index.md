@@ -53,6 +53,14 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](tipos-de-expedientes.md)
 
+-   :material-folder-multiple:{ .lg .middle } **Familias de Registro**
+
+    ---
+
+    Plantillas para legajos: campos, permisos por sector, estados configurables y codigos de familia.
+
+    [:octicons-arrow-right-24: Ver seccion](familias-registro.md)
+
 -   :material-account-group:{ .lg .middle } **Usuarios**
 
     ---
@@ -100,6 +108,7 @@ El sidebar izquierdo del BackOffice contiene las siguientes secciones:
 | **Organigrama** | Estructura organizativa | Documentado |
 | **Tipos de Documentos** | Catalogo de tipos de documento | Documentado |
 | **Tipos de Expedientes** | Catalogo de tipos de expediente | Documentado |
+| **Familias de Registro** | Plantillas para legajos (campos, permisos, estados) | Documentado |
 | **Usuarios** | Gestion de usuarios | Documentado |
 | **Administracion** | Permisos de admin | Documentado |
 | **Certificados** | Certificados digitales | Proximamente |

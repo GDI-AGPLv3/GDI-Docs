@@ -49,6 +49,10 @@ Integrado en GDI-Backend (`api_gateway/`). Comparte las variables del Backend ma
 | `FRONTEND_URL` | URL del BackOffice Front (CORS) | No | `http://localhost:3013` |
 | `BACKOFFICE_URL` | URL propia (referencia) | No | `http://localhost:8010` |
 | `RESEND_API_KEY` | API Key de Resend (emails transaccionales) | Si | `re_...` |
+| `AUTH0_M2M_CLIENT_ID` | Client ID de app M2M (Management API) | Si | `(secreto)` |
+| `AUTH0_M2M_CLIENT_SECRET` | Client Secret de app M2M | Si | `(secreto)` |
+| `AUTH0_FRONTEND_CLIENT_ID` | Client ID de app frontend (redirect en password tickets) | No | `(secreto)` |
+| `AUTH0_DB_CONNECTION` | Nombre de la Database Connection en Auth0 | No | `Username-Password-Authentication` |
 | `TESTING_MODE` | Modo testing | No | `true` / `false` |
 | `PORT` | Puerto del servicio | No | `8010` |
 

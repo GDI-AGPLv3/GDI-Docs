@@ -35,6 +35,10 @@ services/
 │   ├── signer_data.py      # Datos del firmante
 │   ├── user_data.py        # Datos del usuario
 │   └── retry.py            # Logica de reintentos
+├── rlm/                # Registro de Legajos Municipales (RLM)
+│   ├── core.py         # Creacion y actualizacion de legajos
+│   ├── retrieval.py    # Busqueda y consulta de legajos
+│   └── verification.py # Verificacion y vencimientos
 └── users/              # Usuarios (~8 archivos)
     ├── profile.py      # Perfil completo
     ├── search.py       # Busqueda de usuarios
@@ -49,6 +53,7 @@ graph TD
     Endpoints --> Cases
     Endpoints --> Notes
     Endpoints --> Users
+    Endpoints --> RLM["RLM (Legajos)"]
 
     Documents --> Storage["Storage (R2)"]
     Documents --> PDFComposer["shared/pdfcomposer_api"]

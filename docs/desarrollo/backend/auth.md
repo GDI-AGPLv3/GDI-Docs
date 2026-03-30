@@ -158,3 +158,112 @@ def get_auth_source(request: Request) -> str:
     """Extrae auth_source del request.state."""
     return getattr(request.state, 'auth_source', 'unknown')
 ```
+
+---
+
+## Auth0 Database Connection
+
+El BackOffice soporta **dual auth**: usuarios pueden autenticarse via proveedores sociales (Google, Microsoft) o via Database Connection (email + password). La gestion de Database Connection se implementa en `services/auth0_service.py` del BackOffice-Back.
+
+### Tipos de Autenticacion
+
+| Tipo | Connection | Uso tipico |
+|------|-----------|------------|
+| **Social** | `google-oauth2`, `windowslive` | Usuarios con cuenta Google/Microsoft institucional |
+| **Database** | `Username-Password-Authentication` | Usuarios sin cuenta social (email + password manual) |
+
+### Variables de Entorno
+
+| Variable | Descripcion | Default |
+|----------|-------------|---------|
+| `AUTH0_M2M_CLIENT_ID` | Client ID de la aplicacion M2M (Management API) | *requerida* |
+| `AUTH0_M2M_CLIENT_SECRET` | Client Secret de la aplicacion M2M | *requerida* |
+| `AUTH0_M2M_AUDIENCE` | Audience de la Management API | `https://{AUTH0_DOMAIN}/api/v2/` |
+| `AUTH0_DB_CONNECTION` | Nombre de la Database Connection | `Username-Password-Authentication` |
+| `AUTH0_FRONTEND_CLIENT_ID` | Client ID de la app frontend (para redirect en password tickets) | `AUTH0_CLIENT_ID` (fallback) |
+
+### Token M2M (Management API)
+
+Para interactuar con la Management API de Auth0, el servicio obtiene un token via **Client Credentials** grant. El token se cachea por **23 horas** (el token dura 24h, se renueva 1 hora antes de expirar).
+
+```python
+# Cache del token M2M
+_token_cache = {"token": None, "expires_at": 0}
+
+def _get_management_token() -> str:
+    """Obtiene token via Client Credentials. Cachea 23h."""
+    if _token_cache["token"] and time.time() < _token_cache["expires_at"]:
+        return _token_cache["token"]
+    # POST https://{AUTH0_DOMAIN}/oauth/token
+    # grant_type: client_credentials
+    # ...
+```
+
+### Funciones del Servicio
+
+#### `check_user_exists_in_auth0(email)`
+
+Busca si un email ya existe en Auth0 (cualquier connection).
+
+```python
+# GET https://{AUTH0_DOMAIN}/api/v2/users-by-email?email={email}
+users = check_user_exists_in_auth0("juan@municipio.gob.ar")
+# Retorna: lista de usuarios (puede ser vacia)
+```
+
+#### `check_email_has_social_account(email)`
+
+Verifica si el email ya tiene una cuenta Social (Google/Microsoft). Retorna `True`/`False`.
+
+Util para decidir si hay que crear una Database Connection o si el usuario ya puede hacer login social.
+
+#### `create_database_user(email, full_name)`
+
+Crea un usuario en Auth0 Database Connection con password aleatorio.
+
+```python
+result = create_database_user("juan@municipio.gob.ar", "Juan Perez")
+# Retorna: {"user_id": "auth0|abc123", ...}
+```
+
+Detalles de implementacion:
+
+- Password aleatorio: `secrets.token_urlsafe(32) + "!A1"` (cumple Good policy)
+- `email_verified: True` (evita mail de verificacion)
+- `verify_email: False`
+- `app_metadata: {"gdi_invitation": True}` (marca como invitado)
+
+#### `create_password_change_ticket(auth0_user_id, client_id)`
+
+Genera un link de activacion (password change ticket) para que el usuario establezca su password.
+
+```python
+ticket_url = create_password_change_ticket("auth0|abc123", FRONTEND_CLIENT_ID)
+# Retorna: "https://gdilatam.us.auth0.com/lo/reset?..."
+```
+
+Detalles:
+
+- TTL: **5 dias** (432000 segundos)
+- Usa `client_id` (no `result_url`) porque New Universal Login ignora `result_url`
+- Auth0 usa el Application Login URI configurado en la app del `client_id` para el boton de redirect post-cambio
+
+### Flujo Completo: Crear Usuario con Database Connection
+
+```
+1. Admin crea usuario en BackOffice
+2. BackOffice-Back verifica si email tiene cuenta social:
+   - SI tiene social → no crea Database user, el usuario ya puede loguearse
+   - NO tiene social → sigue al paso 3
+3. create_database_user(email, full_name)
+   → Auth0 crea usuario con password aleatorio
+4. create_password_change_ticket(auth0_user_id, FRONTEND_CLIENT_ID)
+   → Auth0 genera link de activacion (5 dias TTL)
+5. Se envia email al usuario con el link de activacion (via Resend)
+6. Usuario abre el link → establece su password en Auth0
+7. Usuario hace login con email + password → obtiene JWT
+8. En primer login, el Backend completa auth_id en la tabla users (onboarding)
+```
+
+!!! info "Onboarding: auth_id"
+    La columna `auth_id` en la tabla `users` se completa en el primer login del usuario. Hasta entonces, el usuario existe en la BD pero sin `auth_id`. La funcion `verify_auth0_token` permite validar el JWT sin requerir que el usuario exista previamente en la BD, facilitando este flujo de onboarding.

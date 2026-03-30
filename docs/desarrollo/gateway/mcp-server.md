@@ -1,6 +1,6 @@
 # MCP Server
 
-Server MCP (Model Context Protocol) con 14 tools para agentes IA. Compatible con Claude Code, ChatGPT y Gemini.
+Server MCP (Model Context Protocol) con 17 tools para agentes IA. Compatible con Claude Code, ChatGPT y Gemini.
 
 **Endpoint:** `POST /mcp` (JSON-RPC over SSE)
 
@@ -37,7 +37,7 @@ https://gateway.tu-municipio.gdilatam.com/mcp
 
 ---
 
-## Tools Detallados (14 total)
+## Tools Detallados (17 total)
 
 ### Expedientes (5 tools)
 
@@ -282,9 +282,66 @@ Plantillas de expedientes disponibles para crear nuevos expedientes.
 
 ---
 
+### Legajos - RLM (3 tools)
+
+#### 15. `search_records`
+
+Busca legajos con filtros por familia de registro, texto y estado.
+
+| Parametro | Tipo | Default | Descripcion |
+|-----------|------|---------|-------------|
+| `family_code` | string | null | Codigo de registro (`ARQ`, `LUM`, `ORD`) |
+| `search` | string | null | Texto de busqueda |
+| `state` | string | null | Filtro por estado |
+| `page` | int | 1 | Numero de pagina |
+| `page_size` | int | 20 | Items por pagina (max 100) |
+
+**Respuesta:**
+
+```json
+{
+  "records": [...],
+  "total": 42,
+  "page": 1,
+  "page_size": 20,
+  "total_pages": 3
+}
+```
+
+#### 16. `get_record`
+
+Obtiene el detalle completo de un legajo con datos enriquecidos, permisos y resumen IA.
+
+| Parametro | Tipo | Default | Descripcion |
+|-----------|------|---------|-------------|
+| `record_id` | string | *requerido* | UUID del legajo |
+
+**Respuesta:** Legajo completo con `record_number`, `display_name`, `state`, `registry`, `data`, `resume` y `permissions`.
+
+#### 17. `get_registry_families`
+
+Lista las familias de registros disponibles en la organizacion.
+
+| Parametro | Tipo | Default | Descripcion |
+|-----------|------|---------|-------------|
+| *(ninguno)* | - | - | - |
+
+**Respuesta:**
+
+```json
+{
+  "registries": [
+    { "code": "ARQ", "name": "Arquitectura" }
+  ],
+  "total": 1
+}
+```
+
+---
+
 ### Utilidades (1 tool)
 
-#### 14. `get_agent_guide`
+#### 18. `get_agent_guide`
 
 Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomendados y tips para el agente.
 

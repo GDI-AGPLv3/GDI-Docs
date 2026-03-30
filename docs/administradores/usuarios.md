@@ -54,6 +54,62 @@ Al crear un usuario se elige como va a iniciar sesion:
     - **Login Social**: Para la mayoria de los casos. Si el email es de Google (`@gmail.com`, dominios con Google Workspace) o Microsoft (`@outlook.com`, dominios con Microsoft 365), elegir esta opcion.
     - **Email y Contrasena**: Para dominios que no usan Google ni Microsoft como proveedor de email (ej: servidores de correo propios del municipio).
 
+### Flujo segun metodo de acceso
+
+Dependiendo del metodo elegido, el sistema dispara un flujo diferente:
+
+**Login Social (Google / Microsoft)**
+
+1. El admin crea el usuario y selecciona **Login Social**
+2. El usuario recibe un **email de bienvenida** con un link directo a la aplicacion
+3. El usuario hace clic en el link e inicia sesion con su cuenta de Google o Microsoft
+4. El sistema lo reconoce automaticamente y le da acceso
+
+**Email y Contrasena**
+
+1. El admin crea el usuario y selecciona **Email y Contrasena**
+2. El usuario recibe un **email de activacion** con un link para crear su contrasena
+3. El usuario hace clic en el link, establece su contrasena y queda activado
+4. A partir de ahi, inicia sesion con su email y la contrasena que creo
+
+!!! warning "El link de activacion vence en 5 dias"
+    Si el usuario no completa la activacion dentro de los 5 dias, el link expira. En ese caso, el admin puede reenviar la invitacion desde el detalle del usuario (ver seccion [Activacion pendiente y reinvitacion](#activacion-pendiente-y-reinvitacion)).
+
+---
+
+## Creacion Masiva (CSV)
+
+Permite crear multiples usuarios a la vez importando un archivo CSV.
+
+### Formato del CSV
+
+El archivo CSV debe contener las siguientes columnas:
+
+| Columna | Obligatoria | Descripcion |
+|---------|:-----------:|-------------|
+| **email** | Si | Correo electronico del usuario |
+| **nombre** | Si | Nombre completo |
+| **sector** | Si | Codigo o nombre del sector a asignar |
+| **auth_method** | No | Metodo de acceso: `social` o `database`. Si no se especifica, se usa `social` por defecto |
+
+!!! example "Ejemplo de CSV"
+    ```csv
+    email,nombre,sector,auth_method
+    jperez@municipio.gob.ar,Juan Perez,Mesa de Entradas,social
+    mgarcia@municipio.gob.ar,Maria Garcia,Tesoreria,social
+    alopez@correo-propio.gob.ar,Ana Lopez,Obras Privadas,database
+    ```
+
+### Comportamiento segun auth_method
+
+| Valor | Que pasa al importar |
+|-------|---------------------|
+| `social` (o vacio) | El usuario recibe un email de bienvenida con link a la app. Inicia sesion con Google o Microsoft |
+| `database` | El usuario recibe un email de activacion con link para crear su contrasena. El link vence en 5 dias |
+
+!!! tip "Mezclar metodos en un mismo CSV"
+    Podes combinar usuarios con `social` y `database` en el mismo archivo. El sistema envia el email correspondiente a cada uno segun su metodo.
+
 ---
 
 ## Detalle de Usuario
@@ -106,13 +162,22 @@ Roles asignados al usuario: `Funcionario`, `Administrador`.
 
 Estado actual del usuario: `Activo` o `Inactivo`.
 
-### Activacion pendiente
+### Activacion pendiente y reinvitacion
 
 Si el usuario todavia no activo su cuenta, se muestra esta seccion con la opcion de reenviar la invitacion. Esto aplica para usuarios creados con el metodo **Email y Contrasena** que no completaron el proceso de activacion.
 
 | Accion | Descripcion |
 |--------|-------------|
-| **Reenviar invitacion** | Envia un nuevo email de activacion al usuario para que cree su contrasena |
+| **Reenviar invitacion** | Genera un nuevo link de activacion y envia un email al usuario para que cree su contrasena. El link anterior queda invalidado |
+
+!!! info "Cuando usar reinvitar"
+    Usa esta opcion cuando:
+
+    - El link de activacion original ya vencio (pasaron mas de 5 dias)
+    - El usuario perdio o no encontro el email original
+    - Necesitas reenviar la invitacion por cualquier motivo
+
+    El nuevo link tambien tiene una validez de **5 dias**. Podes reenviar la invitacion todas las veces que sea necesario.
 
 ### Zona de Peligro
 

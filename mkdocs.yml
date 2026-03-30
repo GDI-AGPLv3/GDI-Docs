@@ -129,6 +129,11 @@ nav:
           - Movimientos: usuarios/expedientes/movimientos.md
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
+      - Legajos:
+          - usuarios/legajos/index.md
+          - Crear y Gestionar: usuarios/legajos/crear-legajo.md
+          - Verificacion: usuarios/legajos/verificacion.md
+          - Relaciones y Vinculos: usuarios/legajos/relaciones.md
       - Notas:
           - usuarios/notas/index.md
           - Nota Enviada: usuarios/notas/nota-enviada.md
@@ -145,6 +150,7 @@ nav:
       - Organigrama: administradores/organigrama.md
       - Tipos de Documentos: administradores/tipos-de-documentos.md
       - Tipos de Expedientes: administradores/tipos-de-expedientes.md
+      - Familias de Registro: administradores/familias-registro.md
       - Usuarios: administradores/usuarios.md
       - Administracion: administradores/administracion.md
       - Certificados: administradores/certificados.md
@@ -162,6 +168,7 @@ nav:
               - Documentos: desarrollo/gateway/rest-api/documentos.md
               - Sistema y Catalogos: desarrollo/gateway/rest-api/sistema.md
               - Notas: desarrollo/gateway/rest-api/notas.md
+              - Legajos (RLM): desarrollo/gateway/rest-api/legajos.md
           - Flujos Completos: desarrollo/gateway/flujos.md
           - Errores y Codigos: desarrollo/gateway/errores.md
       - Arquitectura:
@@ -195,6 +202,7 @@ nav:
                   - Sectores: desarrollo/backend/endpoints/sectores.md
                   - Notas: desarrollo/backend/endpoints/notas.md
                   - Dashboard: desarrollo/backend/endpoints/dashboard.md
+                  - Legajos (RLM): desarrollo/backend/endpoints/legajos.md
               - Services:
                   - desarrollo/backend/services/index.md
                   - Documents Core: desarrollo/backend/services/documents-core.md
@@ -206,6 +214,7 @@ nav:
                   - Notes Service: desarrollo/backend/services/notes-service.md
                   - Storage Service: desarrollo/backend/services/storage-service.md
                   - Shared Services: desarrollo/backend/services/shared-services.md
+                  - RLM Service: desarrollo/backend/services/rlm-service.md
               - Models y Schemas: desarrollo/backend/models-schemas.md
               - Middleware: desarrollo/backend/middleware.md
               - Auth: desarrollo/backend/auth.md
@@ -233,6 +242,7 @@ nav:
               - Numeracion: desarrollo/database/numeracion.md
               - Enums y Tipos: desarrollo/database/enums-y-tipos.md
               - Herramientas: desarrollo/database/herramientas.md
+              - Schema RLM: desarrollo/database/schema-rlm.md
           - Deploy:
               - desarrollo/deploy/index.md
               - Docker: desarrollo/deploy/railway.md

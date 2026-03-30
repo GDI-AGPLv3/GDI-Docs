@@ -173,3 +173,4 @@ def get_db_connection(schema_name: str):
 | [Numeracion](numeracion.md) | Sistema de numeracion secuencial con advisory lock |
 | [ENUMs y Tipos](enums-y-tipos.md) | 7 ENUMs y tipos custom |
 | [Herramientas](herramientas.md) | psql, pgAdmin, scripts utiles |
+| [Schema RLM](schema-rlm.md) | Tablas del Registro de Legajos Municipales (familias, registros, campos) |
