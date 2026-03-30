@@ -74,6 +74,19 @@ Tabla resumen de todos los endpoints REST del backend. Organizados por dominio.
 | GET | `/notes/{id}` | Detalle de nota | Si |
 | POST | `/notes/{id}/archive` | Archivar nota | Si |
 
+## Memos
+
+| Metodo | Path | Descripcion | Auth |
+|--------|------|-------------|------|
+| GET | `/memos/received` | Memos recibidos | Si |
+| GET | `/memos/sent` | Memos enviados | Si |
+| GET | `/memos/archived` | Memos archivados | Si |
+| GET | `/memos/{id}` | Detalle de memo (registra apertura) | Si |
+| PATCH | `/memos/{id}/archive` | Archivar/desarchivar memo | Si |
+| GET | `/memos/unread-count` | Contador de no leidos | Si |
+
+Documentacion completa: [Memos](memos.md)
+
 ## Dashboard
 
 | Metodo | Path | Descripcion | Auth |

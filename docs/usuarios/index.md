@@ -53,6 +53,14 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     [:octicons-arrow-right-24: Ver seccion](notas/index.md)
 
+-   :material-email-lock:{ .lg .middle } **Memos**
+
+    ---
+
+    Comunicaciones privadas persona a persona con destinatarios TO/CC/CCO y tracking de lectura.
+
+    [:octicons-arrow-right-24: Ver seccion](memos/index.md)
+
 -   :material-magnify:{ .lg .middle } **Busqueda**
 
     ---
@@ -82,6 +90,7 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 | **Expedientes** | Gestionar expedientes electronicos, vincular documentos, movimientos |
 | **Legajos (RLM)** | Registrar, verificar y consultar legajos digitales con campos configurables |
 | **Notas** | Enviar y recibir notas oficiales entre sectores |
+| **Memos** | Comunicaciones privadas persona a persona con tracking de lectura |
 | **Busqueda** | Buscar documentos y expedientes en todo el sistema |
 | **Asistente AI** | Consultar documentos y expedientes con lenguaje natural |
 | **[Glosario](../glosario.md)** | Terminos y conceptos utilizados en el sistema |

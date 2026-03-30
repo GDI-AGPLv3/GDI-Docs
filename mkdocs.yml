@@ -138,6 +138,10 @@ nav:
           - usuarios/notas/index.md
           - Nota Enviada: usuarios/notas/nota-enviada.md
           - Nota Recibida: usuarios/notas/nota-recibida.md
+      - Memos:
+          - usuarios/memos/index.md
+          - Memo Enviado: usuarios/memos/memo-enviado.md
+          - Memo Recibido: usuarios/memos/memo-recibido.md
       - Busqueda:
           - usuarios/busqueda/buscador-general.md
       - Asistente AI:
@@ -203,6 +207,7 @@ nav:
                   - Notas: desarrollo/backend/endpoints/notas.md
                   - Dashboard: desarrollo/backend/endpoints/dashboard.md
                   - Legajos (RLM): desarrollo/backend/endpoints/legajos.md
+                  - Memos: desarrollo/backend/endpoints/memos.md
               - Services:
                   - desarrollo/backend/services/index.md
                   - Documents Core: desarrollo/backend/services/documents-core.md
