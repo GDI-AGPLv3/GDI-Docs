@@ -66,12 +66,8 @@ Podes crear relaciones entre legajos para representar conexiones logicas. Esto e
 5. Busca el legajo destino por numero o nombre
 6. Confirma la relacion
 
-!!! info "Relaciones reciprocas"
-    Algunas relaciones se crean de forma reciproca automaticamente:
-
-    - Si creas una relacion **padre**, el otro legajo recibe automaticamente la relacion **hijo**
-    - Si creas una relacion **hermano**, el otro legajo tambien recibe la relacion **hermano**
-    - Si creas una relacion **reemplaza**, el otro legajo queda marcado como **reemplazado por**
+!!! info "Relaciones unidireccionales"
+    Las relaciones se crean en una sola direccion: desde el legajo actual hacia el legajo destino. Si necesitas que la relacion sea visible desde ambos lados, crea una relacion en cada legajo.
 
 !!! example "Ejemplo: Red de relaciones de un circuito de alumbrado"
     ```

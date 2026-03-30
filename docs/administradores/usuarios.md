@@ -38,6 +38,7 @@ Al presionar **Nuevo Usuario** se abre el formulario de creacion.
 |-------|-------------|
 | **Email** | Correo electronico del usuario (ej: `usuario@municipio.gob.ar`) |
 | **Nombre completo** | Nombre y apellido |
+| **Sello** | Sello de firma a asignar (obligatorio) |
 | **Metodo de acceso** | Como va a iniciar sesion el usuario (ver abajo) |
 | **Sector** | Sector principal al que se asigna |
 
@@ -89,15 +90,19 @@ El archivo CSV debe contener las siguientes columnas:
 |---------|:-----------:|-------------|
 | **email** | Si | Correo electronico del usuario |
 | **nombre** | Si | Nombre completo |
-| **sector** | Si | Codigo o nombre del sector a asignar |
+| **sello** | Si | Nombre del sello de firma a asignar |
+| **sector** | Si | Codigo o nombre del sector a asignar (formato: `Nombre # CODIGO`) |
+| **busqueda_docs** | No | Busqueda global de documentos: `1` para habilitar, `0` o vacio para no |
+| **busqueda_exps** | No | Busqueda global de expedientes: `1` para habilitar, `0` o vacio para no |
+| **sectores_adicionales** | No | Sectores adicionales separados por punto y coma |
 | **auth_method** | No | Metodo de acceso: `social` o `database`. Si no se especifica, se usa `social` por defecto |
 
 !!! example "Ejemplo de CSV"
     ```csv
-    email,nombre,sector,auth_method
-    jperez@municipio.gob.ar,Juan Perez,Mesa de Entradas,social
-    mgarcia@municipio.gob.ar,Maria Garcia,Tesoreria,social
-    alopez@correo-propio.gob.ar,Ana Lopez,Obras Privadas,database
+    email,nombre,sello,sector,busqueda_docs,busqueda_exps,,auth_method
+    jperez@municipio.gob.ar,Juan Perez,Director,Mesa de Entradas # MEN,0,0,,social
+    mgarcia@municipio.gob.ar,Maria Garcia,Secretario,Tesoreria # TES,1,0,,social
+    alopez@correo-propio.gob.ar,Ana Lopez,Director,Obras Privadas # OPR,0,0,,database
     ```
 
 ### Comportamiento segun auth_method
@@ -164,7 +169,10 @@ Estado actual del usuario: `Activo` o `Inactivo`.
 
 ### Activacion pendiente y reinvitacion
 
-Si el usuario todavia no activo su cuenta, se muestra esta seccion con la opcion de reenviar la invitacion. Esto aplica para usuarios creados con el metodo **Email y Contrasena** que no completaron el proceso de activacion.
+Si el usuario todavia no activo su cuenta o necesita recibir nuevamente el email de acceso, se muestra esta seccion con la opcion de reenviar la invitacion.
+
+- **Email y Contrasena**: Genera un nuevo link de activacion y envia email para crear contrasena. El link anterior queda invalidado.
+- **Login Social**: Reenvia el email de bienvenida con el link directo a la aplicacion.
 
 | Accion | Descripcion |
 |--------|-------------|

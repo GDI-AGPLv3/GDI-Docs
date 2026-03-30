@@ -1,6 +1,6 @@
 # Legajos (RLM)
 
-**17 endpoints** para gestion de legajos del modulo RLM (Registro de Legajos Municipales).
+**20 endpoints** para gestion de legajos del modulo RLM (Registro Legajo Multiproposito).
 
 Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
@@ -41,7 +41,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/records/search?fam
   "records": [
     {
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "record_number": "LG-ARQ-2025-00001",
+      "record_number": "RLM-2026-00000001-MUNI-ARQ",
       "display_name": "Edificio San Martin 1234",
       "state": "active",
       "resume": "Legajo de habilitacion arquitectonica para edificio comercial..."
@@ -83,7 +83,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e
 ```json
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "record_number": "LG-ARQ-2025-00001",
+  "record_number": "RLM-2026-00000001-MUNI-ARQ",
   "display_name": "Edificio San Martin 1234",
   "state": "active",
   "registry": {
@@ -284,7 +284,7 @@ Devuelve los documentos vinculados al legajo con paginacion.
 POST /api/v1/records
 ```
 
-Crea un nuevo legajo en un registro especifico. Genera automaticamente un informe IFRLM inicial.
+Crea un nuevo legajo en un registro especifico.
 
 **Body (JSON):**
 
@@ -316,14 +316,11 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/records" \
 ```json
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "record_number": "LG-ARQ-2025-00001",
+  "record_number": "RLM-2026-00000001-MUNI-ARQ",
   "display_name": "Edificio San Martin 1234",
   "state": "active"
 }
 ```
-
-!!! info "IFRLM inicial"
-    Al crear un legajo se genera automaticamente un informe IFRLM inicial con el snapshot de los datos. Si la generacion falla, el legajo se crea igual y se registra un warning en logs.
 
 **Errores:**
 
@@ -528,7 +525,7 @@ Crea una relacion entre dos legajos.
 | Campo | Tipo | Requerido | Descripcion |
 |-------|------|-----------|-------------|
 | `target_record_id` | string | Si | UUID del legajo destino |
-| `relation_type` | string | Si | Tipo: `parent`, `child`, `related`, `replaces` |
+| `relation_type` | string | Si | Tipo: `parent`, `child`, `related`, `replaces`, `sibling`, `cousin` |
 | `notes` | string | No | Notas sobre la relacion |
 
 **Ejemplo:**

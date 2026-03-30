@@ -64,16 +64,10 @@ Todos los cambios quedan registrados en el **historial** del legajo con fecha, u
 
 Desde la vista de detalle del legajo, podes cambiar su estado usando el selector de estado en la parte superior.
 
-| Transicion | Cuando usarla |
-|------------|---------------|
-| Borrador :material-arrow-right: Activo | Cuando todos los campos obligatorios estan completos |
-| Activo :material-arrow-right: Suspendido | Cuando se necesita pausar la vigencia (ej: observacion en una habilitacion) |
-| Suspendido :material-arrow-right: Activo | Cuando se resuelve la observacion y se reactiva |
-| Activo :material-arrow-right: Archivado | Cuando el legajo ya no tiene vigencia |
-| Borrador :material-arrow-right: Archivado | Cuando se descarta un legajo sin completar |
+Los estados disponibles dependen de la familia de registro. Podes cambiar de cualquier estado a cualquier otro sin restricciones. El sistema registra cada cambio en el historial con fecha, usuario y motivo.
 
-!!! warning "Archivado es definitivo"
-    Una vez archivado, el legajo no puede volver a activarse. Asegurate de que efectivamente corresponde archivar antes de confirmar.
+!!! tip "Motivo del cambio"
+    Al cambiar de estado podes agregar un motivo opcional. Es recomendable hacerlo para mantener la trazabilidad del legajo.
 
 ---
 

@@ -70,14 +70,10 @@ Algunos campos tienen una **fecha de vencimiento** (`expiration_date`). Esto es 
 
 ### Que pasa cuando vence un campo
 
-Cuando un campo alcanza su fecha de vencimiento:
-
-- El campo cambia visualmente a estado **:material-alert-circle-outline: Vencido**
-- La verificacion anterior deja de ser valida
-- Se requiere una **nueva verificacion** con documentacion actualizada
+Cuando un campo alcanza su fecha de vencimiento, se muestra visualmente como **:material-alert-circle-outline: Vencido** en la interfaz. Esto indica que la informacion necesita renovarse.
 
 !!! tip "Anticipate a los vencimientos"
-    Revisa periodicamente los legajos de tu area para identificar campos proximos a vencer y gestionar la renovacion de la documentacion a tiempo.
+    Revisa periodicamente los legajos de tu area para identificar campos proximos a vencer y gestionar la renovacion de la documentacion a tiempo. El sistema muestra la fecha de vencimiento mas proxima en el listado de legajos.
 
 ---
 

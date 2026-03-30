@@ -93,6 +93,7 @@ Al agregar un campo, se configuran las siguientes propiedades:
 | **textarea** | Texto largo, multiples lineas | Observaciones, Descripcion de la obra |
 | **select** | Lista desplegable con opciones predefinidas | Estado de la obra (En curso, Finalizada, Paralizada) |
 | **boolean** | Casilla de verificacion (si/no) | Tiene plano aprobado, Requiere inspeccion |
+| **file** | Archivo adjunto | Plano aprobado, Foto del frente, Certificado escaneado |
 
 !!! tip "Campos con vencimiento"
     Cuando marcas un campo como "con vencimiento", el sistema va a alertar automaticamente cuando la fecha cargada en ese campo este proxima a vencer o ya haya vencido. Esto es util para habilitaciones, certificados o permisos temporales.
@@ -104,15 +105,15 @@ Al agregar un campo, se configuran las siguientes propiedades:
 
 ## Permisos por Sector
 
-Cada familia define que sectores pueden operar con sus legajos y con que nivel de acceso. El sistema de permisos se basa en un sector "dueno" y sectores adicionales con permisos parciales.
+Cada familia define que sectores pueden operar con sus legajos y con que nivel de acceso. Se agregan sectores y se configura individualmente que puede hacer cada uno.
 
-### Sector dueno
+### Agregar un sector
 
-Al crear una familia, se asigna un **sector dueno**. Este sector tiene automaticamente **todos los permisos** sobre los legajos de esa familia.
+Desde la seccion de permisos de la familia, presiona **"+ Agregar sector"**, selecciona el sector y configura sus permisos.
 
-### Sectores adicionales
+### Permisos disponibles
 
-Ademas del sector dueno, se pueden agregar otros sectores con permisos especificos. Cada sector adicional recibe una combinacion de los siguientes permisos:
+Cada sector recibe una combinacion de los siguientes permisos:
 
 | Permiso | Descripcion |
 |---------|-------------|
@@ -126,15 +127,15 @@ Ademas del sector dueno, se pueden agregar otros sectores con permisos especific
 
     | Sector | can_create | can_edit | can_view | can_verify |
     |--------|:----------:|:--------:|:--------:|:----------:|
-    | **Obras Privadas** (dueno) | Si | Si | Si | Si |
+    | Obras Privadas | Si | Si | Si | Si |
     | Catastro | No | No | Si | Si |
     | Mesa de Entradas | Si | No | Si | No |
     | Intendencia | No | No | Si | No |
 
     En este ejemplo, Obras Privadas tiene control total. Mesa de Entradas puede crear legajos nuevos y verlos, pero no editarlos ni verificar campos. Catastro puede ver y verificar. Intendencia solo puede consultar.
 
-!!! warning "Sector dueno vs adicionales"
-    El sector dueno **siempre** tiene todos los permisos (`can_create`, `can_edit`, `can_view`, `can_verify`). No se le pueden quitar permisos individuales. Si necesitas que un sector tenga permisos parciales, agregalo como sector adicional, no como dueno.
+!!! tip "Permisos del usuario"
+    Si un usuario pertenece a multiples sectores (sector principal + sectores adicionales), el sistema evalua los permisos de **todos** sus sectores. Si cualquiera de sus sectores tiene el permiso, se le autoriza la accion.
 
 ---
 
@@ -162,6 +163,5 @@ Para dejar una familia lista para usar, segui estos pasos:
 
 1. **Crear la familia** con codigo, nombre y descripcion
 2. **Definir los campos** del esquema de datos (tipos, obligatoriedad, vencimiento, verificacion)
-3. **Asignar el sector dueno** que tendra control total
-4. **Agregar sectores adicionales** con sus permisos especificos
-5. **Configurar los estados** del ciclo de vida del legajo
+3. **Agregar sectores** con sus permisos especificos (can_create, can_edit, can_view, can_verify)
+4. **Configurar los estados** del ciclo de vida del legajo

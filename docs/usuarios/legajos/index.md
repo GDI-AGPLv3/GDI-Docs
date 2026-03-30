@@ -47,17 +47,17 @@ RLM-{ANO}-{SECUENCIAL}-{TENANT}-{CODIGO}
 |-------|---------|-------------|
 | RLM | `RLM` | Prefijo fijo que identifica un legajo |
 | ANO | `2026` | Ano de creacion |
-| SECUENCIAL | `000042` | Numero secuencial unico por tenant |
+| SECUENCIAL | `00000042` | Numero secuencial unico por tenant (8 digitos) |
 | TENANT | `TXST` | Codigo de la organizacion/tenant |
 | CODIGO | `ARQ` | Codigo de la familia de registro |
 
-Ejemplo completo: `RLM-2026-000042-TXST-ARQ`
+Ejemplo completo: `RLM-2026-00000042-TXST-ARQ`
 
 ---
 
 ## Estados de un legajo
 
-Un legajo puede encontrarse en los siguientes estados:
+Cada familia de registro define sus propios estados posibles. Los estados mas comunes son:
 
 | Estado | Descripcion |
 |--------|-------------|
@@ -66,8 +66,11 @@ Un legajo puede encontrarse en los siguientes estados:
 | :material-pause-circle-outline: **Suspendido** | El legajo fue suspendido temporalmente (ej: habilitacion observada) |
 | :material-archive-outline: **Archivado** | El legajo fue archivado y ya no esta en uso activo |
 
+!!! info "Estados personalizables"
+    Cada familia puede definir sus propios estados segun su necesidad. Por ejemplo, una familia de habilitaciones podria tener: *Ingresado*, *En revision*, *Aprobado*, *Rechazado*, *Vencido*. Los estados se configuran desde el [BackOffice](../../../administradores/familias-registro.md).
+
 !!! info "Quien puede cambiar el estado"
-    Solo los usuarios con permiso de edicion sobre la familia de registro pueden cambiar el estado de un legajo. Los cambios de estado quedan registrados en el historial.
+    Solo los usuarios con permiso de edicion sobre la familia de registro pueden cambiar el estado de un legajo. No hay restriccion de transiciones: cualquier estado puede pasar a cualquier otro. Los cambios de estado quedan registrados en el historial.
 
 ---
 
