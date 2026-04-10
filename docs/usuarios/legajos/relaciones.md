@@ -81,6 +81,8 @@ Podes crear relaciones entre legajos para representar conexiones logicas. Esto e
 
 ## Historial de cambios
 
+![Historial de cambios del legajo](../capturas/legajo-movimientos.png)
+
 Cada legajo mantiene un **historial completo** de todas las acciones realizadas sobre el. El historial registra:
 
 | Evento | Que se registra |

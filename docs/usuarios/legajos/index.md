@@ -6,6 +6,8 @@ Un legajo es una ficha digital que agrupa campos de datos verificables sobre un 
 
 ---
 
+![Listado de legajos](../capturas/legajos-lista.png)
+
 ## Para que sirve
 
 | Uso | Ejemplo |

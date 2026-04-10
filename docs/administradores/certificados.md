@@ -2,8 +2,7 @@
 
 Gestiona los certificados digitales utilizados para la firma electronica de documentos.
 
-!!! warning "Seccion en construccion"
-    Esta seccion esta siendo documentada. Las capturas de pantalla se agregaran proximamente.
+![Gestion de certificados digitales](capturas/certificados.png)
 
 ---
 

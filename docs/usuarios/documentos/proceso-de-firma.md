@@ -138,6 +138,12 @@ Al firmar correctamente, se muestra un dialogo modal de confirmacion.
 !!! note "Numero oficial"
     El numero oficial solo se asigna cuando firma el **numerador** (ultimo firmante). Si un firmante regular firma, el dialogo de exito no muestra numero oficial porque el documento aun no esta completamente firmado.
 
+### Documento finalizado
+
+Una vez completada la firma, el documento muestra el estado "Documento finalizado" junto con el resumen generado por IA, la informacion de firmantes y el PDF oficial.
+
+![Documento firmado con resumen IA](../capturas/documento-detalle-firmado.png)
+
 ### Formato del numero oficial
 
 El numero oficial se genera con el formato:

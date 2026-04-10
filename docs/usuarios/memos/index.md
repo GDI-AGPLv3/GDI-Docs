@@ -35,6 +35,8 @@ Al crear un memo se asignan destinatarios en tres modalidades:
 
 ## Bandeja de Memos
 
+![Comunicaciones Oficiales - Enviados](../capturas/ccoo-enviados.png)
+
 La bandeja organiza los memos en tres pestanas:
 
 | Pestana | Contenido |

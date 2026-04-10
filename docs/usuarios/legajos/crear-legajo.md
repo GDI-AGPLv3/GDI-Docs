@@ -6,6 +6,8 @@ Esta pagina explica como crear un legajo nuevo, completar sus campos, cambiar su
 
 ## Crear un legajo nuevo
 
+![Crear legajo](../capturas/legajo-crear.png)
+
 ### Paso 1: Seleccionar la familia de registro
 
 Desde la pantalla principal de **Legajos**, hace click en el boton **"+ Crear"**. El sistema muestra un selector con las familias de registro disponibles para tu usuario.
@@ -43,6 +45,8 @@ Cada familia de registro define un conjunto de campos especificos. Los campos pu
 Al guardar, el sistema asigna automaticamente el **numero oficial** con formato `RLM-{ANO}-{SEQ}-{TENANT}-{CODIGO}`.
 
 ---
+
+![Detalle de legajo con datos y verificacion](../capturas/legajo-detalle-datos.png)
 
 ## Editar campos de un legajo
 

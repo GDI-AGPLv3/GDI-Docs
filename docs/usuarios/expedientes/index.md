@@ -4,6 +4,8 @@ Un **expediente electronico** es una carpeta digital que agrupa documentos ofici
 
 ---
 
+![Listado de expedientes](../capturas/expedientes-lista.png)
+
 ## Identificacion del expediente
 
 Cada expediente recibe un **numero oficial unico** al momento de su creacion, con el siguiente formato:

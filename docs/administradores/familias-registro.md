@@ -31,6 +31,8 @@ El sistema maneja dos tipos de familias:
 
 ## Listado de Familias
 
+![Familias de legajos](capturas/familias-de-legajos.png)
+
 La tabla muestra todas las familias habilitadas para la organizacion.
 
 | Columna | Descripcion |
@@ -79,6 +81,8 @@ Hay dos formas de crear una familia:
 Si no defines estados al crear, el sistema asigna por defecto: *Activo* e *Inactivo*.
 
 ---
+
+![Detalle de familia de legajos](capturas/familia-legajo-detalle.png)
 
 ## Editar una Familia
 

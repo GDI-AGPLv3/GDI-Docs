@@ -32,6 +32,8 @@ Al crear una nota se asignan destinatarios en tres modalidades:
 
 ## Bandeja de Notas
 
+![Comunicaciones Oficiales - Recibidos](../capturas/ccoo-recibidos.png)
+
 La bandeja de notas organiza las comunicaciones en tres pestanas:
 
 | Pestana | Contenido |
