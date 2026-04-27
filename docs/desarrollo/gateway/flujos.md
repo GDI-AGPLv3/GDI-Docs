@@ -12,7 +12,7 @@ Esta pagina documenta los flujos de trabajo mas comunes del Gateway, mostrando l
 **Base URL:**
 
 ```
-https://gateway.tu-municipio.gdilatam.com
+https://gateway.your-domain.com
 ```
 
 **Headers requeridos en todas las llamadas:**
@@ -68,7 +68,7 @@ sequenceDiagram
 ### Paso 1: Obtener plantillas de expediente
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/case-templates" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -95,7 +95,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/case-templa
 ### Paso 2: Crear expediente
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -H "Content-Type: application/json" \
@@ -120,7 +120,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/" \
 ### Paso 3: Crear documento borrador
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -H "Content-Type: application/json" \
@@ -148,7 +148,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/" \
 ### Paso 4: Guardar contenido y firmantes
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -H "Content-Type: application/json" \
@@ -183,7 +183,7 @@ curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/d4e5f6
 ### Paso 5: Iniciar firma
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123/start-signing" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123/start-signing" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -203,7 +203,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/d4e5f6a
 Cada firmante ejecuta esta llamada con su propio `X-User-ID`.
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123/sign" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/d4e5f6a7-b8c9-0123-defa-234567890123/sign" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: e5f6a7b8-c9d0-1234-efab-345678901234"
 ```
@@ -244,7 +244,7 @@ sequenceDiagram
 ### Paso 1: Obtener sectores disponibles
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/prepare-transfer" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/prepare-transfer" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -271,7 +271,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b
 ### Paso 2: Transferir expediente
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/transfer" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/transfer" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -H "Content-Type: application/json" \
@@ -327,7 +327,7 @@ sequenceDiagram
 ### Paso 1: Buscar expedientes
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?search=habilitacion" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/search?search=habilitacion" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -353,7 +353,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?searc
 ### Paso 2: Obtener detalle del expediente
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -379,7 +379,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b
 ### Paso 3: Obtener historial
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/history" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/history" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -408,7 +408,7 @@ curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b
 ### Paso 4: Obtener documentos vinculados
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -472,7 +472,7 @@ sequenceDiagram
 ### Paso 1: Importar PDF
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/import" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -F "pdf_file=@/ruta/al/documento.pdf"
@@ -495,7 +495,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/import"
 Solo es posible mientras el documento esta en estado `draft`.
 
 ```bash
-curl -X PUT "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/imported-pdf" \
+curl -X PUT "https://gateway.your-domain.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/imported-pdf" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario" \
   -F "pdf_file=@/ruta/al/documento-corregido.pdf"
@@ -514,7 +514,7 @@ curl -X PUT "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/e5f6a7b8
 ### Paso 3: Iniciar firma
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/start-signing" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/start-signing" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -532,7 +532,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/e5f6a7b
 ### Paso 4: Firmar documento
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/sign" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/sign" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-firmante"
 ```
@@ -578,7 +578,7 @@ sequenceDiagram
 El autor del documento propone vincularlo a un expediente.
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents/propose" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents/propose" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-autor" \
   -H "Content-Type: application/json" \
@@ -604,7 +604,7 @@ curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7
 El responsable del expediente acepta la propuesta y el documento queda vinculado.
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents/accept-proposal" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cdef-123456789012/documents/accept-proposal" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-responsable" \
   -H "Content-Type: application/json" \

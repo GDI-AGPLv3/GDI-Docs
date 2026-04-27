@@ -91,7 +91,7 @@ Integrado en GDI-Backend (`api_gateway/`). Comparte las variables del Backend ma
 | `OPENROUTER_FAST_MODEL` | Modelo para Router (gratis) | Si | `meta-llama/llama-3.3-70b-instruct:free` |
 | `EMBEDDINGS_MODEL` | Modelo de embeddings | Si | `openai/text-embedding-3-small` |
 | `GDI_BACKEND_URL` | URL del Backend | Si | `http://backend:8000` |
-| `INTERNAL_API_KEY` | API Key interna para Backend | Si | `gdi-internal-2026` |
+| `INTERNAL_API_KEY` | API Key interna para Backend | Si | `your-internal-api-key` |
 | `AUTH0_DOMAIN` | Dominio Auth0 | Si | `tu-tenant.us.auth0.com` |
 | `AUTH0_AUDIENCE` | Audience Auth0 | Si | `https://api.tu-dominio.com` |
 | `AI_WORKER_INTERVAL` | Intervalo del worker (segundos) | No | `60` (default) |

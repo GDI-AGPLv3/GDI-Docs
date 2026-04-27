@@ -239,7 +239,7 @@ Genera un link de activacion (password change ticket) para que el usuario establ
 
 ```python
 ticket_url = create_password_change_ticket("auth0|abc123", FRONTEND_CLIENT_ID)
-# Retorna: "https://gdilatam.us.auth0.com/lo/reset?..."
+# Retorna: "https://<your-tenant>.auth0.com/lo/reset?..."
 ```
 
 Detalles:

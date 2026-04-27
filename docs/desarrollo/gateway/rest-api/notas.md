@@ -2,7 +2,7 @@
 
 **5 endpoints** para gestion de notas internas.
 
-Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
+Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
 Las notas son comunicaciones internas entre usuarios del sistema. Funcionan como un sistema de mensajeria interna vinculado al contexto de gestion documental.
 
@@ -30,7 +30,7 @@ Devuelve las notas recibidas por el usuario actual. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/received?unread_only=true&page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/notes/received?unread_only=true&page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -79,7 +79,7 @@ Devuelve las notas enviadas por el usuario actual. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/sent?page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/notes/sent?page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -130,7 +130,7 @@ Devuelve las notas que el usuario ha archivado. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/archived?page=1&page_size=5" \
+curl -X GET "https://gateway.your-domain.com/api/v1/notes/archived?page=1&page_size=5" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -178,7 +178,7 @@ Devuelve el contenido completo de una nota. Si la nota estaba sin leer, se marca
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555" \
+curl -X GET "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -246,7 +246,7 @@ Archiva o desarchiva una nota. Las notas archivadas dejan de aparecer en la band
 **Ejemplo (archivar):**
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555/archive" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555/archive" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -269,7 +269,7 @@ curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/a1b2c3d4-0
 **Ejemplo (desarchivar):**
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555/archive" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-2222-333344445555/archive" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \

@@ -58,12 +58,12 @@ Estos errores ocurren cuando las credenciales son invalidas o estan ausentes.
 
 ```bash
 # Peticion incorrecta (falta X-API-Key)
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?search=test" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/search?search=test" \
   -H "X-User-ID: uuid-del-usuario"
 # Respuesta: 401 {"error": "X-API-Key header requerido"}
 
 # Peticion correcta
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?search=test" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/search?search=test" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: uuid-del-usuario"
 ```
@@ -168,7 +168,7 @@ import time
 
 def call_gateway(method, path, **kwargs):
     """Ejemplo de cliente con reintentos para errores 500."""
-    url = f"https://gateway.tu-municipio.gdilatam.com{path}"
+    url = f"https://gateway.your-domain.com{path}"
     headers = {
         "X-API-Key": "tu-api-key",
         "X-User-ID": "uuid-del-usuario",

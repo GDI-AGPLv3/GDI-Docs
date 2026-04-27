@@ -172,7 +172,7 @@ Buscar expedientes activos:
 ```bash
 curl -H "X-API-Key: tu-api-key" \
      -H "X-User-ID: tu-user-id" \
-     "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?page=1&status=active"
+     "https://gateway.your-domain.com/api/v1/cases/search?page=1&status=active"
 ```
 
 ### 3. Verificar la respuesta

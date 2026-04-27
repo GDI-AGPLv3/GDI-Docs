@@ -17,7 +17,7 @@ Archivo `~/.claude/mcp.json`:
   "mcpServers": {
     "gdi-gateway": {
       "type": "url",
-      "url": "https://gateway.tu-municipio.gdilatam.com/mcp"
+      "url": "https://gateway.your-domain.com/mcp"
     }
   }
 }
@@ -32,7 +32,7 @@ Utiliza la especificacion OpenAPI disponible en `/.well-known/openapi.json` junt
 Configuracion similar a Claude Code. Agregar el servidor MCP desde la interfaz de configuracion apuntando a la misma URL:
 
 ```
-https://gateway.tu-municipio.gdilatam.com/mcp
+https://gateway.your-domain.com/mcp
 ```
 
 ---

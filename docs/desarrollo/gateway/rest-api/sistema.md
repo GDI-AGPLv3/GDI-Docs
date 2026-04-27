@@ -2,7 +2,7 @@
 
 **7 endpoints** de datos maestros y catalogos del sistema.
 
-Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
+Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
 !!! info "Datos de referencia"
     Estos endpoints devuelven datos maestros que cambian con poca frecuencia. Se recomienda cachear las respuestas localmente y refrescar periodicamente en lugar de consultar en cada operacion.
@@ -20,7 +20,7 @@ Devuelve la lista de tipos de documentos activos en el tenant.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/document-types" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/document-types" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -71,7 +71,7 @@ Devuelve el catalogo de estados posibles para documentos.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/document-states" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/document-states" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -118,7 +118,7 @@ Devuelve la estructura de sectores y departamentos del municipio.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/sectors" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/sectors" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -166,7 +166,7 @@ Devuelve las plantillas disponibles para crear expedientes.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/case-templates" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -208,7 +208,7 @@ Devuelve la lista completa de usuarios del tenant.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/users/list" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/users/list" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -258,7 +258,7 @@ Busca usuarios por nombre o email. Pensado para funciones de autocompletado en i
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/users/search?q=pere&limit=5" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/users/search?q=pere&limit=5" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -306,7 +306,7 @@ Devuelve la informacion detallada de un usuario especifico.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/system/users/550e8400-e29b-41d4-a716-446655440000" \
+curl -X GET "https://gateway.your-domain.com/api/v1/system/users/550e8400-e29b-41d4-a716-446655440000" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```

@@ -2,7 +2,7 @@
 
 **20 endpoints** para gestion de documentos.
 
-Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
+Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
 
 ---
 
@@ -30,7 +30,7 @@ Busca documentos con filtros opcionales. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/search?status=signed&document_type=INF&page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/search?status=signed&document_type=INF&page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -71,7 +71,7 @@ Devuelve los documentos que el usuario actual tiene pendientes de firma.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/pending-signatures" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/pending-signatures" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -116,7 +116,7 @@ Devuelve la informacion completa de un documento.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -179,7 +179,7 @@ Devuelve el contenido HTML de un documento oficial firmado.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/content" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/content" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -220,7 +220,7 @@ Genera una URL temporal firmada para descargar el PDF del documento. La URL expi
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/url" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/url" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -264,7 +264,7 @@ Devuelve los detalles de firma de un documento (firmantes, fechas, estado de cad
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/signature-details" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012-cdef-123456789012/signature-details" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -313,7 +313,7 @@ Busca un documento oficial por su numero exacto.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/search-official/IF-2025-00012-SMG-ADGEN" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/search-official/IF-2025-00012-SMG-ADGEN" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -357,7 +357,7 @@ Verifica si un usuario tiene permisos para firmar documentos de un tipo determin
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/check-signer-permissions?user_id=550e8400-e29b-41d4-a716-446655440000&document_type_acronym=INF" \
+curl -X GET "https://gateway.your-domain.com/api/v1/documents/check-signer-permissions?user_id=550e8400-e29b-41d4-a716-446655440000&document_type_acronym=INF" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -397,7 +397,7 @@ Crea un nuevo documento en estado borrador.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -453,7 +453,7 @@ Importa un archivo PDF externo como documento en el sistema.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/import" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -F "document_type_acronym=INF" \
@@ -510,7 +510,7 @@ Actualiza el contenido y/o metadatos de un documento en estado borrador.
 **Ejemplo:**
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -566,7 +566,7 @@ Reemplaza el archivo PDF de un documento importado.
 **Ejemplo:**
 
 ```bash
-curl -X PUT "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/a7b8c9d0-e1f2-3456-ghab-567890123456/imported-pdf" \
+curl -X PUT "https://gateway.your-domain.com/api/v1/documents/a7b8c9d0-e1f2-3456-ghab-567890123456/imported-pdf" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -F "pdf_file=@/ruta/al/archivo/informe-pericial-v2.pdf"
@@ -612,7 +612,7 @@ Elimina un documento que se encuentra en estado `draft` o `rejected`.
 **Ejemplo:**
 
 ```bash
-curl -X DELETE "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345" \
+curl -X DELETE "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -654,7 +654,7 @@ Envia un documento borrador al circuito de firma. Cambia el estado del documento
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/start-signing" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/start-signing" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -699,7 +699,7 @@ Aplica la firma del usuario actual al documento. Si todos los firmantes requerid
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/sign" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/sign" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -748,7 +748,7 @@ Rechaza un documento que se encuentra en proceso de firma. El documento vuelve a
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/reject" \
+curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2345-fgab-456789012345/reject" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -803,7 +803,7 @@ Vincula un documento oficial (firmado) a un expediente.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/link" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/link" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -855,7 +855,7 @@ Propone vincular un documento en estado borrador a un expediente. Requiere acept
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/propose" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/propose" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -909,7 +909,7 @@ Acepta una propuesta de vinculacion de documento a un expediente.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/accept-proposal" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/accept-proposal" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -961,7 +961,7 @@ Rechaza una propuesta de vinculacion de documento.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/reject-proposal" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents/reject-proposal" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \

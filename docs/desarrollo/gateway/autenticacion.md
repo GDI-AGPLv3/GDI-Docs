@@ -28,7 +28,7 @@ Cada request a la REST API (`/api/v1/*`) requiere **dos headers obligatorios**:
 ```bash
 curl -H "X-API-Key: sk-gdi-abc123" \
      -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
-     "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?page=1&status=active"
+     "https://gateway.your-domain.com/api/v1/cases/search?page=1&status=active"
 ```
 
 ### Flujo de validacion
@@ -113,7 +113,7 @@ sequenceDiagram
     G-->>C: 2. 401 + WWW-Authenticate:<br/>Bearer resource_metadata="/.well-known/oauth-protected-resource"
 
     C->>G: 3. GET /.well-known/oauth-protected-resource
-    G-->>C: 4. { authorization_servers: ["https://gdilatam.us.auth0.com"] }
+    G-->>C: 4. { authorization_servers: ["https://<your-tenant>.auth0.com"] }
 
     C->>A: 5. Descubrir endpoints OAuth<br/>(authorize, token, register)
     C->>B: 6. Abrir pantalla de login
@@ -136,7 +136,7 @@ El cliente MCP intenta conectarse al endpoint `/mcp` sin credenciales. El Gatewa
 
 ```http
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://gateway.tu-municipio.gdilatam.com/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer resource_metadata="https://gateway.your-domain.com/.well-known/oauth-protected-resource"
 Content-Type: application/json
 
 {
@@ -150,14 +150,14 @@ Content-Type: application/json
 El cliente consulta el endpoint de metadata para saber a que servidor de autorizacion debe dirigirse:
 
 ```bash
-curl "https://gateway.tu-municipio.gdilatam.com/.well-known/oauth-protected-resource"
+curl "https://gateway.your-domain.com/.well-known/oauth-protected-resource"
 ```
 
 ```json
 {
-    "resource": "https://gateway.tu-municipio.gdilatam.com",
+    "resource": "https://gateway.your-domain.com",
     "authorization_servers": [
-        "https://gdilatam.us.auth0.com"
+        "https://<your-tenant>.auth0.com"
     ],
     "scopes_supported": [
         "openid",
@@ -197,7 +197,7 @@ El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, c
 Audiences validos:
 - AUTH0_AUDIENCE (variable de entorno, audience del Backend)
 - MCP_RESOURCE_URI (variable de entorno, configurable por deploy)
-- https://gateway.tu-municipio.gdilatam.com (URL del recurso)
+- https://gateway.your-domain.com (URL del recurso)
 ```
 
 Del JWT se extrae el **email** del usuario (del claim `email` o, como fallback, consultando el endpoint `/userinfo` de Auth0). Con el email se busca al usuario en la base de datos y se construye el contexto de operacion.

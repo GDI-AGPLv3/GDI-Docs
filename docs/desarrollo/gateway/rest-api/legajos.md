@@ -2,7 +2,7 @@
 
 **20 endpoints** para gestion de legajos del modulo RLM (Registro Legajo Multiproposito).
 
-Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
+Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
 ---
 
@@ -29,7 +29,7 @@ Busca legajos con filtros opcionales. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/records/search?family_code=ARQ&search=san+martin&page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/records/search?family_code=ARQ&search=san+martin&page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -73,7 +73,7 @@ Devuelve la informacion completa de un legajo, incluyendo datos enriquecidos, es
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -123,7 +123,7 @@ Devuelve las familias de registros disponibles en la organizacion (ej: Arquitect
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/registries" \
+curl -X GET "https://gateway.your-domain.com/api/v1/registries" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -176,7 +176,7 @@ Devuelve el historial de cambios del legajo con paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/history?page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/history?page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -297,7 +297,7 @@ Crea un nuevo legajo en un registro especifico.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/records" \
+curl -X POST "https://gateway.your-domain.com/api/v1/records" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -360,7 +360,7 @@ Actualiza el estado o nombre de un legajo.
 **Ejemplo:**
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -409,7 +409,7 @@ Actualiza un campo individual de los datos enriquecidos del legajo.
 **Ejemplo:**
 
 ```bash
-curl -X PATCH "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/fields/habilitacion_comercial" \
+curl -X PATCH "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/fields/habilitacion_comercial" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -455,7 +455,7 @@ Marca un campo como verificado, vinculandolo a un documento oficial de respaldo.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/fields/habilitacion_comercial/verify" \
+curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/fields/habilitacion_comercial/verify" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -492,7 +492,7 @@ Genera un informe IFRLM (snapshot del estado actual del legajo). Crea un documen
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/report" \
+curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/report" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -531,7 +531,7 @@ Crea una relacion entre dos legajos.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/relations" \
+curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-abcd-ef1234567890/relations" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \

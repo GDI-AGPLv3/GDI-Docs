@@ -2,7 +2,7 @@
 
 **13 endpoints** para gestion de expedientes.
 
-Todos los endpoints usan la base URL `https://gateway.tu-municipio.gdilatam.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
+Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
 
 ---
 
@@ -30,7 +30,7 @@ Busca expedientes con filtros opcionales. Soporta paginacion.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/search?search=habilitacion&status=active&page=1&page_size=10" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/search?search=habilitacion&status=active&page=1&page_size=10" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -81,7 +81,7 @@ Devuelve la informacion completa de un expediente.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890?include_documents=true" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890?include_documents=true" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -137,7 +137,7 @@ Busca un expediente por su numero exacto.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/number/EE-2025-00001-SMG-ADGEN" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/number/EE-2025-00001-SMG-ADGEN" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -184,7 +184,7 @@ Devuelve el historial completo de movimientos (transferencias, asignaciones, etc
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/history" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/history" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -244,7 +244,7 @@ Devuelve todos los documentos vinculados a un expediente.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/documents" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -299,7 +299,7 @@ Devuelve los permisos que el usuario actual tiene sobre el expediente.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/permissions" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/permissions" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -341,7 +341,7 @@ Devuelve la lista de sectores y usuarios disponibles para asignar el expediente.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/prepare-assignment" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/prepare-assignment" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -393,7 +393,7 @@ Devuelve los sectores disponibles para transferir el expediente. Usar antes de l
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/prepare-transfer" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/prepare-transfer" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -443,7 +443,7 @@ Devuelve la lista de usuarios que pertenecen a un sector determinado.
 **Ejemplo:**
 
 ```bash
-curl -X GET "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/sectors/b2c3d4e5-f6a7-8901-bcde-f12345678901/users" \
+curl -X GET "https://gateway.your-domain.com/api/v1/cases/sectors/b2c3d4e5-f6a7-8901-bcde-f12345678901/users" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
@@ -498,7 +498,7 @@ Crea un nuevo expediente a partir de una plantilla.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -558,7 +558,7 @@ Transfiere un expediente a otro sector.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/transfer" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/transfer" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -618,7 +618,7 @@ Asigna un expediente a un usuario en un sector especifico.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/assign" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/assign" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \
@@ -674,7 +674,7 @@ Cierra una asignacion activa sobre un expediente.
 **Ejemplo:**
 
 ```bash
-curl -X POST "https://gateway.tu-municipio.gdilatam.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/close-assign" \
+curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abcd-ef1234567890/close-assign" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
   -H "Content-Type: application/json" \

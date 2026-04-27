@@ -7,7 +7,7 @@ API REST publica del Gateway con **45 endpoints** para integraciones programatic
 ## Base URL
 
 ```
-https://gateway.tu-municipio.gdilatam.com/api/v1
+https://gateway.your-domain.com/api/v1
 ```
 
 Reemplazar `tu-municipio` por el identificador de tu municipio asignado por GDI Latam.
