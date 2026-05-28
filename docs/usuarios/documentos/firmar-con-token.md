@@ -19,9 +19,9 @@ Para firmar documentos con tu token físico (Feitian ePass2003) necesitas tener 
 
 **1. Descargar el instalador**
 
-Ir a [gdilatam.com/firmador](https://gdilatam.com/firmador) y hacer clic en **"Descargar FirmadorGDI"**.
+[Descargar FirmadorGDI-1.0.0.msi](https://pub-fc099117f5354b1da4281b0975740275.r2.dev/FirmadorGDI-1.0.0.msi){ .md-button .md-button--primary }
 
-El archivo se llama `FirmadorGDI-1.0.0.msi` y pesa menos de 1 MB.
+El archivo pesa menos de 1 MB.
 
 **2. Ejecutar el instalador**
 
@@ -49,25 +49,25 @@ Si aparece ese mensaje, la instalación fue exitosa. No es necesario abrir Firma
 
 Una vez instalado FirmadorGDI, el proceso de firma desde GDI es el siguiente:
 
-**1. Iniciar el proceso de firma**
+**1. Conectar el token**
+
+Antes de hacer clic en "Firmar", conectá el token Feitian al puerto USB. Si lo conectás después, FirmadorGDI no lo detecta y la firma se cancela automáticamente.
+
+**2. Iniciar el proceso de firma**
 
 Desde la [previsualización del documento](previsualizar-documento.md), hacer clic en **"Comenzar proceso de firma"** y luego en el botón **"Firmar"** cuando sea tu turno.
 
-**2. Autorizar la apertura de FirmadorGDI**
+**3. Autorizar la apertura de FirmadorGDI**
 
 Chrome muestra un cuadro de diálogo preguntando si permitís abrir FirmadorGDI. Hacer clic en **"Abrir FirmadorGDI"** (o "Permitir").
 
 ![Dialogo de Chrome para abrir FirmadorGDI](../capturas/chrome-abrir-firmadorgdi.png)
 
-**3. Conectar el token**
-
-Asegurate de tener el token Feitian conectado al puerto USB **antes** de hacer clic en "Firmar". Si el token no está conectado, FirmadorGDI muestra un error y la firma se cancela automáticamente.
-
 **4. Ingresar el PIN**
 
 FirmadorGDI muestra una ventana con los datos de tu token:
 
-- Nombre del titular (ej: *ARANGUREN, Santiago*)
+- Nombre del titular
 - CUIL
 - Fecha de vencimiento del certificado
 
@@ -90,7 +90,7 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
 ## Problemas frecuentes
 
 ??? question "FirmadorGDI no se abre al hacer clic en Firmar"
-    Verificar que FirmadorGDI esté instalado: hacer doble clic en el acceso directo del menú Inicio. Si no está instalado, descargarlo desde [gdilatam.com/firmador](https://gdilatam.com/firmador).
+    Verificar que FirmadorGDI esté instalado: hacer doble clic en el acceso directo del menú Inicio. Si no está instalado, [descargarlo aquí](https://pub-fc099117f5354b1da4281b0975740275.r2.dev/FirmadorGDI-1.0.0.msi).
 
     Si está instalado y aun así no se abre, intentar con Chrome (recomendado) en lugar de otro navegador.
 
