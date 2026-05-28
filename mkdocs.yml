@@ -122,6 +122,7 @@ nav:
           - Documento tipo NOTA: usuarios/documentos/documento-nota.md
           - Previsualizar Documento: usuarios/documentos/previsualizar-documento.md
           - Proceso de Firma: usuarios/documentos/proceso-de-firma.md
+          - Firmar con Token (FirmadorGDI): usuarios/documentos/firmar-con-token.md
           - Rechazar y Subsanar: usuarios/documentos/rechazar-y-subsanar.md
       - Expedientes:
           - usuarios/expedientes/index.md
