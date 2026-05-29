@@ -85,11 +85,11 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](certificados.md)
 
--   :material-backup-restore:{ .lg .middle } **Backups**
+-   :material-backup-restore:{ .lg .middle } **Backups (GDI Sync)**
 
     ---
 
-    Copias de seguridad de los datos de la organizacion.
+    Descarga una copia local y siempre actualizada de todos los datos y documentos del municipio.
 
     [:octicons-arrow-right-24: Ver seccion](backups.md)
 
@@ -112,7 +112,7 @@ El sidebar izquierdo del BackOffice contiene las siguientes secciones:
 | **Usuarios** | Gestion de usuarios | Documentado |
 | **Administracion** | Permisos de admin | Documentado |
 | **Certificados** | Certificados digitales | Proximamente |
-| **Backups** | Copias de seguridad | Proximamente |
+| **Backups** | Copia local de datos y documentos (GDI Sync) | Documentado |
 | **Integraciones** | Integraciones externas | No disponible |
 | **API Key** | Claves de API | No disponible |
 | **Auditorias** | Registros de auditoria | No disponible |

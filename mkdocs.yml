@@ -159,7 +159,7 @@ nav:
       - Usuarios: administradores/usuarios.md
       - Administracion: administradores/administracion.md
       - Certificados: administradores/certificados.md
-      - Backups: administradores/backups.md
+      - Backups (GDI Sync): administradores/backups.md
 
   - Desarrollo:
       - desarrollo/index.md
