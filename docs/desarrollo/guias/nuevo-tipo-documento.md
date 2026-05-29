@@ -196,8 +196,6 @@ TEMPLATE_MAP = {
 }
 ```
 
-Ver [PDFComposer Templates](../pdfcomposer/templates.md) para referencia de templates existentes.
-
 !!! tip "Template por defecto"
     La mayoria de los tipos de documento usan el template `default` (`plantilla.html`). Solo crea un template custom si el formato PDF difiere significativamente del estandar.
 

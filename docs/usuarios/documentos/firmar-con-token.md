@@ -61,8 +61,6 @@ Desde la [previsualización del documento](previsualizar-documento.md), hacer cl
 
 Chrome muestra un cuadro de diálogo preguntando si permitís abrir FirmadorGDI. Hacer clic en **"Abrir FirmadorGDI"** (o "Permitir").
 
-![Dialogo de Chrome para abrir FirmadorGDI](../capturas/chrome-abrir-firmadorgdi.png)
-
 **4. Ingresar el PIN**
 
 FirmadorGDI muestra una ventana con los datos de tu token:

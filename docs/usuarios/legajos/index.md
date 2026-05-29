@@ -69,7 +69,7 @@ Cada familia de registro define sus propios estados posibles. Los estados mas co
 | :material-archive-outline: **Archivado** | El legajo fue archivado y ya no esta en uso activo |
 
 !!! info "Estados personalizables"
-    Cada familia puede definir sus propios estados segun su necesidad. Por ejemplo, una familia de habilitaciones podria tener: *Ingresado*, *En revision*, *Aprobado*, *Rechazado*, *Vencido*. Los estados se configuran desde el [BackOffice](../../../administradores/familias-registro.md).
+    Cada familia puede definir sus propios estados segun su necesidad. Por ejemplo, una familia de habilitaciones podria tener: *Ingresado*, *En revision*, *Aprobado*, *Rechazado*, *Vencido*. Los estados se configuran desde el [BackOffice](../../administradores/familias-registro.md).
 
 !!! info "Quien puede cambiar el estado"
     Solo los usuarios con permiso de edicion sobre la familia de registro pueden cambiar el estado de un legajo. No hay restriccion de transiciones: cualquier estado puede pasar a cualquier otro. Los cambios de estado quedan registrados en el historial.
