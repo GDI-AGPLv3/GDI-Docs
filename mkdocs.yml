@@ -251,14 +251,12 @@ nav:
               - Schema RLM: desarrollo/database/schema-rlm.md
           - Deploy:
               - desarrollo/deploy/index.md
-              - Docker: desarrollo/deploy/railway.md
               - Cloudflare R2: desarrollo/deploy/cloudflare-r2.md
               - GitHub Actions: desarrollo/deploy/github-actions.md
       - Guias:
           - Desarrollo Local: desarrollo/guias/desarrollo-local.md
           - Nuevo Endpoint: desarrollo/guias/nuevo-endpoint.md
           - Nuevo Tipo de Documento: desarrollo/guias/nuevo-tipo-documento.md
-          - Nuevo Municipio: desarrollo/guias/nuevo-municipio.md
           - Troubleshooting: desarrollo/guias/troubleshooting.md
 
   - Glosario: glosario.md

@@ -157,6 +157,5 @@ Todas las credenciales se almacenan como variables de entorno (archivos `.env` o
 
 | Seccion | Contenido |
 |---------|-----------|
-| [Docker](railway.md) | Servicios, Docker Compose, networking, health checks |
 | [Cloudflare R2](cloudflare-r2.md) | Buckets, credenciales, API S3, estructura de keys |
 | [GitHub Actions](github-actions.md) | Workflows CI/CD, build de imagenes Docker |

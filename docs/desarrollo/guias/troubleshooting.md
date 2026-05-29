@@ -300,8 +300,6 @@ git checkout <commit-anterior>
 docker compose up -d --build <servicio>
 ```
 
-Ver [Docker](../deploy/railway.md) para la guia completa de deploy y rollback.
-
 ---
 
 ## Frontend: Error "Failed to fetch" al llamar al Backend

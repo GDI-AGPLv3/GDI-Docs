@@ -268,7 +268,3 @@ aws s3 ls s3://tenant-test-oficial/ \
 | Operaciones Class A (escritura) | Gratis primeras 1M/mes |
 | Operaciones Class B (lectura) | Gratis primeras 10M/mes |
 | Storage | Gratis primeros 10 GB/mes |
-| Egress | Gratis (sin cargos de salida) |
-
-!!! tip "Costos"
-    Cloudflare R2 no cobra por egress (trafico de salida), lo que lo hace significativamente mas economico que AWS S3 para servir PDFs a usuarios finales.
