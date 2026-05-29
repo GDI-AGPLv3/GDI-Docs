@@ -31,9 +31,6 @@ Tu maquina (script Python)  --->  Gateway de tu municipio  --->  Base de datos G
 
 El script se conecta al Gateway de tu municipio con una **API Key de backup**, descarga lo que cambio desde la ultima corrida y lo guarda localmente. Es de **solo lectura**: nunca modifica datos en GDI.
 
-!!! info "Los PDF no tienen costo extra"
-    Los documentos se descargan con enlaces temporales directos a Cloudflare R2. La descarga la hace tu maquina contra Cloudflare, no genera trafico ni costo del lado de GDI.
-
 ---
 
 ## Activacion (una sola vez)
