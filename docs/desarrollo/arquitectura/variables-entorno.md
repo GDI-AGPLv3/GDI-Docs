@@ -96,8 +96,8 @@ Integrado en GDI-Backend (`api_gateway/`). Comparte las variables del Backend ma
 | `GDI_BACKEND_URL` | URL del Backend | Si | `http://localhost:8000` (dev) / `http://{cliente}-backend-prd.internal:8080` (prd) |
 | `GDI_GATEWAY_URL` | URL del Gateway MCP | Si | `http://localhost:8005` (dev) / `http://{cliente}-gateway-prd.internal:8080` (prd) |
 | `INTERNAL_API_KEY` | API Key interna compartida con Backend (1 por ambiente) | Si | `(secreto)` |
-| `AUTH0_DOMAIN` | Dominio Auth0 | Si | `gdilatam.us.auth0.com` |
-| `AUTH0_AUDIENCE` | Audience Auth0 | Si | `https://gdilatam.us.auth0.com/api/v2/` |
+| `AUTH0_DOMAIN` | Dominio Auth0 | Si | `<your-tenant>.auth0.com` |
+| `AUTH0_AUDIENCE` | Audience Auth0 | Si | `https://<your-tenant>.auth0.com/api/v2/` |
 | `ALLOW_TEST_MODE` | Permite modo test sin auth (solo dev) | No | `false` (default en prd) |
 | `AI_WORKER_INTERVAL` | Intervalo del worker (segundos) | No | `60` (default) |
 | `AI_WORKER_BATCH_SIZE` | Documentos por batch | No | `10` (default) |

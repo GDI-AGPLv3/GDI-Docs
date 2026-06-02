@@ -213,11 +213,11 @@ Si un usuario tiene acceso a mas de una organizacion (municipalidad), el Gateway
     "tenants": [
         {
             "tenant_id": "uuid-municipio-a",
-            "name": "Municipalidad de San Martin"
+            "name": "Municipalidad del Futuro"
         },
         {
             "tenant_id": "uuid-municipio-b",
-            "name": "Municipalidad de Tres de Febrero"
+            "name": "Municipalidad del Futuro"
         }
     ]
 }

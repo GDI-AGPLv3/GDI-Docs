@@ -231,7 +231,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 {
   "document_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
   "official_number": "IF-2025-00012-SMG-ADGEN",
-  "pdf_url": "https://r2.gdilatam.com/municipio/documents/c3d4e5f6.pdf?X-Amz-Signature=abc123&X-Amz-Expires=600",
+  "pdf_url": "https://r2.your-domain.com/municipio/documents/c3d4e5f6.pdf?X-Amz-Signature=abc123&X-Amz-Expires=600",
   "expires_in": 600
 }
 ```

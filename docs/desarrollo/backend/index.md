@@ -62,7 +62,7 @@ Cliente (Frontend/MCP)
 | GDI-PDFComposer | `PDFCOMPOSER_URL` (env, Fly.io *.internal:8080) | Generar PDFs (preview, final, CAEX, PV, IFRLM) |
 | GDI-Notary | `NOTARY_URL` (env, Fly.io *.internal:8080) | Firma digital multi-firmante |
 | Cloudflare R2 | S3-compatible | Almacenamiento de PDFs |
-| Auth0 | `gdilatam.us.auth0.com` | Autenticacion OAuth 2.0 |
+| Auth0 | `<your-tenant>.auth0.com` | Autenticacion OAuth 2.0 |
 
 ## Variables de Entorno
 

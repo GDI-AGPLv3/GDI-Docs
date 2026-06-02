@@ -130,7 +130,7 @@ OPENROUTER_MODEL=openai/gpt-4.1-nano
 OPENROUTER_FAST_MODEL=openai/gpt-4.1-nano
 EMBEDDINGS_MODEL=openai/text-embedding-3-small
 GDI_BACKEND_URL=http://localhost:8000
-INTERNAL_API_KEY=gdi-internal-dev
+INTERNAL_API_KEY=your-internal-api-key
 AUTH0_DOMAIN=tu-tenant.us.auth0.com
 AUTH0_AUDIENCE=https://api.tu-dominio.com
 ```

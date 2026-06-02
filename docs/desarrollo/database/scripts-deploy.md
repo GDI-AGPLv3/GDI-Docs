@@ -107,7 +107,7 @@ Template para crear una organizacion nueva. Contiene **9 placeholders** que debe
 | Placeholder | Ejemplo | Descripcion |
 |-------------|---------|-------------|
 | `{SCHEMA_NAME}` | `201_otra` | Nombre del schema |
-| `{MUNICIPALITY_NAME}` | `Municipalidad de Buenos Aires` | Nombre completo de la organizacion |
+| `{MUNICIPALITY_NAME}` | `Municipalidad del Futuro` | Nombre completo de la organizacion |
 | `{ACRONYM}` | `BSAS` | Acronimo (2-4 letras) |
 | `{COUNTRY}` | `AR` | Codigo de pais |
 | `{SCHEMA_NUMBER}` | `101` | Numero auto-incremental |

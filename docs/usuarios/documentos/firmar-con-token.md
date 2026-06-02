@@ -19,7 +19,7 @@ Para firmar documentos con tu token físico (Feitian ePass2003) necesitas tener 
 
 **1. Descargar el instalador**
 
-[Descargar FirmadorGDI-1.0.0.msi](https://pub-fc099117f5354b1da4281b0975740275.r2.dev/FirmadorGDI-1.0.0.msi){ .md-button .md-button--primary }
+[Descargar FirmadorGDI-1.0.0.msi](https://your-r2-public.r2.dev/FirmadorGDI-1.0.0.msi){ .md-button .md-button--primary }
 
 El archivo pesa menos de 1 MB.
 
@@ -88,7 +88,7 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
 ## Problemas frecuentes
 
 ??? question "FirmadorGDI no se abre al hacer clic en Firmar"
-    Verificar que FirmadorGDI esté instalado: hacer doble clic en el acceso directo del menú Inicio. Si no está instalado, [descargarlo aquí](https://pub-fc099117f5354b1da4281b0975740275.r2.dev/FirmadorGDI-1.0.0.msi).
+    Verificar que FirmadorGDI esté instalado: hacer doble clic en el acceso directo del menú Inicio. Si no está instalado, [descargarlo aquí](https://your-r2-public.r2.dev/FirmadorGDI-1.0.0.msi).
 
     Si está instalado y aun así no se abre, intentar con Chrome (recomendado) en lugar de otro navegador.
 

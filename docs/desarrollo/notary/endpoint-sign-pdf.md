@@ -62,7 +62,7 @@ El body es el PDF firmado en bytes.
 
 ```bash
 curl -X POST "http://localhost:8001/sign-pdf" \
-     -H "X-API-Key: miapikey" \
+     -H "X-API-Key: your-api-key-here" \
      -F "pdf_file=@documento.pdf" \
      -F "name=Juan Perez" \
      -F "seal=Director" \
@@ -78,7 +78,7 @@ curl -X POST "http://localhost:8001/sign-pdf" \
 
 ```bash
 curl -X POST "http://localhost:8001/sign-pdf" \
-     -H "X-API-Key: miapikey" \
+     -H "X-API-Key: your-api-key-here" \
      -F "pdf_file=@documento.pdf" \
      -F "name=Maria Lopez" \
      -F "seal=Secretaria" \

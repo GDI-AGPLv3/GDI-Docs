@@ -98,16 +98,16 @@ http://<app-name>.internal:8080
 
 ```bash
 # Backend → PDFComposer (compartido entre todos los clientes)
-PDFCOMPOSER_URL=http://gdi-pdfcomposer-prd.internal:8080
+PDFCOMPOSER_URL=http://<your-pdfcomposer-prd-app>.internal:8080
 
 # Backend → Notary (compartido entre todos los clientes)
-NOTARY_URL=http://gdi-notary-prd.internal:8080
+NOTARY_URL=http://<your-notary-app>.internal:8080
 
 # Backend → AgenteLANG (dedicado por cliente)
-AGENT_URL=http://aries-agentelang-prd.internal:8080
+AGENT_URL=http://<your-app>-agentelang-prd.internal:8080
 
 # AgenteLANG → Backend (por cliente)
-GDI_BACKEND_URL=http://aries-backend-prd.internal:8080
+GDI_BACKEND_URL=http://<your-backend-app>.internal:8080
 ```
 
 **En desarrollo local:**
@@ -130,16 +130,13 @@ GDI_BACKEND_URL=http://localhost:8000
 Los frontends y clientes externos acceden via URLs publicas de Fly.io o dominios custom de Vercel:
 
 ```bash
-# Frontends en Vercel (PRD)
-https://arg.gdilatam.com       # GDI-FRONTEND ARG
-https://aries.gdilatam.com     # GDI-FRONTEND ARIES
-https://demo.gdilatam.com      # GDI-FRONTEND DEMO
-https://arg-admin.gdilatam.com # GDI-BackOffice-Front ARG
+# Frontends en Vercel (PRD) - un subdominio por cliente/ambiente
+https://cliente.your-domain.com        # GDI-FRONTEND
+https://cliente-admin.your-domain.com  # Panel de administracion
 
 # APIs publicas en Fly.io (PRD)
-https://arg-backend-prd.fly.dev/api/   # Backend ARG
-https://aries-backend-prd.fly.dev/api/ # Backend ARIES
-https://arg-gateway-prd.fly.dev/mcp    # MCP Server ARG
+https://<your-backend-app>.fly.dev/api/   # Backend
+https://<your-gateway-app>.fly.dev/mcp    # MCP Server
 ```
 
 ### Comunicacion Externa

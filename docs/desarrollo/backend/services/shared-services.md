@@ -211,7 +211,7 @@ def get_signer_data(user_id: str, *, schema_name: str) -> Dict[str, str]:
         "full_name": "Juan Perez",
         "seal": "Subsecretario de Gestion",
         "department_name": "Administracion General",
-        "municipality_name": "Municipalidad de Test"
+        "municipality_name": "Municipalidad del Futuro"
     }
     """
 ```

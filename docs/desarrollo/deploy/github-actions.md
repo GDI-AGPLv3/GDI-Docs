@@ -10,7 +10,7 @@ Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente
 
 ## Repositorios
 
-Cada servicio es un repositorio independiente en la organizacion GitHub (GDI-LIVE):
+Cada servicio es un repositorio independiente en la organizacion GitHub (your-org):
 
 | Repositorio | Servicio | Stack | Deploy |
 |-------------|----------|-------|--------|
@@ -129,12 +129,12 @@ Cada cliente tiene su propio `fly.{cliente}.toml` y `fly.{cliente}.gateway.toml`
 
 | Config | App destino |
 |--------|------------|
-| `fly.demo.toml` | `demo-backend-prd` |
-| `fly.demo.gateway.toml` | `demo-gateway-prd` |
-| `fly.arg.toml` | `arg-backend-prd` |
-| `fly.arg.gateway.toml` | `arg-gateway-prd` |
-| `fly.aries.toml` | `aries-backend-prd` |
-| `fly.aries.gateway.toml` | `aries-gateway-prd` |
+| `fly.demo.toml` | `<your-backend-app>` |
+| `fly.demo.gateway.toml` | `<your-gateway-app>` |
+| `fly.arg.toml` | `<your-backend-app>` |
+| `fly.arg.gateway.toml` | `<your-gateway-app>` |
+| `fly.aries.toml` | `<your-backend-app>` |
+| `fly.aries.gateway.toml` | `<your-gateway-app>` |
 
 !!! info "Health checks entre clientes"
     El workflow espera que DEMO este healthy antes de deployar ARG, y que ARG este healthy antes de deployar ARIES. Si un health check falla, los clientes siguientes no reciben el deploy.
@@ -178,7 +178,7 @@ Los siguientes secrets se configuran en cada repositorio o a nivel de organizaci
 
 **A nivel de organizacion (recomendado):**
 
-1. Ir a la organizacion GDI-LIVE en GitHub
+1. Ir a la organizacion your-org en GitHub
 2. **Settings** > **Secrets and variables** > **Actions**
 3. Agregar secrets compartidos y seleccionar repositorios que pueden acceder
 

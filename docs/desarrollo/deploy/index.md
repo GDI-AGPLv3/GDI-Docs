@@ -9,7 +9,7 @@ GDI Latam opera sobre una arquitectura cloud distribuida en cuatro plataformas p
 | **Fly.io** | Hosting de backends, microservicios y PostgreSQL | 25 apps (7 DEV + 16 PRD + 2 CERO1) |
 | **Vercel** | Hosting de frontends Next.js | 9 proyectos (DEV + PRD por cliente) |
 | **Cloudflare R2** | Almacenamiento de objetos (S3-compatible) | Buckets para PDFs oficiales, PDFs pendientes de firma, assets |
-| **Auth0** | Identidad y autenticacion | OAuth 2.0, JWT, SSO para todas las aplicaciones — tenant: `gdilatam.us.auth0.com` |
+| **Auth0** | Identidad y autenticacion | OAuth 2.0, JWT, SSO para todas las aplicaciones — tenant: `<your-tenant>.auth0.com` |
 
 ---
 
@@ -49,7 +49,7 @@ graph TB
         end
 
         subgraph Data["Datos"]
-            PG["PostgreSQL 17<br/>+ pgvector<br/>(gdi-postgres-dev / {cliente}-postgres-prd)"]
+            PG["PostgreSQL 17<br/>+ pgvector<br/>(<your-postgres-app> / {cliente}-postgres-prd)"]
         end
     end
 
@@ -98,8 +98,8 @@ En produccion, GDI-PDFComposer y GDI-Notary son **internal-only**: no tienen IP 
 
 | Servicio | Stack | Puerto local | App Fly.io PRD | URL interna PRD |
 |----------|-------|--------------|----------------|-----------------|
-| GDI-PDFComposer | FastAPI, Jinja2, WeasyPrint, PyMuPDF | 8002 | `gdi-pdfcomposer-prd` | `gdi-pdfcomposer-prd.internal:8080` |
-| GDI-Notary | FastAPI, pyHanko, PyMuPDF | 8001 | `gdi-notary-prd` | `gdi-notary-prd.internal:8080` |
+| GDI-PDFComposer | FastAPI, Jinja2, WeasyPrint, PyMuPDF | 8002 | `<your-pdfcomposer-prd-app>` | `<your-pdfcomposer-prd-app>.internal:8080` |
+| GDI-Notary | FastAPI, pyHanko, PyMuPDF | 8001 | `<your-notary-app>` | `<your-notary-app>.internal:8080` |
 | GDI-AgenteLANG | FastAPI, LangGraph, pgvector | 8004 | `{cliente}-agentelang-prd` | `{cliente}-agentelang-prd.internal:8080` |
 
 ### Base de Datos
@@ -125,8 +125,8 @@ Browser → https://tu-frontend.tu-dominio.com → https://tu-backend.tu-dominio
 Los backends se comunican con los microservicios a traves de la red privada de Fly.io, usando el hostname `*.internal` con puerto `8080`:
 
 ```
-GDI-Backend → http://gdi-pdfcomposer-prd.internal:8080
-GDI-Backend → http://gdi-notary-prd.internal:8080
+GDI-Backend → http://<your-pdfcomposer-prd-app>.internal:8080
+GDI-Backend → http://<your-notary-app>.internal:8080
 GDI-Backend → http://{cliente}-agentelang-prd.internal:8080
 ```
 

@@ -89,7 +89,7 @@ python create_municipio.py
 
   --- Datos del municipio ---
 
-  Nombre del municipio (ej: Municipalidad de La Plata): Municipalidad de La Plata
+  Nombre del municipio (ej: Municipalidad del Futuro): Municipalidad del Futuro
   Acronimo (4 chars max, ej: LPLA): LPLA
   Codigo pais (2 chars) [AR]: AR
   Ciudad (ej: La Plata, Buenos Aires): La Plata
@@ -103,7 +103,7 @@ python create_municipio.py
 ======================================================================
   RESUMEN - Nuevo Municipio
 ======================================================================
-  Nombre:          Municipalidad de La Plata
+  Nombre:          Municipalidad del Futuro
   Acronimo:        LPLA
   Pais:            AR
   Ciudad:          La Plata
