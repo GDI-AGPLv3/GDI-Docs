@@ -84,7 +84,7 @@ La actuacion interna permite solicitar la intervencion de otro sector del organi
 |-------|------|:-----------:|-------------|
 | **Sector Solicitante** | Selector desplegable | Si | Sector desde el cual se realiza la solicitud. Se precarga con el sector del usuario |
 | **Sector a Asignar** | Selector desplegable | Si | Sector al que se solicita la intervencion |
-| **Responsable** | Selector desplegable | No | Usuario especifico dentro del sector destino. Proximamente (actualmente deshabilitado) |
+| **Responsable** | Selector desplegable | No | Usuario especifico dentro del sector destino. Se habilita luego de seleccionar el sector |
 | **Motivo** | Textarea | Si | Descripcion de lo que se solicita. Minimo 5 caracteres, maximo 254 caracteres (se muestra contador) |
 | **Asentar en Expediente** | Checkbox | No | Si esta marcado, la accion queda registrada en el historial oficial del expediente. Activado por defecto |
 
@@ -98,6 +98,9 @@ La actuacion interna permite solicitar la intervencion de otro sector del organi
 | **Cancelar** | Cierra el formulario sin crear la actuacion |
 | **Confirmar** | Crea la actuacion interna. Se habilita cuando todos los campos obligatorios estan completos |
 
+!!! info "Actualizacion de responsables"
+    Si se selecciono un **Responsable** en el formulario, el sistema lo registra automaticamente como responsable del expediente al confirmar la actuacion.
+
 ---
 
 ## Transferencia
@@ -106,6 +109,26 @@ La transferencia **mueve el control** del expediente a otro sector. A diferencia
 
 !!! warning "Accion irreversible"
     Al transferir un expediente, el sector de origen pierde el control administrativo. Solo el nuevo sector administrador podra transferirlo nuevamente o realizar acciones sobre el.
+
+### Formulario
+
+| Campo | Tipo | Obligatorio | Descripcion |
+|-------|------|:-----------:|-------------|
+| **Sector que Transfiere** | Texto fijo (no editable) | — | Sector administrador actual. Se muestra automaticamente y no puede cambiarse |
+| **Sector Destino** | Selector desplegable | Si | Sector al que se cede el control del expediente |
+| **Responsable** | Selector desplegable | No | Usuario del sector destino que quedara como responsable del expediente. Se habilita luego de seleccionar el sector destino |
+| **Motivo** | Textarea | Si | Descripcion de la razon de la transferencia. Minimo 5 caracteres, maximo 254 caracteres |
+| **Asentar en Expediente** | Checkbox | No | Si esta marcado, la accion queda registrada en el historial oficial del expediente. Activado por defecto |
+
+### Botones del formulario
+
+| Boton | Accion |
+|-------|--------|
+| **Cancelar** | Cierra el formulario sin transferir |
+| **Confirmar** | Ejecuta la transferencia. Se habilita cuando Sector Destino y Motivo estan completos |
+
+!!! info "Actualizacion de responsables"
+    Al confirmar la transferencia, el sistema actualiza automaticamente el responsable del expediente segun el usuario seleccionado en el formulario.
 
 ---
 
@@ -131,3 +154,9 @@ Solicita una revision automatica de los documentos del expediente utilizando int
 
 ??? question "Puedo deshacer una transferencia?"
     No directamente. Una vez transferido, solo el nuevo sector administrador puede volver a transferir el expediente al sector original.
+
+??? question "La transferencia genera algun documento en el expediente?"
+    Si el checkbox **"Asentar en Expediente"** esta activado (que es el valor por defecto), la transferencia genera un documento de pase (PV) que queda registrado en el expediente.
+
+??? question "Quien puede ver el campo Responsable en los formularios?"
+    El campo Responsable es opcional en ambos formularios (actuacion interna y transferencia). Solo se habilita luego de seleccionar el sector destino y muestra los usuarios de ese sector disponibles para ser designados.

@@ -8,6 +8,10 @@ Un legajo es una ficha digital que agrupa campos de datos verificables sobre un 
 
 ![Listado de legajos](../capturas/legajos-lista.png)
 
+El listado muestra cada legajo como una **card** con la siguiente informacion en una sola fila: codigo de familia, nombre del legajo, estado, numero oficial (con boton para copiar), proxima fecha de vencimiento (en amarillo si vence en 30 dias o menos) y fecha de ultima actualizacion. Si el legajo tiene un resumen generado por IA, aparece en italica debajo del nombre.
+
+---
+
 ## Para que sirve
 
 | Uso | Ejemplo |
@@ -89,6 +93,19 @@ El acceso a los legajos se gestiona con permisos granulares por familia de regis
 
 !!! warning "Editar no es verificar"
     Un usuario que puede editar no necesariamente puede verificar. La verificacion es un paso separado que requiere su propio permiso. Ver [Verificacion](verificacion.md) para mas detalle.
+
+---
+
+## Pestanas del detalle de legajo
+
+Al abrir un legajo, la vista de detalle tiene cuatro pestanas:
+
+| Pestana | Contenido |
+|---------|-----------|
+| **Datos** | Campos del legajo, documentos vinculados, expedientes vinculados, relaciones con otros legajos |
+| **Mapa** | Proximamente disponible |
+| **Movimientos** | Historial completo de cambios (estados, ediciones, verificaciones, vinculaciones) |
+| **Asistente** | Proximamente disponible |
 
 ---
 

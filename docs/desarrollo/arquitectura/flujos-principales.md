@@ -171,11 +171,11 @@ sequenceDiagram
     participant U as Usuario
     participant FE as Frontend
     participant AG as AgenteLANG
-    participant R as Router (Llama 3.3)
+    participant R as Router (GPT-4.1-nano)
     participant N as Nodo Especializado
     participant BE as Backend
     participant PG as PostgreSQL
-    participant LLM as Respond (Gemini Flash)
+    participant LLM as Respond (GPT-4.1-nano)
 
     U->>FE: Escribe mensaje en chat
     FE->>AG: POST /api/v1/chat (message + JWT)
@@ -216,8 +216,8 @@ sequenceDiagram
 
 | Modelo | Uso | Costo |
 |--------|-----|-------|
-| Llama 3.3 70B (FREE) | Router - Clasificacion de intent | Gratis |
-| Gemini Flash 2.0 | Nodos especializados + Respuesta final | USD 0.10/1M tokens input |
+| GPT-4.1-nano (primary) | Router + Nodos especializados + Respuesta final | ~USD 0.10/1M tokens input, ~0.40/1M output |
+| Gemini 2.0 Flash (fallback) | Fallback si GPT-4.1-nano no responde | Variable |
 
 **Case Chat** (`/api/v1/cases/{id}/chat`): Un chat focalizado que precarga todo el contexto del expediente. No necesita Router porque todas las consultas son sobre ese expediente.
 
@@ -253,7 +253,7 @@ sequenceDiagram
     Note over C,PG: Fase 3: Uso de Tools MCP
     C->>M: POST /mcp (tools/list, Bearer JWT)
     M->>M: Valida JWT, extrae user_id
-    M-->>C: 14 tools disponibles
+    M-->>C: 42 tools disponibles
 
     C->>M: POST /mcp (tools/call: search_cases)
     M->>PG: Query con schema del usuario
@@ -266,13 +266,19 @@ sequenceDiagram
     M-->>C: Historial con resumen IA
 ```
 
-**14 Tools MCP disponibles:**
+**42 Tools MCP disponibles** (lectura y escritura). Resumen por categoria (lista completa en [MCP Server](../gateway/mcp-server.md)):
 
 | Categoria | Tools | Descripcion |
 |-----------|-------|-------------|
-| Expedientes | `search_cases`, `get_case`, `get_case_history`, `get_case_documents`, `get_case_permissions` | Busqueda y consulta de expedientes |
-| Documentos | `search_documents`, `get_document`, `get_document_content`, `get_pending_signatures` | Busqueda y consulta de documentos |
-| Sistema | `get_document_types`, `get_sectors`, `get_user_info`, `get_case_templates` | Informacion del sistema |
+| Expedientes (lectura) | `search_cases`, `get_case`, `get_case_by_number`, `get_case_history`, `get_case_documents`, `get_case_permissions`, `get_case_templates`, `get_case_responsibles` | Busqueda y consulta de expedientes |
+| Expedientes (gestion) | `prepare_assignment`, `assign_case`, `add_case_responsible`, `remove_case_responsible`, `propose_document`, `reject_proposal` | Asignacion, responsables y propuestas |
+| Documentos (lectura) | `search_documents`, `search_document_by_number`, `get_document`, `get_document_content`, `get_document_types`, `get_document_states`, `get_pending_signatures`, `get_signature_details` | Busqueda y consulta de documentos |
+| Documentos (escritura) | `create_document`, `save_document`, `start_signing`, `reject_document` | Creacion, edicion y firma |
+| Notas | `get_notes`, `get_note_detail`, `get_sent_notes`, `get_archived_notes` | Notas recibidas, enviadas y archivadas |
+| Memos | `get_memos`, `get_memo_detail`, `get_sent_memos`, `get_archived_memos` | Memos recibidos, enviados y archivados |
+| Legajos / RLM | `get_record`, `search_records`, `get_registry_families` | Registros y familias de registro |
+| Busqueda semantica | `semantic_search` | Busqueda por significado (pgvector) |
+| Usuarios / Sistema | `search_users`, `get_user_info`, `list_my_tenants` | Usuarios y multi-tenant |
 | Utilidades | `get_agent_guide` | Guia completa para el agente |
 
 ---
@@ -285,7 +291,7 @@ El AIWorker de GDI-AgenteLANG procesa documentos en background para habilitar bu
 sequenceDiagram
     participant W as AIWorker (cada 60s)
     participant PG as PostgreSQL
-    participant LLM as LLM (Gemini Flash)
+    participant LLM as LLM (GPT-4.1-nano)
     participant EMB as Embeddings (OpenAI)
     participant R2 as Cloudflare R2
 
@@ -324,7 +330,7 @@ sequenceDiagram
         W->>R2: Download PDF
         R2-->>W: PDF bytes
         W->>W: PyMuPDF (PDF a imagenes PNG)
-        W->>LLM: Gemini Flash 1.5 Vision
+        W->>LLM: GPT-4.1-nano (multimodal, vision)
         LLM-->>W: Texto transcrito
         W->>PG: UPDATE content (con marcador IA Vision)
     end

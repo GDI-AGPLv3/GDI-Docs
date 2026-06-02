@@ -126,14 +126,13 @@ FALLBACK_TO_VISUAL=true
 ```bash
 DATABASE_URL=postgresql://postgres:password@localhost:5432/railway
 OPENROUTER_API_KEY=sk-or-your-key
-OPENROUTER_MODEL=google/gemini-2.0-flash-001
-OPENROUTER_FAST_MODEL=meta-llama/llama-3.3-70b-instruct:free
+OPENROUTER_MODEL=openai/gpt-4.1-nano
+OPENROUTER_FAST_MODEL=openai/gpt-4.1-nano
 EMBEDDINGS_MODEL=openai/text-embedding-3-small
 GDI_BACKEND_URL=http://localhost:8000
 INTERNAL_API_KEY=gdi-internal-dev
 AUTH0_DOMAIN=tu-tenant.us.auth0.com
 AUTH0_AUDIENCE=https://api.tu-dominio.com
-ENABLED_SCHEMAS=["200_muni"]
 ```
 
 Ver referencia completa en [Variables de Entorno](../arquitectura/variables-entorno.md).

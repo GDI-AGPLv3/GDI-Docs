@@ -8,29 +8,35 @@ Administra los usuarios del sistema: crear, editar, asignar sectores, roles, sel
 
 ## Listado de Usuarios
 
-La tabla muestra todos los usuarios de la organizacion con paginacion.
+La tabla muestra todos los usuarios de la organizacion.
 
 | Columna | Descripcion |
 |---------|-------------|
-| **Usuario** | Avatar con inicial, nombre completo y email |
-| **Sector / Depto** | Sector principal y departamento al que pertenece |
-| **Roles** | Rol asignado: `Funcionario`, `Administrador` |
-| **Estado** | `Activo` o `Inactivo` |
-| **Ultimo Acceso** | Fecha del ultimo login (*Nunca* si no ha ingresado) |
+| **Usuario** | Avatar con inicial (o foto de perfil), nombre completo y email. Si el usuario es titular de una reparticion, se muestra la etiqueta **Titular** |
+| **Reparticion / Sector** | Reparticion y acronimo del sector principal al que pertenece |
+| **Rol** | Rol principal asignado (ej: `Funcionario`, `Administrador`) |
+| **Estado** | `Activo`, `Pendiente` (cuenta creada pero no activada) o `Inactivo` |
+| **Ultimo acceso** | Fecha del ultimo login (*nunca* si no ha ingresado) |
 
-### Acciones del listado
+### Filtros y acciones del listado
 
 | Accion | Descripcion |
 |--------|-------------|
 | **Buscar** | Filtrar por nombre o email |
-| **Creacion Masiva** | Crear multiples usuarios a la vez |
-| **Nuevo Usuario** | Crear un usuario individual |
+| **Filtro por reparticion** | Mostrar solo usuarios de una reparticion especifica |
+| **Filtro por estado** | Mostrar solo Activos, Inactivos o Pendientes |
+| **Creacion masiva** | Crear multiples usuarios a la vez (icono de lista) |
+| **Nuevo usuario** | Crear un usuario individual (boton primario) |
+
+### Detalle del usuario (drawer)
+
+Al hacer clic en cualquier fila de la tabla se abre un **drawer lateral** (panel deslizable sobre la derecha del contenedor) con el detalle completo del usuario. El drawer no empuja el contenido: se superpone sobre la tabla.
 
 ---
 
 ## Crear Usuario
 
-Al presionar **Nuevo Usuario** se abre el formulario de creacion.
+Al presionar **Nuevo usuario** se abre un **modal** con el formulario de creacion.
 
 ### Campos del formulario
 
@@ -80,7 +86,7 @@ Dependiendo del metodo elegido, el sistema dispara un flujo diferente:
 
 ## Creacion Masiva (CSV)
 
-Permite crear multiples usuarios a la vez importando un archivo CSV.
+Al presionar el boton de **Creacion masiva** se abre un **modal** que permite crear multiples usuarios a la vez importando un archivo CSV.
 
 ### Formato del CSV
 

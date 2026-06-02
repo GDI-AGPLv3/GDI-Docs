@@ -1,7 +1,7 @@
 # Firma Visual
 
 El modulo `app/signature_inserter.py` implementa la firma visual de documentos PDF
-usando **ReportLab** para generar el overlay y **PyPDF2** para combinarlo con el PDF original.
+usando **ReportLab** para generar el overlay y **pypdf** (>=4) para combinarlo con el PDF original.
 
 !!! info "Uso actual"
     La firma visual se usa como fallback en ambiente `test` cuando no hay
@@ -67,7 +67,7 @@ for page_num, page in enumerate(pdf_reader.pages):
 ```python
 def create_signature_overlay(signature_params: Dict, x: float, y: float):
     overlay_buffer = io.BytesIO()
-    c = canvas.Canvas(overlay_buffer, pagesize=letter)
+    c = canvas.Canvas(overlay_buffer, pagesize=A4)
 
     # Rectangulo invisible
     c.setStrokeColor(white)
@@ -109,11 +109,11 @@ def create_signature_overlay(signature_params: Dict, x: float, y: float):
 |---------|-------------|-------------|
 | Criptografia | No | Si (SHA256 + certificado) |
 | Verificable en Adobe | No | Si (clic en la firma) |
-| Timestamp | Solo visual | TSA criptografico |
+| Timestamp | Solo visual | TSA criptografico (con reintentos + circuit breaker) |
 | Footer | "Digitally Signed by TEST SERVER" | Sin footer (datos en metadatos) |
 | Nombre | Normal | MAYUSCULAS |
 | Fecha visible | Si (en footer) | No (en metadatos) |
-| Libreria | ReportLab + PyPDF2 | pyHanko |
+| Libreria | ReportLab + pypdf | pyHanko |
 
 ## Excepciones
 

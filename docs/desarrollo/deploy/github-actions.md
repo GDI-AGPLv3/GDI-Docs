@@ -2,24 +2,39 @@
 
 ## Vision General
 
-GDI Latam usa GitHub como plataforma de repositorios. El CI/CD se implementa con GitHub Actions para construir imagenes Docker y publicarlas en un container registry.
+GDI Latam usa GitHub Actions para CI/CD. Cada push a las ramas `dev` o `prd` dispara el workflow correspondiente, que corre lint/tests y luego hace deploy directamente a Fly.io usando `flyctl`.
+
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push (sin workflow manual).
 
 ---
 
 ## Repositorios
 
-Cada servicio es un repositorio independiente en la organizacion GitHub:
+Cada servicio es un repositorio independiente en la organizacion GitHub (GDI-LIVE):
 
-| Repositorio | Servicio | Stack |
-|-------------|----------|-------|
-| GDI-FRONTEND | GDI-FRONTEND | Next.js 15 |
-| GDI-Backend | GDI-Backend | FastAPI |
-| GDI-BackOffice-Front | GDI-BackOffice-Front | Next.js 15 |
-| GDI-BackOffice-Back | GDI-BackOffice-Back | FastAPI |
-| GDI-PDFComposer | GDI-PDFComposer | FastAPI |
-| GDI-Notary | GDI-Notary | FastAPI + pyHanko |
-| GDI-AgenteLANG | GDI-AgenteLANG | FastAPI + LangGraph |
-| GDI-BD | -- | Scripts SQL, migraciones |
+| Repositorio | Servicio | Stack | Deploy |
+|-------------|----------|-------|--------|
+| GDI-FRONTEND | GDI-FRONTEND | Next.js 15 | Vercel (auto) |
+| GDI-Backend | GDI-Backend + MCP Gateway | FastAPI | Fly.io via Actions |
+| GDI-BackOffice-Front | GDI-BackOffice-Front | Next.js 15 | Vercel (auto) |
+| GDI-BackOffice-Back | GDI-BackOffice-Back | FastAPI | Fly.io via Actions |
+| GDI-PDFComposer | GDI-PDFComposer | FastAPI | Fly.io via Actions |
+| GDI-Notary | GDI-Notary | FastAPI + pyHanko | Fly.io via Actions |
+| GDI-AgenteLANG | GDI-AgenteLANG | FastAPI + LangGraph | Fly.io via Actions |
+| GDI-BD | -- | Scripts SQL, migraciones | Manual |
+
+---
+
+## Ramas y Ambientes
+
+| Rama | Deploy | Ambiente |
+|------|--------|----------|
+| `dev` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: gdi-dev) |
+| `prd` | GitHub Actions → Fly.io PRD | `{cliente}-*-prd` (org: gdilatam) |
+| `feat/*`, `fix/*`, etc. | Sin deploy automatico | Solo CI (lint) |
+
+!!! warning "Nunca hacer deploy manual"
+    Excepto para PostgreSQL, el deploy siempre es via `git push`. Nunca ejecutar `flyctl deploy` manualmente en apps de backend/microservicios.
 
 ---
 
@@ -27,153 +42,131 @@ Cada servicio es un repositorio independiente en la organizacion GitHub:
 
 ### Como Funciona
 
-1. Desarrollador hace `git push` a la rama principal
-2. GitHub Actions ejecuta el workflow
-3. Se construye la imagen Docker del servicio
-4. Se ejecutan tests (si aplica)
-5. Se publica la imagen en el container registry
-6. Se despliega la nueva imagen en el servidor
+1. Desarrollador hace `git push` a `dev` o `prd`
+2. GitHub Actions ejecuta el workflow correspondiente
+3. Se corre lint (Ruff ASYNC) y tests (`pytest --collect-only`)
+4. Se hace deploy a Fly.io con `flyctl deploy --config fly.{env}.toml --remote-only`
 
 ```mermaid
 sequenceDiagram
     participant Dev as Desarrollador
     participant GH as GitHub
     participant CI as GitHub Actions
-    participant Reg as Container Registry
-    participant Srv as Servidor
+    participant Fly as Fly.io
 
-    Dev->>GH: git push
+    Dev->>GH: git push dev (o prd)
     GH->>CI: Trigger workflow
-    CI->>CI: Build imagen Docker
-    CI->>CI: Run tests
+    CI->>CI: Lint (Ruff ASYNC)
+    CI->>CI: Tests (pytest --collect-only)
     alt Tests exitosos
-        CI->>Reg: Push imagen
-        CI->>Srv: Deploy nueva imagen
+        CI->>Fly: flyctl deploy --remote-only
+        Fly-->>CI: Deploy completado
         CI-->>GH: Status: success
     else Tests fallidos
         CI-->>GH: Status: failure
-        Note over Srv: Servicio anterior sigue corriendo
+        Note over Fly: Servicio anterior sigue corriendo
     end
 ```
 
 ---
 
-## Workflow de Ejemplo
+## Workflow DEV (rama: dev)
 
-### Build y Push a GitHub Container Registry
+El workflow DEV es simple: lint → deploy en paralelo para backend y gateway.
 
 ```yaml
-# .github/workflows/deploy.yml
-name: Build and Deploy
+name: Deploy DEV
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest tests/ -v
-
-  build-and-push:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=sha,prefix=
-            type=raw,value=latest
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-```
-
-### Workflow para Servicios Next.js
-
-```yaml
-# .github/workflows/deploy.yml
-name: Build and Deploy Frontend
-
-on:
-  push:
-    branches: [main]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: true  # Si llega otro push, cancela el anterior
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+  lint:
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - run: ruff check --select ASYNC --exclude tests/ .
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  deploy-backend:
+    needs: lint
+    steps:
+      - uses: actions/checkout@v5
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+      - run: flyctl deploy --config fly.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+  deploy-gateway:
+    needs: lint
+    steps:
+      - run: flyctl deploy --config fly.gateway.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 ```
+
+---
+
+## Workflow PRD (rama: prd)
+
+El workflow PRD usa un patron de deploy en cascada: **DEMO primero** (con health check), luego **ARG** (con health check), luego **ARIES**. Esto permite detectar problemas en DEMO antes de afectar los clientes productivos.
+
+```mermaid
+graph TD
+    A["lint + tests"] --> B["deploy DEMO + DEMO Gateway (paralelo)"]
+    B --> C{"Health check DEMO OK?"}
+    C -->|Si| D["deploy ARG + ARG Gateway (paralelo)"]
+    C -->|No| E["Falla - ARG y ARIES NO se despliegan"]
+    D --> F{"Health check ARG OK?"}
+    F -->|Si| G["deploy ARIES + ARIES Gateway (paralelo)"]
+    F -->|No| H["Falla - ARIES NO se despliega"]
+```
+
+Cada cliente tiene su propio `fly.{cliente}.toml` y `fly.{cliente}.gateway.toml` en el repo:
+
+| Config | App destino |
+|--------|------------|
+| `fly.demo.toml` | `demo-backend-prd` |
+| `fly.demo.gateway.toml` | `demo-gateway-prd` |
+| `fly.arg.toml` | `arg-backend-prd` |
+| `fly.arg.gateway.toml` | `arg-gateway-prd` |
+| `fly.aries.toml` | `aries-backend-prd` |
+| `fly.aries.gateway.toml` | `aries-gateway-prd` |
+
+!!! info "Health checks entre clientes"
+    El workflow espera que DEMO este healthy antes de deployar ARG, y que ARG este healthy antes de deployar ARIES. Si un health check falla, los clientes siguientes no reciben el deploy.
+
+---
+
+## Servicios con Dockerfile
+
+Todos los servicios backend tienen su propio `Dockerfile`. Fly.io lo usa en el `[build]` del toml:
+
+| Servicio | Base Image | Notas |
+|----------|-----------|-------|
+| GDI-Backend | `python:3.12-slim` | Gunicorn + Uvicorn, multi-worker |
+| GDI-BackOffice-Back | `python:3.12-slim` | psycopg2 |
+| GDI-PDFComposer | `python:3.13-slim` | Usuario non-root, gunicorn config |
+| GDI-Notary | `python:3.11-slim` | Dependencias sistema (wget, fontconfig), fuentes, certificados |
+| GDI-AgenteLANG | `python:3.12-slim` | Dependencias sistema (gcc, libpq-dev) |
+
+### Frontends (Vercel)
+
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente a Vercel cuando se hace push a la rama conectada. No requieren Dockerfile ni workflow de Actions.
 
 ---
 
 ## GitHub Secrets
 
-Los siguientes secrets se configuran en cada repositorio (o a nivel de organizacion):
+Los siguientes secrets se configuran en cada repositorio o a nivel de organizacion:
 
 | Secret | Descripcion | Donde obtener |
 |--------|-------------|---------------|
-| `GITHUB_TOKEN` | Token automatico de GitHub | Disponible por defecto en Actions |
-| `DEPLOY_HOST` | IP o hostname del servidor | Administrador de infraestructura |
-| `DEPLOY_KEY` | SSH key para deploy al servidor | `ssh-keygen` en el servidor |
+| `FLY_API_TOKEN` | Token Fly.io para DEV (org: gdi-dev) | `flyctl tokens create deploy -o gdi-dev` |
+| `FLY_API_TOKEN_PRD` | Token Fly.io para PRD (org: gdilatam) | `flyctl tokens create deploy -o gdilatam` |
 
 ### Configurar Secrets
 
@@ -185,63 +178,25 @@ Los siguientes secrets se configuran en cada repositorio (o a nivel de organizac
 
 **A nivel de organizacion (recomendado):**
 
-1. Ir a la organizacion en GitHub
+1. Ir a la organizacion GDI-LIVE en GitHub
 2. **Settings** > **Secrets and variables** > **Actions**
-3. Agregar secrets compartidos
-4. Seleccionar repositorios que pueden acceder
+3. Agregar secrets compartidos y seleccionar repositorios que pueden acceder
 
 ---
 
-## Servicios con Dockerfile
-
-Todos los servicios backend tienen su propio `Dockerfile`:
-
-| Servicio | Base Image | Notas |
-|----------|-----------|-------|
-| GDI-Backend | `python:3.12-slim` | Gunicorn + Uvicorn, multi-worker |
-| GDI-BackOffice-Back | `python:3.12-slim` | psycopg2 |
-| GDI-PDFComposer | `python:3.11-slim` | Usuario non-root, gunicorn config |
-| GDI-Notary | `python:3.11-slim` | Dependencias sistema (wget, fontconfig), fuentes, certificados |
-| GDI-AgenteLANG | `python:3.11-slim` | Dependencias sistema (gcc, libpq-dev) |
-
-### Servicios Next.js (Node)
-
-Los frontends tambien se pueden construir como imagen Docker:
-
-```dockerfile
-# Dockerfile para Next.js
-FROM node:20-slim AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-FROM node:20-slim
-WORKDIR /app
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
----
-
-## Flujo Completo de un Deployment
+## Flujo Completo de un Deployment PRD
 
 ```mermaid
 graph TD
-    A["Desarrollador: git push"] --> B["GitHub Actions: workflow triggered"]
-    B --> C["Build imagen Docker"]
-    C --> D["Run tests"]
-    D --> E{"Tests exitosos?"}
-    E -->|Si| F["Push imagen al registry"]
-    E -->|No| G["Notificar error"]
-    F --> H["Deploy al servidor"]
-    H --> I["Health check"]
-    I -->|OK| J["Deploy completado"]
-    I -->|Falla| K["Rollback"]
+    A["git push prd"] --> B["GitHub Actions: deploy-prd.yml"]
+    B --> C["Lint (Ruff ASYNC)"]
+    C --> D["Tests (pytest --collect-only)"]
+    D --> E["flyctl deploy DEMO backend + gateway (paralelo)"]
+    E --> F["Health check /health DEMO (curl -f)"]
+    F --> G["flyctl deploy ARG backend + gateway (paralelo)"]
+    G --> H["Health check /health ARG (curl -f)"]
+    H --> I["flyctl deploy ARIES backend + gateway (paralelo)"]
+    I --> J["Deploy completado"]
 ```
 
 ---
@@ -262,11 +217,13 @@ git commit -m "feat(backend): add new endpoint for X"
 git push origin feat/nueva-funcionalidad
 
 # Crear Pull Request en GitHub
-# Review + merge a main = Deploy automatico
+# Review + merge a dev = Deploy DEV automatico
+
+# Cuando DEV esta verificado, merge dev → prd = Deploy PRD
 ```
 
-!!! tip "Proteccion de rama main"
-    Se recomienda configurar proteccion de rama en `main` para requerir Pull Request con al menos 1 review antes de merge. Esto evita deployments accidentales.
+!!! tip "Proteccion de rama prd"
+    Configura proteccion de rama en `prd` para requerir Pull Request con review antes de merge. Esto evita deployments accidentales a produccion.
 
 ### Commits
 
@@ -280,21 +237,21 @@ Seguir el formato convencional por repositorio:
 feat(backend): add document import endpoint
 fix(frontend): resolve PDF viewer hydration error
 refactor(notary): extract certificate loading logic
-docs(deploy): update Docker configuration guide
+docs(deploy): update Fly.io configuration guide
 ```
 
 ### Pre-deploy Checklist
 
 - [ ] Tests pasando localmente
-- [ ] Variables de entorno actualizadas en el servidor
-- [ ] Health check del servicio funciona
-- [ ] Sin credenciales hardcodeadas en el codigo
+- [ ] Secrets actualizados en Fly.io si hay variables nuevas (`flyctl secrets set`)
+- [ ] Health check del servicio funciona en DEV
+- [ ] Sin credenciales hardcodeadas en codigo ni en fly.*.toml
 - [ ] PR revisado y aprobado
-- [ ] Base de datos migrada si hay cambios de schema
+- [ ] Migraciones de BD ejecutadas si hay cambios de schema
 
 ### Post-deploy Checklist
 
-- [ ] Logs sin errores criticos (`docker compose logs -f <servicio>`)
+- [ ] Logs sin errores criticos (`flyctl logs -a <app>`)
 - [ ] Health check respondiendo 200
-- [ ] Funcionalidad principal testeada
+- [ ] Funcionalidad principal testeada en DEV antes de promover a prd
 - [ ] Servicios dependientes funcionando

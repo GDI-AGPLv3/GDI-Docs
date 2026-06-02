@@ -124,16 +124,46 @@ La metadata es visible al hacer clic en la firma en Adobe Reader:
 - **Reason**: Cargo - Departamento
 - **Location**: Entidad
 
-## Timestamp (TSA)
+## Timestamp (TSA) con reintentos y circuit breaker
+
+El cliente TSA usa `RetryingTimestamper` (wrapper sobre `HTTPTimeStamper`) con backoff
+exponencial y circuit breaker. La funcion `get_timestamp_client()` **nunca devuelve None**:
+si `TSA_URL` no esta configurado, lanza `PAdESTimestampError`.
 
 ```python
-TSA_URL = os.getenv("TSA_URL", "http://timestamp.digicert.com")
-
-def get_timestamp_client() -> Optional[timestamps.HTTPTimeStamper]:
-    if not TSA_URL:
-        return None
-    return timestamps.HTTPTimeStamper(TSA_URL)
+# Config
+TSA_URL     = os.getenv("TSA_URL", "http://timestamp.digicert.com")
+TSA_TIMEOUT = int(os.getenv("TSA_TIMEOUT", "3"))   # segundos por intento
+TSA_RETRIES = int(os.getenv("TSA_RETRIES", "2"))   # reintentos (total = retries + 1)
 ```
+
+### Logica de reintentos
+
+Con los valores default: 3 intentos x 3s + backoffs (0.2s + 0.6s) = ~9.8s maximo por firma.
+
+| Intento | Espera antes |
+|---------|-------------|
+| 1 | - |
+| 2 | 0.2s |
+| 3 | 0.6s |
+
+### Circuit breaker
+
+Protege contra TSA caido de forma sostenida. Implementado en `TsaCircuitBreaker`:
+
+| Estado | Comportamiento |
+|--------|---------------|
+| `CLOSED` | Normal, todas las llamadas pasan |
+| `OPEN` | Fail-fast: lanza `PAdESTsaUnavailableError` sin llamar al TSA |
+| `HALF_OPEN` | Deja pasar 1 request de prueba; exito → `CLOSED`, fallo → `OPEN` |
+
+- **Umbral de apertura**: 5 fallos consecutivos
+- **Cooldown**: 60 segundos en `OPEN` antes de pasar a `HALF_OPEN`
+- **Alcance**: por proceso Gunicorn (no compartido entre procesos)
+
+Cuando el circuit breaker esta `OPEN`, Notary devuelve `HTTP 503 TSA_UNAVAILABLE`
+independientemente de `FALLBACK_TO_VISUAL`, para que el Backend pueda distinguir
+"TSA caido" de "sin certificado".
 
 Servidores TSA publicos soportados:
 
@@ -144,22 +174,6 @@ Servidores TSA publicos soportados:
 | GlobalSign | `http://timestamp.globalsign.com/tsa/r6advanced1` |
 
 ## Otras funciones
-
-### sign_pdf_pades (solo criptografica)
-
-Firma sin representacion visual. Usada internamente.
-
-```python
-def sign_pdf_pades(
-    pdf_content: bytes,
-    cert: LoadedCertificate,
-    signer_name: str,
-    reason: Optional[str] = None,
-    location: Optional[str] = None,
-    include_timestamp: bool = True,
-    existing_signature_count: int = 0,
-) -> bytes:
-```
 
 ### count_pades_signatures
 
@@ -182,11 +196,12 @@ def verify_pades_signature(pdf_content: bytes) -> dict:
 
 ## Excepciones
 
-| Excepcion | Causa |
-|-----------|-------|
-| `PAdESSigningError` | Error general de firma |
-| `PAdESTimestampError` | Error al obtener timestamp del TSA |
-| `PAdESCertificateError` | Certificado invalido o expirado |
+| Excepcion | HTTP | Causa |
+|-----------|------|-------|
+| `PAdESSigningError` | 500 | Error general de firma |
+| `PAdESTimestampError` | 500 | Todos los reintentos al TSA fallaron |
+| `PAdESTsaUnavailableError` | 503 | Circuit breaker abierto (subclase de `PAdESTimestampError`) |
+| `PAdESCertificateError` | 400 | Certificado invalido o expirado |
 
 ## Configuracion en config.py
 

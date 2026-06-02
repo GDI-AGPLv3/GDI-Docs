@@ -9,12 +9,12 @@ API REST principal del sistema GDI Latam. Gestiona documentos, expedientes, firm
 | Lenguaje | Python | 3.12 |
 | Framework | FastAPI | latest |
 | Base de datos | PostgreSQL + pgvector | 17 |
-| ORM/Driver | psycopg2 (raw SQL) | - |
+| Driver BD | asyncpg (raw SQL async, sin ORM) | - |
 | Validacion | Pydantic | v2 |
 | Auth | Auth0 JWT (RS256) | - |
 | Storage | Cloudflare R2 (S3-compatible) | - |
-| Deploy | Docker | - |
-| Server | Gunicorn + Uvicorn | 8 workers |
+| Deploy | Docker (Fly.io) | - |
+| Server | Gunicorn + Uvicorn | 2 workers |
 
 ## Puerto
 
@@ -57,12 +57,12 @@ Cliente (Frontend/MCP)
 
 ## Integraciones Externas
 
-| Servicio | URL Interna (Docker) | Proposito |
-|----------|---------------------|-----------|
-| GDI-PDFComposer | `http://pdfcomposer:8002` | Generar PDFs (preview, final, CAEX, PV) |
-| GDI-Notary | `http://notary:8001` | Firma digital multi-firmante |
-| Cloudflare R2 | S3 API | Almacenamiento de PDFs |
-| Auth0 | `tu-tenant.us.auth0.com` | Autenticacion OAuth 2.0 |
+| Servicio | URL | Proposito |
+|----------|-----|-----------|
+| GDI-PDFComposer | `PDFCOMPOSER_URL` (env, Fly.io *.internal:8080) | Generar PDFs (preview, final, CAEX, PV, IFRLM) |
+| GDI-Notary | `NOTARY_URL` (env, Fly.io *.internal:8080) | Firma digital multi-firmante |
+| Cloudflare R2 | S3-compatible | Almacenamiento de PDFs |
+| Auth0 | `gdilatam.us.auth0.com` | Autenticacion OAuth 2.0 |
 
 ## Variables de Entorno
 
@@ -81,9 +81,12 @@ Cliente (Frontend/MCP)
 | `R2_ACCESS_KEY_ID` | R2 access key |
 | `R2_SECRET_ACCESS_KEY` | R2 secret |
 | `R2_ENDPOINT` | Endpoint R2 S3-compatible |
-| `TESTING_MODE` | `true`/`false` - bypass Auth0 en desarrollo |
-| `PGBOUNCER_TRANSACTION_MODE` | `true`/`false` - modo transaccional PgBouncer |
-| `FRONTEND_URL` | URL del frontend (CORS) |
+| `TESTING_MODE` | `true`/`false` - bypass Auth0 en desarrollo. Requiere `ALLOW_TESTING_MODE_LOCAL=true` en entornos locales sin FLY_APP_NAME |
+| `ALLOW_TESTING_MODE_LOCAL` | `true`/`false` - opt-in para activar TESTING_MODE localmente (fail-closed por defecto) |
+| `ASYNCPG_MIN_SIZE` | Minimo de conexiones en el pool (default `2`) |
+| `ASYNCPG_MAX_SIZE` | Maximo de conexiones en el pool (default `8`) |
+| `ASYNCPG_COMMAND_TIMEOUT` | Timeout de comandos SQL en segundos (default `60`) |
+| `FRONTEND_URL` | URL/s del frontend (CORS, soporta multiples separadas por coma) |
 
 ## Comandos
 

@@ -12,18 +12,24 @@ El ecosistema GDI utiliza tres protocolos de comunicacion:
 
 ## Tabla de Comunicaciones
 
-| Origen | Destino | Protocolo | Autenticacion | Puerto destino | URL tipo |
-|--------|---------|-----------|---------------|----------------|----------|
-| GDI-FRONTEND | GDI-Backend | REST | Auth0 JWT (Bearer) | 8000 | Public |
-| GDI-BackOffice-Front | GDI-BackOffice-Back | REST | Auth0 JWT (Bearer) | 8010 | Public |
-| GDI-Backend | GDI-PDFComposer | REST | API Key (`X-API-Key`) | 8002 | Docker internal |
-| GDI-Backend | GDI-Notary | REST | API Key (`X-API-Key`) | 8001 | Docker internal |
-| GDI-Backend | Cloudflare R2 | S3 API | Access Key + Secret Key | 443 | External (HTTPS) |
-| GDI-AgenteLANG | GDI-Backend | REST | JWT / Internal API Key | 8000 | Docker internal |
-| GDI-AgenteLANG | OpenRouter | REST | API Key (Bearer) | 443 | External (HTTPS) |
-| GDI-AgenteLANG | PostgreSQL | TCP | Connection string | 5432 | Docker internal |
-| Cliente MCP | GDI-MCP Server | MCP (JSON-RPC) | OAuth 2.0 (Auth0 JWT) | 8005 | Public |
-| GDI-BackOffice-Back | PostgreSQL | TCP | Connection string | 5432 | Docker internal |
+| Origen | Destino | Protocolo | Autenticacion | Puerto destino (Fly.io) | URL tipo |
+|--------|---------|-----------|---------------|------------------------|----------|
+| GDI-FRONTEND | GDI-Backend | REST | Auth0 JWT (Bearer) | 8080 | Publica (Fly.io URL) |
+| GDI-BackOffice-Front | GDI-BackOffice-Back | REST | Auth0 JWT (Bearer) | 8080 | Publica (Fly.io URL) |
+| GDI-Backend | GDI-PDFComposer | REST | API Key (`X-API-Key`) + `X-PDF-SHA256` | 8080 | Fly.io *.internal (privada) |
+| GDI-Backend | GDI-Notary | REST | API Key (`X-API-Key`) | 8080 | Fly.io *.internal (privada) |
+| GDI-Backend | Cloudflare R2 | S3 API | Access Key + Secret Key | 443 | Externa (HTTPS) |
+| GDI-AgenteLANG | GDI-Backend | REST | `X-API-Key` (INTERNAL_API_KEY) | 8080 | Fly.io *.internal (privada) |
+| GDI-AgenteLANG | OpenRouter | REST | API Key (Bearer) | 443 | Externa (HTTPS) |
+| GDI-AgenteLANG | PostgreSQL | TCP | Connection string | 5432 | Fly.io *.internal (privada) |
+| Cliente MCP | GDI-MCP Server | MCP (JSON-RPC) | OAuth 2.0 (Auth0 JWT) | 8080 | Publica (Fly.io URL) |
+| GDI-BackOffice-Back | PostgreSQL | TCP | Connection string | 5432 | Fly.io *.internal (privada) |
+
+!!! note "INTERNAL_API_KEY"
+    La variable `INTERNAL_API_KEY` es compartida entre el Backend y AgenteLANG de cada ambiente. Hay una key distinta por ambiente (dev, arg, demo, aries). Se usa en el header `X-API-Key` para llamadas de AgenteLANG al Backend.
+
+!!! note "X-PDF-SHA256"
+    El Backend envia el header `X-PDF-SHA256` junto con el PDF al PDFComposer para verificacion de integridad del contenido.
 
 ## Autenticacion Inter-Servicio
 
@@ -78,46 +84,62 @@ curl -H "X-API-Key: sk-gdi-xxx" \
      https://mcp.tu-dominio.com/api/v1/cases/search
 ```
 
-## Comunicacion Interna (Docker Networking)
+## Comunicacion Interna (Fly.io Private Networking)
 
-### URLs Internas (servicio a servicio)
+### URLs Internas en PRD (servicio a servicio)
 
-Los servicios dentro de la misma red Docker Compose se comunican usando el nombre del servicio como hostname. Estas no pasan por internet, lo que reduce latencia y aumenta seguridad.
+En produccion (Fly.io), los servicios se comunican via red privada usando hostnames `*.internal` con puerto `8080`. Estas no pasan por internet, lo que reduce latencia y aumenta seguridad. PDFComposer y Notary en PRD **no tienen IP publica** — solo son accesibles via estas URLs internas.
 
 ```
-http://<nombre-servicio>:<puerto>
+http://<app-name>.internal:8080
 ```
 
-**Ejemplos:**
+**Ejemplos en PRD:**
 
 ```bash
-# Backend → PDFComposer
-PDFCOMPOSER_URL=http://pdfcomposer:8002
+# Backend → PDFComposer (compartido entre todos los clientes)
+PDFCOMPOSER_URL=http://gdi-pdfcomposer-prd.internal:8080
 
-# Backend → Notary
-NOTARY_URL=http://notary:8001
+# Backend → Notary (compartido entre todos los clientes)
+NOTARY_URL=http://gdi-notary-prd.internal:8080
 
-# AgenteLANG → Backend
-GDI_BACKEND_URL=http://backend:8000
+# Backend → AgenteLANG (dedicado por cliente)
+AGENT_URL=http://aries-agentelang-prd.internal:8080
+
+# AgenteLANG → Backend (por cliente)
+GDI_BACKEND_URL=http://aries-backend-prd.internal:8080
 ```
 
-!!! tip "Ventajas de Docker Networking"
-    - Sin exposicion a internet
-    - Menor latencia (misma red)
+**En desarrollo local:**
+
+```bash
+# Puerto local de cada servicio
+PDFCOMPOSER_URL=http://localhost:8002
+NOTARY_URL=http://localhost:8001
+GDI_BACKEND_URL=http://localhost:8000
+```
+
+!!! tip "Ventajas de Fly.io Private Networking"
+    - Sin exposicion a internet (microservicios sin IP publica en PRD)
+    - Menor latencia (misma region gru)
     - Sin costos de bandwidth externo
-    - Nombres DNS estables (nombre del servicio en Docker Compose)
+    - Nombres DNS estables (`<app-name>.internal`)
 
 ### URLs Publicas (usuario a servicio)
 
-Los frontends y clientes externos acceden via URLs publicas configuradas con reverse proxy o dominio:
+Los frontends y clientes externos acceden via URLs publicas de Fly.io o dominios custom de Vercel:
 
 ```bash
-# Frontends (navegador del usuario)
-https://tu-frontend.tu-dominio.com     # GDI-FRONTEND
-https://tu-backoffice.tu-dominio.com   # GDI-BackOffice-Front
+# Frontends en Vercel (PRD)
+https://arg.gdilatam.com       # GDI-FRONTEND ARG
+https://aries.gdilatam.com     # GDI-FRONTEND ARIES
+https://demo.gdilatam.com      # GDI-FRONTEND DEMO
+https://arg-admin.gdilatam.com # GDI-BackOffice-Front ARG
 
-# APIs publicas
-https://mcp.tu-dominio.com/mcp            # MCP Server (dominio custom)
+# APIs publicas en Fly.io (PRD)
+https://arg-backend-prd.fly.dev/api/   # Backend ARG
+https://aries-backend-prd.fly.dev/api/ # Backend ARIES
+https://arg-gateway-prd.fly.dev/mcp    # MCP Server ARG
 ```
 
 ### Comunicacion Externa

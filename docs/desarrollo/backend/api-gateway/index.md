@@ -35,17 +35,17 @@ El API Gateway de GDI-Backend expone dos interfaces externas: un **MCP Server** 
 
 ```
 api_gateway/
-├── server.py          # MCP Server (stdio transport, 12 tools)
-├── http_server.py     # HTTP Server (ASGI, OAuth discovery, REST routes)
+├── server.py          # MCP Server (stdio transport, legacy)
+├── http_server.py     # HTTP Server (ASGI, OAuth discovery, REST routes, 42 tools)
 ├── auth_mcp.py        # Autenticacion MCP (JWT multi-audience)
 ├── auth_rest.py       # Autenticacion REST (API Key + X-User-ID)
 ├── context.py         # MCPContext (multi-tenant)
 ├── rest_api.py        # Handlers REST API
 └── tools/             # Tools compartidos entre MCP y REST
-    ├── cases.py       # search_cases, get_case, get_case_history, etc.
-    ├── documents.py   # search_documents, get_document, etc.
-    ├── system.py      # get_document_types, get_sectors, etc.
-    └── notes.py       # (futuro) Tools de notas
+    ├── cases.py       # search_cases, get_case, get_case_history, assign_case, etc.
+    ├── documents.py   # search_documents, get_document, create_document, etc.
+    ├── system.py      # get_document_types, get_document_states, search_users, etc.
+    └── notes.py       # get_notes, get_memos, get_sent_notes, etc.
 ```
 
 ## Comparacion MCP vs REST
@@ -58,7 +58,7 @@ api_gateway/
 | **Clientes** | Claude Code, ChatGPT, Gemini | Scripts, bots, apps |
 | **Discovery** | `/.well-known/oauth-protected-resource` | `/.well-known/openapi.json` |
 | **Multi-tenant** | Automatico (JWT -> email -> usuario) | Manual (X-User-ID -> sector) |
-| **Tools** | 14 tools con parametros tipados | 14 endpoints GET equivalentes |
+| **Tools** | 42 tools (lectura y escritura) | Endpoints equivalentes via REST |
 
 ## URLs de Produccion
 

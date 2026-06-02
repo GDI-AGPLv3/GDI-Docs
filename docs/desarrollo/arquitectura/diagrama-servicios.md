@@ -37,7 +37,7 @@ graph TB
     end
 
     subgraph AI["Proveedores IA"]
-        OR["OpenRouter<br/>(Gemini Flash, Llama 3.3)"]
+        OR["OpenRouter<br/>(GPT-4.1-nano, text-embedding-3-small)"]
     end
 
     U1 --> FE
@@ -99,17 +99,20 @@ graph LR
 
 ## Puertos y Tecnologias
 
-| Servicio | Puerto | Tecnologia | Workers | Protocolo |
-|----------|--------|------------|---------|-----------|
-| GDI-FRONTEND | 3003 | Next.js 15 (Pages Router) | Node.js | HTTP |
-| GDI-BackOffice-Front | 3013 | Next.js 15 (Pages Router) | Node.js | HTTP |
-| GDI-Backend | 8000 | FastAPI + Gunicorn | 8 Uvicorn workers | HTTP |
-| GDI-BackOffice-Back | 8010 | FastAPI + Uvicorn | 1 worker | HTTP |
-| GDI-MCP Server | 8005 | FastAPI (integrado en Backend) | Compartido | MCP + HTTP |
-| GDI-AgenteLANG | 8004 | FastAPI + Uvicorn | 1 + AIWorker background | HTTP |
-| GDI-PDFComposer | 8002 | FastAPI + Gunicorn | 4 Uvicorn workers | HTTP |
-| GDI-Notary | 8001 | FastAPI + Gunicorn | 3 Uvicorn workers | HTTP |
-| PostgreSQL | 5432 | PostgreSQL 17 + pgvector | Docker managed | TCP |
+| Servicio | Puerto local | Puerto Fly.io | Tecnologia | Workers | Protocolo |
+|----------|-------------|---------------|------------|---------|-----------|
+| GDI-FRONTEND | 3003 | N/A (Vercel) | Next.js 15 (Pages Router) | Node.js | HTTP |
+| GDI-BackOffice-Front | 3013 | N/A (Vercel) | Next.js 15 (Pages Router) | Node.js | HTTP |
+| GDI-Backend | 8000 | 8080 | FastAPI + Gunicorn | 2 Uvicorn workers | HTTP |
+| GDI-BackOffice-Back | 8010 | 8080 | FastAPI + Uvicorn | 1 worker | HTTP |
+| GDI-MCP Server | 8005 | 8080 (mismo proceso que Backend) | FastAPI (integrado en Backend) | Compartido | MCP + HTTP |
+| GDI-AgenteLANG | 8004 | 8080 | FastAPI + Uvicorn | 1 + AIWorker background | HTTP |
+| GDI-PDFComposer | 8002 | 8080 (internal-only PRD) | FastAPI + Gunicorn | 2 Uvicorn workers | HTTP |
+| GDI-Notary | 8001 | 8080 (internal-only PRD) | FastAPI + Gunicorn | 2 Uvicorn workers | HTTP |
+| PostgreSQL | 5432 | 5432 (solo tunnel) | PostgreSQL 17 + pgvector | Fly.io managed | TCP |
+
+!!! note "Puertos en Fly.io"
+    En Fly.io todos los servicios escuchan en el puerto `:8080` interno (configurado en `fly.*.toml` con `internal_port = 8080`). Los puertos locales (8000, 8001, etc.) son solo para desarrollo local. PDFComposer y Notary en PRD no tienen IP publica — solo accesibles via `*.internal:8080`.
 
 ## Dependencias entre Servicios
 

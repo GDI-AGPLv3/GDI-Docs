@@ -31,7 +31,7 @@ El Gateway expone **dos interfaces** segun el tipo de cliente:
 
     Protocolo estandar para **agentes de inteligencia artificial** (Claude, ChatGPT, Gemini). Autenticacion automatica via OAuth 2.0. El agente se conecta, se autentica con su cuenta de usuario y opera con los mismos permisos que tendria en la interfaz web.
 
-    **14 tools** de solo lectura.
+    **42 tools** (lectura y escritura).
 
     [:octicons-arrow-right-24: Ver MCP Server](mcp-server.md)
 
@@ -41,7 +41,7 @@ El Gateway expone **dos interfaces** segun el tipo de cliente:
 
     Endpoints HTTP clasicos para **scripts, bots, sistemas de tramites y aplicaciones externas**. Autenticacion por API Key + User ID. Ideal para integraciones programaticas donde no se necesita un agente IA.
 
-    **45 endpoints** organizados por dominio.
+    **80+ endpoints** organizados por dominio.
 
     [:octicons-arrow-right-24: Ver REST API](rest-api/index.md)
 
@@ -86,7 +86,7 @@ flowchart LR
 
 El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
-### Expedientes (13 endpoints)
+### Expedientes
 
 | Operacion | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
@@ -95,61 +95,116 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 | Historial de movimientos | `get_case_history` | `GET /api/v1/cases/{id}/history` |
 | Documentos del expediente | `get_case_documents` | `GET /api/v1/cases/{id}/documents` |
 | Permisos del usuario | `get_case_permissions` | `GET /api/v1/cases/{id}/permissions` |
-| Buscar por numero | `get_case_by_number` | `GET /api/v1/cases/by-number/{number}` |
-| Preparar pase | `prepare_assignment` | `POST /api/v1/cases/{id}/prepare-assignment` |
+| Buscar por numero | `get_case_by_number` | `GET /api/v1/cases/number/{number}` |
+| Preparar pase | `prepare_assignment` | `GET /api/v1/cases/{id}/prepare-assignment` |
 | Ejecutar pase | `assign_case` | `POST /api/v1/cases/{id}/assign` |
-| Preparar transferencia | `prepare_transfer` | `POST /api/v1/cases/{id}/prepare-transfer` |
+| Cerrar pase | - | `POST /api/v1/cases/{id}/close-assign` |
+| Preparar transferencia | - | `GET /api/v1/cases/{id}/prepare-transfer` |
+| Transferir | - | `POST /api/v1/cases/{id}/transfer` |
+| Crear expediente | - | `POST /api/v1/cases/` |
+| Responsables: listar | `get_case_responsibles` | `GET /api/v1/cases/{id}/responsibles` |
+| Responsables: agregar | `add_case_responsible` | `POST /api/v1/cases/{id}/responsibles` |
+| Responsables: quitar | `remove_case_responsible` | `DELETE /api/v1/cases/{id}/responsibles/{rid}` |
+| Subsanar documento | - | `POST /api/v1/cases/{id}/subsanar` |
+| Movimientos planos | - | `GET /api/v1/cases/{id}/movements` |
+| Usuarios de sector | - | `GET /api/v1/cases/sectors/{sector_id}/users` |
 | Templates disponibles | `get_case_templates` | `GET /api/v1/system/case-templates` |
-| Crear documento en expediente | `create_document` | `POST /api/v1/documents` |
-| Guardar documento | `save_document` | `PUT /api/v1/documents/{id}` |
-| Proponer documento | `propose_document` | `POST /api/v1/documents/{id}/propose` |
 
-### Documentos (20 endpoints)
+### Documentos
 
 | Operacion | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Buscar documentos | `search_documents` | `GET /api/v1/documents/search` |
 | Detalle de documento | `get_document` | `GET /api/v1/documents/{id}` |
 | Contenido HTML | `get_document_content` | `GET /api/v1/documents/{id}/content` |
+| URL temporal PDF | - | `GET /api/v1/documents/{id}/url` |
 | Firmas pendientes | `get_pending_signatures` | `GET /api/v1/documents/pending-signatures` |
-| Tipos de documentos | `get_document_types` | `GET /api/v1/system/document-types` |
-| Estados de documento | `get_document_states` | `GET /api/v1/documents/states` |
-| Buscar por numero | `search_document_by_number` | `GET /api/v1/documents/by-number/{number}` |
-| Crear documento | `create_document` | `POST /api/v1/documents` |
-| Guardar borrador | `save_document` | `PUT /api/v1/documents/{id}` |
-| Proponer documento | `propose_document` | `POST /api/v1/documents/{id}/propose` |
+| Buscar por numero oficial | `search_document_by_number` | `GET /api/v1/documents/search-official/{num}` |
+| Detalles de firma | `get_signature_details` | `GET /api/v1/documents/{id}/signature-details` |
+| Verificar permisos firma | - | `GET /api/v1/documents/check-signer-permissions` |
+| Crear documento | `create_document` | `POST /api/v1/documents/` |
+| Guardar borrador | `save_document` | `PATCH /api/v1/documents/{id}` |
+| Eliminar borrador | - | `DELETE /api/v1/documents/{id}` |
+| Importar PDF externo | - | `POST /api/v1/documents/import` |
+| Reemplazar PDF importado | - | `PUT /api/v1/documents/{id}/imported-pdf` |
+| Iniciar firma | `start_signing` | `POST /api/v1/documents/{id}/start-signing` |
+| Firmar documento | - | `POST /api/v1/documents/{id}/sign` |
 | Rechazar documento | `reject_document` | `POST /api/v1/documents/{id}/reject` |
-| Rechazar propuesta | `reject_proposal` | `POST /api/v1/documents/{id}/reject-proposal` |
-| Iniciar firma | `start_signing` | `POST /api/v1/documents/{id}/sign` |
-| Detalle de firma | `get_signature_details` | `GET /api/v1/documents/{id}/signature` |
-| Descargar PDF | - | `GET /api/v1/documents/{id}/download` |
-| Preview PDF | - | `GET /api/v1/documents/{id}/preview` |
-| Historial de documento | - | `GET /api/v1/documents/{id}/history` |
-| Adjuntos | - | `GET /api/v1/documents/{id}/attachments` |
-| Subir adjunto | - | `POST /api/v1/documents/{id}/attachments` |
-| Eliminar adjunto | - | `DELETE /api/v1/documents/{id}/attachments/{att_id}` |
+| Proponer borrador a exp. | `propose_document` | `POST /api/v1/cases/{id}/documents/propose` |
+| Vincular doc oficial | - | `POST /api/v1/cases/{id}/documents/link` |
+| Aceptar propuesta | - | `POST /api/v1/cases/{id}/documents/accept-proposal` |
+| Rechazar propuesta | `reject_proposal` | `POST /api/v1/cases/{id}/documents/reject-proposal` |
 
-### Sistema y Catalogos (7 endpoints)
+### Sistema y Catalogos
 
 | Operacion | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Tipos de documentos | `get_document_types` | `GET /api/v1/system/document-types` |
+| Estados de documentos | `get_document_states` | `GET /api/v1/system/document-states` |
 | Sectores y departamentos | - | `GET /api/v1/system/sectors` |
-| Info de usuario | `get_user_info` | `GET /api/v1/system/users/{id}` |
 | Templates de expedientes | `get_case_templates` | `GET /api/v1/system/case-templates` |
+| Listar usuarios | - | `GET /api/v1/system/users/list` |
 | Buscar usuarios | `search_users` | `GET /api/v1/system/users/search` |
-| Mis tenants | `list_my_tenants` | `GET /api/v1/system/my-tenants` |
-| Guia del agente | `get_agent_guide` | `GET /api/v1/system/agent-guide` |
+| Info de usuario | `get_user_info` | `GET /api/v1/system/users/{id}` |
 
-### Notas (5 endpoints)
+### Notas
 
 | Operacion | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
-| Notas recibidas | `get_notes` | `GET /api/v1/notes` |
+| Notas recibidas | `get_notes` | `GET /api/v1/notes/received` |
 | Notas enviadas | `get_sent_notes` | `GET /api/v1/notes/sent` |
 | Notas archivadas | `get_archived_notes` | `GET /api/v1/notes/archived` |
 | Detalle de nota | `get_note_detail` | `GET /api/v1/notes/{id}` |
-| Enviar nota | - | `POST /api/v1/notes` |
+| Archivar nota | - | `PATCH /api/v1/notes/{id}/archive` |
+
+### Memos
+
+| Operacion | MCP Tool | REST Endpoint |
+|-----------|----------|---------------|
+| Memos recibidos | `get_memos` | `GET /api/v1/memos/received` |
+| Memos enviados | `get_sent_memos` | `GET /api/v1/memos/sent` |
+| Memos archivados | `get_archived_memos` | `GET /api/v1/memos/archived` |
+| Detalle de memo | `get_memo_detail` | `GET /api/v1/memos/{id}` |
+
+### Legajos (RLM)
+
+| Operacion | MCP Tool | REST Endpoint |
+|-----------|----------|---------------|
+| Buscar legajos | `search_records` | `GET /api/v1/records/search` |
+| Detalle de legajo | `get_record` | `GET /api/v1/records/{id}` |
+| Familias de registros | `get_registry_families` | `GET /api/v1/records/families` |
+| Crear legajo | - | `POST /api/v1/records` |
+| Actualizar legajo | - | `PATCH /api/v1/records/{id}` |
+| Actualizar campo | - | `PATCH /api/v1/records/{id}/fields/{field}` |
+| Verificar campo | - | `POST /api/v1/records/{id}/fields/{field}/verify` |
+| Historial | - | `GET /api/v1/records/{id}/history` |
+| Informe IFRLM | - | `POST /api/v1/records/{id}/report` |
+| Relaciones: listar | - | `GET /api/v1/records/{id}/relations` |
+| Relaciones: crear | - | `POST /api/v1/records/{id}/relations` |
+| Relaciones: eliminar | - | `DELETE /api/v1/records/{id}/relations/{rid}` |
+| Expedientes vinculados | - | `GET /api/v1/records/{id}/cases` |
+| Vincular expediente | - | `POST /api/v1/records/{id}/cases` |
+| Desvincular expediente | - | `DELETE /api/v1/records/{id}/cases/{link_id}` |
+| Documentos vinculados | - | `GET /api/v1/records/{id}/documents` |
+| Vincular documento | - | `POST /api/v1/records/{id}/documents` |
+| Desvincular documento | - | `DELETE /api/v1/records/{id}/documents/{link_id}` |
+
+### Busqueda Semantica
+
+| Operacion | MCP Tool | REST Endpoint |
+|-----------|----------|---------------|
+| Busqueda semantica IA | `semantic_search` | `GET /api/v1/search/semantic` |
+
+### Backup / Sync
+
+| Operacion | MCP Tool | REST Endpoint |
+|-----------|----------|---------------|
+| Catalogo de tablas | - | `GET /api/v1/sync/schema` |
+| Datos incrementales | - | `GET /api/v1/sync/data` |
+| PDFs firmados | - | `GET /api/v1/sync/documents` |
+
+!!! note "Autenticacion especial para Backup/Sync"
+    Los endpoints `/api/v1/sync/*` usan **Backup API Keys** (`key_type='backup'`) en lugar de las API Keys normales. No requieren `X-User-ID` pero validan IP de origen y aplican rate limiting estricto.
 
 ---
 
@@ -220,7 +275,7 @@ Si todo esta correcto, recibiras un JSON con los expedientes accesibles para ese
 
     ---
 
-    Referencia completa de los 14 tools MCP, parametros, respuestas y flujos recomendados para agentes IA.
+    Referencia completa de los 42 tools MCP, parametros, respuestas y flujos recomendados para agentes IA.
 
     [:octicons-arrow-right-24: MCP Server](mcp-server.md)
 

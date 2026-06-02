@@ -1,6 +1,6 @@
 # Expedientes
 
-**13 endpoints** para gestion de expedientes.
+**19 endpoints** para gestion de expedientes.
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
 
@@ -24,7 +24,7 @@ Busca expedientes con filtros opcionales. Soporta paginacion.
 | `page_size` | int | `20` | Resultados por pagina (max `100`) |
 | `search` | string | - | Busca por `case_number` o `reference` |
 | `status` | string | - | Filtrar por estado: `active`, `inactive`, `archived` |
-| `date_filter` | string | - | Filtrar por fecha: `today`, `week`, `month`, `year` |
+| `date_filter` | string | - | Filtrar por fecha: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
 | `sector_filter` | string | - | Filtrar por acronimo del sector |
 
 **Ejemplo:**
@@ -700,3 +700,140 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 | `400` | Motivo invalido o movimiento no es una asignacion activa |
 | `403` | Sin permisos para cerrar la asignacion |
 | `404` | Expediente o movimiento no encontrado |
+
+---
+
+## Responsables
+
+### Listar responsables
+
+```
+GET /api/v1/cases/{case_id}/responsibles
+```
+
+Lista los responsables activos de un expediente.
+
+**Respuesta `200 OK`:** Lista de responsables con `user_id`, `type` (ADMIN o ADDITIONAL), `sector_id`, `added_at`.
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| `403` | Sin permisos para ver este expediente |
+| `404` | Expediente no encontrado |
+
+---
+
+### Agregar responsable
+
+```
+POST /api/v1/cases/{case_id}/responsibles
+```
+
+Agrega un responsable al expediente.
+
+**Body (JSON):**
+
+| Campo | Tipo | Requerido | Descripcion |
+|-------|------|-----------|-------------|
+| `user_id` | UUID | Si | Usuario a agregar |
+| `type` | string | Si | `ADMIN` o `ADDITIONAL` |
+| `sector_id` | UUID | Si | Sector del usuario |
+| `reason` | string | No | Motivo (default: "Asignacion de responsable") |
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| `400` | Datos invalidos |
+| `403` | Sin permisos para modificar este expediente |
+| `404` | Expediente no encontrado |
+
+---
+
+### Quitar responsable
+
+```
+DELETE /api/v1/cases/{case_id}/responsibles/{responsible_id}
+```
+
+Quita un responsable del expediente (soft delete).
+
+**Parametros path:**
+
+| Parametro | Tipo | Descripcion |
+|-----------|------|-------------|
+| `case_id` | UUID | Identificador del expediente |
+| `responsible_id` | UUID | ID del registro en `case_responsibles` |
+
+**Parametros query (opcional):**
+
+| Parametro | Tipo | Descripcion |
+|-----------|------|-------------|
+| `reason` | string | Motivo de remocion |
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| `403` | Sin permisos para modificar este expediente |
+| `404` | Responsable o expediente no encontrado |
+
+---
+
+## Subsanacion
+
+### Subsanar documento oficial
+
+```
+POST /api/v1/cases/{case_id}/subsanar
+```
+
+Subsana un documento oficial erroneo en el expediente. Desactiva el documento erroneo y vincula el documento que justifica la subsanacion. Solo usuarios ADMIN del expediente pueden ejecutarlo.
+
+**Body (JSON):**
+
+| Campo | Tipo | Requerido | Descripcion |
+|-------|------|-----------|-------------|
+| `official_document_id_erroneo` | UUID | Si | Documento a desactivar |
+| `official_document_id_justifica` | UUID | Si | Documento correcto que justifica |
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| `400` | Los dos IDs son identicos, o campos faltantes |
+| `403` | El usuario no tiene rol ADMIN sobre el expediente |
+| `404` | Expediente o documento no encontrado |
+
+---
+
+## Movimientos
+
+### Movimientos del expediente
+
+```
+GET /api/v1/cases/{case_id}/movements
+```
+
+Lista plana de movimientos de un expediente. A diferencia de `/history`, no incluye analisis IA ni resumen narrativo.
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "movements": [...],
+    "total": 5
+  },
+  "message": "Movimientos obtenidos exitosamente"
+}
+```
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| `401` | Usuario invalido o inactivo en el schema |
+| `404` | Expediente no encontrado o sin permisos |

@@ -241,17 +241,22 @@ Almacena las API Keys generadas desde el BackOffice:
 
 ```sql
 CREATE TABLE public.api_keys (
-    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    key_hash    VARCHAR NOT NULL,     -- Hash SHA-256 de la API Key
-    name        VARCHAR NOT NULL,     -- Nombre descriptivo (ej: "Sistema Tramites")
-    is_active   BOOLEAN DEFAULT true, -- Si la key esta activa
-    expires_at  TIMESTAMP,            -- Fecha de expiracion (NULL = sin expiracion)
-    created_at  TIMESTAMP DEFAULT now()
+    id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    api_key_hash         VARCHAR NOT NULL,     -- Hash SHA-256 de la API Key
+    api_key_prefix       VARCHAR,              -- Prefijo visible (primeros 12 chars)
+    name                 VARCHAR NOT NULL,     -- Nombre descriptivo (ej: "Sistema Tramites")
+    key_type             VARCHAR DEFAULT 'standard', -- 'standard' o 'backup'
+    is_active            BOOLEAN DEFAULT true, -- Si la key esta activa
+    expires_at           TIMESTAMP,            -- Fecha de expiracion (NULL = sin expiracion)
+    last_used_at         TIMESTAMP,            -- Ultima vez usada
+    rate_limit_per_minute INT,                 -- Limite de requests por minuto
+    municipality_id      UUID NOT NULL,        -- Municipalidad propietaria
+    created_at           TIMESTAMP DEFAULT now()
 );
 ```
 
 !!! note "Hash, no texto plano"
-    La API Key se almacena como hash SHA-256. El valor original (`sk-gdi-xxx`) solo se muestra al momento de crear la key. El Gateway hashea la key recibida en el header y la compara contra `key_hash`.
+    La API Key se almacena como hash SHA-256 (`api_key_hash`). El valor original (`sk-gdi-xxx`) solo se muestra al momento de crear la key. El Gateway hashea la key recibida en el header y la compara contra `api_key_hash`.
 
 ### `public.api_key_users`
 
@@ -261,7 +266,7 @@ Vincula API Keys con usuarios autorizados y sus municipalidades:
 CREATE TABLE public.api_key_users (
     api_key_id      UUID REFERENCES public.api_keys(id),
     user_id         UUID NOT NULL,         -- UUID del usuario en GDI
-    municipality_id UUID NOT NULL          -- Municipalidad del usuario
+    schema_name     VARCHAR NOT NULL       -- Schema del tenant (municipalidad)
 );
 ```
 
@@ -274,21 +279,71 @@ erDiagram
 
     api_keys {
         uuid id PK
-        varchar key_hash
+        varchar api_key_hash
+        varchar api_key_prefix
         varchar name
+        varchar key_type
         boolean is_active
         timestamp expires_at
+        timestamp last_used_at
+        int rate_limit_per_minute
+        uuid municipality_id FK
         timestamp created_at
     }
 
     api_key_users {
         uuid api_key_id FK
         uuid user_id
-        uuid municipality_id
+        varchar schema_name
     }
 ```
 
 Una API Key puede tener **multiples usuarios** asociados. Esto permite que un sistema externo opere con distintos usuarios segun el contexto (por ejemplo, un bot que crea documentos en nombre de diferentes funcionarios).
+
+---
+
+## Backup API Keys (Sync)
+
+Los endpoints de sincronizacion (`/api/v1/sync/*`) usan un mecanismo de autenticacion diferente al flujo normal.
+
+### Diferencias con las API Keys standard
+
+| Aspecto | API Key standard | Backup API Key |
+|---------|-----------------|----------------|
+| `X-User-ID` | Requerido | **Prohibido** (se rechaza si se envia) |
+| `key_type` en BD | `standard` | `backup` |
+| Validacion IP | No | Si (campo `allowed_origins` en `api_keys`) |
+| Uso | Todas las operaciones | Solo `/api/v1/sync/*` |
+
+### Flujo de autenticacion Backup
+
+```mermaid
+flowchart TD
+    A["Request entrante<br/>GET /api/v1/sync/data"] --> B{"Header<br/>X-User-ID?"}
+    B -->|Si| C["401: Acceso denegado<br/>(X-User-ID prohibido para backup)"]
+    B -->|No| D{"Header<br/>X-API-Key?"}
+    D -->|No| E["401: Acceso denegado"]
+    D -->|Si| F["Validar key en BD<br/>(key_type='backup', activa, no expirada)"]
+    F --> G{"Key valida?"}
+    G -->|No| H["401: Acceso denegado"]
+    G -->|Si| I["Verificar IP origen<br/>contra allowed_origins"]
+    I --> J{"IP autorizada?"}
+    J -->|No| K["403: Acceso denegado"]
+    J -->|Si| L["Rate limit atomico<br/>(INSERT ... WHERE NOT EXISTS)"]
+    L --> M{"Rate limit OK?"}
+    M -->|No| N["429 + Retry-After header"]
+    M -->|Si| O["Ejecutar operacion"]
+```
+
+### Errores de autenticacion Backup
+
+Todos los errores de autenticacion backup devuelven `{"error": "Acceso denegado"}` sin detallar el motivo (por seguridad).
+
+| HTTP | Causa real |
+|------|-----------|
+| 401 | Key no encontrada, tipo incorrecto, inactiva, expirada, o se envio `X-User-ID` |
+| 403 | IP del cliente no esta en `allowed_origins` |
+| 429 | Rate limit excedido (incluye `Retry-After` en segundos) |
 
 ---
 

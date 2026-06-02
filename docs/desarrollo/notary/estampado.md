@@ -10,8 +10,8 @@ Se aplica opcionalmente cuando se envian `document_number` y `city` al endpoint 
 
 ```
 +-------------------------------------+
-| Ciudad Autonoma, 15 de enero de 2025|  <-- city + fecha (Y=720)
-| IF-2025-00001234-MUNI               |  <-- document_number (Y=705)
+| Ciudad Autonoma, 15 de enero de 2025|  <-- city + fecha (Y=770)
+| IF-2025-00001234-MUNI               |  <-- document_number (Y=755)
 |                                      |
 |         Contenido del documento      |
 |                                      |
@@ -20,12 +20,16 @@ Se aplica opcionalmente cuando se envian `document_number` y `city` al endpoint 
 
 ## Posicion del estampado
 
+Los valores estan fijados en `document_stamper.py` y alineados al template HTML de WeasyPrint
+(`@page { size: A4; margin: 10mm }`).
+
 | Parametro | Valor | Descripcion |
 |-----------|-------|-------------|
-| `DOC_NUMBER_X` | 55.4 | Coordenada X |
-| `DOC_NUMBER_Y` | 705 | Numero de documento (pts desde borde inferior) |
-| `CITY_DATE_X` | 55.4 | Coordenada X |
-| `CITY_DATE_Y` | 720 | Ciudad y fecha (pts desde borde inferior) |
+| `DOC_NUMBER_X` | 28 | Coordenada X (~10 mm, margen izquierdo del template HTML) |
+| `DOC_NUMBER_Y` | 755 | Numero de documento (pts desde borde inferior, ~87 pts desde top A4) |
+| `CITY_DATE_X` | 28 | Coordenada X |
+| `CITY_DATE_Y` | 770 | Ciudad y fecha (pts desde borde inferior, ~72 pts desde top A4) |
+| Pagesize | A4 (595x842 pts) | Paginas del overlay |
 | Fuente | Helvetica 11pt | Fuente del estampado |
 
 !!! note "Posicion del sello"
@@ -100,14 +104,20 @@ def create_stamp_text(document_number: str, city: str) -> Tuple[str, str]:
 ```python
 def create_stamp_overlay(document_number: str, city: str) -> bytes:
     buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=(612, 792))  # Letter size
+    c = canvas.Canvas(buffer, pagesize=A4)  # A4: 595x842 pts
+
+    # X=28 ≈ 10mm (margen izquierdo del template HTML de WeasyPrint)
+    DOC_NUMBER_X = 28
+    DOC_NUMBER_Y = 755   # ~87 pts desde top
+    CITY_DATE_X  = 28
+    CITY_DATE_Y  = 770   # ~72 pts desde top
 
     document_line, city_date_line = create_stamp_text(document_number, city)
 
     c.setFont("Helvetica", 11)
     c.setFillColor(black)
-    c.drawString(55.4, 705, document_line)
-    c.drawString(55.4, 720, city_date_line)
+    c.drawString(DOC_NUMBER_X, DOC_NUMBER_Y, document_line)
+    c.drawString(CITY_DATE_X, CITY_DATE_Y, city_date_line)
 
     c.save()
     buffer.seek(0)

@@ -1,6 +1,6 @@
 # Documentos
 
-**20 endpoints** para gestion de documentos.
+**20 endpoints** para gestion de documentos (mas 4 de vinculacion a expedientes documentados en [Expedientes](expedientes.md)).
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
 
@@ -23,7 +23,7 @@ Busca documentos con filtros opcionales. Soporta paginacion.
 | `page` | int | `1` | Numero de pagina |
 | `page_size` | int | `20` | Resultados por pagina (max `100`) |
 | `search` | string | - | Busca por `document_number` |
-| `status` | string | - | Filtrar por estado: `pending`, `sent_to_sign`, `signed`, `rejected` |
+| `status` | string | - | Filtrar por estado visual: `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
 | `document_type` | string | - | Filtrar por acronimo del tipo: `INF`, `DICT`, etc. |
 | `case_id` | string | - | Filtrar por expediente |
 
@@ -715,6 +715,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 }
 ```
 
+!!! warning "Firma digital con token fisico"
+    Este endpoint solo acepta **firma electronica**. Si el documento requiere firma con token fisico (`signature_policy=digital_all`, o el usuario es numerador con `digital_num`), la API devuelve `422` con el mensaje _"Este documento requiere firma con token fisico. Firma desde el portal web."_. La firma con token se realiza desde el portal web con FirmadorGDI.
+
 **Errores:**
 
 | Codigo | Descripcion |
@@ -722,6 +725,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 | `400` | El documento no esta en estado `sent_to_sign` |
 | `403` | El usuario no es firmante de este documento |
 | `404` | Documento no encontrado |
+| `422` | El documento requiere firma con token fisico |
 
 ---
 

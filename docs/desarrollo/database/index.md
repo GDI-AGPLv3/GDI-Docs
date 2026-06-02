@@ -7,10 +7,10 @@ GDI Latam utiliza **PostgreSQL 17** como motor de base de datos, con arquitectur
 | Componente | Tecnologia |
 |------------|------------|
 | Motor | PostgreSQL 17.0+ |
-| Extensiones | pgvector, pg_trgm, unaccent, uuid-ossp |
+| Extensiones | pgvector, pg_trgm, unaccent |
 | Hosting | Docker (pgvector/pgvector:pg17) |
 | Multi-tenant | Un schema por organizacion |
-| Connection Pool | PgBouncer (transaction mode) |
+| Connection Pool | Sin PgBouncer (psycopg2 directo con asyncpg en async) |
 | ORM | Ninguno (psycopg2 directo con RealDictCursor) |
 
 ## Arquitectura Multi-Schema
@@ -20,26 +20,28 @@ PostgreSQL
 |
 +-- public/                         # Compartido por todos los tenants
 |   +-- roles                       # 3 roles del sistema
-|   +-- global_document_types       # 61 tipos de documento
-|   +-- global_case_templates       # 30 plantillas de expediente
+|   +-- global_document_types       # Tipos de documento globales
+|   +-- global_case_templates       # Plantillas de expediente globales
 |   +-- municipalities              # Registro de tenants
 |   +-- document_display_states     # 6 estados de visualizacion
 |   +-- user_registry               # Mapeo email -> schema
 |   +-- api_keys                    # API Keys (REST API)
 |   +-- api_key_users               # Usuarios autorizados por API Key
 |   +-- global_registry_families    # Familias de registros
+|   +-- tenant_certificates         # Certificados digitales por tenant
+|   +-- backup_access_log           # Log de accesos del sistema de backup
 |   +-- (tablas LangGraph)          # Creadas automaticamente por GDI-AgenteLANG
 |
-+-- {schema_municipio}/             # Ej: 200_muni, 201_otra
-|   +-- 33 tablas (Grupos A-I)
-|   +-- ~47 indices
-|   +-- 1 trigger (sync user_registry)
++-- {schema_municipio}/             # Ej: 100_test, 101_esco
+|   +-- 35 tablas (Grupos A-J)
+|   +-- ~52 indices
+|   +-- 34 triggers updated_at + 1 trigger sync user_registry
 |   +-- 1 funcion (fn_sync_user_registry)
 |
-+-- {schema_municipio}_audit/       # Ej: 200_muni_audit
++-- {schema_municipio}_audit/       # Ej: 100_test_audit
     +-- audit_log                   # Registro de auditoria
     +-- fn_log_change               # Funcion de auditoria
-    +-- 6 triggers de auditoria
+    +-- 7 triggers de auditoria
 ```
 
 ## Ambientes
@@ -59,7 +61,7 @@ PostgreSQL
 postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 ```
 
-El schema de pruebas es `200_muni`. Cada backend se conecta y setea `search_path` al schema del tenant en cada request.
+El schema de pruebas es `100_test`. Cada backend se conecta y setea `search_path` al schema del tenant en cada request.
 
 ## Extensiones
 
@@ -77,21 +79,21 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 ## Estructura de Schemas
 
-### Schema `public` (9 tablas)
+### Schema `public` (11 tablas)
 
-Contiene datos globales compartidos por todas las organizaciones: roles del sistema, tipos de documento maestros, plantillas de expediente, registro de organizaciones activas y autenticacion API.
+Contiene datos globales compartidos por todas las organizaciones: roles del sistema, tipos de documento maestros, plantillas de expediente, registro de organizaciones activas, autenticacion API, certificados digitales y log de backup.
 
 Ver: [Schema Public](schema-public.md)
 
-### Schema por organizacion (33 tablas)
+### Schema por organizacion (35 tablas)
 
-Cada organizacion tiene su propio schema con la estructura completa: estructura organizacional, usuarios, documentos, expedientes, configuracion, agente IA, notas y registros.
+Cada organizacion tiene su propio schema con la estructura completa: estructura organizacional, usuarios, documentos, expedientes, configuracion, agente IA, notas, registros, responsables y favoritos de expediente.
 
 Ver: [Schema Municipio](schema-municipio.md)
 
 ### Schema de auditoria (1 tabla)
 
-Cada organizacion tiene un schema `{nombre}_audit` con una tabla `audit_log` y triggers automaticos sobre 6 tablas criticas.
+Cada organizacion tiene un schema `{nombre}_audit` con una tabla `audit_log` y triggers automaticos sobre 7 tablas criticas.
 
 Ver: [Schema Audit](schema-audit.md)
 
@@ -112,7 +114,7 @@ Ver: [Schema Audit](schema-audit.md)
 === "Produccion (organizacion nueva)"
 
     ```
-    01-install.sql       -- Extensiones + ENUMs + 9 tablas public (una vez)
+    01-install.sql       -- Extensiones + ENUMs + 11 tablas public (una vez)
          |
          v
     02-seed-global.sql   -- Roles + doc types + case templates (una vez)
@@ -121,16 +123,16 @@ Ver: [Schema Audit](schema-audit.md)
     03-create-municipio.sql  -- Schema + audit + datos iniciales (por municipio)
     ```
 
-=== "Dev/Test (200_muni)"
+=== "Dev/Test (100_test)"
 
     ```
-    01-install.sql       -- Extensiones + ENUMs + 9 tablas public
+    01-install.sql       -- Extensiones + ENUMs + 11 tablas public
          |
          v
     02-seed-global.sql   -- Datos globales
          |
          v
-    04-seed-demo.sql     -- 200_muni completo con datos demo (autonomo)
+    04-seed-demo.sql     -- 100_test completo con datos demo (autonomo)
     ```
 
 Ver: [Scripts de Deploy](scripts-deploy.md)
@@ -166,8 +168,8 @@ def get_db_connection(schema_name: str):
 
 | Seccion | Contenido |
 |---------|-----------|
-| [Schema Public](schema-public.md) | 9 tablas globales: roles, document types, municipalities, API keys |
-| [Schema Municipio](schema-municipio.md) | 33 tablas por tenant (Grupos A-I) con indices |
+| [Schema Public](schema-public.md) | 11 tablas globales: roles, document types, municipalities, API keys, tenant_certificates, backup_access_log |
+| [Schema Municipio](schema-municipio.md) | 35 tablas por tenant (Grupos A-J) con indices |
 | [Schema Audit](schema-audit.md) | Auditoria automatica con triggers |
 | [Scripts de Deploy](scripts-deploy.md) | 4 archivos SQL, flujo de ejecucion, herramientas Python |
 | [Numeracion](numeracion.md) | Sistema de numeracion secuencial con advisory lock |

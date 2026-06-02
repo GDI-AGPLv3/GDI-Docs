@@ -238,3 +238,204 @@ Obtiene detalle completo de un expediente con movimientos, documentos y permisos
 ### `GET /api/v1/cases/by-number/{case_number}`
 
 Busca un expediente por su numero exacto (ej: `EE-2025-00001-SMG-ADGEN`).
+
+---
+
+## Descargar Expediente como ZIP
+
+### `GET /api/v1/cases/{case_id}/download-zip`
+
+Descarga todos los documentos oficiales activos del expediente en un unico archivo ZIP.
+
+**Autenticacion:** JWT Auth0 (igual que todos los endpoints del backend directo).
+
+!!! warning "Solo disponible en el Backend directo"
+    Este endpoint **no esta expuesto en el Gateway REST** (`/api/v1/` del MCP Server). Es exclusivo de `GDI-Backend` en `/api/v1/cases/{case_id}/download-zip`. Los clientes que usen el Gateway no pueden invocarlo.
+
+**Path Parameters:**
+
+| Parametro | Tipo | Descripcion |
+|-----------|------|-------------|
+| `case_id` | UUID | ID del expediente |
+
+**Proceso:**
+
+1. Valida usuario autenticado (JWT).
+2. Verifica permiso de visualizacion (`can_user_view_case`). Si falla retorna 404 para no revelar existencia del expediente.
+3. Obtiene el `case_number` desde BD.
+4. Consulta documentos oficiales activos con `official_number` y `pdf_url` presignada.
+5. Filtra los que tienen `is_active=true`, `official_number` y `pdf_url` (URLs presignadas de R2).
+6. Ordena por `order` ASC.
+7. Descarga todos los PDFs en paralelo via `asyncio.gather` con cliente `httpx.AsyncClient`.
+8. Verifica que el total no supere 500 MB (`BusinessLogicError` si lo supera).
+9. Construye el ZIP en un `SpooledTemporaryFile` con compresion `ZIP_STORED`.
+10. Retorna `StreamingResponse` en chunks de 64 KB.
+
+**Nombres de archivos dentro del ZIP:**
+
+```
+{order:03d} - {official_number}.pdf
+# Ejemplo: 001 - IF-2025-00001-SMG-ADGEN.pdf
+#          002 - DICT-2025-00002-SMG-ADGEN.pdf
+```
+
+**Nombre del archivo ZIP:**
+
+```
+{case_number}.zip
+# Ejemplo: EE-2025-00001-SMG-ADGEN.zip
+# Las barras / se reemplazan por guiones para evitar problemas en Windows/Mac.
+```
+
+**Response (200):**
+
+```
+Content-Type: application/zip
+Content-Disposition: attachment; filename="EE-2025-00001-SMG-ADGEN.zip"
+[stream binario]
+```
+
+**Errores:**
+
+| Codigo | Descripcion |
+|--------|-------------|
+| 401 | Usuario no autenticado |
+| 404 | Expediente no encontrado o sin permisos de visualizacion |
+| 404 | El expediente no tiene documentos oficiales activos vinculados |
+| 422 | Limite de 500 MB superado (`BusinessLogicError`) |
+| 502 | No se pudo descargar ningun PDF de R2 |
+
+**Archivo:** `endpoints/cases/download_case_zip.py`
+
+**Notas de implementacion:**
+
+- Los PDFs que fallan en la descarga de R2 se omiten con `logger.warning` (no abortan el ZIP si al menos uno tuvo exito).
+- Si TODOS los PDFs fallan → 502.
+- `SpooledTemporaryFile(max_size=50MB)`: hasta 50 MB se guarda en RAM; si es mayor, vuelca a disco temporario.
+- Compresion `ZIP_STORED` (sin compresion): los PDFs ya son binarios comprimidos; comprimirlos de nuevo no reduce el tamano y agrega CPU innecesaria.
+
+---
+
+## Responsables de Expediente
+
+### `GET /api/v1/cases/{case_id}/responsibles`
+
+Lista los responsables activos de un expediente.
+
+**Descripcion:** Retorna el responsable administrador (`type=ADMIN`, unico activo a la vez) y la lista de responsables adicionales (`type=ADDITIONAL`). Requiere que el usuario pueda ver el expediente.
+
+**Response (200):**
+
+```json
+{
+    "success": true,
+    "data": {
+        "admin": {
+            "id": "uuid",
+            "user_id": "uuid",
+            "sector_id": "uuid",
+            "type": "ADMIN",
+            "full_name": "Juan Perez",
+            "email": "juan.perez@municipio.gob.ar",
+            "sector_acronym": "ADGEN",
+            "department_name": "Administracion General",
+            "department_acronym": "ADGEN",
+            "added_at": "2025-06-15T10:30:00Z"
+        },
+        "additional": [
+            {
+                "id": "uuid",
+                "user_id": "uuid",
+                "sector_id": "uuid",
+                "type": "ADDITIONAL",
+                "full_name": "Ana Lopez",
+                "email": "ana.lopez@municipio.gob.ar",
+                "sector_acronym": "LEGAL",
+                "department_name": "Legal y Tecnica",
+                "department_acronym": "LEGAL",
+                "added_at": "2025-06-16T09:00:00Z"
+            }
+        ]
+    },
+    "message": "Responsables obtenidos correctamente"
+}
+```
+
+**Errores:** 404 si el expediente no existe o el usuario no puede verlo.
+
+---
+
+### `GET /api/v1/cases/{case_id}/available-responsibles?type=ADMIN|ADDITIONAL`
+
+Lista usuarios disponibles para ser asignados como responsables del expediente.
+
+**Query Parameters:**
+
+| Parametro | Tipo | Requerido | Descripcion |
+|-----------|------|-----------|-------------|
+| `type` | string | SI | `ADMIN` o `ADDITIONAL` |
+| `sector_id` | UUID | NO | Filtrar por sector especifico (util en transferencia/asignacion) |
+
+**Logica por tipo:**
+
+- `type=ADMIN`: usuarios del sector administrador actual del expediente.
+- `type=ADDITIONAL`: usuarios de sectores admin o actuantes activos del expediente (sector principal o con `can_edit=true` en `user_sector_permissions`).
+- `sector_id` (opcional): filtra directamente por ese sector (Transferencia/Asignacion).
+
+---
+
+### `POST /api/v1/cases/{case_id}/responsibles`
+
+Agrega un responsable al expediente.
+
+**Permisos:** Requiere `can_user_edit_case`. 403 si puede ver pero no editar.
+
+**Request:**
+
+```json
+{
+    "user_id": "uuid-usuario",
+    "type": "ADMIN",
+    "sector_id": "uuid-sector",
+    "reason": "Asignacion de responsable"
+}
+```
+
+| Campo | Tipo | Requerido | Descripcion |
+|-------|------|-----------|-------------|
+| `user_id` | UUID | SI | Usuario a agregar como responsable |
+| `type` | string | SI | `ADMIN` o `ADDITIONAL` |
+| `sector_id` | UUID | SI | Sector del usuario responsable |
+| `reason` | string | NO | Motivo (min 1, max 500 chars; default: "Asignacion de responsable") |
+
+**Comportamiento por tipo:**
+
+- `type=ADMIN`: reemplaza al responsable admin actual (desactiva el anterior con soft delete).
+- `type=ADDITIONAL`: agrega sin modificar el admin existente.
+
+---
+
+### `DELETE /api/v1/cases/{case_id}/responsibles/{responsible_id}?reason=texto`
+
+Quita un responsable del expediente (soft delete: `is_active = false`).
+
+**Permisos:** Requiere `can_user_edit_case`.
+
+**Path Parameters:**
+
+| Parametro | Tipo | Descripcion |
+|-----------|------|-------------|
+| `case_id` | UUID | ID del expediente |
+| `responsible_id` | UUID | ID del registro en `case_responsibles` |
+
+**Query Parameters (opcional):**
+
+| Parametro | Tipo | Descripcion |
+|-----------|------|-------------|
+| `reason` | string | Motivo de remocion (default: "Remocion de responsable") |
+
+Crea un movimiento de tipo `responsible_remove` en el historial.
+
+**Archivo:** `endpoints/cases/responsibles.py`
+
+**Tabla BD:** `{schema}.case_responsibles` (migracion 042b)

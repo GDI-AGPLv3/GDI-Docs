@@ -36,9 +36,35 @@ Cada expediente tiene:
 |----------|-------------|
 | **Tipo** | Categoria del tramite (ej: RRHH - Recursos Humanos, HABI - Habilitacion Comercial, COMP - Compras) |
 | **Sector administrador** | El sector que tiene el control actual del expediente |
-| **Actuantes** | Usuarios asignados como responsables del seguimiento |
+| **Responsables** | Usuarios designados para llevar adelante el tramite (administrador y adicionales) |
 | **Documentos oficiales** | Documentos firmados y vinculados al expediente, numerados en orden |
 | **Documentos propuestos** | Documentos cuya vinculacion fue propuesta pero aun no fue aceptada |
+
+---
+
+## Listado de expedientes
+
+El listado muestra los expedientes como **tarjetas** (cards), una por expediente. Cada tarjeta tiene dos filas:
+
+**Fila superior:** tipo del expediente (badge azul) | motivo | sector administrador | actuantes | numero oficial | boton copiar | fecha de ultima modificacion | estrella de favorito | flecha de ingreso.
+
+**Fila inferior:** resumen breve generado por inteligencia artificial (en cursiva gris).
+
+---
+
+## Solapas de vista
+
+En la parte superior del listado hay cinco solapas para filtrar la vista:
+
+| Solapa | Muestra |
+|--------|---------|
+| **Todo** | Todos los expedientes a los que el usuario tiene acceso |
+| **Personal** | Expedientes donde el usuario es responsable o actuante directo |
+| **Administrador** | Expedientes donde el sector del usuario es el administrador |
+| **Actuante** | Expedientes donde el sector del usuario participa como actuante |
+| **Favoritos** | Expedientes que el usuario marco con la estrella de favorito |
+
+Cada solapa muestra un contador con la cantidad de expedientes correspondientes (excepto "Todo", que muestra todos).
 
 ---
 
@@ -46,7 +72,7 @@ Cada expediente tiene:
 
 | Pagina | Descripcion |
 |--------|-------------|
-| [Detalle del Expediente](detalle-expediente.md) | Vista principal del expediente: header, documentos oficiales, documentos propuestos y acciones disponibles |
+| [Detalle del Expediente](detalle-expediente.md) | Vista principal del expediente: header, documentos oficiales, documentos propuestos, responsables y acciones disponibles incluyendo la descarga ZIP |
 | [Movimientos](movimientos.md) | Historial de actividad, acciones en curso/finalizadas, y como crear actuaciones internas o transferencias |
 | [Vincular Documentos](vincular-documentos.md) | Como vincular documentos oficiales a un expediente, aceptar o rechazar propuestas de vinculacion |
 | [Subsanar en Expediente](subsanar-expediente.md) | Como reemplazar un documento dentro de un expediente aportando un justificante |

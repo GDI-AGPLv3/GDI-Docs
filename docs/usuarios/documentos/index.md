@@ -6,7 +6,7 @@ La seccion **Documentos** es el modulo principal de GDI. Desde aqui se crean, ed
 
 ## Acceso
 
-Desde el **menu lateral izquierdo**, hacer click en **Documentos**. Se muestra una tabla con todos los documentos visibles para el usuario.
+Desde el **menu lateral izquierdo**, hacer click en **Documentos**. Se muestra el listado de documentos visibles para el usuario.
 
 ## Pantalla principal: Listado de documentos
 
@@ -20,7 +20,7 @@ Desde el **menu lateral izquierdo**, hacer click en **Documentos**. Se muestra u
 
 ### Filtros adicionales
 
-En la parte superior derecha de la tabla se encuentran tres selectores:
+En la parte superior derecha del listado se encuentran tres selectores:
 
 | Filtro | Opciones | Descripcion |
 |--------|----------|-------------|
@@ -28,17 +28,28 @@ En la parte superior derecha de la tabla se encuentran tres selectores:
 | **Fecha** | Todos, Hoy, Esta semana, Este mes | Filtrar por rango de fecha de ultima modificacion |
 | **Tipo** | Todos, IF, NOTA, DICTA, etc. | Filtrar por tipo de documento |
 
-### Columnas de la tabla
+### Tarjetas del listado
 
-| Columna | Descripcion |
-|---------|-------------|
-| **Ultima modificacion** | Fecha y hora del ultimo cambio en el documento |
-| **Sector Creador** | Sector del usuario que creo el documento (ej: `LEGAL#PRIV`) |
-| **Ultimo Editor** | Avatar e iniciales + nombre del ultimo usuario que edito |
-| **Tipo** | Acronimo del tipo de documento (IF, NOTA, DICTA, etc.) |
-| **Referencia** | Titulo descriptivo del documento |
-| **Numero** | Numero oficial asignado al firmar (ej: `IF-2026-00000122-TXST-INTE`) |
-| **Estado** | Badge de color con el estado actual (verde=Firmado, azul=En proceso, etc.) |
+Cada documento se muestra como una tarjeta de dos filas.
+
+**Fila 1** (de izquierda a derecha):
+
+| Elemento | Descripcion |
+|----------|-------------|
+| **Sigla** | Acronimo del tipo de documento en badge primario (ej: `IF`, `NOTA`) |
+| **Referencia** | Titulo descriptivo del documento (truncado si es largo) |
+| **Estado** | Badge de color redondeado con el estado actual (ej: `Firmado`, `En edicion`) |
+| **Numero oficial** | Numero asignado al firmar (ej: `IF-2026-00000122-TXST-INTE`), con boton de copiar al portapapeles. Solo aparece si el documento ya tiene numero |
+| **Fecha** | Fecha y hora de ultima modificacion |
+| **`>`** | Flecha de navegacion, se resalta al pasar el cursor |
+
+**Fila 2** (de izquierda a derecha):
+
+| Elemento | Descripcion |
+|----------|-------------|
+| **Resumen IA** | Resumen automatico del contenido generado por IA (`short_resume`), en texto italico gris. Solo aparece si el documento ya fue procesado |
+| **Avatar + nombre del ultimo editor** | Foto de perfil (o iniciales en circulo) del ultimo usuario que edito, seguido de su nombre |
+| **Avatares de firmantes** | Fotos de perfil (o iniciales) de los firmantes asignados. Se muestran hasta 2; si hay mas, aparece un contador `+N`. Solo aparece si el documento tiene firmantes |
 
 ### Buscador
 

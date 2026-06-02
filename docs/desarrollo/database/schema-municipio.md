@@ -1,6 +1,6 @@
 # Schema Municipio
 
-Cada organizacion tiene su propio schema PostgreSQL con **33 tablas** organizadas en 9 grupos funcionales. El nombre del schema sigue la convencion `{numero}_{acronimo}`, por ejemplo: `200_muni`, `201_otra`.
+Cada organizacion tiene su propio schema PostgreSQL con **35 tablas** organizadas en 10 grupos funcionales. El nombre del schema sigue la convencion `{numero}_{acronimo}`, por ejemplo: `100_test`, `101_esco`.
 
 ## Resumen por Grupo
 
@@ -9,12 +9,13 @@ Cada organizacion tiene su propio schema PostgreSQL con **33 tablas** organizada
 | A - Estructura Organizacional | 2 | departments, sectors |
 | B - Usuarios | 5 | users, user_roles, user_seals, user_sector_permissions, estado_users |
 | C - Rangos y Sellos | 2 | ranks, city_seals |
-| D - Documentos | 7 | document_types, dtabr, edts, document_draft, document_signers, document_rejections, official_documents |
-| E - Expedientes | 6 | case_templates, ctad, cases, case_movements, case_official_documents, case_proposed_documents |
+| D - Documentos | 9 | document_types, document_types_allowed_by_rank, enabled_document_types_by_sector, document_draft, document_signers, document_rejections, official_documents, document_number_counters, case_proposed_documents |
+| E - Expedientes | 6 | case_templates, case_template_allowed_departments, cases, case_movements, case_official_documents, case_proposed_documents |
 | F - Configuracion | 1 | settings |
 | G - Agente IA | 1 | document_chunks |
-| H - Notas | 2 | notes_recipients, notes_openings |
+| H - Notas | 3 | notes_recipients, notes_openings, memo_recipients |
 | I - Registros | 7 | registry_families, registry_family_permissions, records, record_history, record_relations, record_case_links, record_document_links |
+| J - Responsables y Favoritos | 2 | case_responsibles, case_favorites |
 
 ## Diagrama ER Simplificado
 
@@ -69,8 +70,11 @@ Departamentos de la organizacion. Soporta jerarquia via `parent_id` (self-refere
 | `start_date` | TIMESTAMPTZ | NO | `NOW()` | Inicio de vigencia |
 | `end_date` | TIMESTAMPTZ | SI | - | Fin de vigencia |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, FK `parent_id` -> self, FK `rank_id` -> `ranks(id)` (diferida)
+
+**Indices:** `idx_{schema}_departments_head_user_id` en `head_user_id` (mig 060)
 
 ### TABLA 2: sectors
 
@@ -86,6 +90,7 @@ Sectores dentro de cada departamento. Cada departamento tiene al menos un sector
 | `start_date` | TIMESTAMPTZ | NO | `NOW()` | Inicio de vigencia |
 | `end_date` | TIMESTAMPTZ | SI | - | Fin de vigencia |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, FK `department_id` -> `departments(id)`, UNIQUE (`department_id`, `acronym`)
 
@@ -101,6 +106,7 @@ Usuarios de la organizacion. Cada usuario pertenece a un sector.
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `auth_id` | TEXT | SI | - | ID de Auth0 |
+| `auth_method` | VARCHAR(20) | NO | `'social'` | Metodo de autenticacion: `social` o `database` |
 | `email` | TEXT | NO | - | Email (unique) |
 | `full_name` | VARCHAR(150) | NO | - | Nombre completo |
 | `profile_picture_url` | TEXT | SI | - | URL foto de perfil (Auth0) |
@@ -111,6 +117,7 @@ Usuarios de la organizacion. Cada usuario pertenece a un sector.
 | `can_global_search_documents` | BOOLEAN | NO | `true` | Permiso de busqueda global de docs |
 | `can_global_search_cases` | BOOLEAN | NO | `true` | Permiso de busqueda global de expedientes |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, UNIQUE `email`, FK `sector_id` -> `sectors(id)`
 
@@ -129,6 +136,7 @@ Asignacion de roles a usuarios. Un usuario puede tener un rol (tipicamente Funci
 | `user_id` | UUID | NO | - | FK a `users` |
 | `role_id` | UUID | NO | - | FK a `public.roles` |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, UNIQUE (`user_id`, `role_id`), FK a `users` y `public.roles`
 
@@ -140,10 +148,11 @@ Asigna exactamente un sello de firma por usuario. Relacion 1:1 (UNIQUE en `user_
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `user_id` | UUID | NO | - | FK a `users` (UNIQUE) |
-| `city_seal_id` | INT | NO | - | FK a `city_seals` |
+| `city_seal_id` | INT | NO | - | FK a `city_seals` (diferida) |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
-**Constraints:** PK `id`, UNIQUE `user_id`, FK a `users` y `city_seals` (diferida)
+**Constraints:** PK `id`, UNIQUE `user_id`, FK a `users`, FK `city_seal_id` -> `city_seals(id)` (diferida)
 
 ### TABLA 6: user_sector_permissions
 
@@ -157,6 +166,7 @@ Permisos adicionales de un usuario sobre sectores que no son el suyo.
 | `can_view` | BOOLEAN | NO | `true` | Permiso de lectura |
 | `can_edit` | BOOLEAN | NO | `false` | Permiso de escritura |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, UNIQUE (`user_id`, `sector_id`)
 
@@ -189,6 +199,7 @@ Jerarquias de la organizacion. El campo `level` determina el orden (1 = mas alto
 | `level` | INT | NO | - | Nivel jerarquico (1 = mas alto, unique) |
 | `head_signature` | VARCHAR(100) | SI | - | Texto en firma de documentos |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 
 **Constraints:** PK `id`, UNIQUE `name`, UNIQUE `level`
 

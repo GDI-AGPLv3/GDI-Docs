@@ -1,6 +1,6 @@
 # REST API
 
-API REST publica del Gateway con **45 endpoints** para integraciones programaticas con el sistema de gestion documental.
+API REST publica del Gateway con **80+ endpoints** para integraciones programaticas con el sistema de gestion documental.
 
 ---
 
@@ -91,23 +91,28 @@ La respuesta incluye metadatos de paginacion:
 
 ## Endpoints por dominio
 
-### Expedientes (13 endpoints)
+### Expedientes (19 endpoints)
 
 | Metodo | Ruta | Descripcion |
 |--------|------|-------------|
 | `GET` | `/cases/search` | Buscar expedientes con filtros |
 | `GET` | `/cases/{case_id}` | Detalle de un expediente |
 | `GET` | `/cases/number/{case_number}` | Buscar expediente por numero exacto |
-| `GET` | `/cases/{case_id}/history` | Historial de movimientos |
+| `GET` | `/cases/{case_id}/history` | Historial de movimientos con resumen IA |
 | `GET` | `/cases/{case_id}/documents` | Documentos del expediente |
 | `GET` | `/cases/{case_id}/permissions` | Permisos del usuario sobre el expediente |
 | `GET` | `/cases/{case_id}/prepare-assignment` | Preparar datos para asignacion |
 | `GET` | `/cases/{case_id}/prepare-transfer` | Preparar datos para transferencia |
+| `GET` | `/cases/{case_id}/movements` | Movimientos del expediente (plano, sin IA) |
+| `GET` | `/cases/{case_id}/responsibles` | Responsables activos del expediente |
 | `GET` | `/cases/sectors/{sector_id}/users` | Usuarios de un sector |
 | `POST` | `/cases/` | Crear expediente |
 | `POST` | `/cases/{case_id}/transfer` | Transferir expediente a otro sector |
-| `POST` | `/cases/{case_id}/assign` | Asignar expediente a usuario |
+| `POST` | `/cases/{case_id}/assign` | Asignar expediente a sector |
 | `POST` | `/cases/{case_id}/close-assign` | Cerrar asignacion activa |
+| `POST` | `/cases/{case_id}/responsibles` | Agregar responsable al expediente |
+| `POST` | `/cases/{case_id}/subsanar` | Subsanar documento oficial erroneo |
+| `DELETE` | `/cases/{case_id}/responsibles/{responsible_id}` | Quitar responsable del expediente |
 
 Documentacion completa: [Expedientes](expedientes.md)
 
@@ -120,23 +125,26 @@ Documentacion completa: [Expedientes](expedientes.md)
 | `GET` | `/documents/search` | Buscar documentos con filtros |
 | `GET` | `/documents/pending-signatures` | Documentos pendientes de firma |
 | `GET` | `/documents/{document_id}` | Detalle de un documento |
-| `GET` | `/documents/{document_id}/content` | Contenido HTML del documento |
+| `GET` | `/documents/{document_id}/content` | Contenido HTML del documento (solo oficiales) |
 | `GET` | `/documents/{document_id}/url` | URL temporal para descargar PDF |
 | `GET` | `/documents/{document_id}/signature-details` | Detalles de firma |
 | `GET` | `/documents/search-official/{doc_number}` | Buscar documento oficial por numero |
-| `GET` | `/documents/check-signer-permissions` | Verificar permisos de firma |
+| `GET` | `/documents/check-signer-permissions` | Verificar permisos de firma de un usuario |
 | `POST` | `/documents/` | Crear documento borrador |
-| `POST` | `/documents/import` | Importar PDF externo |
+| `POST` | `/documents/import` | Importar PDF externo (multipart/form-data) |
 | `PATCH` | `/documents/{document_id}` | Guardar cambios en borrador |
 | `PUT` | `/documents/{document_id}/imported-pdf` | Reemplazar PDF importado |
-| `DELETE` | `/documents/{document_id}` | Eliminar borrador |
+| `DELETE` | `/documents/{document_id}` | Eliminar borrador o rechazado |
 | `POST` | `/documents/{document_id}/start-signing` | Iniciar proceso de firma |
-| `POST` | `/documents/{document_id}/sign` | Firmar documento |
+| `POST` | `/documents/{document_id}/sign` | Firmar documento (solo firma electronica) |
 | `POST` | `/documents/{document_id}/reject` | Rechazar documento |
 | `POST` | `/cases/{case_id}/documents/link` | Vincular documento oficial a expediente |
 | `POST` | `/cases/{case_id}/documents/propose` | Proponer borrador a expediente |
 | `POST` | `/cases/{case_id}/documents/accept-proposal` | Aceptar propuesta de documento |
 | `POST` | `/cases/{case_id}/documents/reject-proposal` | Rechazar propuesta de documento |
+
+!!! warning "Firma digital con token fisico"
+    `POST /documents/{id}/sign` solo acepta firma electronica. Documentos con `signature_policy=digital_all` o numeradores con `digital_num` devuelven `422` e instruyen al usuario a firmar desde el portal web con FirmadorGDI.
 
 Documentacion completa: [Documentos](documentos.md)
 
@@ -151,8 +159,11 @@ Documentacion completa: [Documentos](documentos.md)
 | `GET` | `/system/sectors` | Sectores con departamentos |
 | `GET` | `/system/case-templates` | Plantillas de expedientes |
 | `GET` | `/system/users/list` | Listar todos los usuarios del tenant |
-| `GET` | `/system/users/search` | Buscar usuarios (autocompletado) |
-| `GET` | `/system/users/{user_id}` | Informacion de un usuario |
+| `GET` | `/system/users/search` | Buscar usuarios por nombre (autocompletado) |
+| `GET` | `/system/users/{user_id}` | Informacion de un usuario (solo propia) |
+
+!!! note "Restriccion en GET /system/users/{user_id}"
+    Por seguridad (SEC-12), el usuario solo puede consultar su propia informacion. Intentar consultar otro `user_id` devuelve `403`.
 
 Documentacion completa: [Sistema y Catalogos](sistema.md)
 
@@ -172,14 +183,67 @@ Documentacion completa: [Notas](notas.md)
 
 ---
 
-### Legajos - RLM (endpoints)
+### Memos (4 endpoints)
+
+| Metodo | Ruta | Descripcion |
+|--------|------|-------------|
+| `GET` | `/memos/received` | Memos recibidos del usuario |
+| `GET` | `/memos/sent` | Memos enviados por el usuario |
+| `GET` | `/memos/archived` | Memos archivados del usuario |
+| `GET` | `/memos/{memo_id}` | Detalle de un memo |
+
+---
+
+### Busqueda Semantica (1 endpoint)
+
+| Metodo | Ruta | Descripcion |
+|--------|------|-------------|
+| `GET` | `/search/semantic` | Busqueda semantica vectorial sobre documentos |
+
+**Parametros query:** `query` (requerido, min 3 chars), `limit` (default 20, max 50).
+
+---
+
+### Legajos - RLM (18 endpoints)
 
 | Metodo | Ruta | Descripcion |
 |--------|------|-------------|
 | `GET` | `/records/search` | Buscar legajos con filtros |
 | `GET` | `/records/{record_id}` | Detalle de un legajo |
 | `GET` | `/records/families` | Familias de registro disponibles |
-| `POST` | `/records/` | Crear legajo |
-| `PATCH` | `/records/{record_id}` | Actualizar legajo |
+| `GET` | `/records/{record_id}/history` | Historial del legajo |
+| `GET` | `/records/{record_id}/relations` | Relaciones con otros legajos |
+| `GET` | `/records/{record_id}/cases` | Expedientes vinculados |
+| `GET` | `/records/{record_id}/documents` | Documentos vinculados |
+| `POST` | `/records` | Crear legajo |
+| `PATCH` | `/records/{record_id}` | Actualizar estado o nombre |
+| `PATCH` | `/records/{record_id}/fields/{field_name}` | Actualizar campo del legajo |
+| `POST` | `/records/{record_id}/fields/{field_name}/verify` | Verificar campo con documento oficial |
+| `POST` | `/records/{record_id}/report` | Generar informe IFRLM |
+| `POST` | `/records/{record_id}/relations` | Crear relacion entre legajos |
+| `DELETE` | `/records/{record_id}/relations/{relation_id}` | Eliminar relacion |
+| `POST` | `/records/{record_id}/cases` | Vincular expediente al legajo |
+| `DELETE` | `/records/{record_id}/cases/{link_id}` | Desvincular expediente |
+| `POST` | `/records/{record_id}/documents` | Vincular documento al legajo |
+| `DELETE` | `/records/{record_id}/documents/{link_id}` | Desvincular documento |
+
+Ademas, `/registries` es un alias de `/records/families`.
 
 Documentacion completa: [Legajos (RLM)](legajos.md)
+
+---
+
+### Backup / Sync (3 endpoints)
+
+!!! warning "Autenticacion especial"
+    Estos endpoints usan **Backup API Keys** (`key_type='backup'`). No requieren `X-User-ID`. Validan IP de origen y aplican rate limiting por accion.
+
+| Metodo | Ruta | Descripcion |
+|--------|------|-------------|
+| `GET` | `/sync/schema` | Catalogo de tablas sincronizables |
+| `GET` | `/sync/data` | Datos incrementales de una tabla |
+| `GET` | `/sync/documents` | PDFs firmados con presigned URLs |
+
+**Parametros `/sync/data`:** `table` (requerido), `since` (ISO 8601, requerido), `page`, `page_size` (max 100).
+
+**Parametros `/sync/documents`:** `since` (ISO 8601, requerido), `page`, `page_size` (max 100).

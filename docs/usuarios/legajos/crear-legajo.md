@@ -10,26 +10,26 @@ Esta pagina explica como crear un legajo nuevo, completar sus campos, cambiar su
 
 ### Paso 1: Seleccionar la familia de registro
 
-Desde la pantalla principal de **Legajos**, hace click en el boton **"+ Crear"**. El sistema muestra un selector con las familias de registro disponibles para tu usuario.
+Desde la pantalla principal de **Legajos**, hace click en el boton **"+ Crear"**. El sistema abre el formulario de nuevo legajo con un selector de familias de registro.
 
 !!! tip "Solo ves las familias que tenes habilitadas"
-    Si no aparece la familia que necesitas, contacta al administrador del sistema para que te asigne el permiso `can_create` en esa familia.
+    El selector muestra unicamente las familias activas en las que tenes permiso `can_create`. Si no aparece la familia que necesitas, contacta al administrador del sistema.
 
 Selecciona la familia que corresponda al tipo de legajo que queres crear (ej: Arquitectura, Luminarias, Ordenanzas).
 
-### Paso 2: Completar el nombre descriptivo
+### Paso 2: Completar el nombre del legajo
 
-El campo **display_name** es el nombre que identifica al legajo de forma legible. Debe ser claro y descriptivo para que cualquier usuario pueda entender de que se trata.
+El campo **Legajo** es el nombre identificatorio del legajo. Debe ser claro y descriptivo para que cualquier usuario entienda de que se trata.
 
-!!! example "Ejemplos de display_name"
+!!! example "Ejemplos de nombres"
     - `Obra Av. San Martin 1250 - Gonzalez`
     - `Luminaria LED #4521 - Rotonda Belgrano`
     - `Ordenanza 3847/2025 - Uso de suelo zona norte`
     - `Habilitacion - Panaderia Don Carlos - Mitre 890`
 
-### Paso 3: Completar los campos
+### Paso 3: Completar los campos de la familia
 
-Cada familia de registro define un conjunto de campos especificos. Los campos pueden ser de distintos tipos:
+Una vez seleccionada la familia, aparecen los campos especificos de esa familia. Los campos pueden ser de distintos tipos:
 
 | Tipo de campo | Ejemplo |
 |---------------|---------|
@@ -40,9 +40,9 @@ Cada familia de registro define un conjunto de campos especificos. Los campos pu
 | Archivo adjunto | Plano aprobado, foto del frente |
 
 !!! warning "Campos obligatorios"
-    Los campos marcados con asterisco (*) son obligatorios. El legajo no puede pasar a estado **Activo** hasta que todos los campos obligatorios esten completos.
+    Los campos marcados con asterisco (*) son obligatorios. El sistema valida que esten completos antes de crear el legajo. Si falta algun campo obligatorio, se muestra un mensaje indicando cuales faltan.
 
-Al guardar, el sistema asigna automaticamente el **numero oficial** con formato `RLM-{ANO}-{SEQ}-{TENANT}-{CODIGO}`.
+Al confirmar con **"Crear Legajo"**, el sistema asigna automaticamente el **numero oficial** con formato `RLM-{ANO}-{SEQ}-{TENANT}-{CODIGO}` y redirige al detalle del legajo recien creado.
 
 ---
 
@@ -53,20 +53,20 @@ Al guardar, el sistema asigna automaticamente el **numero oficial** con formato 
 Para modificar los datos de un legajo existente:
 
 1. Abri el legajo desde el listado
-2. Hace click en el campo que queres modificar
+2. En la pestana **Datos**, hace click en el campo que queres modificar para editarlo directamente (edicion inline), o usa el boton de edicion global para modificar varios campos a la vez
 3. Ingresa el nuevo valor
 4. Guarda los cambios
 
 !!! info "Campos verificados"
     Si un campo ya fue verificado por un verificador, al editarlo se pierde la verificacion y el campo vuelve a estado **pendiente de verificacion**. Ver [Verificacion](verificacion.md).
 
-Todos los cambios quedan registrados en el **historial** del legajo con fecha, usuario y valor anterior.
+Todos los cambios quedan registrados en la pestana **Movimientos** del legajo con fecha, usuario y valor anterior.
 
 ---
 
 ## Cambiar el estado de un legajo
 
-Desde la vista de detalle del legajo, podes cambiar su estado usando el selector de estado en la parte superior.
+Desde la vista de detalle del legajo, hace click en el boton **"Acciones"** (arriba a la derecha) y selecciona **"Cambiar Estado"**.
 
 Los estados disponibles dependen de la familia de registro. Podes cambiar de cualquier estado a cualquier otro sin restricciones. El sistema registra cada cambio en el historial con fecha, usuario y motivo.
 
@@ -82,7 +82,7 @@ El **IFRLM (Informe de Registro Legajo Multiproposito)** es una foto del legajo 
 ### Como generarlo
 
 1. Abri el legajo del que queres emitir el informe
-2. Hace click en **"Generar IFRLM"**
+2. Hace click en **"Acciones"** (arriba a la derecha) y selecciona **"Generar Informe IFRLM"**
 3. El sistema crea un documento tipo IFRLM con:
     - Todos los campos del legajo y sus valores actuales
     - Estado de verificacion de cada campo

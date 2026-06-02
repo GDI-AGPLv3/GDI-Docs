@@ -83,25 +83,32 @@ Integrado en GDI-Backend (`api_gateway/`). Comparte las variables del Backend ma
 
 ## GDI-AgenteLANG (:8004)
 
+!!! info "Stack LLM"
+    GDI-AgenteLANG usa **exclusivamente GPT-4.1-nano** via OpenRouter para todos los nodos (router, respond, resume, transcripcion). Los embeddings usan `openai/text-embedding-3-small` (1536 dims) tambien via OpenRouter con la misma API key.
+
 | Variable | Descripcion | Requerida | Ejemplo |
 |----------|-------------|-----------|---------|
 | `DATABASE_URL` | Connection string PostgreSQL | Si | `postgresql://user:pass@host:port/db` |
 | `OPENROUTER_API_KEY` | API Key de OpenRouter | Si | `sk-or-...` |
-| `OPENROUTER_MODEL` | Modelo LLM principal | Si | `google/gemini-2.0-flash-001` |
-| `OPENROUTER_FAST_MODEL` | Modelo para Router (gratis) | Si | `meta-llama/llama-3.3-70b-instruct:free` |
-| `EMBEDDINGS_MODEL` | Modelo de embeddings | Si | `openai/text-embedding-3-small` |
-| `GDI_BACKEND_URL` | URL del Backend | Si | `http://backend:8000` |
-| `INTERNAL_API_KEY` | API Key interna para Backend | Si | `your-internal-api-key` |
-| `AUTH0_DOMAIN` | Dominio Auth0 | Si | `tu-tenant.us.auth0.com` |
-| `AUTH0_AUDIENCE` | Audience Auth0 | Si | `https://api.tu-dominio.com` |
+| `OPENROUTER_MODEL` | Modelo LLM principal | Si | `openai/gpt-4.1-nano` |
+| `OPENROUTER_FAST_MODEL` | Modelo para Router | Si | `openai/gpt-4.1-nano` |
+| `EMBEDDINGS_MODEL` | Modelo de embeddings (via OpenRouter) | Si | `openai/text-embedding-3-small` |
+| `GDI_BACKEND_URL` | URL del Backend | Si | `http://localhost:8000` (dev) / `http://{cliente}-backend-prd.internal:8080` (prd) |
+| `GDI_GATEWAY_URL` | URL del Gateway MCP | Si | `http://localhost:8005` (dev) / `http://{cliente}-gateway-prd.internal:8080` (prd) |
+| `INTERNAL_API_KEY` | API Key interna compartida con Backend (1 por ambiente) | Si | `(secreto)` |
+| `AUTH0_DOMAIN` | Dominio Auth0 | Si | `gdilatam.us.auth0.com` |
+| `AUTH0_AUDIENCE` | Audience Auth0 | Si | `https://gdilatam.us.auth0.com/api/v2/` |
+| `ALLOW_TEST_MODE` | Permite modo test sin auth (solo dev) | No | `false` (default en prd) |
 | `AI_WORKER_INTERVAL` | Intervalo del worker (segundos) | No | `60` (default) |
 | `AI_WORKER_BATCH_SIZE` | Documentos por batch | No | `10` (default) |
-| `ENABLED_SCHEMAS` | Schemas a procesar | No | `["200_muni"]` |
 | `TRANSCRIPTION_ENABLED` | Habilitar transcripcion de PDFs | No | `true` (default) |
-| `TRANSCRIPTION_VISION_MODEL` | Modelo de vision para OCR | No | `google/gemini-flash-1.5` |
+| `TRANSCRIPTION_VISION_MODEL` | Modelo de vision para OCR | No | `openai/gpt-4.1-nano` |
 | `TRANSCRIPTION_MAX_FILE_SIZE_MB` | Tamano maximo PDF (MB) | No | `10` |
 | `TRANSCRIPTION_MAX_PAGES` | Paginas maximas a transcribir | No | `50` |
 | `TRANSCRIPTION_DPI` | Resolucion de renderizado | No | `150` |
+
+!!! warning "ENABLED_SCHEMAS removida"
+    La variable `ENABLED_SCHEMAS` fue eliminada. El AIWorker descubre automaticamente los schemas a procesar desde `public.ai_usage_limits` en la BD.
 
 ## GDI-PDFComposer (:8002)
 

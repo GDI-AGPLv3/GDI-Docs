@@ -56,7 +56,7 @@ Selecciona la seccion que corresponde a tu perfil:
 |------|-------------|
 | **Frontend** | Next.js 15, React 18, TypeScript, Tailwind CSS, shadcn/ui |
 | **Backend** | FastAPI, Python 3.12, Auth0, PostgreSQL 17 |
-| **Gateway API** | MCP Server (14 tools) + REST API (45 endpoints) |
+| **Gateway API** | MCP Server (42 tools) + REST API (45 endpoints) |
 | **Microservicios** | Notary (pyHanko), AgenteLANG (LangGraph) |
 | **Infraestructura** | Docker, Cloudflare R2, GitHub Actions |
 

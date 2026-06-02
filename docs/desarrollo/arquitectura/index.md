@@ -67,23 +67,23 @@ Todos los servicios se comunican via HTTP REST. No se usan colas de mensajes, gR
 - **Embeddings**: pgvector en PostgreSQL para busqueda semantica RAG.
 - **Imagenes de config**: Cloudflare R2 (logos, isologos) gestionados por BackOffice.
 
-### Deploy con Docker
+### Deploy en Fly.io y Vercel
 
-Cada servicio se empaqueta como imagen Docker. Las organizaciones despliegan el ecosistema completo con Docker Compose. La comunicacion interna entre servicios usa la red Docker para menor latencia y mayor seguridad.
+Cada servicio backend se empaqueta como imagen Docker y se despliega en **Fly.io** via GitHub Actions. Los frontends Next.js se despliegan en **Vercel** automaticamente al hacer push. La comunicacion interna entre microservicios usa la red privada de Fly.io (`*.internal`) para menor latencia y mayor seguridad, sin exponer puertos publicos para PDFComposer y Notary en PRD.
 
 ## Repositorios
 
 El proyecto esta organizado como **multi-repo**: cada carpeta en el directorio raiz es un repositorio Git independiente. No es un monorepo.
 
 ```
-mi-proyecto/          # Directorio raiz (NO es repo git)
-├── GDI-FRONTEND/      # App usuarios (Next.js :3003)
-├── GDI-Backend/       # API principal (FastAPI :8000)
-├── GDI-BackOffice-Front/  # Admin UI (Next.js :3013)
-├── GDI-BackOffice-Back/   # Admin API (FastAPI :8010)
-├── GDI-AgenteLANG/    # Agente IA (FastAPI :8004)
-├── GDI-PDFComposer/   # Genera PDFs (FastAPI :8002)
-├── GDI-Notary/        # Firma digital (FastAPI :8001)
+APP-GDILatam/         # Directorio raiz (NO es repo git)
+├── GDI-FRONTEND/      # App usuarios (Next.js :3003 local, Vercel PRD)
+├── GDI-Backend/       # API principal + MCP Gateway (FastAPI :8000/:8005 local, :8080 Fly.io)
+├── GDI-BackOffice-Front/  # Admin UI (Next.js :3013 local, Vercel PRD)
+├── GDI-BackOffice-Back/   # Admin API (FastAPI :8010 local, :8080 Fly.io)
+├── GDI-AgenteLANG/    # Agente IA (FastAPI :8004 local, :8080 Fly.io)
+├── GDI-PDFComposer/   # Genera PDFs (FastAPI :8002 local, :8080 Fly.io internal-only PRD)
+├── GDI-Notary/        # Firma digital (FastAPI :8001 local, :8080 Fly.io internal-only PRD)
 ├── GDI-BD/            # Scripts SQL de BD
 └── .claude/           # Documentacion interna y agentes
 ```

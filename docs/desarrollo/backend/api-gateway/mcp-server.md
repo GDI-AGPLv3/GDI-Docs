@@ -1,132 +1,64 @@
 # MCP Server
 
-Server MCP (Model Context Protocol) con 14 tools de solo lectura. Compatible con Claude Code, ChatGPT y Gemini.
+!!! info "Documentacion completa en la seccion Gateway"
+    La documentacion autoritativa del MCP Server vive en [desarrollo/gateway/mcp-server.md](../../gateway/mcp-server.md).
+    Esta pagina es un resumen de arquitectura interna; para la lista de tools, flujos y configuracion de clientes, ver esa seccion.
 
-**Ubicacion:** `api_gateway/server.py`
+El MCP Server expone **42 tools** (lectura y escritura) a agentes IA. Se implementa como Streamable HTTP (JSON-RPC) sobre el endpoint `POST /mcp`.
 
-## Tools Disponibles
+**Ubicacion del codigo:** `api_gateway/http_server.py` (handler `handle_list_tools`) y `api_gateway/tools/` (implementacion de cada tool).
 
-### Expedientes (Cases)
+## Implementacion Interna
 
-| Tool | Descripcion | Parametros principales |
-|------|-------------|----------------------|
-| `search_cases` | Busca en contenido completo de expedientes | `search`, `page`, `status`, `date_filter` |
-| `get_case` | Detalle de expediente con documentos opcionales | `case_id`, `include_documents` |
-| `get_case_history` | Historial de movimientos + ai_summary | `case_id` |
-| `get_case_documents` | Lista documentos oficiales y propuestos | `case_id` |
-| `get_case_permissions` | Permisos del usuario sobre un expediente | `case_id` |
+### Definicion de Tools (`http_server.py`)
 
-### Documentos
-
-| Tool | Descripcion | Parametros principales |
-|------|-------------|----------------------|
-| `search_documents` | Busca en contenido completo de documentos | `search`, `page`, `status`, `doc_type` |
-| `get_document` | Detalle con ai_summary (resumen IA) | `document_id` |
-| `get_document_content` | Contenido HTML completo (solo oficiales) | `document_id` |
-| `get_pending_signatures` | Documentos esperando firma del usuario | (ninguno) |
-
-### Sistema
-
-| Tool | Descripcion |
-|------|-------------|
-| `get_document_types` | Tipos de documentos activos (INF, DICT, CAEX, etc.) |
-| `get_sectors` | Sectores y departamentos de la organizacion |
-| `get_user_info` | Informacion del usuario actual |
-| `get_case_templates` | Templates de expedientes disponibles |
-
-### Utilidades
-
-| Tool | Descripcion |
-|------|-------------|
-| `get_agent_guide` | Guia completa del sistema (usar al conectar) |
-
----
-
-## Flujos Recomendados
-
-### "Que tengo para firmar?"
-
-```
-1. get_pending_signatures
-2. Responder: "Tenes 2 docs esperando tu firma: INF-xxx, DICT-xxx"
-```
-
-### "Contame sobre el expediente de la panaderia"
-
-```
-1. search_cases(search="panaderia")
-2. get_case_history(case_id=...)
-3. Responder con RESUMEN NARRATIVO (no lista de pasos)
-```
-
-### "Busca documentos de Juan Perez"
-
-```
-1. search_documents(search="Juan Perez")
-2. Responder con lista resumida
-```
-
----
-
-## Implementacion
-
-### Definicion de Tools (`server.py`)
-
-Cada tool se define con `@server.list_tools()` y se ejecuta con `@server.call_tool()`:
+Las tools se definen en `handle_list_tools` y se despachan en `handle_call_tool`. Cada tool recibe un `MCPContext` con el usuario y schema del tenant:
 
 ```python
-# Definicion
+# Definicion (handle_list_tools)
 Tool(
     name="search_cases",
     description="Busca expedientes por texto...",
     inputSchema={
         "type": "object",
         "properties": {
-            "search": {"type": "string", "description": "Texto de busqueda"},
+            "search": {"type": "string"},
             "page": {"type": "integer", "default": 1},
             "page_size": {"type": "integer", "default": 20},
-            "status": {"type": "string", "enum": ["active", "inactive", "archived"]},
         }
     }
 )
 
-# Ejecucion
-@server.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "search_cases":
-        result = await cases.search_cases(ctx, **arguments)
-        return [TextContent(type="text", text=json.dumps(result))]
+# Ejecucion (handle_call_tool)
+if name == "search_cases":
+    result = await cases.search_cases(ctx, **arguments)
+    return [TextContent(type="text", text=json.dumps(result))]
 ```
 
-### Contexto Multi-Tenant
+### Contexto Multi-Tenant (`auth_mcp.py`)
 
 El contexto se inyecta automaticamente desde el JWT:
 
 ```python
-# auth_mcp.py
 async def validate_mcp_auth(token: str) -> MCPContext:
     # 1. Validar JWT con Auth0 JWKS
     # 2. Extraer email (del token o de /userinfo)
     # 3. Buscar usuario en BD por email
-    # 4. Construir MCPContext con user_id, municipality_id, schema_name
+    # 4. Construir MCPContext con user_id, schema_name, etc.
     return MCPContext(
-        user_id=user['id'],
-        municipality_id=user['municipality_id'],
-        schema_name=get_schema_from_municipality(municipality_id),
-        user_full_name=user['full_name'],
-        user_email=email
+        user_id=...,
+        schema_name=...,
+        user_full_name=...,
+        user_email=...,
     )
 ```
 
----
+### Tools Layer (`tools/`)
 
-## Tools Layer (`tools/`)
-
-Los tools son funciones async que reciben `MCPContext` y parametros tipados.
-
-### Ejemplo: `search_cases` (`tools/cases.py`)
+Los tools son funciones async que reciben `MCPContext` y parametros tipados:
 
 ```python
+# tools/cases.py
 async def search_cases(
     ctx: MCPContext,
     search: str = "",
@@ -137,61 +69,23 @@ async def search_cases(
     sector_filter: str = None
 ) -> Dict[str, Any]:
     """Busca expedientes accesibles por el usuario."""
-    # Usa schema_name del contexto para multi-tenant
+    # Usa ctx.schema_name para multi-tenant
     # Filtra por sectores del usuario automaticamente
 ```
 
-### Ejemplo: `get_document` (`tools/documents.py`)
-
-```python
-async def get_document(
-    ctx: MCPContext,
-    document_id: str
-) -> Dict[str, Any]:
-    """Obtiene detalle de documento con ai_summary."""
-    # Incluye resumen IA si esta disponible
-    # Resuelve linked_case si esta vinculado a expediente
-```
-
----
-
 ## Autenticacion MCP (`auth_mcp.py`)
 
-### JWT Multi-Audience
+Ver [OAuth Discovery](oauth-discovery.md) para el flujo completo.
 
-Soporta multiples audiences para flexibilidad de clientes:
+JWT multi-audience soportado:
 
 ```python
 VALID_AUDIENCES = [
-    os.getenv('AUTH0_AUDIENCE'),      # Backend principal
-    os.getenv('MCP_RESOURCE_URI'),    # Variable configurable
-    "https://mcp.tu-dominio.com"        # Produccion hardcoded
+    os.getenv('AUTH0_AUDIENCE'),
+    os.getenv('MCP_RESOURCE_URI'),
 ]
-```
-
-### Flujo de Autenticacion
-
-```
-1. Cliente envia POST /mcp sin auth
-2. Server responde 401 + WWW-Authenticate header
-3. Cliente descubre Auth0 via /.well-known/oauth-protected-resource
-4. Cliente hace login en Auth0 (navegador)
-5. Cliente envia POST /mcp con Authorization: Bearer <jwt>
-6. Server valida JWT con JWKS (cache 30 min)
-7. Server extrae email (token o /userinfo fallback)
-8. Server busca usuario en BD por email
-9. Server construye MCPContext
 ```
 
 ### Multi-Tenant Selection
 
-Si un usuario tiene acceso a multiples organizaciones:
-
-```python
-# Error: "multi_tenant_selection_required"
-# El usuario debe especificar tenant_id
-
-# Tools disponibles para seleccion:
-# list_my_tenants -> retorna municipalidades del usuario
-# Luego usar tenant_id en las llamadas
-```
+Si un usuario tiene acceso a multiples organizaciones, el server devuelve error `multi_tenant_selection_required`. El agente debe usar la tool `list_my_tenants` para listar las opciones y luego incluir `tenant_id` en las llamadas.
