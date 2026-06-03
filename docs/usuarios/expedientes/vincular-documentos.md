@@ -3,8 +3,13 @@
 Vincular un documento a un expediente significa incorporarlo como parte oficial del tramite. Solo los documentos firmados pueden quedar vinculados de forma definitiva. Esta pagina describe el proceso completo: buscar y seleccionar un documento, confirmar la vinculacion, y gestionar las propuestas pendientes.
 
 !!! video "Video tutorial"
-    - [GDI Latam #6 — Como vincular documentos a un expediente](https://www.youtube.com/watch?v=ENjH5NOb1no&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
-    - [GDI Latam #7 — Gestionar propuestas de vinculacion en expedientes](https://www.youtube.com/watch?v=oSekb0IWj4A&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+    **GDI Latam #6 — Como vincular documentos a un expediente**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ENjH5NOb1no?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #6 — Como vincular documentos a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI Latam #7 — Gestionar propuestas de vinculacion en expedientes**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/oSekb0IWj4A?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #7 — Gestionar propuestas de vinculacion" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 

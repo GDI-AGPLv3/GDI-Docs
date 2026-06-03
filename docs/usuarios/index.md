@@ -10,11 +10,9 @@ hide:
 Esta documentacion describe como utilizar cada pantalla de la aplicacion, que campos completar, que validaciones aplican y que resultado esperar de cada accion.
 
 !!! video "Video tutoriales"
-    Mira la serie completa de tutoriales en video en la [**lista de reproduccion de GDI Latam en YouTube**](https://www.youtube.com/playlist?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq). Para empezar:
+    Serie completa de tutoriales en la [**lista de reproduccion de GDI Latam en YouTube**](https://www.youtube.com/playlist?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq). Cada seccion de este manual incluye su video. Para empezar:
 
-    - [GDI Latam #1 — Inicio y Dashboard: tu primer acceso a la plataforma](https://www.youtube.com/watch?v=g9TRURHcURg&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
-
-    Cada seccion de este manual incluye el link al video correspondiente.
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/g9TRURHcURg?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #1 — Inicio y Dashboard" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 

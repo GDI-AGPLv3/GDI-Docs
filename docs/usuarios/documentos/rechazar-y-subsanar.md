@@ -3,7 +3,9 @@
 Cuando un documento en proceso de firma contiene errores o necesita correcciones, cualquier firmante o el creador pueden cancelar la firma. El documento vuelve al estado editable para ser corregido y reenviado a firma. Este ciclo se conoce como **subsanacion**.
 
 !!! video "Video tutorial"
-    - [GDI Latam #4 — Rechazar, corregir y reenviar documentos](https://www.youtube.com/watch?v=ESaWZA2BzeE&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+    **GDI Latam #4 — Rechazar, corregir y reenviar documentos**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ESaWZA2BzeE?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #4 — Rechazar, corregir y reenviar documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ![Dialogo de rechazo](../capturas/rechazar-firma.png)
 

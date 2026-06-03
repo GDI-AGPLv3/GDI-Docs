@@ -3,8 +3,13 @@
 Una vez que se inicia el proceso de firma desde la previsualizacion, el documento entra en un circuito donde los firmantes deben firmar en orden. Esta pantalla muestra el estado actual del proceso, permite firmar y ofrece la opcion de cancelar la firma si se detecta un error.
 
 !!! video "Video tutorial"
-    - [GDI Latam #2 — Firmar documentos paso a paso](https://www.youtube.com/watch?v=292GrNVGUSU&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
-    - [GDI Latam #3 — Firma conjunta de documentos: como funciona](https://www.youtube.com/watch?v=RuvKiC_loho&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+    **GDI Latam #2 — Firmar documentos paso a paso**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/292GrNVGUSU?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #2 — Firmar documentos paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI Latam #3 — Firma conjunta de documentos: como funciona**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RuvKiC_loho?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #3 — Firma conjunta de documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ![Documento en proceso de firma](../capturas/documento-proceso-firma.png)
 
