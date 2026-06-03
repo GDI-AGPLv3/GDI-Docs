@@ -2,6 +2,9 @@
 
 **Subsanar** un documento dentro de un expediente significa reemplazarlo por otro documento que corrige o actualiza la informacion. El documento original queda marcado como subsanado y se incorpora el nuevo documento justificante en su lugar. Este proceso permite corregir errores sin eliminar el registro historico.
 
+!!! video "Video tutorial"
+    - [GDI Latam #9 — Subsanar documentos en un expediente](https://www.youtube.com/watch?v=jtHGK2Ic84E&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+
 ---
 
 ## Como iniciar

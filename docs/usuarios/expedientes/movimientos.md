@@ -2,6 +2,9 @@
 
 La pestana **Movimientos** muestra el historial de actividad de un expediente: que documentos se vincularon, que acciones se realizaron, quien las ejecuto y cuando. Tambien permite crear nuevas acciones como actuaciones internas, transferencias y verificaciones con inteligencia artificial.
 
+!!! video "Video tutorial"
+    - [GDI Latam #8 — Historial y movimientos: trazabilidad completa del expediente](https://www.youtube.com/watch?v=PeIdFCqKutA&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+
 ![Tab Movimientos](../capturas/expediente-movimientos.png)
 
 ---

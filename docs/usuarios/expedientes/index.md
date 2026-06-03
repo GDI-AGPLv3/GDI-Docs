@@ -2,6 +2,9 @@
 
 Un **expediente electronico** es una carpeta digital que agrupa documentos oficiales relacionados a un mismo tramite o asunto administrativo. Funciona como el equivalente digital de una carpeta fisica de expediente: reune en un solo lugar todos los informes, dictamenes, resoluciones y demas documentos que forman parte de una gestion.
 
+!!! video "Video tutorial"
+    - [GDI Latam #5 — Modulo Expedientes: como crear y gestionar expedientes](https://www.youtube.com/watch?v=1e4_-ZLd0U8&list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq)
+
 ---
 
 ![Listado de expedientes](../capturas/expedientes-lista.png)
