@@ -120,6 +120,7 @@ nav:
           - Crear y Editar Documento: usuarios/documentos/crear-editar-documento.md
           - Documento Importado (PDF): usuarios/documentos/documento-importado.md
           - Documento tipo NOTA: usuarios/documentos/documento-nota.md
+          - Documento FFCC (Formulario Controlado): usuarios/documentos/documento-ffcc.md
           - Previsualizar Documento: usuarios/documentos/previsualizar-documento.md
           - Proceso de Firma: usuarios/documentos/proceso-de-firma.md
           - Firmar con Token (FirmadorGDI): usuarios/documentos/firmar-con-token.md
@@ -127,7 +128,8 @@ nav:
       - Expedientes:
           - usuarios/expedientes/index.md
           - Detalle del Expediente: usuarios/expedientes/detalle-expediente.md
-          - Historial y Movimientos: usuarios/expedientes/movimientos.md
+          - Panel del Expediente: usuarios/expedientes/panel.md
+          - Historial y Comentarios: usuarios/expedientes/movimientos.md
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
       - Legajos:
