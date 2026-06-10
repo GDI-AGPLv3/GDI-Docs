@@ -7,9 +7,9 @@ hide:
 <div class="gdi-hero" markdown>
 <span class="gdi-wordmark"><span class="dot"></span> GDI LATAM</span>
 
-# Documentacion de GDI Latam
+# Documentación de GDI Latam
 
-<p class="gdi-lede">Todo lo que necesitas para usar, administrar e integrar la plataforma de <strong>Gestion Documental Inteligente</strong> para gobiernos de America Latina.</p>
+<p class="gdi-lede">Todo lo que necesitás para usar, administrar e integrar la plataforma de <strong>Gestión Documental Inteligente</strong> para gobiernos de América Latina.</p>
 
 <div class="gdi-hero-actions">
 <a class="md-button" href="usuarios/">Manual de usuario</a>
@@ -17,8 +17,8 @@ hide:
 </div>
 </div>
 
-<span class="gdi-section-eyebrow">Elegi tu seccion</span>
-## Por donde empezar
+<span class="gdi-section-eyebrow">Elegí tu sección</span>
+## Por dónde empezar
 
 <div class="grid cards" markdown>
 
@@ -26,7 +26,7 @@ hide:
 
     ---
 
-    Como crear documentos, gestionar expedientes, enviar notas y memos, firmar con token y usar el asistente AI.
+    Cómo crear documentos, gestionar expedientes, enviar notas y memos, firmar con token y usar el asistente AI.
 
     [:octicons-arrow-right-24: Ir al manual de usuario](usuarios/index.md)
 
@@ -34,15 +34,15 @@ hide:
 
     ---
 
-    Panel de administracion (BackOffice): organizaciones, usuarios, permisos, sectores, tipos de documento y configuracion.
+    Panel de administración (BackOffice): organizaciones, usuarios, permisos, sectores, tipos de documento y configuración.
 
-    [:octicons-arrow-right-24: Ir a administracion](administradores/index.md)
+    [:octicons-arrow-right-24: Ir a administración](administradores/index.md)
 
 -   :material-api:{ .lg .middle } **Gateway API**
 
     ---
 
-    Integracion con GDI: MCP Server para agentes IA y REST API para sistemas externos. 45 endpoints documentados.
+    Integración con GDI: MCP Server para agentes IA y REST API para sistemas externos. 45 endpoints documentados.
 
     [:octicons-arrow-right-24: Ir a Gateway API](desarrollo/gateway/index.md)
 
@@ -50,23 +50,23 @@ hide:
 
     ---
 
-    Documentacion tecnica por servicio: arquitectura, endpoints, services, base de datos, deploy y guias.
+    Documentación técnica por servicio: arquitectura, endpoints, services, base de datos, deploy y guías.
 
     [:octicons-arrow-right-24: Ir a desarrollo](desarrollo/index.md)
 
 </div>
 
-!!! info "Sobre esta documentacion"
-    Esta organizada por audiencia: cada perfil tiene su propia seccion. Usa el buscador (arriba a la derecha) para encontrar cualquier termino en toda la documentacion.
+!!! info "Sobre esta documentación"
+    Está organizada por audiencia: cada perfil tiene su propia sección. Usá el buscador (arriba a la derecha) para encontrar cualquier término en toda la documentación.
 
 ---
 
-<span class="gdi-section-eyebrow">Referencia tecnica</span>
+<span class="gdi-section-eyebrow">Referencia técnica</span>
 ## Stack y servicios
 
-??? abstract "Stack tecnologico"
+??? abstract "Stack tecnológico"
 
-    | Capa | Tecnologias |
+    | Capa | Tecnologías |
     |------|-------------|
     | **Frontend** | Next.js 15, React 18, TypeScript, Tailwind CSS, shadcn/ui |
     | **Backend** | FastAPI, Python 3.12, Auth0, PostgreSQL 17 |
