@@ -2,6 +2,8 @@
 
 Crea nuevos sectores y asigna usuarios a tus espacios de trabajo. El organigrama define la estructura organizativa de la organizacion: reparticiones (departamentos) y sectores.
 
+![Organigrama](capturas/organigrama.png)
+
 ---
 
 ## Diseño general
@@ -10,34 +12,44 @@ La pantalla tiene tres zonas principales:
 
 | Zona | Descripcion |
 |------|-------------|
-| **Panel izquierdo** | Arbol de reparticiones (colapsable y redimensionable) |
-| **Panel central** | Detalle de la reparticion seleccionada: header con responsable, stats, sub-reparticiones y sectores |
-| **Modales centrados** | Crear reparticion, crear sector, detalle de sector y detalle de reparticion se abren como dialogos modales (ya no como panel lateral deslizable) |
+| **Panel izquierdo** | Arbol **ESTRUCTURA** con todas las reparticiones (colapsable y redimensionable). Muestra la cantidad total de reparticiones y la jerarquia (reparticion padre -> sub-reparticiones) |
+| **Panel derecho** | Detalle de la reparticion seleccionada: nombre, rango, acronimos, tarjeta de responsable, stats, sectores y sub-reparticiones |
+| **Modales centrados** | Crear reparticion, crear sector, detalle de sector y detalle de reparticion se abren como dialogos modales |
+
+Arriba a la derecha de la pagina hay tres botones:
+
+| Boton | Que hace |
+|-------|----------|
+| **Exportar** | Exporta la estructura del organigrama |
+| **Audit** | Abre la auditoria legible de organigrama y permisos (ver [Auditoria de organigrama](#auditoria-de-organigrama-audit)) |
+| **Nueva reparticion** | Crea una nueva reparticion |
 
 El panel izquierdo se puede colapsar con el boton lateral y redimensionar arrastrando el borde.
 
 ---
 
-## Arbol de Reparticiones
+## Arbol de Reparticiones (ESTRUCTURA)
 
-El panel izquierdo muestra todas las reparticiones de la organizacion en formato jerarquico. Cada reparticion tiene un **color** identificatorio y puede contener sub-reparticiones anidadas.
+El panel izquierdo muestra todas las reparticiones de la organizacion en formato jerarquico, con la cantidad total de reparticiones en el encabezado. Cada reparticion tiene un **color** identificatorio y puede contener sub-reparticiones anidadas (reparticion padre -> sub-reparticiones).
 
-Al seleccionar una reparticion, el panel central se actualiza con su detalle.
+Al seleccionar una reparticion, el panel derecho se actualiza con su detalle.
 
 ---
 
-## Header de Reparticion
+## Detalle de Reparticion
 
-Al seleccionar una reparticion, el panel central muestra en el encabezado:
+Al seleccionar una reparticion, el panel derecho muestra:
 
-- **Color** de la reparticion (barra de color superior)
-- **Nombre** y **acronimo** de la reparticion
-- **Responsable** de la reparticion (si esta asignado). Hacer clic abre un modal para asignar, cambiar o quitar el responsable
-- Boton **Editar** para abrir el modal de detalle/edicion de la reparticion
+- **Nombre** de la reparticion
+- **Rango** jerarquico asociado
+- **Acronimos**: lista de siglas de los sectores de la reparticion (por ejemplo `INTEN2#ADMIN`, `INTEN2#PRIV`, etc.)
+- Tarjeta **RESPONSABLE** con la persona asignada y un boton para cambiar responsable
+- Boton **Editar Reparticion** para abrir el modal de detalle/edicion
+- Contadores **N Empleados** | **N Tipos de exp.**
 
 ### Responsable
 
-Cada reparticion puede tener un responsable (titular del departamento). El boton de responsable en el header permite:
+Cada reparticion puede tener un responsable (titular del departamento). El boton de la tarjeta **RESPONSABLE** permite:
 
 | Accion | Descripcion |
 |--------|-------------|
@@ -49,28 +61,36 @@ Cada reparticion puede tener un responsable (titular del departamento). El boton
 
 ## Estadisticas de la Reparticion
 
-Debajo del header se muestran cuatro estadisticas de la reparticion seleccionada:
+El detalle de la reparticion muestra contadores con los totales de la reparticion seleccionada:
 
 | Estadistica | Descripcion |
 |-------------|-------------|
 | **Empleados** | Cantidad total de usuarios asignados |
-| **Sub-reparticiones** | Cantidad de reparticiones hijas |
-| **Sectores** | Cantidad de sectores dentro de la reparticion |
 | **Tipos de exp.** | Cantidad de tipos de expediente habilitados para la reparticion |
 
 ---
 
-## Sub-reparticiones y Sectores
+## Sectores y Sub-Reparticiones
 
-Debajo de las estadisticas aparecen las sub-reparticiones como tarjetas clicables (cada una muestra su color, acronimo, nombre y cantidad de empleados). Hacer clic en una sub-reparticion la selecciona en el arbol y actualiza el panel central.
+Debajo del detalle hay dos pestañas:
 
-Al final de las tarjetas hay un boton **+ Agregar sub-reparticion** para crear una reparticion hija de la seleccionada.
+| Pestaña | Contenido |
+|---------|-----------|
+| **Sectores (N)** | Lista de sectores de la reparticion, con un boton **Nuevo Sector** |
+| **Sub-Reparticiones (N)** | Sub-reparticiones como tarjetas clicables (color, acronimo, nombre y cantidad de empleados). Hacer clic en una sub-reparticion la selecciona en el arbol |
 
-La lista de **sectores** aparece debajo, con un boton **+ Crear sector**.
+### Vista "Por sector" / "Por usuario"
+
+Dentro de la pestaña **Sectores** hay un toggle de vista que cambia como se listan los datos:
+
+| Vista | Que muestra |
+|-------|-------------|
+| **Por sector** | Agrupa por sector. Cada sector lista los usuarios que tiene asignados. Es la vista para administrar los integrantes y permisos de cada sector |
+| **Por usuario** | Agrupa por usuario. Permite ver de un vistazo en que sectores esta cada persona |
 
 ### Detalle de Sector
 
-Al hacer clic en el icono de configuracion de un sector se abre un modal con:
+Al hacer clic en **Configurar sector** se abre un modal con:
 
 | Dato | Descripcion |
 |------|-------------|
@@ -78,14 +98,37 @@ Al hacer clic en el icono de configuracion de un sector se abre un modal con:
 | **Color del sector** | Selector de color con paleta predefinida |
 | **Usuarios asignados** | Cantidad de usuarios en el sector |
 
-!!! info "Sector PRIV"
-    El sector **PRIV** es el sector de sistema que se crea automaticamente al crear una reparticion. Solo se puede cambiar su color; el acronimo esta fijo.
+!!! info "Sector PRIV (privado)"
+    El sector **PRIV** es el sector de sistema (privado) que se crea automaticamente al crear una reparticion. Solo se puede cambiar su color; el acronimo esta fijo. Ademas, el responsable de la reparticion **no se puede quitar** del sector Privado.
+
+---
+
+## Multi-admin: varios usuarios por sector
+
+Un mismo sector puede tener **varios usuarios** asignados. En la vista **Por sector**, cada sector lista sus integrantes con su permiso:
+
+| Marca | Significado |
+|-------|-------------|
+| **Principal** | Es el responsable del sector. Cada sector tiene un unico usuario con el badge **Principal** |
+| **Ver + Editar** | Resto de usuarios del sector. Tienen permiso de ver y editar, controlado por el toggle **EDITAR** de cada usuario |
+
+### Acciones sobre los usuarios del sector
+
+| Accion | Descripcion |
+|--------|-------------|
+| **Asignar usuario** | Suma un usuario nuevo al sector |
+| **EDITAR** (toggle) | Activa o desactiva el permiso de edicion del usuario en el sector |
+| **Configurar sector** | Abre el detalle del sector (acronimo, color) |
+| **Quitar del sector** | Quita al usuario del sector |
+
+!!! warning "Quitar al usuario Principal"
+    No se puede quitar directamente al usuario **Principal** de un sector. Primero hay que reasignar el principal: el propio boton lo indica con el texto **"Quitar del sector (requiere reasignar el sector principal)"**. En el sector PRIV (privado), el responsable de la reparticion no se puede quitar.
 
 ---
 
 ## Crear Reparticion
 
-El boton **+ Anadir reparticion** (en el header de la pagina o dentro de sub-reparticiones) abre un modal:
+El boton **Nueva reparticion** (en el header de la pagina) o **+ Agregar sub-reparticion** (dentro de Sub-Reparticiones) abre un modal:
 
 | Campo | Obligatorio | Descripcion |
 |-------|:-----------:|-------------|
@@ -100,7 +143,7 @@ Al crear la reparticion, el sistema genera automaticamente un sector **PRIV** pa
 
 ## Crear Sector
 
-El boton **+ Crear Sector** abre un modal:
+El boton **Nuevo Sector** abre un modal:
 
 | Campo | Obligatorio | Descripcion |
 |-------|:-----------:|-------------|
@@ -110,24 +153,59 @@ El boton **+ Crear Sector** abre un modal:
 
 ---
 
-## Auditoria
+## Auditoria de organigrama (Audit)
 
-El boton **Auditoria** en el header de la pagina abre una vista a pantalla completa con el historial de cambios del organigrama.
+El boton **Audit** en el header de la pagina abre la vista **"Historial de cambios — Auditoria de organigrama y permisos"**. Es una bitacora legible de todas las operaciones registradas automaticamente sobre reparticiones, sectores y permisos de usuario.
 
-Muestra una bitacora de todas las operaciones registradas automaticamente sobre reparticiones y sectores:
+![Auditoria de organigrama](capturas/organigrama-audit.png)
 
-| Columna | Descripcion |
+### Buscador y filtros
+
+| Control | Descripcion |
 |---------|-------------|
-| **Operacion** | Tipo de cambio: `Creo`, `Edito` o `Elimino` |
-| **Entidad** | Objeto afectado: Reparticion o Sector |
-| **Quien** | Usuario que realizo el cambio |
-| **Cuando** | Fecha y hora de la operacion |
-| **Detalle** | Campos modificados con valores anterior y nuevo |
+| **Buscar** | Caja "Buscar por entidad, usuario o campo" |
+| **Filtro por entidad** | `Todo`, `Reparticiones`, `Sectores` o `Permisos de usuario` |
+| **Filtro por fecha** | `Ultimos 30 dias`, `Ultimos 7 dias` o `Todo` |
+| **Recargar** | Vuelve a cargar el historial |
 
-Se puede filtrar por tipo de entidad (Reparticiones, Sectores) y buscar por texto. La auditoria se actualiza en tiempo real.
+### Entradas del historial
+
+Cada entrada del historial muestra:
+
+| Dato | Descripcion |
+|------|-------------|
+| **Accion** | Verbo de la operacion: `Edito`, `Modifico`, `Otorgo`, `Quito` o `Creo` |
+| **Entidad** | Objeto afectado: `REPARTICION`, `SECTOR` o `PERMISO DE SECTOR` |
+| **Campo y valores** | Campo cambiado con valor anterior -> nuevo. Por ejemplo `Puede editar: No -> Si`, `Responsable: X -> Y`, `Color: ... -> ...` |
+| **Quien** | Nombre del usuario que hizo el cambio |
+| **Cuando** | Fecha y hora del cambio |
+
+El historial esta **paginado**.
+
+!!! info "Auditoria legible"
+    Los nombres de responsables, reparticiones y rangos se muestran con su **valor actual**, para que el historial sea facil de leer aunque la entidad haya cambiado de nombre despues.
 
 ---
 
 ## Color de Departamento
 
 Al editar el detalle de una reparticion se puede modificar su **color primario**. El color se aplica a la barra superior del header y al avatar de la reparticion. Tambien se puede ajustar el color individual de cada sector hijo desde el mismo panel.
+
+---
+
+## Preguntas frecuentes
+
+??? question "¿Cuantos usuarios puede tener un sector?"
+    Varios. Un sector tiene un unico usuario **Principal** (responsable del sector) y puede tener otros usuarios con permiso **Ver + Editar**. Se suman con **Asignar usuario**.
+
+??? question "¿Que es el badge Principal?"
+    Marca al responsable del sector. Es unico por sector. Para quitarlo del sector primero hay que reasignar el principal a otro usuario.
+
+??? question "¿Para que sirve la vista Por sector / Por usuario?"
+    Son dos formas de leer lo mismo. **Por sector** agrupa los usuarios dentro de cada sector (ideal para administrar permisos). **Por usuario** agrupa por persona para ver en que sectores esta cada una.
+
+??? question "¿Por que no puedo quitar a un usuario del sector PRIV?"
+    PRIV es el sector privado de sistema y el responsable de la reparticion no se puede quitar de el. Si es el Principal de otro sector, primero hay que reasignar ese principal.
+
+??? question "¿Que registra la Auditoria (Audit)?"
+    Cambios en reparticiones, sectores y permisos de sector: quien los hizo, cuando, y el campo modificado con su valor anterior y nuevo. Se puede filtrar por entidad y por fecha, y buscar por texto.

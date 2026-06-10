@@ -127,7 +127,7 @@ nav:
       - Expedientes:
           - usuarios/expedientes/index.md
           - Detalle del Expediente: usuarios/expedientes/detalle-expediente.md
-          - Movimientos: usuarios/expedientes/movimientos.md
+          - Historial y Movimientos: usuarios/expedientes/movimientos.md
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
       - Legajos:
