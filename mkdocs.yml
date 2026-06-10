@@ -10,14 +10,18 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: es
-  logo: assets/logo.png
+  logo: assets/logo-white.png
   favicon: assets/favicon.png
+
+  font:
+    text: Montserrat
+    code: Roboto Mono
 
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
-      accent: deep purple
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Cambiar a modo oscuro
@@ -25,7 +29,7 @@ theme:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
-      accent: deep purple
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Cambiar a modo claro
