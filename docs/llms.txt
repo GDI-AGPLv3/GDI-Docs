@@ -1,0 +1,21 @@
+# GDI Docs — Documentación de Gestión Documental Inteligente
+
+> Documentación unificada de GDI, la plataforma open source (AGPLv3) de gestión documental con IA para gobiernos de América Latina. Cubre uso, administración y desarrollo.
+
+## Qué es GDI
+
+GDI (Gestión Documental Inteligente) es un sistema completo de documentos, expedientes electrónicos y firma digital con validez legal para organizaciones públicas. Reemplaza sistemas legacy como el GDE con flujos paralelos, IA integrada (resúmenes, búsqueda semántica) e interoperabilidad vía MCP (Model Context Protocol) y REST API.
+
+## Secciones
+
+- Usuarios (https://docs.gdilatam.com/usuarios/): documentos, expedientes, legajos, notas, memos, firma con token, asistente AI.
+- Administradores (https://docs.gdilatam.com/administradores/): organigrama, roles y sellos, tipos de documentos y expedientes, certificados, backups (GDI Sync).
+- Desarrollo (https://docs.gdilatam.com/desarrollo/): Gateway API (REST + MCP Server), arquitectura multi-tenant, base de datos, deploy.
+- Glosario (https://docs.gdilatam.com/glosario/).
+
+## Links
+
+- Web: https://gdilatam.com
+- Demo: https://gdilatam.com/demo
+- GitHub: https://github.com/GestionDocumentalInteligente
+- Repo de esta documentación: https://github.com/GDI-APGLv3/GDI-Docs
