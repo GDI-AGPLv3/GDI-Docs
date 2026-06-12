@@ -14,6 +14,7 @@ hide:
 <div class="gdi-hero-actions">
 <a class="md-button" href="usuarios/">Manual de usuario</a>
 <a class="md-button gdi-ghost" href="desarrollo/gateway/">Integrar con la API</a>
+<a class="md-button gdi-ghost" href="https://notebooklm.google.com/notebook/56b820d3-ef1d-403f-bbd2-aa2710e5bdd4" target="_blank" rel="noopener">Aprender con IA · NotebookLM</a>
 </div>
 </div>
 
