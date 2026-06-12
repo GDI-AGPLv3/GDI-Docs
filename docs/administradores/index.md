@@ -93,6 +93,14 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](backups.md)
 
+-   :material-scale-balance:{ .lg .middle } **Implementación GDI**
+
+    ---
+
+    Guía de implementación en el municipio: marco normativo, hoja de ruta y modelos de ordenanza, decreto y resolución.
+
+    [:octicons-arrow-right-24: Ver sección](implementacion/index.md)
+
 </div>
 
 ---

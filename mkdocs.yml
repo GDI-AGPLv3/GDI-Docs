@@ -166,6 +166,18 @@ nav:
       - Administracion: administradores/administracion.md
       - Certificados: administradores/certificados.md
       - Backups (GDI Sync): administradores/backups.md
+      - Implementación GDI:
+          - administradores/implementacion/index.md
+          - Marco Normativo: administradores/implementacion/marco-normativo.md
+          - Hoja de Ruta Normativa: administradores/implementacion/hoja-de-ruta.md
+          - Modelos de Normas:
+              - administradores/implementacion/modelos/index.md
+              - Ordenanza de Adhesión a Firma Digital: administradores/implementacion/modelos/ordenanza-adhesion-firma-digital.md
+              - Decreto de Implementación GDI: administradores/implementacion/modelos/decreto-reglamentario.md
+              - Resolución de Puesta en Marcha: administradores/implementacion/modelos/resolucion-etapas.md
+              - Plan de Evolución Tecnológica (adicional): administradores/implementacion/modelos/plan-evolucion-tecnologica.md
+              - Protocolo de Digitalización (adicional): administradores/implementacion/modelos/protocolo-digitalizacion.md
+              - Documentos Complementarios: administradores/implementacion/modelos/complementarios.md
 
   - Desarrollo:
       - desarrollo/index.md
