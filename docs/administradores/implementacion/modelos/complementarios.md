@@ -18,14 +18,6 @@ Además del paquete normativo central (Modelos 1 a 3), el kit de implementación
 
 ---
 
-## Términos y Condiciones de Uso del Sistema
-
-**Para qué sirve**: regula el acceso y uso del sistema por parte de los **vecinos** cuando el municipio habilita trámites a distancia (mesa de entradas digital ciudadana). Cubre: definiciones (usuario, cuenta de usuario), autenticación (AFIP Clave Fiscal, ANSES, Mi Argentina vía plataforma Autenticar), responsabilidad del usuario sobre su clave, cómputo de plazos (la carga en día inhábil se considera efectuada el primer día hábil posterior), facultades de la administración (suspensión o revocación del acceso) y notificaciones electrónicas.
-
-**Cómo se aprueba**: por decreto del DEM o resolución de la autoridad de aplicación, como anexo, antes de abrir el sistema a presentaciones ciudadanas.
-
----
-
 ## Programa Municipal «Sandbox»
 
 **Para qué sirve**: crea un **sandbox regulatorio municipal** — un espacio controlado de prueba para que soluciones tecnológicas innovadoras (públicas o privadas) se testeen con supervisión municipal antes de su regulación definitiva. Complementa el eje A del [Plan de Evolución Tecnológica](plan-evolucion-tecnologica.md).
