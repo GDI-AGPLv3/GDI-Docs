@@ -2,9 +2,11 @@
 
 ## Vision General
 
-GDI Latam usa GitHub Actions para CI/CD. Cada push a las ramas `dev` o `prd` dispara el workflow correspondiente, que corre lint/tests y luego hace deploy directamente a Fly.io usando `flyctl`.
+GDI Latam usa GitHub Actions para CI/CD. Cada push a las ramas `dev`, `hml` o `prd` dispara el workflow correspondiente, que corre lint/tests y luego hace deploy directamente a Fly.io usando `flyctl`.
 
-Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push (sin workflow manual).
+El flujo es escalonado de 3 niveles: **`dev` (DEV) → `hml` (HML = ARIES) → `prd` (PRD = ARG + DEMO)**. ARIES es ambiente de homologacion/sandbox (sin clientes reales) y se deploya desde `hml`; ARG es produccion real y DEMO son trials de prospectos, ambos desde `prd`.
+
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push a su Production Branch: `aries-frontend` y `aries-backoffice-front` apuntan a `hml`; los `arg-*`/`demo-*` apuntan a `prd`.
 
 ---
 
@@ -27,11 +29,14 @@ Cada servicio es un repositorio independiente en la organizacion GitHub (your-or
 
 ## Ramas y Ambientes
 
-| Rama | Deploy | Ambiente |
-|------|--------|----------|
-| `dev` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: gdi-dev) |
-| `prd` | GitHub Actions → Fly.io PRD | `{cliente}-*-prd` (org: gdilatam) |
-| `feat/*`, `fix/*`, etc. | Sin deploy automatico | Solo CI (lint) |
+| Rama | Workflow | Deploy | Ambiente |
+|------|----------|--------|----------|
+| `dev` | `deploy-dev.yml` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: gdi-dev) |
+| `hml` | `deploy-hml.yml` | GitHub Actions → Fly.io HML | `aries-*-prd` (org: gdilatam) |
+| `prd` | `deploy-prd.yml` | GitHub Actions → Fly.io PRD | `arg-*-prd` + `demo-*-prd` (org: gdilatam) |
+| `feat/*`, `fix/*`, etc. | - | Sin deploy automatico | Solo CI (lint) |
+
+> **`deploy-hml.yml` existe en GDI-Backend, GDI-AgenteLANG y GDI-BackOffice-Back** (los repos con apps `aries-*`). Dispara en push a `hml` y deploya SOLO las apps `aries-*` (en Backend: `aries-backend` + `aries-gateway`). ARIES salio de `deploy-prd.yml`, asi que `prd` ahora deploya solo `arg-*` + `demo-*`.
 
 !!! warning "Nunca hacer deploy manual"
     Excepto para PostgreSQL, el deploy siempre es via `git push`. Nunca ejecutar `flyctl deploy` manualmente en apps de backend/microservicios.
@@ -110,34 +115,39 @@ jobs:
 
 ---
 
-## Workflow PRD (rama: prd)
+## Workflow HML (rama: hml) — ARIES
 
-El workflow PRD usa un patron de deploy en cascada: **DEMO primero** (con health check), luego **ARG** (con health check), luego **ARIES**. Esto permite detectar problemas en DEMO antes de afectar los clientes productivos.
+`deploy-hml.yml` dispara en push a `hml` y deploya **solo el ambiente ARIES** (homologacion/sandbox, sin clientes reales). Existe en los repos con apps `aries-*`: GDI-Backend (`aries-backend` + `aries-gateway`), GDI-AgenteLANG (`aries-agentelang`) y GDI-BackOffice-Back (`aries-backoffice-back`).
 
 ```mermaid
 graph TD
-    A["lint + tests"] --> B["deploy DEMO + DEMO Gateway (paralelo)"]
-    B --> C{"Health check DEMO OK?"}
-    C -->|Si| D["deploy ARG + ARG Gateway (paralelo)"]
-    C -->|No| E["Falla - ARG y ARIES NO se despliegan"]
-    D --> F{"Health check ARG OK?"}
-    F -->|Si| G["deploy ARIES + ARIES Gateway (paralelo)"]
-    F -->|No| H["Falla - ARIES NO se despliega"]
+    A["git push hml"] --> B["lint + tests"]
+    B --> C["deploy aries-backend + aries-gateway (paralelo)"]
+    C --> D["Health check ARIES"]
+```
+
+Usa `fly.aries.toml` / `fly.aries.gateway.toml` y el token `FLY_API_TOKEN_PRD` (ARIES vive en la org Fly `gdilatam`). Los fronts ARIES (`aries-frontend`, `aries-backoffice-front`) se deployan via Vercel con Production Branch = `hml`.
+
+---
+
+## Workflow PRD (rama: prd) — ARG + DEMO
+
+`deploy-prd.yml` deploya **ARG (produccion real) y DEMO (trials) en jobs paralelos**, despues de lint+tests. Ya NO incluye ARIES (salio a `hml`) y ya NO usa cascada con health-checks encadenados entre clientes: ARG y DEMO se deployan en paralelo, cada uno con su propio `fly.{cliente}.toml`.
+
+```mermaid
+graph TD
+    A["git push prd"] --> B["lint + tests"]
+    B --> C["deploy ARG backend + gateway (paralelo)"]
+    B --> D["deploy DEMO backend + gateway (paralelo)"]
 ```
 
 Cada cliente tiene su propio `fly.{cliente}.toml` y `fly.{cliente}.gateway.toml` en el repo:
 
-| Config | App destino |
-|--------|------------|
-| `fly.demo.toml` | `<your-backend-app>` |
-| `fly.demo.gateway.toml` | `<your-gateway-app>` |
-| `fly.arg.toml` | `<your-backend-app>` |
-| `fly.arg.gateway.toml` | `<your-gateway-app>` |
-| `fly.aries.toml` | `<your-backend-app>` |
-| `fly.aries.gateway.toml` | `<your-gateway-app>` |
-
-!!! info "Health checks entre clientes"
-    El workflow espera que DEMO este healthy antes de deployar ARG, y que ARG este healthy antes de deployar ARIES. Si un health check falla, los clientes siguientes no reciben el deploy.
+| Config | Rama | Ambiente |
+|--------|------|----------|
+| `fly.arg.toml` / `fly.arg.gateway.toml` | `prd` | ARG (produccion real) |
+| `fly.demo.toml` / `fly.demo.gateway.toml` | `prd` | DEMO (trials) |
+| `fly.aries.toml` / `fly.aries.gateway.toml` | `hml` | ARIES (homologacion) |
 
 ---
 
@@ -191,13 +201,13 @@ graph TD
     A["git push prd"] --> B["GitHub Actions: deploy-prd.yml"]
     B --> C["Lint (Ruff ASYNC)"]
     C --> D["Tests (pytest --collect-only)"]
-    D --> E["flyctl deploy DEMO backend + gateway (paralelo)"]
-    E --> F["Health check /health DEMO (curl -f)"]
-    F --> G["flyctl deploy ARG backend + gateway (paralelo)"]
-    G --> H["Health check /health ARG (curl -f)"]
-    H --> I["flyctl deploy ARIES backend + gateway (paralelo)"]
-    I --> J["Deploy completado"]
+    D --> E["flyctl deploy ARG backend + gateway (paralelo)"]
+    D --> F["flyctl deploy DEMO backend + gateway (paralelo)"]
+    E --> G["Deploy completado"]
+    F --> G
 ```
+
+ARIES no aparece aca: se deploya por separado desde `hml` (`deploy-hml.yml`).
 
 ---
 
@@ -219,7 +229,8 @@ git push origin feat/nueva-funcionalidad
 # Crear Pull Request en GitHub
 # Review + merge a dev = Deploy DEV automatico
 
-# Cuando DEV esta verificado, merge dev → prd = Deploy PRD
+# Cuando DEV esta verificado, merge dev → hml = Deploy HML (ARIES, homologacion)
+# Cuando ARIES esta homologado, merge hml → prd = Deploy PRD (ARG + DEMO)
 ```
 
 !!! tip "Proteccion de rama prd"
@@ -253,5 +264,5 @@ docs(deploy): update Fly.io configuration guide
 
 - [ ] Logs sin errores criticos (`flyctl logs -a <app>`)
 - [ ] Health check respondiendo 200
-- [ ] Funcionalidad principal testeada en DEV antes de promover a prd
+- [ ] Funcionalidad testeada en DEV, luego homologada en HML (ARIES) antes de promover a prd
 - [ ] Servicios dependientes funcionando
