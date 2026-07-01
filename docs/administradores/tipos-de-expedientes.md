@@ -4,6 +4,13 @@ Configura los tipos de expedientes disponibles en el sistema. Cada organizacion 
 
 ![Tipos de Expedientes](capturas/tipos-de-expedientes.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Tipos de expediente**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/h1Rj1y41ydk?list=PLbbUEsKhLkuc" title="GDI BackOffice — Tipos de expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Listado de Tipos

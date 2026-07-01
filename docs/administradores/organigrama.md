@@ -4,6 +4,13 @@ Crea nuevos sectores y asigna usuarios a tus espacios de trabajo. El organigrama
 
 ![Organigrama](capturas/organigrama.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Organigrama: reparticiones y sectores**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/hclnkyEnSDs?list=PLbbUEsKhLkuc" title="GDI BackOffice — Organigrama: reparticiones y sectores" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Diseño general

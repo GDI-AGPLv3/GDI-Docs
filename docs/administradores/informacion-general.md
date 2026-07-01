@@ -4,6 +4,13 @@ Configura los datos basicos que identifican oficialmente a tu organizacion dentr
 
 ![Informacion General](capturas/informacion-general.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Datos e identidad del municipio**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/9Gn2_AASUPs?list=PLbbUEsKhLkuc" title="GDI BackOffice — Datos e identidad del municipio" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Informacion Institucional

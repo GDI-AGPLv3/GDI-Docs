@@ -2,6 +2,13 @@
 
 Descarga y manten una copia local, siempre actualizada, de todos los datos y documentos de tu municipio.
 
+!!! video "Video tutorial"
+    **GDI BackOffice — GDI Sync: soberania de tus datos**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/kugDwXNUxSk?list=PLbbUEsKhLkuc" title="GDI BackOffice — GDI Sync: soberania de tus datos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Descripcion General

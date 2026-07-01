@@ -2,6 +2,13 @@
 
 Los **Memos** son comunicaciones internas privadas **persona a persona**. A diferencia de las [Notas](../notas/index.md) (que se envian entre sectores), los memos se dirigen a **usuarios individuales** y tienen tracking de lectura.
 
+!!! video "Video tutorial"
+    **GDI — Panel CCOO: gestion de Notas y Memos**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/lWYjNqkUO78?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Panel CCOO: gestion de Notas y Memos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Memo vs Nota

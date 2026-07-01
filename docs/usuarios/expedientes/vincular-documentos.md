@@ -3,13 +3,13 @@
 Vincular un documento a un expediente significa incorporarlo como parte oficial del tramite. Solo los documentos firmados pueden quedar vinculados de forma definitiva. Esta pagina describe el proceso completo: vincular un documento ya existente o crear uno nuevo que se vincule automaticamente al firmarse, confirmar la vinculacion, y gestionar las propuestas pendientes.
 
 !!! video "Video tutorial"
-    **GDI Latam #6 — Como vincular documentos a un expediente**
+    **GDI — Vincular un documento existente a un expediente**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ENjH5NOb1no?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #6 — Como vincular documentos a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/11BY6OkI9BU?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Vincular un documento existente a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
-    **GDI Latam #7 — Gestionar propuestas de vinculacion en expedientes**
+    **GDI — Crear y vincular un documento nuevo al firmar**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/oSekb0IWj4A?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #7 — Gestionar propuestas de vinculacion" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/1vnJknK57MA?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y vincular un documento nuevo al firmar" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 

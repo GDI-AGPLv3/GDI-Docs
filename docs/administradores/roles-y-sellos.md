@@ -4,6 +4,13 @@ Gestiona los rangos jerarquicos y sellos de firma de la organizacion. Los rangos
 
 ![Roles y Sellos](capturas/roles-y-sellos.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Sellos y rangos de firma**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ZkPR6T5OkAE?list=PLbbUEsKhLkuc" title="GDI BackOffice — Sellos y rangos de firma" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Como funciona la relacion entre Sellos y Rangos

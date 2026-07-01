@@ -4,6 +4,13 @@ Administra los usuarios del sistema: crear, editar, asignar sectores, roles, sel
 
 ![Gestion de Usuarios](capturas/gestion-usuarios.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Usuarios: crear y gestionar el equipo**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/pd5OhkuvX1g?list=PLbbUEsKhLkuc" title="GDI BackOffice — Usuarios: crear y gestionar el equipo" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Listado de Usuarios

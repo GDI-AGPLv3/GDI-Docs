@@ -7,6 +7,29 @@ La pestana **Panel** es la vista de gestion del expediente y la **pestana por de
 !!! info "Panel, Documentos, Historial y Tu Asistente"
     El detalle del expediente tiene cuatro pestanas: **Panel**, **Documentos**, **Historial** y **Tu Asistente**. El Panel es la que se muestra activa al abrir el expediente. Para el header y la vista general ver [Detalle del Expediente](detalle-expediente.md); para la linea de tiempo y los comentarios ver [Historial](movimientos.md).
 
+!!! video "Video tutorial"
+    **GDI — Asignar responsable a un expediente**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/xQ_BP0zBcI0?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Asignar responsable a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI — Solicitar una actuacion a otro sector**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/UqAhKlIrjOI?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI — Solicitar una actuacion a una persona**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MURbMmn_r60?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a una persona" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI — Transferir un expediente a otro sector**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/1uHUB-X70xU?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Transferir un expediente a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+    **GDI — Finalizar una actuacion en el expediente**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3a68UvifAW4?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Finalizar una actuacion en el expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Columna izquierda: administracion y responsables

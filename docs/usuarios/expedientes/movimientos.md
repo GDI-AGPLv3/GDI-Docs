@@ -6,14 +6,9 @@ La pestana **Historial** muestra la actividad del expediente como una **linea de
     Arriba de la pestana hay un banner que aclara: *"Todo lo reflejado aqui es informal y no tiene valor legal, para ver el expediente oficial vaya a Documentos."* El historial y el chat sirven como apoyo de trabajo y trazabilidad, pero **no constituyen un registro legal** del expediente.
 
 !!! video "Video tutorial"
-    **GDI Latam #8 — Historial y movimientos: trazabilidad completa del expediente**
+    **GDI — Comentar y mencionar en el Historial del expediente**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/PeIdFCqKutA?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #8 — Historial y movimientos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-
-![Tab Historial](../capturas/expediente-movimientos.png)
-
-!!! note "Crear acciones ahora se hace desde Panel"
-    La creacion de **Actuacion Interna** y **Transferencia** ya **no** se realiza desde el Historial. Ahora se hace desde la pestana **Panel**, con el modal **"Nueva Tarea / Asignacion"**. Ver [Detalle del Expediente](detalle-expediente.md) para el detalle de esos formularios. Esta pestana se enfoca en consultar la actividad (timeline) y comentar (chat).
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ZDhj1pVCldg?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Comentar y mencionar en el Historial del expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 

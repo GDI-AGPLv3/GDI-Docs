@@ -9,6 +9,13 @@ Arriba del listado hay dos botones:
 - **Nuevo tipo propio**: crea un tipo de documento exclusivo de tu organizacion.
 - **Catalogo Global**: adopta un tipo del catalogo global compartido.
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Tipos de documento**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/N7i6mrLaC80?list=PLbbUEsKhLkuc" title="GDI BackOffice — Tipos de documento" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Listado de Tipos

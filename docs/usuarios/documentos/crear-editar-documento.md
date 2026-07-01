@@ -2,6 +2,13 @@
 
 Esta pantalla permite crear un nuevo documento oficial o editar uno existente en estado borrador o rechazado. Se compone de dos zonas: el **panel central** (editor de contenido) y el **panel lateral derecho** (firmantes, vinculacion y acciones).
 
+!!! video "Video tutorial"
+    **GDI — Crear y firmar un Informe: paso a paso**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/R9A6j3uHEFM?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar un Informe: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Paso 1: Abrir el dialogo de creacion

@@ -2,6 +2,13 @@
 
 El Asistente AI es una herramienta integrada en GDI que permite consultar informacion sobre expedientes y documentos usando **lenguaje natural**. Esta disponible dentro de cada expediente para consultar su contenido. Al abrir el chat presenta automaticamente un **resumen del expediente** generado por IA y, para responder, lee los **resumenes de los documentos** vinculados y el **historial de movimientos** del expediente. Es de **solo lectura**: consulta y explica, pero no modifica nada.
 
+!!! video "Video tutorial"
+    **GDI — Asistente IA del expediente: pregunta en lenguaje natural**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/kvCS4NgVMPs?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Asistente IA del expediente: pregunta en lenguaje natural" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Asistente en el Expediente

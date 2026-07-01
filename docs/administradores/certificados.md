@@ -4,6 +4,13 @@ Gestiona los certificados digitales utilizados para la firma electronica de docu
 
 ![Panel de certificados](capturas/certificados-panel.png)
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Certificados de firma digital (ONTI)**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/jS7_0tQyLBo?list=PLbbUEsKhLkuc" title="GDI BackOffice — Certificados de firma digital (ONTI)" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Descripcion General

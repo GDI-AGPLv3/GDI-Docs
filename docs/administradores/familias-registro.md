@@ -2,6 +2,13 @@
 
 Gestiona las familias de registro del sistema. Las familias son plantillas que definen la estructura de los legajos: que campos tiene cada tipo de legajo, que sectores pueden operar con el, y que estados puede atravesar.
 
+!!! video "Video tutorial"
+    **GDI BackOffice — Familias de legajos: plantillas de registros**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/9_3wrjRskhk?list=PLbbUEsKhLkuc" title="GDI BackOffice — Familias de legajos: plantillas de registros" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Que es una Familia de Registro

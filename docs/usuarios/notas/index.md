@@ -2,6 +2,13 @@
 
 Las **Notas** son un tipo especial de documento que funciona como memorandos o comunicaciones internas oficiales entre sectores del organismo. A diferencia de otros documentos, las notas incluyen **destinatarios** (sectores) y un sistema de **tracking de aperturas** que permite al remitente saber quien leyo la comunicacion.
 
+!!! video "Video tutorial"
+    **GDI — Panel CCOO: gestion de Notas y Memos**
+
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/lWYjNqkUO78?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Panel CCOO: gestion de Notas y Memos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+
+
 ---
 
 ## Que es una Nota
