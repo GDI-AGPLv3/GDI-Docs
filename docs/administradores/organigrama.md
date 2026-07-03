@@ -146,6 +146,11 @@ El boton **Nueva reparticion** (en el header de la pagina) o **+ Agregar sub-rep
 
 Al crear la reparticion, el sistema genera automaticamente un sector **PRIV** para ella.
 
+!!! info "El acronimo es solo una etiqueta; la numeracion va por reparticion"
+    El acronimo de una reparticion se puede cambiar, pero **cambiarlo no reinicia el contador de los numeros especiales**. Los documentos de [numeracion especial](tipos-de-documentos.md) (contador propio, ej: Decretos, Resoluciones, Disposiciones) llevan un contador atado a la **reparticion**, no a su acronimo: al renombrar el acronimo el contador **sigue la misma secuencia** (…7, 8, 9). Los documentos ya emitidos conservan en su numero el acronimo con el que se emitieron (registro historico), y los nuevos salen con el acronimo nuevo, continuando la misma serie.
+
+    **Si necesitas una numeracion que arranque desde 1, tenes que crear una reparticion nueva** (no alcanza con cambiar el acronimo de una existente).
+
 ---
 
 ## Crear Sector
@@ -216,3 +221,6 @@ Al editar el detalle de una reparticion se puede modificar su **color primario**
 
 ??? question "¿Que registra la Auditoria (Audit)?"
     Cambios en reparticiones, sectores y permisos de sector: quien los hizo, cuando, y el campo modificado con su valor anterior y nuevo. Se puede filtrar por entidad y por fecha, y buscar por texto.
+
+??? question "Si cambio el acronimo de una reparticion, ¿se reinicia la numeracion?"
+    No. En los tipos con [numeracion especial](tipos-de-documentos.md) (contador propio, como Decretos, Resoluciones o Disposiciones) el contador esta atado a la **reparticion**, no a su acronimo. Al cambiar el acronimo la secuencia **continua** donde estaba: los documentos ya emitidos mantienen el acronimo viejo en su numero (registro historico) y los nuevos salen con el acronimo nuevo, dentro de la misma serie. **Para tener una numeracion que empiece desde 1 hay que crear una reparticion nueva.**

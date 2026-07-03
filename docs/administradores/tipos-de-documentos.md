@@ -93,6 +93,11 @@ Ademas de adoptar tipos del catalogo global, podes crear tipos de documento **pr
 
 Al completar los datos, el boton **Crear tipo** da de alta el tipo en tu organizacion.
 
+!!! info "Numeracion especial vs. secuencial general"
+    Con **Numeracion especial** desactivada, el tipo usa la **secuencia general** de la organizacion (un unico correlativo por anio compartido entre todos los tipos). Con **Numeracion especial** activada, el tipo lleva un **contador propio, independiente por reparticion**.
+
+    Ese contador propio esta atado a la **reparticion**, no a su acronimo. Por eso **cambiar el acronimo de una reparticion no reinicia el contador de los numeros especiales**: la secuencia continua donde estaba y solo cambia el texto del acronimo en los documentos nuevos (los ya emitidos conservan el acronimo con el que salieron). **Si necesitas una numeracion que arranque desde 1, tenes que crear una reparticion nueva.** (El acronimo del *tipo de documento*, en cambio, es inmutable, ver abajo.)
+
 !!! warning "El acronimo es inmutable"
     Elegi el acronimo con cuidado: una vez creado el tipo **no se puede cambiar**. Ademas, no puede coincidir con el acronimo de ningun tipo del catalogo global.
 
