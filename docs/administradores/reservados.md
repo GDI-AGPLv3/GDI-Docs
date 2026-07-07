@@ -30,14 +30,17 @@ Quien puede activar el flag: el mismo administrador del BackOffice que edita hoy
 
 ## Quien puede ver un expediente reservado
 
-Para un expediente reservado, el modelo de acceso habitual por sector **no aplica**: pertenecer al sector administrador o a un sector asignado ya **no alcanza** para verlo. Solo lo ven las personas que cumplen alguna de estas cuatro condiciones (modelo R1 / R2 / R3 / R4):
+Para un expediente reservado, el modelo de acceso habitual por sector **no aplica**: pertenecer al sector administrador o a un sector asignado ya **no alcanza** para verlo. En terminos de negocio lo ven solo **el titular de la reparticion y los responsables del expediente**. Tecnicamente son cuatro condiciones (modelo R1 / R2 / R3 / R4), porque hay dos formas de ser responsable y dos de ser titular:
 
 | Rama | Quien | Detalle |
 |------|-------|---------|
-| **R1** | Responsables por persona | Usuarios cargados en la lista de responsables del expediente (tipo ADMIN o ADDITIONAL) que esten activos |
+| **R1** | Responsables del expediente | Usuarios cargados en la lista de responsables del expediente (titular o adicionales) que esten activos |
 | **R2** | Titular de la reparticion administradora | El titular **directo** de la reparticion del **sector administrador actual** del expediente |
 | **R3** | Titular de cada reparticion asignada | El titular **directo** de la reparticion de **cada sector asignado activo** del expediente |
-| **R4** | Actuantes designados | Usuarios con una actuacion o tarea asignada abierta en el expediente. Al cerrarse la tarea, el acceso por esta via se pierde (salvo que la persona siga siendo responsable por R1 o titular por R2/R3) |
+| **R4** | Responsables de una actuacion | Usuarios designados responsables de una actuacion o tarea del expediente (actuantes). Es la otra forma de ser responsable del expediente: vale mientras la actuacion este abierta; al cerrarse, el acceso por esta via se pierde (salvo que la persona siga cumpliendo R1, R2 o R3) |
+
+!!! note "R1 y R4 son el mismo concepto"
+    El **responsable directo** (R1) y el **designado en una actuacion** (R4) son lo mismo para el negocio: personas responsables del expediente. La diferencia es solo la vigencia: el alta directa dura hasta que se la quite, la de la actuacion dura mientras la actuacion siga abierta.
 
 !!! note "Solo la reparticion directa"
     R2 y R3 se refieren al titular de la reparticion **directa** del sector, nunca al titular de una reparticion padre ni al Intendente. Si un sector no tiene titular cargado, esa via simplemente no aporta ningun visor: en ese caso, la unica forma de acceder es figurar como responsable (R1).
