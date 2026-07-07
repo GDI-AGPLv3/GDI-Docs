@@ -53,6 +53,14 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](tipos-de-expedientes.md)
 
+-   :material-lock:{ .lg .middle } **Expedientes y Documentos Reservados**
+
+    ---
+
+    Modelo de confidencialidad por tipo (`is_reserved`): quien ve un item reservado, integridad al vincular y contenido fuera de la IA.
+
+    [:octicons-arrow-right-24: Ver seccion](reservados.md)
+
 -   :material-folder-multiple:{ .lg .middle } **Familias de Registro**
 
     ---
