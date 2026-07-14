@@ -61,6 +61,14 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](reservados.md)
 
+-   :material-earth:{ .lg .middle } **Documentos y Legajos Públicos**
+
+    ---
+
+    Tercera pata de visibilidad: abrir documentos y legajos a la ciudadania sin login. Configuracion por tipo/familia, API publica y reglas de seguridad.
+
+    [:octicons-arrow-right-24: Ver seccion](documentos-publicos.md)
+
 -   :material-folder-multiple:{ .lg .middle } **Familias de Registro**
 
     ---
