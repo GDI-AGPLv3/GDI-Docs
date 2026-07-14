@@ -143,6 +143,7 @@ La informacion publicada se consume por un **bloque de API de solo lectura** pen
 - **`search`**: `q` obligatorio (minimo 2 caracteres). Cada resultado es de tipo `document` (con `official_number`, `document_type`, `resume`, `snippet`, `pdf_url`, ...) o `record` (legajo, con `record_number`, `display_name`, `registry_code`, `fields`).
 - **`registries/{code}/records`**: acepta `page` (default 1), `page_size` (default 20, tope 25) y `search` (opcional, min 2 caracteres). Una familia inexistente o no publica devuelve **404** (no distingue "no existe" de "privada").
 - **`records/{record_number}`**: devuelve `record_number`, `display_name`, `state`, `registry` y los `fields` publicos; ademas `documents`, `cases` y `related_records` **solo** si la familia los habilito. Un legajo que no existe, cuya familia no es publica, o cuyo estado no esta en `visible_states`, devuelve **404**.
+    - **Resumen de los vinculados:** cada `documents` incluye `resume` **solo si el documento es publico** (mismo criterio que `pdf_url`); si no es publico, `resume` viene `null`. Cada `related_records` incluye `resume` **solo si el legajo destino es publico y navegable** (mismo criterio que `linked`); si no, `resume` viene `null`. Los `cases` (expedientes) **nunca** incluyen resumen: siguen devolviendo solo `case_number` y `reference`.
 
 ### URLs de los PDFs
 
