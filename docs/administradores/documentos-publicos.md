@@ -172,7 +172,3 @@ El bloque publico esta blindado por varias capas (todas activas en la implementa
 !!! info "Busqueda inteligente"
     La busqueda publica es **hibrida**: combina busqueda semantica (embeddings + RAG) con busqueda lexica, fusionadas con Reciprocal Rank Fusion (RRF). Si no hay cupo de IA disponible, degrada de forma transparente a busqueda lexica.
 
----
-
-!!! example "Estado de la funcionalidad"
-    El comportamiento descripto en esta pagina corresponde al **modelo diseñado** de documentos y legajos publicos (GDI-098, con el endurecimiento de autenticacion GDI-112). La implementacion se esta verificando en el ambiente de desarrollo (DEV) durante julio de 2026. Requiere ademas el aprovisionamiento del bucket publico R2 y el ruteo de dominio en Cloudflare por parte de DevOps. Si detectas una diferencia entre lo documentado aca y lo que ves en la aplicacion, prevalece este modelo como comportamiento esperado.
