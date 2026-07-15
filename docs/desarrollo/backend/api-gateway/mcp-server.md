@@ -41,8 +41,9 @@ El contexto se inyecta automaticamente desde el JWT:
 
 ```python
 async def validate_mcp_auth(token: str) -> MCPContext:
-    # 1. Validar JWT con Auth0 JWKS
-    # 2. Extraer email (del token o de /userinfo)
+    # 1. Validar JWT con Auth0 JWKS (audience con/sin barra final)
+    # 2. Extraer email del claim namespaced https://gdilatam.com/email
+    #    (clientes third-party no traen claim "email" ni sirven para /userinfo)
     # 3. Buscar usuario en BD por email
     # 4. Construir MCPContext con user_id, schema_name, etc.
     return MCPContext(
@@ -77,12 +78,12 @@ async def search_cases(
 
 Ver [OAuth Discovery](oauth-discovery.md) para el flujo completo.
 
-JWT multi-audience soportado:
+Audience soportado: solo la Custom API del gateway (`MCP_RESOURCE_URI`), con y sin barra final. NO el Management API. Ver [OAuth Discovery > Requisitos Auth0 para MCP](oauth-discovery.md#requisitos-auth0-para-mcp).
 
 ```python
 VALID_AUDIENCES = [
-    os.getenv('AUTH0_AUDIENCE'),
-    os.getenv('MCP_RESOURCE_URI'),
+    MCP_RESOURCE_URI,          # p.ej. https://gdi-gateway-dev.fly.dev
+    MCP_RESOURCE_URI + "/",    # variante canonicalizada por el cliente (RFC 8707)
 ]
 ```
 

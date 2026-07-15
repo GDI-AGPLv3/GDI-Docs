@@ -674,4 +674,7 @@ Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomend
 
 OAuth 2.0 automatico via Auth0. Los clientes MCP compatibles manejan el flujo de autenticacion de forma transparente.
 
+!!! warning "Requisitos Auth0 (si el MCP no conecta)"
+    El tenant necesita 4 cosas o el cliente termina con un token opaco: **DCR habilitado**, **conexion de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server con la barra final** (`https://<gateway>/`). Ver [Autenticacion > Validacion del JWT](autenticacion.md#validacion-del-jwt) y [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
+
 Para mas detalle sobre el flujo OAuth, descubrimiento de endpoints y configuracion de Auth0, ver [Autenticacion](autenticacion.md).
