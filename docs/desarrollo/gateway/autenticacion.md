@@ -191,16 +191,20 @@ El cliente envia requests al endpoint `/mcp` incluyendo el JWT como Bearer token
 
 ### Validacion del JWT
 
-El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, con cache de 30 minutos. Se aceptan multiples audiences para compatibilidad con distintos clientes:
+El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, con cache de 30 minutos. El unico audience valido es la Custom API del gateway (`MCP_RESOURCE_URI`), aceptado **con y sin barra final** (los clientes MCP canonicalizan el `resource` y le agregan `/`):
 
 ```
-Audiences validos:
-- AUTH0_AUDIENCE (variable de entorno, audience del Backend)
-- MCP_RESOURCE_URI (variable de entorno, configurable por deploy)
-- https://gateway.your-domain.com (URL del recurso)
+Audiences validos (api_gateway/auth_mcp.py):
+- MCP_RESOURCE_URI          (p.ej. https://gdi-gateway-dev.fly.dev)
+- MCP_RESOURCE_URI + "/"    (variante canonicalizada por el cliente)
 ```
 
-Del JWT se extrae el **email** del usuario (del claim `email` o, como fallback, consultando el endpoint `/userinfo` de Auth0). Con el email se busca al usuario en la base de datos y se construye el contexto de operacion.
+NO se acepta el audience del Management API (`https://<tenant>.auth0.com/api/v2/`).
+
+Del JWT se extrae el **email** del usuario. Los clientes MCP son *third-party* (DCR) y su token sale con scope `offline_access` solo (sin `openid`), por lo que **no** trae el claim `email` estandar ni sirve para `/userinfo` (devuelve 401). El email viaja en el claim **con namespace** `https://gdilatam.com/email` que agrega un Action de Auth0; el gateway lo lee con `_email_from_payload`. Con el email se busca al usuario en la base de datos y se construye el contexto de operacion.
+
+!!! warning "Requisitos Auth0 para MCP"
+    Para que un cliente MCP obtenga un JWT valido (y no un token opaco), el tenant necesita: **DCR habilitado**, la **conexion de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server registrado con la barra final** (`https://<gateway>/`). Ver [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
 
 ### Multi-tenant: usuarios con multiples organizaciones
 
