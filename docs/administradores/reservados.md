@@ -93,8 +93,8 @@ Un documento reservado **solo puede vivir dentro de un expediente reservado**. E
 El contenido de un documento reservado queda afuera de todos los procesos de IA y busqueda de contenido, **salvo para sus firmantes**:
 
 - **No** se le genera resumen de IA.
-- **No** se le generan embeddings (no entra al RAG ni a la busqueda semantica).
-- **No** se transcribe su PDF (en documentos importados, su contenido nunca se materializa ni se manda al modelo de vision).
+- **No** se indexa su contenido para la busqueda inteligente por significado.
+- **No** se transcribe su PDF (en documentos importados, su contenido nunca se procesa por IA).
 - **No** aparece en busquedas por contenido ni por similitud.
 
 El **asistente de IA (chat)** no cita ni menciona el contenido de un documento reservado a quien no tiene acceso a el.
@@ -123,4 +123,4 @@ Un expediente o documento reservado al que no tenes acceso **nunca aparece por b
 ---
 
 !!! example "Estado de la funcionalidad"
-    El comportamiento descripto en esta pagina corresponde al **modelo disenado** de expedientes y documentos reservados (GDI-069). La implementacion se esta verificando en el ambiente de desarrollo (DEV) durante julio de 2026. Si detectas una diferencia entre lo documentado aca y lo que ves en la aplicacion, prevalece este modelo como comportamiento esperado.
+    El comportamiento descripto en esta pagina corresponde al **modelo disenado** de expedientes y documentos reservados. La implementacion se esta verificando en el ambiente de desarrollo (DEV) durante julio de 2026. Si detectas una diferencia entre lo documentado aca y lo que ves en la aplicacion, prevalece este modelo como comportamiento esperado.

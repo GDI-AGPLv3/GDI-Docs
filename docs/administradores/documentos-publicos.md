@@ -18,7 +18,7 @@ Cada Tipo de Documento tiene un campo `visibility` con uno de tres valores:
 | **Público** | **Cualquiera en internet, sin login** | Solo Tipos de Documento |
 
 !!! warning "Los expedientes NUNCA son publicos"
-    La opcion *Público* **solo existe para Tipos de Documento**. Los **Tipos de Expediente** admiten unicamente *Interno* o *Reservado* (decision de diseño D8). El BackOffice rechaza con error cualquier intento de crear o editar un tipo de expediente como publico.
+    La opcion *Público* **solo existe para Tipos de Documento**. Los **Tipos de Expediente** admiten unicamente *Interno* o *Reservado*. El BackOffice rechaza con error cualquier intento de crear o editar un tipo de expediente como publico.
 
 Los **legajos** (RLM) tienen su propio mecanismo de publicacion, a nivel de **Familia de Registro** (ver [Familias públicas](#familias-de-registro-publicas) mas abajo).
 
@@ -64,7 +64,7 @@ Los legajos se publican a nivel de **Familia de Registro**. En el detalle de una
 !!! quote "Publicación Pública"
     *Expone los legajos de esta familia sin login, en internet. Reversible en cualquier momento.*
 
-A diferencia de los tipos de documento, **publicar una familia es reversible** (decision D4): se puede prender y apagar cuando se quiera. Al apagarlo, la API publica deja de servir esos legajos de inmediato.
+A diferencia de los tipos de documento, **publicar una familia es reversible**: se puede prender y apagar cuando se quiera. Al apagarlo, la API publica deja de servir esos legajos de inmediato.
 
 ### Configuracion de una familia publica
 
@@ -104,21 +104,21 @@ Las URLs publicas dependen del **acronimo del municipio** (viaja en la ruta, ver
 !!! danger "Error 409 al cambiar el acronimo"
     Si se intenta cambiar el acronimo de un municipio con publicaciones activas, el sistema responde:
 
-    > *No se puede cambiar el acronimo: el tenant tiene tipos de documento o familias de legajos publicos activos (GDI-098). Las URLs publicas dependen del acronimo.*
+    > *No se puede cambiar el acronimo: el tenant tiene tipos de documento o familias de legajos publicos activos. Las URLs publicas dependen del acronimo.*
 
     Para cambiar el acronimo, primero hay que despublicar (apagar) las familias publicas. Los tipos de documento publicos, al ser irreversibles, hacen que esta decision sea de fondo: elegir bien el acronimo antes de publicar.
 
 ---
 
-## Requisito operativo: bucket publico
+## Requisito operativo: publicacion de PDFs
 
-La publicacion de PDFs requiere que el tenant tenga configurado un **bucket R2 publico** (`settings.bucket_publico`) y el ruteo de dominio en Cloudflare. Esto **no se configura desde el BackOffice**: es parte del alta / aprovisionamiento del cliente (DevOps).
+Para que los PDFs oficiales queden accesibles en internet, el municipio necesita tener habilitado el almacenamiento publico. Esto **no se configura desde el BackOffice**: es parte del alta / aprovisionamiento del cliente y lo realiza el equipo tecnico durante la puesta en marcha.
 
-- Si `bucket_publico` **no** esta configurado (`NULL`), la feature esta **apagada** para ese tenant: la copia del PDF publico es un *no-op* silencioso y las URLs de PDF no se generan (el resto de la informacion publica sigue disponible, solo sin link al PDF).
-- Marcar tipos o familias como publicos **no rompe nada** si el bucket no esta: simplemente no habra PDFs publicados hasta que DevOps active el bucket.
+- Si ese almacenamiento **no** esta habilitado, la publicacion de PDFs queda **apagada** para ese municipio: el resto de la informacion publica sigue disponible, solo que sin el link al PDF.
+- Marcar tipos o familias como publicos **no rompe nada** si todavia no esta habilitado: simplemente no habra PDFs publicados hasta que el equipo tecnico lo active.
 
 !!! note "Auditoria"
-    Todo cambio de visibilidad (crear un tipo publico, prender/apagar una familia, editar su `public_config`) queda registrado en la auditoria del sistema, en la misma transaccion que el cambio (D18).
+    Todo cambio de visibilidad (crear un tipo publico, prender/apagar una familia, editar su `public_config`) queda registrado en la auditoria del sistema, en la misma transaccion que el cambio.
 
 ---
 
@@ -127,7 +127,7 @@ La publicacion de PDFs requiere que el tenant tenga configurado un **bucket R2 p
 La informacion publicada se consume por un **bloque de API de solo lectura** pensado para portales de transparencia, integraciones y consultas de la ciudadania. Vive bajo el prefijo `/api/v1/public/{muni}/...`, donde `{muni}` es el **acronimo del municipio**.
 
 !!! warning "Requiere API Key del municipio (no es anonima)"
-    Aunque la informacion sea publica, la API **no es anonima**: cada pedido debe incluir el header **`X-API-Key`** con una **clave de municipio** (GDI-112). No lleva `X-User-ID` (la clave es del municipio, no de un usuario). La clave debe corresponder al `{muni}` de la URL; si no coincide, la respuesta es **403**. Estas claves son server-to-server: **no deben viajar a un navegador** (por eso las respuestas se sirven como `Cache-Control: private`).
+    Aunque la informacion sea publica, la API **no es anonima**: cada pedido debe incluir el header **`X-API-Key`** con una **clave de municipio**. No lleva `X-User-ID` (la clave es del municipio, no de un usuario). La clave debe corresponder al `{muni}` de la URL; si no coincide, la respuesta es **403**. Estas claves son server-to-server: **no deben viajar a un navegador** (por eso las respuestas se sirven como `Cache-Control: private`).
 
 ### Endpoints
 
@@ -153,23 +153,22 @@ Los PDFs publicos se sirven con una URL plana y estable:
 https://public.gdilatam.com/{numero_oficial}.pdf
 ```
 
-El mapeo dominio → bucket por municipio lo resuelve Cloudflare. La URL solo se incluye en la respuesta si el tipo del documento es publico **y** el tenant tiene `bucket_publico` configurado; si no, el campo `pdf_url` viene `null`.
+La URL solo se incluye en la respuesta si el tipo del documento es publico **y** el municipio tiene habilitado el almacenamiento publico; si no, el campo `pdf_url` viene `null`.
 
 ---
 
 ## Seguridad del bloque publico
 
-El bloque publico esta blindado por varias capas (todas activas en la implementacion GDI-098 / GDI-112):
+El bloque publico se diseño con la seguridad como prioridad. Sin entrar en detalles de implementacion, estas son las garantias que ofrece:
 
-| Capa | Comportamiento |
-|------|----------------|
-| **Autenticacion** | `X-API-Key` de municipio, validada contra el acronimo de la URL. Aislamiento cross-tenant (403 si la clave es de otro municipio) |
-| **Rate limit por IP** | Por minuto y por IP real (`fly-client-ip`), **fail-closed** (si el limitador no responde, bloquea): 30/min en busqueda, 60/min en listados → **429** |
-| **Cupo de IA** | La busqueda semantica tiene un cupo diario por municipio; si se agota o el servicio no responde, **degrada** a busqueda lexica (nunca falla con error) |
-| **Whitelist de campos** | Solo se sirven los campos marcados en `public_config`; los nombres se validan con `^[a-z0-9_]{1,64}$` antes de tocar la base (previene inyeccion) |
-| **Nunca expone reservados** | Documentos y expedientes reservados jamas aparecen: se filtran en la propia consulta, no despues |
-| **No expone el schema** | El `schema_name` del tenant se resuelve del lado del servidor y nunca se devuelve |
+| Garantia | Que significa |
+|----------|---------------|
+| **Acceso autenticado y aislado** | Cada pedido se valida contra una clave de municipio y queda acotado a ese municipio: no hay forma de acceder a la informacion de otro (403 si la clave no corresponde) |
+| **Solo lectura y protegida contra abuso** | La API no permite modificar nada y limita la cantidad de consultas por origen; los excesos se rechazan automaticamente |
+| **Solo se expone lo que marcas** | Unicamente salen los campos que el administrador tilda explicitamente en la configuracion publica; el resto nunca se publica |
+| **Nunca expone reservados** | Documentos y expedientes reservados jamas aparecen: se filtran en origen, antes de armar la respuesta |
+| **No revela la estructura interna** | La respuesta nunca incluye datos internos del sistema ni de la base de datos |
 
 !!! info "Busqueda inteligente"
-    La busqueda publica es **hibrida**: combina busqueda semantica (embeddings + RAG) con busqueda lexica, fusionadas con Reciprocal Rank Fusion (RRF). Si no hay cupo de IA disponible, degrada de forma transparente a busqueda lexica.
+    La busqueda publica combina coincidencia por palabras con una busqueda que entiende el **significado** de la consulta, para devolver resultados relevantes aunque no coincidan exactamente los terminos. Si el servicio inteligente no esta disponible en un momento dado, la busqueda sigue funcionando de forma transparente por coincidencia de texto.
 
