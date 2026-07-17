@@ -110,12 +110,12 @@ Las URLs publicas dependen del **acronimo del municipio** (viaja en la ruta, ver
 
 ---
 
-## Requisito operativo: publicacion de PDFs
+## Publicacion de PDFs: viene lista de fabrica
 
-Para que los PDFs oficiales queden accesibles en internet, el municipio necesita tener habilitado el almacenamiento publico. Esto **no se configura desde el BackOffice**: es parte del alta / aprovisionamiento del cliente y lo realiza el equipo tecnico durante la puesta en marcha.
+El almacenamiento publico donde se sirven los PDFs **viene habilitado de fabrica**: toda instancia nace con su espacio de publicacion propio, creado automaticamente en el alta del municipio. El administrador **no tiene que configurar ni pedir nada** — alcanza con marcar un tipo de documento como publico para que sus PDFs firmados empiecen a publicarse.
 
-- Si ese almacenamiento **no** esta habilitado, la publicacion de PDFs queda **apagada** para ese municipio: el resto de la informacion publica sigue disponible, solo que sin el link al PDF.
-- Marcar tipos o familias como publicos **no rompe nada** si todavia no esta habilitado: simplemente no habra PDFs publicados hasta que el equipo tecnico lo active.
+- Cuando se firma un documento de un tipo publico, el PDF oficial se copia automaticamente al espacio publico y su `pdf_url` aparece en la API.
+- Si un documento vinculado **no** es de tipo publico, su `pdf_url` viene `null`: es el comportamiento esperado, no una falla.
 
 !!! note "Auditoria"
     Todo cambio de visibilidad (crear un tipo publico, prender/apagar una familia, editar su `public_config`) queda registrado en la auditoria del sistema, en la misma transaccion que el cambio.
@@ -276,7 +276,7 @@ Los PDFs publicos se sirven con una URL plana y estable, cuyo nombre de archivo 
 {url-base-de-publicacion}/{numero_oficial}.pdf
 ```
 
-La URL base de publicacion depende del ambiente y la informa GDI en la puesta en marcha; el integrador **no necesita construirla**: siempre llega completa en el campo `pdf_url` de las respuestas. La URL solo se incluye si el tipo del documento es publico **y** el municipio tiene habilitado el almacenamiento publico; si no, el campo `pdf_url` viene `null`. La descarga del PDF **no requiere API Key**.
+La URL base de publicacion depende del ambiente; el integrador **no necesita construirla**: siempre llega completa en el campo `pdf_url` de las respuestas. La URL se incluye solo para documentos de **tipo publico**; para el resto el campo `pdf_url` viene `null`. La descarga del PDF **no requiere API Key**.
 
 ---
 
