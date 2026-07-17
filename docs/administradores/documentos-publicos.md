@@ -124,7 +124,13 @@ Para que los PDFs oficiales queden accesibles en internet, el municipio necesita
 
 ## API pública
 
-La informacion publicada se consume por un **bloque de API de solo lectura** pensado para portales de transparencia, integraciones y consultas de la ciudadania. Vive bajo el prefijo `/api/v1/public/{muni}/...`, donde `{muni}` es el **acronimo del municipio**.
+La informacion publicada se consume por un **bloque de API de solo lectura** pensado para portales de transparencia, integraciones y consultas de la ciudadania. Vive bajo el prefijo `/api/v1/public/{muni}/...`, donde `{muni}` es el **acronimo del municipio** (en minusculas).
+
+!!! abstract "Que necesita el equipo tecnico del municipio para integrar"
+    1. La **URL base** del ambiente (la entrega GDI en la puesta en marcha).
+    2. La **API Key del municipio** (la entrega GDI por un canal seguro; nunca por mail junto con la URL).
+    3. El **acronimo** del municipio, que va en la ruta.
+    4. Un cliente **server-to-server** (backend propio, no un navegador).
 
 !!! warning "Requiere API Key del municipio (no es anonima)"
     Aunque la informacion sea publica, la API **no es anonima**: cada pedido debe incluir el header **`X-API-Key`** con una **clave de municipio**. No lleva `X-User-ID` (la clave es del municipio, no de un usuario). La clave debe corresponder al `{muni}` de la URL; si no coincide, la respuesta es **403**. Estas claves son server-to-server: **no deben viajar a un navegador** (por eso las respuestas se sirven como `Cache-Control: private`).
@@ -141,19 +147,136 @@ La informacion publicada se consume por un **bloque de API de solo lectura** pen
 **Parametros y notas:**
 
 - **`search`**: `q` obligatorio (minimo 2 caracteres). Cada resultado es de tipo `document` (con `official_number`, `document_type`, `resume`, `snippet`, `pdf_url`, ...) o `record` (legajo, con `record_number`, `display_name`, `registry_code`, `fields`).
-- **`registries/{code}/records`**: acepta `page` (default 1), `page_size` (default 20, tope 25) y `search` (opcional, min 2 caracteres). Una familia inexistente o no publica devuelve **404** (no distingue "no existe" de "privada").
+- **`registries/{code}/records`**: acepta `page` (default 1), `page_size` (default 20, tope 25: valores mayores se ajustan a 25 sin error) y `search` (opcional, min 2 caracteres: con menos, el filtro se ignora y se devuelve el listado completo). Una familia inexistente o no publica devuelve **404** (no distingue "no existe" de "privada").
 - **`records/{record_number}`**: devuelve `record_number`, `display_name`, `state`, `registry` y los `fields` publicos; ademas `documents`, `cases` y `related_records` **solo** si la familia los habilito. Un legajo que no existe, cuya familia no es publica, o cuyo estado no esta en `visible_states`, devuelve **404**.
     - **Resumen de los vinculados:** cada `documents` incluye `resume` **solo si el documento es publico** (mismo criterio que `pdf_url`); si no es publico, `resume` viene `null`. Cada `related_records` incluye `resume` **solo si el legajo destino es publico y navegable** (mismo criterio que `linked`); si no, `resume` viene `null`. Los `cases` (expedientes) **nunca** incluyen resumen: siguen devolviendo solo `case_number` y `reference`.
 
+### Ejemplos de uso
+
+Listar las familias publicas del municipio:
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  "https://URL-BASE/api/v1/public/muni/registries"
+```
+
+```json
+{
+  "registries": [
+    {
+      "code": "NORMA",
+      "name": "Normativa HCD",
+      "description": "Registro de normativa emitida por el Honorable Concejo Deliberante",
+      "fields": ["materia", "tipo_norma", "numero_norma", "fecha_sancion"]
+    }
+  ],
+  "total": 1
+}
+```
+
+Listar los legajos de una familia, paginados:
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  "https://URL-BASE/api/v1/public/muni/registries/NORMA/records?page=1&page_size=5"
+```
+
+```json
+{
+  "records": [
+    {
+      "record_number": "RLM-2026-00000036-MUNI-NORMA",
+      "display_name": "Ordenanza 5383 - Regula contrataciones municipales",
+      "state": "Vigente",
+      "registry_code": "NORMA",
+      "fields": {
+        "materia": {"value": "Presupuesto"},
+        "tipo_norma": {"value": "Ordenanza"},
+        "numero_norma": {"value": "5383"}
+      }
+    }
+  ],
+  "total": 10,
+  "page": 1,
+  "page_size": 5,
+  "total_pages": 2
+}
+```
+
+Detalle de un legajo, con sus documentos publicos:
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  "https://URL-BASE/api/v1/public/muni/records/RLM-2026-00000036-MUNI-NORMA"
+```
+
+```json
+{
+  "record_number": "RLM-2026-00000036-MUNI-NORMA",
+  "display_name": "Ordenanza 5383 - Regula contrataciones municipales",
+  "state": "Vigente",
+  "registry": {"code": "NORMA", "name": "Normativa HCD"},
+  "fields": {
+    "materia": {"value": "Presupuesto"},
+    "tipo_norma": {"value": "Ordenanza"},
+    "numero_norma": {"value": "5383"}
+  },
+  "documents": [
+    {
+      "official_number": "NORPU-2026-00001234-MUNI-HCD",
+      "reference": "5383/26",
+      "pdf_url": "https://URL-PDF/NORPU-2026-00001234-MUNI-HCD.pdf",
+      "resume": "Resumen del contenido generado automaticamente..."
+    },
+    {
+      "official_number": "ANEXO-2026-00001235-MUNI-HCD",
+      "reference": "Anexo interno",
+      "pdf_url": null,
+      "resume": null
+    }
+  ]
+}
+```
+
+!!! tip "pdf_url: null NO es un error"
+    Un documento vinculado al legajo que **no** sea de tipo publico aparece en la lista con `pdf_url: null` y `resume: null`. Es el comportamiento esperado: el legajo muestra que el documento existe, pero su contenido no es publico. El PDF de los documentos publicos se descarga directo de `pdf_url`, **sin API Key** (es un link publico).
+
+Busqueda combinada:
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  "https://URL-BASE/api/v1/public/muni/search?q=ordenanza%205383"
+```
+
+Cada resultado trae `type` (`record` o `document`). Los resultados `document` incluyen ademas `linked_records`, con los legajos publicos a los que esta vinculado el documento.
+
+### Respuestas de error
+
+| Caso | Codigo | Cuerpo |
+|------|--------|--------|
+| Sin header `X-API-Key` | 401 | `{"error": "X-API-Key requerido"}` |
+| Clave invalida, inactiva, vencida o revocada | 401 | `{"error": "API Key invalida"}` (mensaje generico a proposito) |
+| Clave valida pero de **otro** municipio | 403 | `{"error": "API Key no valida para este municipio"}` |
+| Familia inexistente o no publica | 404 | `{"error": "Familia no encontrada"}` |
+| Legajo inexistente, no publico o en estado no visible | 404 | `{"error": "Legajo no encontrado"}` |
+| `q` de busqueda con menos de 2 caracteres | 400 | `{"error": "q requerido (min 2 caracteres)"}` |
+| Exceso de consultas | 429 | `{"error": "Rate limit exceeded. Retry after 60s"}` |
+
+!!! tip "Buenas practicas de integracion"
+    - **Cachear en el servidor** las respuestas hasta 60 segundos (las respuestas ya lo indican con `Cache-Control: private, max-age=60`). Un portal de transparencia no necesita pegarle a la API en cada visita.
+    - Ante un **429**, esperar 60 segundos y reintentar: es la proteccion contra abuso funcionando, no una falla.
+    - La API Key vive **solo en el backend** del municipio. Si aparece en el codigo del frontend, en un repositorio o en un navegador, hay que pedir a GDI que la **rote** (revocar y emitir una nueva).
+    - Al reportar un problema a GDI, enviar URL completa, fecha/hora, codigo HTTP y cuerpo de la respuesta. **Nunca incluir la API Key** en el reporte.
+
 ### URLs de los PDFs
 
-Los PDFs publicos se sirven con una URL plana y estable:
+Los PDFs publicos se sirven con una URL plana y estable, cuyo nombre de archivo es el **numero oficial** del documento:
 
 ```
-https://public.gdilatam.com/{numero_oficial}.pdf
+{url-base-de-publicacion}/{numero_oficial}.pdf
 ```
 
-La URL solo se incluye en la respuesta si el tipo del documento es publico **y** el municipio tiene habilitado el almacenamiento publico; si no, el campo `pdf_url` viene `null`.
+La URL base de publicacion depende del ambiente y la informa GDI en la puesta en marcha; el integrador **no necesita construirla**: siempre llega completa en el campo `pdf_url` de las respuestas. La URL solo se incluye si el tipo del documento es publico **y** el municipio tiene habilitado el almacenamiento publico; si no, el campo `pdf_url` viene `null`. La descarga del PDF **no requiere API Key**.
 
 ---
 
