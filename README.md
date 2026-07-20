@@ -2,7 +2,7 @@
 
 Documentación técnica del sistema de Gestión Documental Inteligente (GDI).
 
-Sitio publicado: **[https://gdi-apglv3.github.io/GDI-Docs/](https://gdi-apglv3.github.io/GDI-Docs/)**
+Sitio publicado: **[https://gdi-agplv3.github.io/GDI-Docs/](https://gdi-agplv3.github.io/GDI-Docs/)**
 
 ## Build local
 
@@ -21,9 +21,9 @@ Luego abrir `http://localhost:8000`.
 
 ## Repos relacionados
 
-- [GDI-Backend](https://github.com/GDI-APGLv3/GDI-Backend) — API REST + Gateway MCP
-- [GDI-Frontend](https://github.com/GDI-APGLv3/GDI-Frontend) — Next.js
-- [GDI-BD](https://github.com/GDI-APGLv3/GDI-BD) — Schema PostgreSQL multi-tenant
+- [GDI-Backend](https://github.com/GDI-AGPLv3/GDI-Backend) — API REST + Gateway MCP
+- [GDI-Frontend](https://github.com/GDI-AGPLv3/GDI-Frontend) — Next.js
+- [GDI-BD](https://github.com/GDI-AGPLv3/GDI-BD) — Schema PostgreSQL multi-tenant
 
 ## Licencia
 
