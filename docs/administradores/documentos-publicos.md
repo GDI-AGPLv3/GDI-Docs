@@ -267,6 +267,9 @@ curl -H "X-API-Key: $API_KEY" \
 !!! tip "PDF y contenido son complementarios"
     El detalle de legajo entrega, para cada documento publico, tanto el `pdf_url` (para descargar el PDF firmado) como el `document_id` (para pedir el texto en HTML por este endpoint). Sirven a fines distintos: el PDF es el documento oficial descargable; el contenido HTML es util para indexar, buscar o mostrar el texto embebido en un portal sin abrir el PDF.
 
+!!! warning "Sanitizar el HTML antes de mostrarlo en un navegador"
+    El `content.html` es el texto del documento tal como quedo en el sistema; la API lo devuelve **sin sanitizar** (es una API server-to-server, no pensada para render directo en un browser). Si el portal del municipio lo va a inyectar en una pagina, **debe pasarlo antes por un sanitizador** (por ejemplo DOMPurify) — nunca hacer `dangerouslySetInnerHTML` / `innerHTML` con el HTML crudo. Es la misma precaucion que con cualquier contenido de origen externo.
+
 !!! info "Flujo tipico de integracion"
     1. `GET /registries` -> familias publicas del municipio.
     2. `GET /registries/{code}/records` -> legajos de una familia.
