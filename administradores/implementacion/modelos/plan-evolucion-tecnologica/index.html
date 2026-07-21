@@ -1,0 +1,5424 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentacion unificada del Sistema de Gestion Documental Inteligente para gobiernos LATAM">
+      
+      
+        <meta name="author" content="GDI Latam">
+      
+      
+        <link rel="canonical" href="https://docs.gdilatam.com/administradores/implementacion/modelos/plan-evolucion-tecnologica/">
+      
+      
+        <link rel="prev" href="../resolucion-etapas/">
+      
+      
+        <link rel="next" href="../protocolo-digitalizacion/">
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>Plan de Evolución Tecnológica (adicional) - GDI Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Montserrat";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+        html.glightbox-open { overflow: initial; height: 100%; }
+        .gslide-title { margin-top: 0px; user-select: text; }
+        .gslide-desc { color: #666; user-select: text; }
+        .gslide-image img { background: white; }
+        
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+            </style> <script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adicional-ordenanza-plan-de-evolucion-tecnologica-municipal" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../../../.." title="GDI Docs" class="md-header__button md-logo" aria-label="GDI Docs" data-md-component="logo">
+      
+  <img src="../../../../assets/logo-white.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GDI Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plan de Evolución Tecnológica (adicional)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartir" aria-label="Compartir" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GDI-APGLv3/GDI-Docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GDI-APGLv3/GDI-Docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../usuarios/" class="md-tabs__link">
+          
+  
+    
+  
+  Usuarios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+    
+  
+  Administradores
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../desarrollo/" class="md-tabs__link">
+          
+  
+    
+  
+  Desarrollo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../glosario/" class="md-tabs__link">
+        
+  
+    
+  
+  Glosario
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="GDI Docs" class="md-nav__button md-logo" aria-label="GDI Docs" data-md-component="logo">
+      
+  <img src="../../../../assets/logo-white.png" alt="logo">
+
+    </a>
+    GDI Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GDI-APGLv3/GDI-Docs" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GDI-APGLv3/GDI-Docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Usuarios
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Usuarios
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/catalogos/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Catalogos
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Catalogos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/catalogos/tipos-de-documento/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tipos de Documento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/catalogos/tipos-de-expediente/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tipos de Expediente
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/documentos/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Documentos
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Documentos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/crear-editar-documento/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Crear y Editar Documento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/documento-importado/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documento Importado (PDF)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/documento-nota/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documento tipo NOTA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/documento-ffcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documento FFCC (Formulario Controlado)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/previsualizar-documento/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Previsualizar Documento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/proceso-de-firma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Proceso de Firma
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/firmar-con-token/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firmar con Token (FirmadorGDI)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/documentos/rechazar-y-subsanar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rechazar y Subsanar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/expedientes/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Expedientes
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Expedientes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/expedientes/detalle-expediente/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Detalle del Expediente
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/expedientes/panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Panel del Expediente
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/expedientes/movimientos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Historial y Comentarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/expedientes/vincular-documentos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vincular Documentos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/expedientes/subsanar-expediente/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subsanar en Expediente
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/legajos/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Legajos
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Legajos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/legajos/crear-legajo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Crear y Gestionar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/legajos/verificacion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Verificacion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/legajos/relaciones/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Relaciones y Vinculos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/notas/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Notas
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Notas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/notas/nota-enviada/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nota Enviada
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/notas/nota-recibida/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nota Recibida
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/memos/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Memos
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Memos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/memos/memo-enviado/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memo Enviado
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/memos/memo-recibido/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memo Recibido
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Busqueda
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Busqueda
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../usuarios/busqueda/buscador-general/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Buscador General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../usuarios/asistente-ai/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Asistente AI
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Asistente AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Administradores
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Administradores
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../informacion-general/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Informacion General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../roles-y-sellos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roles y Sellos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../organigrama/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Organigrama
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tipos-de-documentos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tipos de Documentos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tipos-de-expedientes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tipos de Expedientes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reservados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expedientes y Documentos Reservados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../documentos-publicos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentos y Legajos Públicos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../familias-registro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Familias de Registro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usuarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Usuarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../administracion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administracion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../certificados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Certificados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../backups/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Backups (GDI Sync)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_14" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Implementación GDI
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_14" id="__nav_3_14_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_14_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_14">
+            <span class="md-nav__icon md-icon"></span>
+            Implementación GDI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../marco-normativo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Marco Normativo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hoja-de-ruta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hoja de Ruta Normativa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_14_4" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Modelos de Normas
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_14_4" id="__nav_3_14_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_14_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_14_4">
+            <span class="md-nav__icon md-icon"></span>
+            Modelos de Normas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ordenanza-adhesion-firma-digital/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ordenanza de Adhesión a Firma Digital
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decreto-reglamentario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decreto de Implementación GDI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolucion-etapas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resolución de Puesta en Marcha
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Plan de Evolución Tecnológica (adicional)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Plan de Evolución Tecnológica (adicional)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="En esta pagina">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      En esta pagina
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estructura del modelo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notas-de-adaptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notas de adaptación
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#texto-completo-del-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Texto completo del modelo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Texto completo del modelo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exposicion-de-motivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exposición de motivos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proyecto-de-ordenanza" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proyecto de Ordenanza
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anexo-i-plan-de-evolucion-tecnologica-municipal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anexo I — Plan de Evolución Tecnológica Municipal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocolo-digitalizacion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Protocolo de Digitalización (adicional)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../complementarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentos Complementarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Desarrollo
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Desarrollo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/gateway/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Gateway API
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Gateway API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/autenticacion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Autenticacion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/mcp-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCP Server
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/gateway/rest-api/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    REST API
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_4" id="__nav_4_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            REST API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/rest-api/expedientes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expedientes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/rest-api/documentos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/rest-api/sistema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sistema y Catalogos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/rest-api/notas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/rest-api/legajos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Legajos (RLM)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/flujos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flujos Completos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/gateway/errores/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Errores y Codigos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/arquitectura/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Arquitectura
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Arquitectura
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/arquitectura/diagrama-servicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagrama de Servicios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/arquitectura/comunicacion-entre-servicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comunicacion entre Servicios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/arquitectura/multi-tenant/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi-Tenant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/arquitectura/flujos-principales/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flujos Principales
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/arquitectura/variables-entorno/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Variables de Entorno
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/referencia-interna/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Referencia Interna
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Referencia Interna
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/frontend/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Frontend
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_2" id="__nav_4_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Frontend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/estructura-proyecto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Estructura del Proyecto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/paginas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paginas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/componentes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Componentes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/hooks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hooks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/types/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Types
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/lib-utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lib y Utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/middleware-auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Middleware Auth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/design-system/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/frontend/api-routes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Routes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/backend/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Backend
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_3" id="__nav_4_4_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/estructura-proyecto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Estructura del Proyecto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_3_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/backend/endpoints/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Endpoints
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_3_3" id="__nav_4_4_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Endpoints
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/documentos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/expedientes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expedientes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/usuarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Usuarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/sectores/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sectores
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/notas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dashboard
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/legajos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Legajos (RLM)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/endpoints/memos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_3_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/backend/services/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Services
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_3_4" id="__nav_4_4_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Services
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/documents-core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documents Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/documents-lifecycle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documents Lifecycle
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/documents-signing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documents Signing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/documents-pdf-preview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documents PDF Preview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/documents-retrieval/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documents Retrieval
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/cases-service/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cases Service
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/notes-service/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notes Service
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/storage-service/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage Service
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/shared-services/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Shared Services
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/services/rlm-service/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RLM Service
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/models-schemas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models y Schemas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/middleware/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Middleware
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/auth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Auth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_3_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/backend/api-gateway/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_3_9" id="__nav_4_4_3_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_4_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            API Gateway
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/api-gateway/mcp-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCP Server
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/api-gateway/rest-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    REST API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/backend/api-gateway/oauth-discovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OAuth Discovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/notary/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Notary
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_4" id="__nav_4_4_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Notary
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/endpoint-sign-pdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Endpoint Sign PDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/layout-firmas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout de Firmas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/firma-pades/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firma PAdES
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/firma-visual/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Firma Visual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/estampado/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Estampado
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/certificados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Certificados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/notary/validaciones/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Validaciones
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/database/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Database
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_5" id="__nav_4_4_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Database
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/schema-public/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schema Public
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/schema-municipio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schema Municipio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/schema-audit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schema Audit
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/scripts-deploy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scripts Deploy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/numeracion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Numeracion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/enums-y-tipos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enums y Tipos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/herramientas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Herramientas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/database/schema-rlm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schema RLM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../desarrollo/deploy/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Deploy
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4_6" id="__nav_4_4_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Deploy
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/deploy/cloudflare-r2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloudflare R2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/deploy/github-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub Actions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Guias
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Guias
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/guias/desarrollo-local/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Desarrollo Local
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/guias/nuevo-endpoint/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nuevo Endpoint
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/guias/nuevo-tipo-documento/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nuevo Tipo de Documento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../desarrollo/guias/troubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../glosario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glosario
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="En esta pagina">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      En esta pagina
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estructura del modelo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notas-de-adaptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notas de adaptación
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#texto-completo-del-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Texto completo del modelo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Texto completo del modelo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exposicion-de-motivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exposición de motivos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proyecto-de-ordenanza" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proyecto de Ordenanza
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anexo-i-plan-de-evolucion-tecnologica-municipal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anexo I — Plan de Evolución Tecnológica Municipal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="adicional-ordenanza-plan-de-evolucion-tecnologica-municipal">Adicional — Ordenanza Plan de Evolución Tecnológica Municipal<a class="headerlink" href="#adicional-ordenanza-plan-de-evolucion-tecnologica-municipal" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Material adicional</p>
+<p>No forma parte del paquete normativo central de tres modelos. Se ofrece cuando el municipio quiere un marco estratégico más amplio.</p>
+</div>
+<p><strong>Cuándo usarlo</strong>: cuando el municipio quiere enmarcar GDI en una política de modernización más amplia. Esta ordenanza aprueba un <strong>Plan de Evolución Tecnológica</strong> con cuatro ejes estratégicos y crea la autoridad de aplicación que después conduce la implementación de GDI. Es opcional pero estratégica: convierte el proyecto en política de Estado y le da al área de modernización un mandato amplio (datos abiertos, interoperabilidad, tecnologías emergentes, sandbox regulatorio).</p>
+<p><strong>Quién lo dicta</strong>: el Honorable Concejo Deliberante, a iniciativa del Departamento Ejecutivo.</p>
+<p><strong>Relación con el resto del paquete</strong>: puede dictarse junto con la <a href="../ordenanza-adhesion-firma-digital/">Ordenanza de Adhesión a Firma Digital (Modelo 1)</a>; el <a href="../decreto-reglamentario/">Decreto de Implementación GDI (Modelo 2)</a> puede citarla en su Visto como la ordenanza que crea la autoridad de aplicación.</p>
+<hr />
+<h2 id="estructura-del-modelo">Estructura del modelo<a class="headerlink" href="#estructura-del-modelo" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Eje</th>
+<th>Objetivo</th>
+<th>Iniciativas destacadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A. Fomento de la innovación y el desarrollo tecnológico</strong></td>
+<td>Fomentar el desarrollo tecnológico de la ciudad</td>
+<td>Tecnologías avanzadas (IA, blockchain, LiDAR, conectividad), marco normativo para tecnologías emergentes, alianzas estratégicas, hackatones y espacios de innovación</td>
+</tr>
+<tr>
+<td><strong>B. Transformación digital del municipio</strong></td>
+<td>Digitalizar la administración pública</td>
+<td><strong>Firma y expediente electrónico</strong> (aquí encaja GDI), plataformas interoperables, modernización de infraestructura, reingeniería de procesos, formación en habilidades digitales</td>
+</tr>
+<tr>
+<td><strong>C. Cercanía con el ciudadano</strong></td>
+<td>Administración cercana, ágil y transparente</td>
+<td>Gestión electrónica de trámites, aplicaciones móviles, participación ciudadana en desafíos urbanos</td>
+</tr>
+<tr>
+<td><strong>D. Gobierno abierto y gestión de datos</strong></td>
+<td>Transparencia y decisiones basadas en datos</td>
+<td>Plataforma de datos abiertos, sistema de gestión de datos, participación ciudadana con datos</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="notas-de-adaptacion">Notas de adaptación<a class="headerlink" href="#notas-de-adaptacion" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Punto</th>
+<th>Qué revisar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Considerandos</td>
+<td>El modelo cita Decreto Nacional 434/16, Ley 25.506, Ley 13.666 (PBA) y Ley 14.858 (Plan Estratégico de Modernización PBA). Para otras provincias, reemplazar las normas provinciales.</td>
+</tr>
+<tr>
+<td>Eje A</td>
+<td>La mención de tecnologías concretas (blockchain, LiDAR) es ilustrativa: ajustar a la agenda real del municipio para no generar expectativas incumplibles.</td>
+</tr>
+<tr>
+<td>Autoridad de aplicación</td>
+<td>Es la misma que luego administra GDI (<a href="../decreto-reglamentario/">Modelo 2</a>, art. 2°). Conviene que sea un área con peso político (Jefatura de Gabinete, Secretaría de Gobierno o de Modernización).</td>
+</tr>
+<tr>
+<td>Sandbox</td>
+<td>Si el municipio quiere el programa de sandbox regulatorio (eje A), existe como documento complementario — ver <a href="../complementarios/">Documentos Complementarios</a>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="texto-completo-del-modelo">Texto completo del modelo<a class="headerlink" href="#texto-completo-del-modelo" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Para copiar y adaptar</p>
+<p>Reemplazá <code>[MUNICIPIO]</code>, <code>[PARTIDO DE XX]</code> y <code>[NOMBRE DE LA DEPENDENCIA]</code> por los datos reales. Ajustá las referencias normativas provinciales si el municipio no es de Buenos Aires.</p>
+</div>
+<hr />
+<h3 id="exposicion-de-motivos">Exposición de motivos<a class="headerlink" href="#exposicion-de-motivos" title="Permanent link">&para;</a></h3>
+<p><strong>VISTO:</strong></p>
+<p>La necesidad imperiosa de modernizar la Administración Pública Municipal con el fin de adaptarse a los desafíos actuales y futuros, respondiendo de manera ágil, eficiente y transparente a las demandas de la comunidad.</p>
+<p>Que dicha modernización no solo implica la actualización de los sistemas y procesos administrativos, sino también la incorporación de nuevas tecnologías y herramientas digitales que optimicen la gestión pública, mejoren la calidad de los servicios brindados y promuevan una interacción más cercana con la ciudadanía, facilitando el acceso a trámites y servicios de forma rápida y eficaz, y</p>
+<p><strong>CONSIDERANDO:</strong></p>
+<p>Que el Decreto Nacional 434/16 establece el Plan de Modernización del Estado a nivel nacional, cuyo objetivo principal es transformar la gestión pública mediante el uso de tecnologías avanzadas, optimizando los procesos administrativos y fomentando la transparencia y accesibilidad.</p>
+<p>Que la Ley Nacional N° 25.506 de Firma Digital y su adhesión a través de la Ley N° 13.666 en la Provincia de Buenos Aires proporcionan el marco legal necesario para la validación electrónica de documentos, simplificando los trámites administrativos y promoviendo una gestión pública más ágil y eficiente.</p>
+<p>Que la Ley N° 14.858 de la Provincia de Buenos Aires establece un Plan Estratégico para la modernización y digitalización del Estado provincial, promoviendo el uso de tecnologías innovadoras para mejorar la gestión pública y acercar los servicios a los ciudadanos.</p>
+<p>Que en un contexto de gobernanza inteligente, es fundamental utilizar la tecnología como medio para mejorar la eficiencia de los servicios públicos, promover la competitividad y fortalecer el tejido económico y social de las ciudades, en beneficio de todos los ciudadanos.</p>
+<p>Que la tecnología no solo debe ser vista como una herramienta de transformación digital, sino también como un puente entre la sociedad y el gobierno, fomentando la participación ciudadana, la transparencia y la innovación en los procesos administrativos.</p>
+<p>Que la apertura de datos y la transparencia son fundamentales para una gestión moderna, permitiendo al Estado cambiar su lógica tradicional y abrirse a una administración más eficiente e inclusiva.</p>
+<p>Que al facilitar el acceso a la información pública, se promueve una mayor participación ciudadana en la toma de decisiones, consolidando un vínculo de confianza y colaboración entre el gobierno y la comunidad.</p>
+<p>Que la transformación digital debe estar centrada en el ciudadano, promoviendo plataformas que permitan la gestión electrónica de trámites de manera eficiente, la integración de sistemas interconectados que favorezcan la interoperabilidad entre áreas municipales y el desarrollo de una infraestructura tecnológica moderna y segura.</p>
+<p>Que en este contexto, la despapelización administrativa se convierte en un pilar fundamental para agilizar y modernizar los procesos internos del Municipio. Que la eliminación progresiva del papel en la gestión pública no solo optimiza el tiempo de respuesta y reduce los costos operativos, sino que también contribuye a la sostenibilidad ambiental.</p>
+<p>Que la digitalización integral de los documentos y trámites permite un acceso más rápido, seguro y transparente a la información, facilitando el seguimiento en tiempo real de cada expediente. Esta transformación hacia un entorno completamente digital fortalece la confianza ciudadana en el municipio y optimiza la gestión de los recursos.</p>
+<p>Que el uso y la promoción de tecnologías innovadoras como blockchain, inteligencia artificial (IA) y LiDAR es esencial para mejorar y modernizar la prestación de servicios públicos municipales. Que estas tecnologías emergentes permiten optimizar los procesos administrativos, aumentar la transparencia y mejorar la toma de decisiones.</p>
+<p>Que el uso de estas tecnologías ofrecería beneficios tangibles para la gestión de infraestructuras, como el control inteligente de luminarias públicas, la optimización de semáforos, la gestión ambiental y el monitoreo urbano, incrementando la calidad de vida en el Municipio. Que el despliegue de sistemas basados en Inteligencia Artificial, blockchain o LiDAR permite no solo gestionar los recursos de manera más efectiva, sino también promover una ciudad más segura, sostenible y accesible para todos los ciudadanos, impulsando una gobernanza más eficiente y adaptada a los desafíos del siglo XXI.</p>
+<p>Que una administración pública comprometida con el fomento de la innovación y el apoyo a los desarrolladores y emprendedores tecnológicos desempeña un rol crucial en el crecimiento económico y social, generando soluciones que mejoran significativamente la calidad de vida de los ciudadanos y posicionando al Municipio como un referente en sostenibilidad y modernización.</p>
+<p>Que es fundamental establecer alianzas estratégicas con instituciones educativas, centros de investigación y emprendimientos tecnológicos, facilitando el intercambio de conocimientos y recursos y promoviendo la colaboración activa de la comunidad para resolver problemas locales mediante soluciones tecnológicas disruptivas.</p>
+<p>Que en un contexto de gobernanza inteligente es esencial que las ciudades se posicionen como polos de innovación, donde la tecnología actúe como motor clave para mejorar la calidad de vida de los ciudadanos y fortalecer el tejido económico de la comunidad. Que esto incluye la capacidad de gestionar de manera ágil y eficiente los servicios públicos, a través de plataformas tecnológicas y aplicaciones móviles que faciliten la interacción con los ciudadanos y promuevan la participación activa en la solución de desafíos urbanos.</p>
+<p>Que el fomento de la educación y el desarrollo de capacidades es fundamental para el éxito de cualquier transformación tecnológica. Para ello, es clave formar a los funcionarios públicos y empleados municipales, asegurando que todos puedan aprovechar al máximo las nuevas tecnologías implementadas. Que esta formación no solo garantiza su participación, sino que los posiciona como líderes activos en el proceso de transformación digital, fomentando una cultura de innovación y mejora continua dentro de la gestión pública.</p>
+<p>Que resulta esencial la creación de un marco regulatorio vanguardista que permita al municipio abrirse a la innovación, en consonancia con los lineamientos del Plan Ciudad Innovadora 2050. Que la implementación de estas regulaciones permitirá al Municipio fomentar la innovación, modernización y competitividad en todos sus ámbitos, a través de proyectos que incentiven el desarrollo tecnológico.</p>
+<p>Que el proyecto de ordenanza impulsado por esta [NOMBRE DE LA DEPENDENCIA] se presenta como una oportunidad invaluable para avanzar en la transformación digital y tecnológica del municipio, posicionándolo como un referente en innovación, modernización y desarrollo.</p>
+<p>Por todo lo expuesto, se acompaña y somete a estudio y posterior sanción de ese Alto Cuerpo, el presente Proyecto de Ordenanza.</p>
+<hr />
+<h3 id="proyecto-de-ordenanza">Proyecto de Ordenanza<a class="headerlink" href="#proyecto-de-ordenanza" title="Permanent link">&para;</a></h3>
+<p><strong>Plan de Evolución Tecnológica Municipal de [MUNICIPIO]</strong></p>
+<blockquote>
+<p><strong>ARTÍCULO 1°.-</strong> Apruébase el Plan de Evolución Tecnológica Municipal de [MUNICIPIO], que como Anexo I forma parte integrante de la presente.</p>
+<p><strong>ARTÍCULO 2°.-</strong> La Autoridad de Aplicación del Plan de Evolución Tecnológica Municipal será designada por el Departamento Ejecutivo Municipal.</p>
+<p><strong>ARTÍCULO 3°.-</strong> Ámbito de aplicación: el presente plan será aplicable a todos los organismos y dependencias que integren la función Ejecutiva Municipal.</p>
+<p><strong>ARTÍCULO 4°.-</strong> De forma.</p>
+</blockquote>
+<hr />
+<h3 id="anexo-i-plan-de-evolucion-tecnologica-municipal">Anexo I — Plan de Evolución Tecnológica Municipal<a class="headerlink" href="#anexo-i-plan-de-evolucion-tecnologica-municipal" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>ARTÍCULO 1°.- Objeto:</strong></p>
+<p>El Plan de Evolución Tecnológica Municipal tiene como objetivo principal promover una Administración Pública eficiente, transparente y orientada al ciudadano, utilizando tecnologías avanzadas para optimizar procesos, mejorar la calidad de los servicios y fortalecer la cercanía con la comunidad, fomentando la innovación y modernización y garantizando una gestión pública más ágil, accesible y transparente.</p>
+<p><strong>ARTÍCULO 2°.- Ejes:</strong></p>
+<p>Con el propósito de alcanzar el objetivo consagrado en el Artículo 1°, el Plan de Evolución Tecnológica Municipal del Partido de [MUNICIPIO] se articula en cuatro ejes estratégicos, cada uno con objetivos específicos y acciones concretas:</p>
+<p><strong>A. Fomento de la Innovación y el Desarrollo Tecnológico</strong></p>
+<p><em>Objetivo:</em> Fomentar el desarrollo tecnológico en la ciudad, mediante la implementación de iniciativas que promuevan la innovación, modernización y competitividad.</p>
+<p><em>Iniciativas:</em></p>
+<ul>
+<li>
+<p><strong>Implementación de tecnologías avanzadas:</strong> Desarrollar e implementar programas y proyectos que incorporen tecnologías de vanguardia, tales como blockchain, inteligencia artificial, LiDAR, aplicaciones móviles y redes de conectividad. Estas iniciativas estarán orientadas a optimizar la eficiencia operativa y mejorar la calidad de los servicios públicos, considerando acciones como la implementación de Wi-Fi público, mejoras en la infraestructura de internet, luminarias inteligentes, semáforos interconectados, monitoreo ambiental y gestión de residuos, así como la posible expansión del acceso a internet en espacios públicos y comunidades.</p>
+</li>
+<li>
+<p><strong>Marco normativo para tecnologías emergentes:</strong> Propiciar políticas y regulaciones que faciliten la implementación de tecnologías emergentes, creando un entorno que promueva la innovación y la adopción de nuevas herramientas tecnológicas. Estas regulaciones estarán diseñadas para integrar tecnologías disruptivas, fomentar la colaboración público-privada y garantizar un entorno favorable para la adopción de soluciones tecnológicas avanzadas.</p>
+</li>
+<li>
+<p><strong>Alianzas estratégicas:</strong> Promover alianzas con instituciones educativas, centros de investigación, organizaciones, cámaras, emprendedores, startups y empresas emergentes, creando redes de colaboración estratégicas. Ello, a fin de fomentar sinergias entre el sector público y privado, potenciando el intercambio de experiencias y la colaboración, donde la innovación conjunta se convierte en el motor clave para el crecimiento y desarrollo de la ciudad.</p>
+</li>
+<li>
+<p><strong>Espacios de innovación:</strong> Organizar eventos, hackatones y foros de innovación que permitan a emprendedores, ciudadanos y expertos en tecnología proponer ideas disruptivas para resolver desafíos locales, promoviendo el uso de la tecnología en la mejora de la calidad de vida de la comunidad.</p>
+</li>
+</ul>
+<hr />
+<p><strong>B. Transformación Digital del Municipio</strong></p>
+<p><em>Objetivo:</em> Digitalizar la administración pública mediante la integración de tecnologías que mejoren la interacción con los ciudadanos, incrementen la accesibilidad y optimicen la eficiencia de los servicios.</p>
+<p><em>Iniciativas:</em></p>
+<ul>
+<li>
+<p><strong>Firma y expediente electrónico:</strong> Implementar sistemas de gestión documental y validación de documentos mediante firma electrónica, mejorando la transparencia en los trámites administrativos.</p>
+</li>
+<li>
+<p><strong>Plataformas interconectadas:</strong> Implementar plataformas interconectadas que permitan la interoperabilidad entre diferentes áreas del municipio.</p>
+</li>
+<li>
+<p><strong>Modernización de infraestructura tecnológica:</strong> Modernizar los sistemas tecnológicos del municipio para garantizar mayor capacidad, seguridad y eficiencia en la gestión de datos.</p>
+</li>
+<li>
+<p><strong>Reingeniería de procesos:</strong> Rediseñar y digitalizar los procesos administrativos para agilizar y optimizar los recursos disponibles, asegurando que la transformación no solo simplifique la gestión municipal interna, sino que también incorpore tecnologías digitales para automatizar tareas, mejorar la interoperabilidad entre áreas y facilitar el acceso a la información en tiempo real.</p>
+</li>
+<li>
+<p><strong>Formación en habilidades digitales:</strong> Implementar programas de formación para todo el personal municipal, asegurando que los empleados y funcionarios públicos se mantengan actualizados en el uso de tecnologías innovadoras, optimizando los procesos y mejorando la eficiencia y calidad de la gestión municipal.</p>
+</li>
+</ul>
+<hr />
+<p><strong>C. Cercanía con el Ciudadano</strong></p>
+<p><em>Objetivo:</em> Crear una administración pública cercana, ágil y transparente, que facilite el acceso del ciudadano a los servicios municipales mediante tecnologías accesibles e innovadoras.</p>
+<p><em>Iniciativas:</em></p>
+<ul>
+<li>
+<p><strong>Sistemas de Gestión Electrónica de Trámites:</strong> Implementar un sistema integral de gestión electrónica que permita a los ciudadanos gestionar y realizar seguimiento de sus trámites de manera digital, sin la necesidad de acudir físicamente a la municipalidad.</p>
+</li>
+<li>
+<p><strong>Aplicaciones móviles para la interacción ciudadana:</strong> Implementar aplicaciones móviles que permitan una comunicación ágil y directa entre los ciudadanos y el Municipio y gestionar trámites de manera sencilla y rápida desde cualquier dispositivo.</p>
+</li>
+<li>
+<p><strong>Participación ciudadana en la solución de desafíos urbanos:</strong> Promover la colaboración activa de la comunidad, incentivando la participación de los ciudadanos en la identificación y resolución de desafíos locales mediante el uso de tecnologías innovadoras.</p>
+</li>
+</ul>
+<hr />
+<p><strong>D. Gobierno Abierto y Gestión de Datos</strong></p>
+<p><em>Objetivo:</em> Promover la transparencia, participación ciudadana y eficiencia mediante la apertura de datos y el uso de herramientas que optimicen la toma de decisiones basadas en información precisa y accesible.</p>
+<p><em>Iniciativas:</em></p>
+<ul>
+<li>
+<p><strong>Plataforma de Datos Abiertos:</strong> Desarrollar e implementar una plataforma de datos abiertos que permita a los ciudadanos y empresas acceder a información relevante del Municipio, fomentando la transparencia y la rendición de cuentas.</p>
+</li>
+<li>
+<p><strong>Sistema de Gestión de Datos:</strong> Crear un sistema de gestión de datos que permita recopilar, analizar y utilizar información clave para mejorar la toma de decisiones y la prestación de servicios municipales.</p>
+</li>
+<li>
+<p><strong>Participación Ciudadana:</strong> Implementar mecanismos de participación ciudadana que utilicen datos abiertos, permitiendo a los ciudadanos colaborar activamente en la planificación y ejecución de políticas públicas.</p>
+</li>
+</ul>
+<p><strong>ARTÍCULO 3°.- Autoridad de Aplicación:</strong></p>
+<p>La Autoridad de Aplicación del Plan será responsable de ejecutar las acciones necesarias para el cumplimiento de los objetivos establecidos en la presente ordenanza. En este marco, tendrá a su cargo la promoción, desarrollo y supervisión de los programas y proyectos destinados a dichos fines, impulsando y asegurando la transformación digital e innovación tecnológica en todo el municipio. La Autoridad de Aplicación tendrá a su cargo las siguientes responsabilidades:</p>
+<ul>
+<li>Ejecutar el Plan de Evolución Tecnológica Municipal, proponiendo las actualizaciones pertinentes en función de los avances tecnológicos y las necesidades de la ciudadanía.</li>
+<li>Proponer las disposiciones, reglamentaciones y aclaraciones necesarias para asegurar la adecuada implementación del Plan.</li>
+<li>Monitorear el cumplimiento de los objetivos del plan, implementando indicadores de evaluación y control.</li>
+<li>Elaborar y coordinar programas que impulsen la modernización interna de los procesos administrativos, incorporando tecnologías que optimicen la operativa del Municipio, promoviendo la eficiencia y la transparencia.</li>
+<li>Dirigir y supervisar la ejecución de proyectos que integren tecnologías de vanguardia, tales como blockchain, inteligencia artificial, LiDAR, aplicaciones móviles y redes de conectividad, asegurando que su implementación optimice la eficiencia operativa y mejore la calidad de los servicios públicos.</li>
+<li>Proponer lineamientos estratégicos para garantizar la modernización de la infraestructura tecnológica, tanto dentro de la administración como en el entorno urbano, mejorando la conectividad, los servicios inteligentes y la sostenibilidad.</li>
+<li>Desarrollar manuales y guías metodológicas para facilitar la digitalización de los procesos internos, promoviendo la eficiencia operativa y una gestión más ágil y cercana al ciudadano.</li>
+<li>Simplificar y digitalizar los procedimientos administrativos para garantizar mayor transparencia, eficiencia y control social.</li>
+<li>Coordinar acciones de transformación tecnológica con el gobierno provincial, nacional y otros municipios, estableciendo redes colaborativas para el desarrollo de ciudades inteligentes.</li>
+<li>Establecer alianzas estratégicas con el sector privado, emprendedores, cámaras, instituciones educativas y centros de innovación para el desarrollo de proyectos conjuntos que impulsen la modernización tecnológica del municipio y de la ciudad.</li>
+<li>Elaborar y coordinar políticas de transformación digital enfocadas en la modernización de los servicios y espacios públicos de la ciudad. Dirigir la implementación de soluciones tecnológicas innovadoras, incluyendo iniciativas como iluminación inteligente, gestión de arbolado, control de tráfico mediante semáforos interconectados, monitoreo ambiental y gestión de residuos, con el objetivo de fomentar un entorno urbano más eficiente y sostenible.</li>
+<li>Proponer y actualizar políticas y regulaciones que faciliten la adopción de tecnologías emergentes, asegurando que estas regulaciones promuevan la innovación, fomenten la colaboración público-privada, e impulsen un entorno favorable para la integración de tecnologías disruptivas.</li>
+<li>Propiciar la implementación de sistemas de gestión documental con firma electrónica, garantizando que estos sistemas mejoren la transparencia y agilidad en los trámites administrativos.</li>
+<li>Coordinar la integración de plataformas interconectadas entre diferentes áreas del municipio para asegurar la interoperabilidad y el flujo eficiente de información entre ellas.</li>
+<li>Supervisar la implementación y operación de un sistema integral de gestión electrónica de trámites que permita a los ciudadanos realizar y seguir sus trámites de manera digital, promoviendo un acceso fácil y ágil a los servicios municipales.</li>
+<li>Fomentar la participación ciudadana a través de plataformas digitales que faciliten el acceso a la información pública y promuevan la intervención activa de los ciudadanos en los procesos de modernización.</li>
+<li>Coordinar la capacitación del personal municipal, incluyendo a los funcionarios líderes, para garantizar su adaptación y actualización en el uso de tecnologías innovadoras.</li>
+<li>Organizar eventos y espacios de colaboración que promuevan la adopción de nuevas tecnologías y la transformación digital en el municipio.</li>
+<li>Fomentar espacios controlados de prueba y experimentación para la implementación de soluciones tecnológicas, facilitando su validación y posterior integración en la gestión pública.</li>
+</ul>
+<p><strong>ARTÍCULO 4°.-</strong> Con el fin de cumplir con los objetivos del Plan, la Autoridad de Aplicación estará facultada para gestionar y firmar convenios con el Estado Nacional, Provincial y/o de la Ciudad Autónoma de Buenos Aires, así como con sus Ministerios Públicos, Organismos y Entes Autárquicos y/o Descentralizados. Asimismo, podrá celebrar convenios con instituciones educativas, centros de investigación, organizaciones, cámaras, emprendedores y empresas emergentes, a fin de implementar iniciativas y tecnologías que promuevan la innovación, modernización y competitividad del Municipio.</p>
+<p><strong>ARTÍCULO 5°.-</strong> Facúltase al Departamento Ejecutivo a realizar, durante el presente ejercicio, las reasignaciones presupuestarias necesarias para la adecuada implementación de los proyectos asociados al Plan de Evolución Tecnológica Municipal.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../resolucion-etapas/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Resolución de Puesta en Marcha">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Resolución de Puesta en Marcha
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../protocolo-digitalizacion/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Protocolo de Digitalización (adicional)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Protocolo de Digitalización (adicional)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 GDI Latam - Documentacion Unificada
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/GestionDocumentalInteligente" target="_blank" rel="noopener" title="GDI en GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "navigation.indexes", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../../../javascripts/external-links.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
