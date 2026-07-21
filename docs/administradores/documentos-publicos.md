@@ -143,6 +143,7 @@ La informacion publicada se consume por un **bloque de API de solo lectura** pen
 | `GET /api/v1/public/{muni}/registries` | Familias de registro publicas del municipio, con sus campos publicos |
 | `GET /api/v1/public/{muni}/registries/{code}/records` | Legajos publicos de la familia `code` (paginado) |
 | `GET /api/v1/public/{muni}/records/{record_number}` | Detalle de un legajo publico |
+| `GET /api/v1/public/{muni}/documents/{document_id}/content` | Contenido (texto completo, en HTML) de un documento publico, identificado por su `document_id` (UUID) |
 
 **Parametros y notas:**
 
@@ -150,6 +151,8 @@ La informacion publicada se consume por un **bloque de API de solo lectura** pen
 - **`registries/{code}/records`**: acepta `page` (default 1), `page_size` (default 20, tope 25: valores mayores se ajustan a 25 sin error) y `search` (opcional, min 2 caracteres: con menos, el filtro se ignora y se devuelve el listado completo). Una familia inexistente o no publica devuelve **404** (no distingue "no existe" de "privada").
 - **`records/{record_number}`**: devuelve `record_number`, `display_name`, `state`, `registry` y los `fields` publicos; ademas `documents`, `cases` y `related_records` **solo** si la familia los habilito. Un legajo que no existe, cuya familia no es publica, o cuyo estado no esta en `visible_states`, devuelve **404**.
     - **Resumen de los vinculados:** cada `documents` incluye `resume` **solo si el documento es publico** (mismo criterio que `pdf_url`); si no es publico, `resume` viene `null`. Cada `related_records` incluye `resume` **solo si el legajo destino es publico y navegable** (mismo criterio que `linked`); si no, `resume` viene `null`. Los `cases` (expedientes) **nunca** incluyen resumen: siguen devolviendo solo `case_number` y `reference`.
+    - **`document_id` de los vinculados:** cada `documents` incluye ademas un `document_id` (UUID) **solo si el documento es publico**; si no lo es, viene `null`. Ese identificador es el que se usa en el endpoint de contenido (abajo). Es la unica forma de obtenerlo: la API nunca expone el UUID de un documento no publico.
+- **`documents/{document_id}/content`**: devuelve el **texto completo del documento en HTML**, ademas de `official_number`, `reference`, `document_type` y `signed_at`. El `document_id` es el UUID que trae el detalle de legajo (`documents[].document_id`). Solo responde para documentos **publicos y firmados**; para cualquier otro caso —no existe, no es publico, no esta firmado, o el `document_id` no es un UUID valido— devuelve **404** con el mismo cuerpo (`{"error": "Documento no encontrado"}`), sin distinguir el motivo. El PDF de ese mismo documento se sigue descargando por `pdf_url`; el endpoint de contenido es el complemento en texto (para indexar, mostrar en HTML, etc.).
 
 ### Ejemplos de uso
 
@@ -225,12 +228,14 @@ curl -H "X-API-Key: $API_KEY" \
     {
       "official_number": "NORPU-2026-00001234-MUNI-HCD",
       "reference": "5383/26",
+      "document_id": "07669375-29d9-4446-b18c-239e8038d60c",
       "pdf_url": "https://URL-PDF/NORPU-2026-00001234-MUNI-HCD.pdf",
       "resume": "Resumen del contenido generado automaticamente..."
     },
     {
       "official_number": "ANEXO-2026-00001235-MUNI-HCD",
       "reference": "Anexo interno",
+      "document_id": null,
       "pdf_url": null,
       "resume": null
     }
@@ -240,6 +245,33 @@ curl -H "X-API-Key: $API_KEY" \
 
 !!! tip "pdf_url: null NO es un error"
     Un documento vinculado al legajo que **no** sea de tipo publico aparece en la lista con `pdf_url: null` y `resume: null`. Es el comportamiento esperado: el legajo muestra que el documento existe, pero su contenido no es publico. El PDF de los documentos publicos se descarga directo de `pdf_url`, **sin API Key** (es un link publico).
+
+Contenido (texto completo en HTML) de un documento publico. El `document_id` sale del detalle de legajo de arriba (`documents[].document_id`):
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  "https://URL-BASE/api/v1/public/muni/documents/07669375-29d9-4446-b18c-239e8038d60c/content"
+```
+
+```json
+{
+  "document_id": "07669375-29d9-4446-b18c-239e8038d60c",
+  "official_number": "NORPU-2026-00001234-MUNI-HCD",
+  "reference": "5383/26",
+  "document_type": {"name": "Norma Publicada", "acronym": "NORPU"},
+  "content": {"html": "<div class=\"transcription\">...texto completo del documento...</div>", "format": "html"},
+  "signed_at": "2026-07-21T18:57:14+00:00"
+}
+```
+
+!!! tip "PDF y contenido son complementarios"
+    El detalle de legajo entrega, para cada documento publico, tanto el `pdf_url` (para descargar el PDF firmado) como el `document_id` (para pedir el texto en HTML por este endpoint). Sirven a fines distintos: el PDF es el documento oficial descargable; el contenido HTML es util para indexar, buscar o mostrar el texto embebido en un portal sin abrir el PDF.
+
+!!! info "Flujo tipico de integracion"
+    1. `GET /registries` -> familias publicas del municipio.
+    2. `GET /registries/{code}/records` -> legajos de una familia.
+    3. `GET /records/{record_number}` -> detalle del legajo; de aca sale, por cada documento publico, su `pdf_url` y su `document_id`.
+    4. `GET /documents/{document_id}/content` -> texto completo en HTML de ese documento.
 
 Busqueda combinada:
 
@@ -259,6 +291,7 @@ Cada resultado trae `type` (`record` o `document`). Los resultados `document` in
 | Clave valida pero de **otro** municipio | 403 | `{"error": "API Key no valida para este municipio"}` |
 | Familia inexistente o no publica | 404 | `{"error": "Familia no encontrada"}` |
 | Legajo inexistente, no publico o en estado no visible | 404 | `{"error": "Legajo no encontrado"}` |
+| Documento inexistente, no publico, sin firmar, o `document_id` mal formado | 404 | `{"error": "Documento no encontrado"}` |
 | `q` de busqueda con menos de 2 caracteres | 400 | `{"error": "q requerido (min 2 caracteres)"}` |
 | Exceso de consultas | 429 | `{"error": "Rate limit exceeded. Retry after 60s"}` |
 
