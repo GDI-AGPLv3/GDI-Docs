@@ -197,6 +197,12 @@ nav:
               - Sistema y Catalogos: desarrollo/gateway/rest-api/sistema.md
               - Notas: desarrollo/gateway/rest-api/notas.md
               - Legajos (RLM): desarrollo/gateway/rest-api/legajos.md
+              - TAD Ciudadano:
+                  - desarrollo/gateway/rest-api/tad/index.md
+                  - Ciudadanos: desarrollo/gateway/rest-api/tad/ciudadanos.md
+                  - Documentos: desarrollo/gateway/rest-api/tad/documentos.md
+                  - Expedientes: desarrollo/gateway/rest-api/tad/expedientes.md
+                  - Webhook de Notificaciones: desarrollo/gateway/rest-api/tad/webhook.md
           - Flujos Completos: desarrollo/gateway/flujos.md
           - Errores y Codigos: desarrollo/gateway/errores.md
       - Arquitectura:
