@@ -128,6 +128,7 @@ Validaciones sobre `form_data`:
 - Campos `required: true` faltantes → `400` (`"El campo 'Monto' es requerido"`).
 - Tipo de dato incorrecto → `400` (`"El campo 'Monto' debe ser un numero"`; las fechas van en formato `YYYY-MM-DD`).
 - Campos no definidos en el esquema → `400` (`"Campos no definidos en el formulario: ['x']"`). Enviar exactamente los campos de `field_definitions`.
+- Controles de sanidad (aplican aunque el campo no declare limites): los `number` deben ser finitos y de magnitud razonable; los textos tienen un tope de largo; las fechas deben ser reales (`2026-13-45` se rechaza) y de un anio plausible. Si el campo define `min`/`max`/`max_length` propios, mandan esos.
 - Campos `type: "file"`: **no se pueden completar por API** — enviar `null` u omitirlos (`400` si traen valor). Para enviar un archivo, usar un tipo de documento `Importado`.
 - El documento guarda un snapshot `{schema, data}` con la definicion vigente del formulario al momento de la firma.
 

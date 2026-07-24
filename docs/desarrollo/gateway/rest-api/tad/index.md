@@ -65,6 +65,23 @@ La API usa un criterio **anti-enumeracion**: los 404 son genericos y no distingu
 
 Superado el limite se responde `429`. El portal debe encolar y reintentar pasado el minuto.
 
+## Errores por endpoint
+
+Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` sin/mala key, `429` rate limit, `500` inesperado). Todos los cuerpos de error tienen la forma `{"error": "mensaje"}`.
+
+| Endpoint | Codigos especificos |
+|----------|---------------------|
+| `POST /tad/citizens` | `400` (`full_name`/`country_id` faltante, estado invalido) |
+| `GET /tad/citizens/{ref}` | `404` (no existe) |
+| `PATCH /tad/citizens/{ref}` | `400` (campo distinto de `estado`, estado invalido) · `404` (no existe) |
+| `GET /tad/document-types` · `GET /tad/case-templates` | — (solo transversales) |
+| `GET /tad/document-types/{id}/fields` | `404` (tipo inexistente, no habilitado, o sin formulario) |
+| `POST /tad/documents` | `400` (tipo no habilitado, campo de contenido incorrecto, PDF/base64 invalido, `form_data` invalido) · `403` (ciudadano no validado o bloqueado) · `503` (migraciones pendientes) |
+| `POST /tad/cases` | `400` (`case_template_id` inexistente o canal no-API) · `403` (ciudadano no validado o bloqueado) |
+| `GET /tad/cases` | `403` (ciudadano bloqueado) |
+| `GET /tad/cases/{id}` | `404` (inexistente o no compartido) |
+| `POST /tad/cases/{id}/propose` | `404` (expediente/documento inexistente, no compartido o ajeno) · `409` (documento no firmado, o propuesta ya pendiente) |
+
 ## Contenido de la seccion
 
 - [Ciudadanos](ciudadanos.md) — alta, consulta y cambio de estado de la base de ciudadanos.
