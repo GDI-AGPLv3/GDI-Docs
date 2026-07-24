@@ -2,7 +2,7 @@
 
 La API TAD (Tramites A Distancia) permite que el **portal ciudadano del municipio** (u otro software externo) opere sobre GDI **a nombre de un ciudadano**: crear y firmar documentos, iniciar expedientes y seguir su avance. El ciudadano NO es un usuario de GDI: vive en una base propia (`citizens`) y firma con **firma electronica** en el mismo acto de creacion del documento.
 
-**10 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
+**11 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
 
 ```
 Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
@@ -81,6 +81,7 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 | `GET /tad/cases` | `403` (ciudadano bloqueado) |
 | `GET /tad/cases/{id}` | `404` (inexistente o no compartido) |
 | `POST /tad/cases/{id}/propose` | `404` (expediente/documento inexistente, no compartido o ajeno) · `409` (documento no firmado, o propuesta ya pendiente) |
+| `POST /tad/webhook/test` | `422` (sin webhook configurado en la key TAD) |
 
 ## Contenido de la seccion
 

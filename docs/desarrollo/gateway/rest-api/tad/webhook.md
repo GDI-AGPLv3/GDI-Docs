@@ -74,3 +74,49 @@ def verify_gdi_signature(header: str, secret: str, path: str, body: bytes) -> bo
 - El portal debe responder `2xx` rapido (idealmente encolar y procesar despues).
 - Si el envio falla, GDI reintenta con **backoff exponencial** durante varias horas.
 - La entrega es **al menos una vez**: ante reintentos el portal puede recibir el mismo evento repetido. Usar el par (`case.id`, `sent_at`) o el contenido de `documents` para deduplicar.
+
+## Probar el webhook (sandbox)
+
+```
+POST /api/v1/tad/webhook/test
+```
+
+Dispara un webhook de **prueba** al `webhook_url` configurado en tu API Key TAD, firmado con el **mismo HMAC** que un webhook real. Sirve para verificar que tu receptor recibe el `POST` y valida bien la firma, **sin depender de un tramite real ni tocar produccion**. No lleva `X-Citizen-ID` ni body.
+
+El evento es `webhook.test` (no `documents.notified`) y trae datos ficticios: tu receptor debe reconocerlo y **no** procesarlo como una notificacion real.
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/webhook/test" \
+  -H "X-API-Key: tu-api-key-tad"
+```
+
+La respuesta te dice **que respondio tu propio servidor** (la llamada es sincrona):
+
+```json
+{
+  "delivered": true,
+  "webhook_url": "https://portal.tu-muni.gob.ar/avisos-gdi",
+  "status_code": 200,
+  "signature": "t=1784924465,v1=4//7q...",
+  "event": "webhook.test",
+  "error": null
+}
+```
+
+- `delivered: true` → tu servidor respondio `2xx`: recibe y (si tu codigo valida la firma) el circuito funciona.
+- `delivered: false` con `status_code` → tu servidor respondio pero con error (revisar tu handler); con `status_code: null` y `error` → GDI no pudo ni conectar (URL mal, DNS, TLS, timeout, firewall).
+- `422` → tu municipio todavia no tiene una API Key TAD con `webhook_url` y secret configurados en BackOffice.
+
+El cuerpo del `webhook.test` que recibe tu servidor tiene la misma forma que `documents.notified`, mas un campo `note` que aclara que es una prueba:
+
+```json
+{
+  "event": "webhook.test",
+  "sent_at": "2026-07-24T20:00:00.000Z",
+  "municipality": {"name": "...", "acronym": "..."},
+  "citizen": {"id": "00000000-...", "country_id": "20000000001", "full_name": "Ciudadano de Prueba"},
+  "case": {"id": "00000000-...", "number": "EE-2026-000000-TEST-XXXX", "reference": "Expediente de prueba (webhook.test)"},
+  "documents": [{"id": "00000000-...", "official_number": "TEST-2026-00000000-XXXX-TAD", "name": "Documento de prueba", "url": "https://ejemplo.invalido/documento-de-prueba.pdf"}],
+  "note": "Webhook de PRUEBA disparado desde POST /api/v1/tad/webhook/test. No corresponde a un tramite real."
+}
+```
