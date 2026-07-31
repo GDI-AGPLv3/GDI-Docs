@@ -3,8 +3,8 @@ site_description: Documentacion unificada del Sistema de Gestion Documental Inte
 site_author: GDI Latam
 site_url: https://docs.gdilatam.com/
 
-repo_name: GDI-APGLv3/GDI-Docs
-repo_url: https://github.com/GDI-APGLv3/GDI-Docs
+repo_name: GDI-AGPLv3/GDI-Docs
+repo_url: https://github.com/GDI-AGPLv3/GDI-Docs
 edit_uri: edit/main/docs/
 
 theme:
