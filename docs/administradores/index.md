@@ -69,6 +69,14 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     [:octicons-arrow-right-24: Ver seccion](documentos-publicos.md)
 
+-   :material-book-open-page-variant:{ .lg .middle } **Digesto Normativo Público**
+
+    ---
+
+    Guia paso a paso para publicar el digesto del municipio: tipos publicos, carga de normas, legajos NORMA y conexion del portal via API.
+
+    [:octicons-arrow-right-24: Ver seccion](digesto-normativo.md)
+
 -   :material-folder-multiple:{ .lg .middle } **Familias de Registro**
 
     ---

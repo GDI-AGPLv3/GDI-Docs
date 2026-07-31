@@ -5,6 +5,9 @@ La **visibilidad pública** es la tercera pata del modelo de visibilidad del sis
 !!! abstract "La idea en una frase"
     La publicidad se define **por TIPO** (no item por item), igual que la reserva. Un administrador marca un **Tipo de Documento** como *Público* o una **Familia de Registro** como *Pública*; a partir de ahi, todos los items de ese tipo quedan expuestos por una API publica de solo lectura, con reglas fijas y sin dar permisos a mano.
 
+!!! tip "Caso de uso completo: el Digesto Normativo"
+    La aplicacion mas comun de este modelo es publicar la normativa del municipio. La guia paso a paso esta en [Digesto Normativo Público](digesto-normativo.md).
+
 ---
 
 ## Las tres visibilidades
