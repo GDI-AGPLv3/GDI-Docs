@@ -19,6 +19,79 @@ La seccion de Certificados permite al administrador gestionar los certificados d
 
 ---
 
+## Que es un archivo .p12
+
+Un `.p12` (tambien llamado **PKCS#12**, o `.pfx` en el mundo Windows) es un **unico archivo, protegido por contrasena, que contiene la identidad digital del organismo**. Adentro guarda dos cosas que van siempre juntas:
+
+| Contenido | Que es | Para que sirve |
+|-----------|--------|----------------|
+| **Certificado** | Documento firmado por una Autoridad Certificante (AC ONTI) que dice "esta clave publica pertenece a tal organismo" | Es la parte **publica**: viaja dentro de cada PDF firmado y permite que cualquiera valide la firma |
+| **Clave privada** | El secreto que produce las firmas | Es la parte **privada**: es lo que efectivamente *firma*. Nunca se comparte |
+
+Se puede pensar como el documento de identidad del organismo (el certificado) mas su sello indelegable (la clave privada), guardados en un sobre cerrado con una contrasena.
+
+### Por que GDI lo necesita
+
+Cuando un usuario firma digitalmente un documento, GDI aplica una **firma PAdES** sobre el PDF usando el `.p12` del organismo. Esa firma:
+
+- queda **dentro** del PDF (se puede validar en Adobe Reader, en el validador de firma de la Nacion, o en cualquier lector compatible);
+- detecta cualquier modificacion posterior del archivo;
+- prueba que el documento fue emitido por ese organismo, no por un tercero.
+
+Sin `.p12` cargado, el organismo **no puede firmar digitalmente**: solo quedan disponibles las firmas electronicas (sin criptografia de AC).
+
+!!! info "Un certificado por organismo, no por persona"
+    El `.p12` que se carga en GDI es un **certificado de aplicacion**: identifica al organismo, no a cada agente. Quien firma queda identificado en el sello visual y en la auditoria del sistema. No hay que cargar un certificado por usuario.
+
+### De donde sale un .p12
+
+Hay tres caminos, en orden de preferencia:
+
+1. **Solicitarlo ante AC ONTI desde GDI** (recomendado). Es el flujo guiado que esta mas abajo: GDI genera el `.csr` y el `.key`, el organismo tramita ante ONTI, y al recibir el `.cer` GDI **arma el `.p12` automaticamente**. En este camino el administrador nunca tiene que fabricar el archivo a mano.
+2. **Ya tener un `.cer` y su `.key`** de un tramite anterior. Se pueden combinar desde la opcion **Activar certificado**, o armar el `.p12` a mano (ver abajo).
+3. **Ya tener un `.p12` o `.pfx`** exportado de otro sistema. Se sube directo.
+
+### Armarlo a mano (opcional)
+
+Si el organismo prefiere generar el archivo por su cuenta, con OpenSSL:
+
+```bash
+# Combinar certificado + clave privada en un .p12
+openssl pkcs12 -export \
+  -in certificado.cer \
+  -inkey clave.key \
+  -certfile cadena.pem \
+  -out certificado.p12
+```
+
+`-certfile` es opcional y agrega la cadena de la AC (recomendado: mejora la validacion en Adobe). OpenSSL va a pedir una contrasena de exportacion: **esa es la contrasena que hay que ingresar al subir el archivo a GDI**.
+
+Para verificar el contenido antes de subirlo:
+
+```bash
+openssl pkcs12 -info -in certificado.p12 -nokeys
+```
+
+### Requisitos que valida GDI
+
+Al subir el archivo, el sistema lo abre y lo rechaza si no cumple:
+
+| Requisito | Detalle |
+|-----------|---------|
+| Formato | PKCS#12 valido (`.p12` / `.pfx`) |
+| Contenido | Debe traer **certificado y clave privada**. Un `.p12` solo con el certificado no sirve para firmar |
+| Contrasena | Tiene que abrir el archivo. Minimo 8 caracteres cuando GDI lo genera |
+| Vigencia | El certificado no puede estar vencido ni tener fecha de inicio futura |
+| Tamano | Maximo 5 MB |
+
+!!! warning "Certificados de token personal no sirven aca"
+    Los certificados que vienen en un token fisico (eToken) son **no exportables** por diseno: no se puede obtener un `.p12` de ellos. Ese tipo de firma se usa desde el FirmadorGDI en la maquina del usuario, no se carga en el BackOffice.
+
+!!! danger "La contrasena y el archivo son material sensible"
+    Quien tenga el `.p12` y su contrasena puede firmar en nombre del organismo. Guardarlos en un gestor de contrasenas o boveda institucional, nunca por mail ni en un chat. GDI almacena el archivo cifrado y la contrasena encriptada.
+
+---
+
 ## Tu firma digital activa
 
 Si el organismo ya tiene un certificado cargado, el panel muestra:
