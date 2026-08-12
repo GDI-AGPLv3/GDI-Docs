@@ -47,6 +47,26 @@ Cada expediente tiene:
 
 ---
 
+## Iniciador del expediente
+
+Al crear un expediente, ademas del tipo y el motivo, se elige **quien lo inicia** con un selector de dos opciones:
+
+| Opcion | Significado |
+|--------|-------------|
+| **Mi Ciudad** | El expediente lo inicia el propio municipio (comportamiento habitual) |
+| **Ciudadano** | El expediente lo inicia un **vecino del padron**, a pedido suyo (por ejemplo, un tramite presentado en mesa de entradas) |
+
+Al elegir **Ciudadano** aparece un buscador para seleccionar al vecino por nombre o CUIL. Solo se puede elegir **un** ciudadano, y debe estar cargado en el padron del municipio; los ciudadanos **bloqueados** no aparecen en el buscador ni pueden asociarse.
+
+Reglas del expediente iniciado por un ciudadano:
+
+- El **empleado sigue siendo el creador**: el expediente radica en el sector del empleado y la caratula (CAEX) la firma el, como cualquier expediente interno.
+- El expediente se **comparte automaticamente** con el ciudadano, que pasa a verlo desde su portal de Tramites a Distancia (TAD).
+- En la caja **TAD** del Panel, el ciudadano iniciador figura marcado como "Inicio el expediente" y **no puede ser quitado** del expediente.
+- El movimiento queda registrado en el historial del expediente.
+
+---
+
 ## Listado de expedientes
 
 El listado muestra los expedientes como **tarjetas** (cards), una por expediente. Cada tarjeta tiene dos filas:
