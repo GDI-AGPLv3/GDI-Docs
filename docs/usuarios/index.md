@@ -18,6 +18,14 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
 <div class="grid cards" markdown>
 
+-   :material-home:{ .lg .middle } **Inicio**
+
+    ---
+
+    Tablero de pendientes de cada usuario: firmas, memos, notas, novedades de tus expedientes y trabajo sin tomar en tu sector.
+
+    [:octicons-arrow-right-24: Ver seccion](inicio/index.md)
+
 -   :material-format-list-bulleted:{ .lg .middle } **Catalogos**
 
     ---
@@ -90,6 +98,7 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
 | Seccion | Descripcion |
 |---------|-------------|
+| **[Inicio](inicio/index.md)** | Tablero de pendientes: firmas, memos, notas, novedades de expedientes y trabajo del sector |
 | **Catalogos** | Listas maestras: tipos de documento y tipos de expediente |
 | **Documentos** | Crear, editar, firmar y gestionar documentos oficiales |
 | **Expedientes** | Gestionar expedientes electronicos, vincular documentos, movimientos |

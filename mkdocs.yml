@@ -118,6 +118,8 @@ nav:
 
   - Usuarios:
       - usuarios/index.md
+      - Inicio:
+          - usuarios/inicio/index.md
       - Catalogos:
           - usuarios/catalogos/index.md
           - Tipos de Documento: usuarios/catalogos/tipos-de-documento.md

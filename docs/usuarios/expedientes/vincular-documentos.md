@@ -15,7 +15,14 @@ Vincular un documento a un expediente significa incorporarlo como parte oficial 
 
 ## Iniciar la vinculacion
 
-Desde la pestana **Documentos** del detalle del expediente, presionar el boton **"Vincular Documento"** ubicado en la parte inferior de la lista de documentos. Se abre el modal **"Vincular Documento — <numero>"**, que tiene dos pestanas:
+Hay dos formas de abrir el mismo modal:
+
+- Desde la pestana **Documentos** del detalle del expediente, con el boton **"Vincular Documento"** ubicado en la parte inferior de la lista de documentos.
+- Desde el menu **Acciones** del encabezado del expediente, con la opcion **"Vincular Documentos"**.
+
+En ambos casos el sistema primero verifica los permisos (muestra *"Verificando permisos..."* un instante). Si el usuario no tiene permiso de edicion en los sectores asociados al expediente, en lugar del modal aparece el aviso **"Sin permisos para actuar sobre este expediente"**.
+
+Se abre el modal **"Vincular Documento — <numero>"**, que tiene dos pestanas:
 
 - **Documentos Existentes**: el flujo clasico de buscar y seleccionar un documento ya firmado para vincularlo.
 - **Nuevo Documento**: crear un documento nuevo y vincularlo a este expediente al firmarse (vinculacion automatica).
@@ -39,6 +46,11 @@ En la parte superior del modal hay un campo de busqueda con el texto guia: *"Sel
 - Referencia o titulo del documento
 - Contenido del documento
 
+!!! info "Que documentos se listan"
+    - Sin escribir nada, la tabla lista los documentos **firmados del sector del usuario**. Los borradores y los documentos en proceso de firma no aparecen: no se pueden vincular.
+    - Si el texto ingresado tiene forma de **numero oficial**, la busqueda se hace en **todo el sistema** y el resultado se marca con una etiqueta **"Global"** u **"Oficial"**. Es la forma de vincular un documento de otro sector.
+    - Si el expediente **no** es reservado, los documentos reservados quedan excluidos de la busqueda.
+
 ### Tabla de resultados
 
 Los documentos se muestran en una tabla paginada con las siguientes columnas:
@@ -61,28 +73,31 @@ La tabla muestra 10 documentos por pagina. En la parte inferior se indica la pag
 | Boton | Accion |
 |-------|--------|
 | **Cancelar** | Cierra el modal sin vincular nada |
-| **Vincular** | Confirma la seleccion y abre el modal de confirmacion |
+| **Continuar** | Pasa al segundo paso (vista previa y confirmacion). Solo se habilita con un documento seleccionado |
+
+La seleccion es **de a un documento por vez**: al elegir una fila, sobre los botones aparece la tarjeta *"Seleccionado: <numero> - <referencia>"*.
 
 ---
 
-## Modal de confirmacion (documento existente)
+## Segundo paso: vista previa y confirmacion
 
-Al seleccionar un documento de la tabla, se abre un segundo modal de confirmacion que muestra:
+Al presionar **"Continuar"** el modal cambia de paso (no se abre una ventana nueva) y muestra:
 
 | Elemento | Descripcion |
 |----------|-------------|
 | **Vista previa PDF** | Preview del documento seleccionado con su membrete y contenido |
-| **Banner de confirmacion** | Mensaje azul que indica el numero oficial y la referencia del documento que se va a vincular al expediente |
+| **Panel lateral** | Documento seleccionado, sector creador y resumen automatico del documento |
+| **Aviso de confirmacion** | Cartel azul **"Atencion"**: *"Al presionar Vincular, el documento <numero> sera vinculado al Expediente."* |
 
-### Botones del modal
+### Botones del paso de confirmacion
 
 | Boton | Accion |
 |-------|--------|
-| **Cancelar** | Vuelve al modal de seleccion sin vincular |
+| **Volver** | Regresa al buscador sin vincular |
 | **Vincular** | Confirma la vinculacion del documento al expediente |
 
 !!! info "Vinculacion como propuesta"
-    Si el usuario que vincula no es el administrador del expediente, el documento queda como **propuesta de vinculacion** pendiente de aceptacion. Si el usuario es el administrador, el documento se incorpora directamente como documento oficial.
+    Si el usuario que vincula no es el administrador del expediente, el documento queda como **propuesta de vinculacion** pendiente de aceptacion. Si el usuario es el administrador, el documento se incorpora directamente como documento oficial. La decision la toma el sistema al confirmar: el modal es el mismo en los dos casos.
 
 ---
 
@@ -107,16 +122,17 @@ Presionar **"Crear y Vincular"**. El sistema abre el editor del documento ya con
 
 ![Editor con vinculacion automatica](../capturas/vincular-automatico-firma.png)
 
-En el editor (titulo **"Crear Documento: TIPO - Nombre"**), ademas de redactar el contenido, vas a ver la seccion **"Proponer vinculacion (opcional)"**, que muestra:
+En el editor (titulo **"Crear Documento: TIPO - Nombre"**), ademas de redactar el contenido, vas a ver la seccion **"Proponer vinculacion"**, que muestra:
 
 - **Expedientes vinculados: <numero>** — el expediente desde el que se inicio la creacion.
-- Un checkbox **"Vincular automaticamente cuando se firme"**, **tildado por defecto**, con la nota: *"Al firmarse el documento, se vinculara solo a los expedientes propuestos, sin esperar aceptacion manual."*
+- Un checkbox **"Vincular automaticamente cuando se firme"**, **tildado**, con la nota: *"Al firmarse el documento, se vinculara solo a los expedientes propuestos, sin esperar aceptacion manual."*
 
 Mas abajo se configuran los **Firmantes** y, cuando todo esta listo, se presiona **"Comenzar Proceso de Firma"**.
 
-!!! info "Que controla el checkbox"
-    - **Tildado** (por defecto): al firmarse, el documento se incorpora **automaticamente** como documento oficial del expediente. No queda como propuesta pendiente.
-    - **Destildado**: al firmarse, el documento queda como **propuesta de vinculacion** que el administrador del expediente debe aceptar (flujo clasico descrito mas arriba).
+!!! warning "En este flujo la vinculacion automatica no se puede desactivar"
+    Cuando el documento se crea **desde el expediente** (pestana "Nuevo Documento"), el panel de vinculacion queda **bloqueado**: el expediente de origen no se puede quitar ni se pueden agregar otros, y el checkbox **"Vincular automaticamente cuando se firme"** queda fijo en tildado. Es logico: la finalidad de este flujo es justamente que el documento se incorpore al expediente al firmarse.
+
+    Para elegir entre vinculacion automatica y propuesta pendiente hay que crear el documento por el camino normal (**Documentos › Crear documento**): ahi la seccion "Proponer vinculacion" es editable y el checkbox se puede destildar. Destildado, al firmarse el documento queda como **propuesta de vinculacion** que el administrador del expediente debe aceptar.
 
 ### 3. Confirmacion en el paso de firma
 
@@ -133,13 +149,13 @@ Al firmar, aparece la confirmacion **"Documento firmado y numerado — El docume
 El documento queda **directamente como documento oficial** del expediente, sin pasar por la seccion "DOCUMENTOS PROPUESTOS" ni requerir aceptacion manual.
 
 !!! note "Diferencia clave con la vinculacion clasica"
-    Con la **vinculacion automatica** (checkbox tildado) el documento se incorpora solo al firmarse. Si en cambio **destildas** el checkbox, vuelve al flujo clasico: queda como propuesta de vinculacion que el administrador del expediente debe aceptar o rechazar.
+    Con la **vinculacion automatica** el documento se incorpora solo al firmarse. El flujo clasico —queda como propuesta que el administrador del expediente acepta o rechaza— es el que se da cuando el documento se crea por fuera del expediente y se destilda el checkbox, o cuando se vincula un documento existente sin ser administrador.
 
 ---
 
-## Documentos propuestos
+## Vinculaciones propuestas
 
-Los documentos cuya vinculacion fue propuesta (pero aun no aceptada) aparecen en la seccion **"DOCUMENTOS PROPUESTOS"** dentro de la pestana Documentos del expediente.
+Los documentos cuya vinculacion fue propuesta (pero aun no aceptada) aparecen en una seccion desplegable al final de la lista de documentos, dentro de la pestana Documentos del expediente, con el titulo **"Vinculaciones Propuestas (N)"**.
 
 ![Aceptar vinculacion](../capturas/aceptar-vinculacion.png)
 
@@ -147,9 +163,11 @@ Cada documento propuesto muestra:
 
 | Elemento | Descripcion |
 |----------|-------------|
-| **Badge "VINCULACION PROPUESTA"** | Etiqueta naranja que identifica al documento como pendiente de aceptacion |
-| **Estado de firma** | Badge que indica si el documento esta "En firma" (gris) o "Firmado" (verde) |
+| **Badge "Vinculacion Propuesta"** | Etiqueta que identifica al documento como pendiente de aceptacion |
+| **Estado de firma** | Badge con el estado del documento: "Borrador", "En firma", "Firmado", "Rechazado" o "Cancelado" |
 | **Menu "Acciones"** | Desplegable con las opciones disponibles |
+
+Al seleccionar una propuesta, el panel derecho del expediente muestra su contenido (el PDF si ya esta firmado, o el borrador si todavia no), junto con quien la propuso, la fecha y el resumen del documento.
 
 ---
 
@@ -157,9 +175,10 @@ Cada documento propuesto muestra:
 
 Para aceptar la vinculacion de un documento propuesto:
 
-1. Ubicar el documento en la seccion **"DOCUMENTOS PROPUESTOS"**
+1. Ubicar el documento en la seccion **"Vinculaciones Propuestas"**
 2. Hacer click en el boton **"Acciones"** del documento
 3. Seleccionar **"Aceptar Vinculacion"** (icono check verde)
+4. Confirmar en el mensaje que aparece en la misma fila: *"Se vinculara <referencia> al expediente. Confirmar?"*
 
 El documento se incorpora a la lista de **documentos oficiales** del expediente y recibe un numero de orden secuencial.
 
@@ -174,9 +193,10 @@ El documento se incorpora a la lista de **documentos oficiales** del expediente 
 
 Para rechazar la vinculacion de un documento propuesto:
 
-1. Ubicar el documento en la seccion **"DOCUMENTOS PROPUESTOS"**
+1. Ubicar el documento en la seccion **"Vinculaciones Propuestas"**
 2. Hacer click en el boton **"Acciones"** del documento
 3. Seleccionar **"Rechazar Vinculacion"** (icono X rojo)
+4. Confirmar en el mensaje que aparece en la misma fila: *"Se descartara la propuesta de <referencia>. Confirmar?"*
 
 El documento se elimina de la lista de propuestos. No se incorpora al expediente.
 
@@ -195,7 +215,8 @@ El documento se elimina de la lista de propuestos. No se incorpora al expediente
     4. Al aceptar una vinculacion, el documento recibe un **numero de orden** secuencial dentro del expediente
     5. Rechazar una vinculacion **no afecta** al documento original; solo lo quita de la lista de propuestos del expediente
     6. Un mismo documento puede ser propuesto para vinculacion en **multiples expedientes**
-    7. Con la **vinculacion automatica** (checkbox tildado al crear el documento), al firmarse el documento se incorpora directo como oficial, sin pasar por "DOCUMENTOS PROPUESTOS" ni requerir aceptacion manual
+    7. Con la **vinculacion automatica** (checkbox tildado al crear el documento), al firmarse el documento se incorpora directo como oficial, sin pasar por "Vinculaciones Propuestas" ni requerir aceptacion manual
+    8. Desde el modal solo se pueden vincular documentos **firmados**; para traer uno de otro sector hay que buscarlo por su **numero oficial**
 
 ---
 
@@ -205,7 +226,13 @@ El documento se elimina de la lista de propuestos. No se incorpora al expediente
     En la pestana **Documentos Existentes** seleccionas un documento que ya fue creado (normalmente firmado) y lo vinculas. En la pestana **Nuevo Documento** creas el documento desde cero y el sistema te lleva al editor con el expediente ya cargado para que se vincule al firmarse.
 
 ??? question "Que significa el checkbox 'Vincular automaticamente cuando se firme'?"
-    Tildado (por defecto), el documento se incorpora solo al expediente en el momento de firmarse, sin esperar la aceptacion de una propuesta. Destildado, el documento queda como propuesta de vinculacion que el administrador del expediente debe aceptar manualmente.
+    Tildado, el documento se incorpora solo al expediente en el momento de firmarse, sin esperar la aceptacion de una propuesta. Destildado, el documento queda como propuesta de vinculacion que el administrador del expediente debe aceptar manualmente.
 
-??? question "Si uso la vinculacion automatica, el documento queda en 'DOCUMENTOS PROPUESTOS'?"
-    No. Con el checkbox tildado, al firmarse el documento queda directamente como documento oficial del expediente. Solo aparece en "DOCUMENTOS PROPUESTOS" si destildas el checkbox y dejas la vinculacion como propuesta pendiente.
+??? question "Por que no puedo destildar el checkbox de vinculacion automatica?"
+    Porque el documento se esta creando **desde el expediente**: en ese flujo el destino ya esta definido y el panel de vinculacion queda bloqueado. Si necesitas dejarlo como propuesta pendiente, crea el documento desde **Documentos › Crear documento** y elegi ahi el expediente.
+
+??? question "Si uso la vinculacion automatica, el documento queda en 'Vinculaciones Propuestas'?"
+    No. Con el checkbox tildado, al firmarse el documento queda directamente como documento oficial del expediente. Solo aparece en "Vinculaciones Propuestas" si se deja la vinculacion como propuesta pendiente.
+
+??? question "Por que no encuentro en el buscador un documento que existe?"
+    Tres motivos posibles: todavia no esta **firmado** (los borradores y los documentos en firma no se listan), es de **otro sector** (hay que buscarlo por su numero oficial completo) o es un documento **reservado** y el expediente no lo es.
