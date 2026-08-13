@@ -2,6 +2,9 @@
 
 El Asistente AI es una herramienta integrada en GDI que permite consultar informacion sobre expedientes y documentos usando **lenguaje natural**. Esta disponible dentro de cada expediente para consultar su contenido. Al abrir el chat presenta automaticamente un **resumen del expediente** generado por IA y, para responder, lee los **resumenes de los documentos** vinculados y el **historial de movimientos** del expediente. Es de **solo lectura**: consulta y explica, pero no modifica nada.
 
+!!! info "Limite mensual de uso"
+    El consumo de inteligencia artificial se registra **por municipio** y tiene un **tope mensual**. Si el municipio alcanza su tope, el asistente se pausa y muestra un cartel indicando el **motivo real** del bloqueo (por ejemplo, limite de uso alcanzado). Las demas funciones del sistema siguen operando con normalidad; el asistente se rehabilita automaticamente al iniciarse el nuevo periodo o si se ajusta el tope del municipio.
+
 !!! video "Video tutorial"
     **GDI — Asistente IA del expediente: pregunta en lenguaje natural**
 

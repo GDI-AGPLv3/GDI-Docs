@@ -83,6 +83,19 @@ Cada sector actuante se muestra como una tarjeta con:
 
 Debajo de las tarjetas hay una caja punteada **"Nueva Tarea / Asignacion — Asignar un sector o una persona"** con un boton **+** que abre el modal de nuevo movimiento.
 
+!!! info "El Panel es la fuente de verdad"
+    Las **caritas** (avatares) que se ven en el encabezado del expediente y en el listado de expedientes son un espejo de lo que muestra el Panel: los responsables administradores mas las personas a cargo de las **tareas abiertas** de los sectores actuantes. Si una carita no aparece donde esperabas, lo que vale es lo que dice el Panel.
+
+### Finalizados
+
+Cuando un sector actuante se cierra, su tarjeta **no desaparece**: baja a la linea de tiempo **"Finalizados"**, al pie de la columna. Esa linea de tiempo reune, en orden cronologico:
+
+- los **sectores actuantes cerrados** (con el nombre de la reparticion y las caras de las personas que actuaron),
+- las **transferencias** de control entre sectores,
+- y la **creacion del expediente** como primer hito.
+
+Es de solo consulta: sirve para reconstruir de un vistazo por donde paso el expediente y quien actuo en cada etapa.
+
 ---
 
 ## Nueva Tarea / Asignacion
