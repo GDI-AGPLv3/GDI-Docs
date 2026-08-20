@@ -1,6 +1,56 @@
 # Webhook de notificaciones
 
-Cuando un agente municipal **notifica documentos** de un expediente a un ciudadano desde la app GDI, GDI envia un `POST` a la URL de callback configurada en la API Key TAD (BackOffice → `/api-key`). Asi el portal se entera de novedades sin hacer polling.
+GDI envia un `POST` a la URL de callback configurada en la API Key TAD
+(BackOffice → `/api-key`) cuando hay una novedad para el portal. Asi el portal se
+entera sin hacer polling.
+
+| Evento | Cuando llega |
+|---|---|
+| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el numero oficial y el PDF.** |
+| [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. |
+| [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
+
+## Evento `documents.signed`
+
+El cierre del alta de documento: `POST /tad/documents` devolvio `202` y **esto es lo
+que avisa que la firma termino**, con el numero oficial y el link al PDF.
+
+```json
+{
+  "event": "documents.signed",
+  "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
+  "official_number": "PROV-2026-00003039-MDEV-TAD",
+  "pdf_url": "https://...firma-presignada...&X-Amz-Expires=600&...",
+  "status": "signed"
+}
+```
+
+!!! warning "El `pdf_url` expira en 10 minutos"
+    Es un link presignado de descarga directa (600 segundos). Si el portal quiere
+    guardar el PDF, debe descargarlo al recibir el webhook. Siempre se puede volver a
+    obtener un link fresco via `GET /tad/cases/{id}` (si el documento esta vinculado
+    a un expediente).
+
+    El campo puede venir en `null` si el link no se pudo generar en ese momento: el
+    documento **igual esta firmado y numerado**, y el PDF se obtiene por la via de
+    arriba.
+
+## Evento `documents.signature_failed`
+
+La firma de ese documento no salio y no se va a reintentar sola. El documento queda
+en el sistema sin numerar.
+
+```json
+{
+  "event": "documents.signature_failed",
+  "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
+  "status": "failed",
+  "failure_reason": "notary_business_error"
+}
+```
+
+`failure_reason` es un codigo para soporte, no un texto para mostrarle al ciudadano.
+Ante este evento, el portal puede volver a dar de alta el documento.
 
 ## Evento `documents.notified`
 
