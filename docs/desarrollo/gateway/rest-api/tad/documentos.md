@@ -1,6 +1,15 @@
 # Documentos
 
-Creacion y **firma electronica en un solo paso**: el documento nace, se firma con el sello del ciudadano y se numera oficialmente en la misma llamada. No hay borradores por API: si la respuesta es `200`, el documento ya es oficial.
+Creacion y **firma electronica**: el documento nace y se firma con el sello del ciudadano, para quedar numerado oficialmente. No hay borradores por API.
+
+!!! info "La firma es asincronica (desde 3.12.0)"
+    El alta responde **`202 Accepted` al instante** y la firma se procesa a continuacion.
+    El numero oficial y el link al PDF **no vienen en esa respuesta**: llegan por
+    **webhook** (`documents.signed`), en segundos.
+
+    Antes el pedido se quedaba esperando a que la firma terminara, lo que bajo carga
+    podia superar los 30 segundos y hacer que el portal cortara por timeout un
+    documento que en realidad se estaba firmando bien.
 
 Numeracion: `{ACRONIMO}-{ANIO}-{NUMERO}-{MUNI}-TAD` (el sufijo `TAD` identifica los documentos firmados por ciudadanos).
 
@@ -79,19 +88,33 @@ Segun el tipo, el contenido va en **uno solo** de estos tres campos (son mutuame
 | FFCC (`has_fields: true`) | `form_data` | **Requerido**: dict plano `{campo: valor}` |
 | Importado | `pdf_base64` | **Requerido**: PDF en base64, maximo 20 MB |
 
-**Respuesta `200 OK`** (igual para las tres variantes):
+**Respuesta `202 Accepted`** (igual para las tres variantes):
 
 ```json
 {
   "success": true,
+  "message": "Documento recibido — la firma se está procesando",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
-  "official_number": "PROV-2026-00003039-MDEV-TAD",
-  "pdf_url": "https://...firma-presignada...&X-Amz-Expires=600&..."
+  "session_id": "9f2b1c40-5d3e-4a71-9c88-2b0a5e6d1f34",
+  "status": "queued",
+  "expires_at": "2026-07-24T18:41:09Z"
 }
 ```
 
-!!! warning "El `pdf_url` expira en 10 minutos"
-    Es un link presignado de descarga directa (600 segundos). Si el portal quiere guardar el PDF, debe descargarlo al recibir la respuesta. Siempre se puede volver a obtener un link fresco via `GET /tad/cases/{id}` (si el documento esta vinculado a un expediente) o el webhook.
+El `session_id` identifica esta firma: sirve para trazar el caso con soporte si algo
+no llega.
+
+!!! warning "El numero oficial NO viene aca"
+    Llega por webhook, en el evento **`documents.signed`**, junto con el `pdf_url`.
+    Si la firma falla definitivamente, llega **`documents.signature_failed`** — el
+    portal nunca se queda esperando un aviso que no va a existir.
+
+    Ver [Webhook de notificaciones](webhook.md).
+
+!!! tip "Reintentos del portal"
+    Repetir el mismo `POST` **no genera una segunda firma**: si ya hay una encolada
+    para ese documento, se devuelve la misma sesion. Es seguro reintentar ante un
+    timeout de red.
 
 ### Variante HTML
 
