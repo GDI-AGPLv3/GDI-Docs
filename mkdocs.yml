@@ -174,6 +174,7 @@ nav:
       - Administracion: administradores/administracion.md
       - Certificados: administradores/certificados.md
       - Backups (GDI Sync): administradores/backups.md
+      - LOGs del Sistema: administradores/logs.md
       - Implementación GDI:
           - administradores/implementacion/index.md
           - Marco Normativo: administradores/implementacion/marco-normativo.md
