@@ -2,7 +2,7 @@
 
 La API TAD (Tramites A Distancia) permite que el **portal ciudadano del municipio** (u otro software externo) opere sobre GDI **a nombre de un ciudadano**: crear y firmar documentos, iniciar expedientes y seguir su avance. El ciudadano NO es un usuario de GDI: vive en una base propia (`citizens`) y firma con **firma electronica** en el mismo acto de creacion del documento.
 
-**12 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
+**13 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
 
 ```
 Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
@@ -33,7 +33,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 |----------|----------------|
 | `POST /tad/citizens`, `GET /tad/citizens/{id}`, `PATCH /tad/citizens/{id}` | No (gestion de la base de ciudadanos) |
 | `GET /tad/document-types`, `GET /tad/document-types/{id}/fields`, `GET /tad/case-templates` | No (catalogos) |
-| `POST /tad/documents`, `POST /tad/cases`, `GET /tad/cases`, `GET /tad/cases/{id}`, `POST /tad/cases/{id}/propose` | **Si** |
+| `POST /tad/documents`, `GET /tad/documents/{id}`, `POST /tad/cases`, `GET /tad/cases`, `GET /tad/cases/{id}`, `POST /tad/cases/{id}/propose` | **Si** |
 
 !!! warning "Server-to-server"
     La API Key identifica al municipio completo. Nunca exponerla en frontend ni en apps moviles: todas las llamadas deben salir del backend del portal.
@@ -82,7 +82,8 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 | `PATCH /tad/citizens/{ref}` | `400` (campo distinto de `estado`, estado invalido) · `404` (no existe) |
 | `GET /tad/document-types` · `GET /tad/case-templates` | — (solo transversales) |
 | `GET /tad/document-types/{id}/fields` | `404` (tipo inexistente, no habilitado, o sin formulario) |
-| `POST /tad/documents` | `400` (tipo no habilitado, campo de contenido incorrecto, PDF/base64 invalido, `form_data` invalido) · `403` (ciudadano no validado o bloqueado) · `503` (migraciones pendientes) |
+| `POST /tad/documents` | `400` (tipo no habilitado, campo de contenido incorrecto, PDF/base64 invalido, `form_data` invalido, `Idempotency-Key` vacia o >255) · `403` (ciudadano no validado o bloqueado) · `409` (reintento en curso o `Idempotency-Key` reusada con otro contenido) · `503` (migraciones pendientes) |
+| `GET /tad/documents/{id}` | `404` (inexistente o de otro ciudadano) |
 | `POST /tad/cases` | `400` (`case_template_id` inexistente o canal no-API) · `403` (ciudadano no validado o bloqueado) |
 | `GET /tad/cases` | `403` (ciudadano bloqueado) |
 | `GET /tad/cases/{id}` | `404` (inexistente o no compartido) |
@@ -93,6 +94,6 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 
 - **[Conectar el portal de tramites](conectar-portal.md)** — guia de punta a punta: requisitos previos, flujo completo, como saber el numero oficial, reintentos y checklist de produccion. **Empeza aca.**
 - [Ciudadanos](ciudadanos.md) — alta, consulta y cambio de estado de la base de ciudadanos.
-- [Documentos](documentos.md) — catalogo de tipos y creacion + firma en un paso (HTML, formulario controlado FFCC e Importado PDF), con adjuntos embebidos.
+- [Documentos](documentos.md) — catalogo de tipos, creacion + firma en un paso (HTML, formulario controlado FFCC e Importado PDF), consulta de estado y reintentos con `Idempotency-Key`.
 - [Expedientes](expedientes.md) — creacion de expedientes, consulta de los compartidos y propuesta de vinculacion de documentos.
 - [Webhook de notificaciones](webhook.md) — eventos `documents.signed`, `documents.signature_failed` y `documents.notified`, con firma HMAC.

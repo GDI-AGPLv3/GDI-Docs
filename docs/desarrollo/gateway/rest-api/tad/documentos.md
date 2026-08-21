@@ -148,23 +148,83 @@ no llega.
     **Guardar el `document_id`** es lo que permite reconocer despues ese webhook: es el
     unico dato que ata la solicitud con su desenlace.
 
+    Si el portal prefiere (o necesita) preguntar en vez de esperar, esta
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
+
     Ver [Webhook de notificaciones](webhook.md) y
-    [como saber el numero oficial](conectar-portal.md#paso-5-saber-el-numero-oficial)
-    (incluye que hacer si el portal todavia no puede recibir webhooks).
+    [como saber el numero oficial](conectar-portal.md#paso-5-saber-el-numero-oficial).
 
-!!! danger "Reintentar el `POST` a ciegas genera un documento duplicado"
-    Cada `POST /tad/documents` crea un documento **nuevo**: no hay deduplicacion por
-    contenido y todavia no se acepta una `Idempotency-Key`. Si el portal reintenta por un
-    timeout de red y la primera llamada si habia llegado, quedan **dos documentos firmados
-    y numerados** para el mismo tramite.
+### Reintentos seguros: `Idempotency-Key`
 
-    Un timeout de red **no significa que el documento no se creo**. La proteccion va del
-    lado del portal (un candado por tramite antes de enviar): ver
-    [Reintentos](conectar-portal.md#4-reintentos-cuidado-con-los-duplicados).
+Cada `POST /tad/documents` crea un documento **nuevo**. Sin ninguna precaucion, un portal que reintenta por un timeout de red — cuando la primera llamada en realidad si habia llegado — termina con **dos documentos firmados y numerados** para el mismo tramite. Un timeout **no significa que el documento no se creo**.
 
-    Lo que si es idempotente es la **cola de firma**: un mismo `document_id` no puede
-    tener dos firmas encoladas a la vez. Eso protege el reproceso interno, no el reenvio
-    del portal.
+Para eso esta el header opcional `Idempotency-Key`: un identificador que el portal elige (un UUID, o el id del tramite en su propia base) y **repite en cada reintento del mismo envio**.
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
+  -H "X-API-Key: tu-api-key-tad" \
+  -H "X-Citizen-ID: 27333444556" \
+  -H "Idempotency-Key: tramite-4711" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+| Situacion | Respuesta |
+|---|---|
+| Primera vez con esa clave | `202` normal: se crea el documento |
+| Reintento, el alta anterior ya termino | `202` con **el mismo cuerpo** que la primera vez + header `Idempotent-Replay: true`. No se crea nada |
+| Reintento mientras el primero todavia se procesa | `409` — reintentar en unos segundos |
+| Misma clave con **otro contenido** | `409` — es una clave reciclada por error; cada solicitud distinta necesita la suya |
+| El alta falla (`400`/`403`) | La clave **queda libre**: se puede corregir el cuerpo y reintentar con la misma |
+
+- **Una clave por trámite, no por reintento**: si el portal genera una clave nueva en cada intento, no protege de nada.
+- La clave vale **24 horas** y su alcance es la API Key (el municipio). Maximo 255 caracteres.
+- **No se deduplica por contenido**: dos solicitudes identicas del mismo vecino pueden ser dos tramites reales. El unico que sabe si son "el mismo" es el portal, por eso lo declara con la clave.
+- El header es **opcional**: sin el, el comportamiento es el de siempre y la proteccion contra duplicados queda enteramente del lado del portal. Ver [Reintentos](conectar-portal.md#4-reintentos-manda-siempre-una-idempotency-key).
+
+---
+
+## Consultar el estado de un documento
+
+```
+GET /api/v1/tad/documents/{document_id}
+```
+
+Requiere `X-Citizen-ID`: el documento tiene que ser de ese ciudadano (si no, `404` generico, igual que si no existiera).
+
+Contesta si la firma sigue en cola, si ya termino — con el numero oficial y un link fresco al PDF — o si fallo:
+
+```json
+{
+  "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
+  "status": "signed",
+  "official_number": "PROV-2026-00003039-MDEV-TAD",
+  "pdf_url": "https://...presignado...",
+  "signed_at": "2026-07-24T18:12:29Z",
+  "reference": "Solicitud de poda de arbol",
+  "document_type_acronym": "PROV",
+  "created_at": "2026-07-24T18:11:09Z",
+  "failure_reason": null
+}
+```
+
+| `status` | Que significa | Que hace el portal |
+|---|---|---|
+| `queued` | La firma esta en cola o procesandose | Esperar. Trae ademas `session_id` y `expires_at` |
+| `signed` | Firmado y numerado | Guardar `official_number`, descargar el `pdf_url` |
+| `failed` | No se va a firmar solo | Mirar `failure_reason` y volver a dar de alta el documento |
+
+!!! warning "Esto no reemplaza al webhook"
+    El webhook avisa **cuando pasa algo**; esto contesta **cuando preguntan**. Un portal
+    que sondee en loop cerrado se va a comer el rate limit de la key (30 req/min) y va a
+    tardar mas en enterarse que si escuchara. Usalo para desarrollo (mientras tu endpoint
+    no sea alcanzable desde GDI), para reconciliar trámites que quedaron sin aviso, y como
+    respaldo — no como mecanismo principal.
+
+    El `pdf_url` es un link presignado de **10 minutos**, como el del webhook: se puede
+    volver a pedir cuantas veces haga falta.
+
+---
 
 ### Variante HTML
 
