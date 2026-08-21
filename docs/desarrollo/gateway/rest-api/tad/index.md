@@ -2,12 +2,18 @@
 
 La API TAD (Tramites A Distancia) permite que el **portal ciudadano del municipio** (u otro software externo) opere sobre GDI **a nombre de un ciudadano**: crear y firmar documentos, iniciar expedientes y seguir su avance. El ciudadano NO es un usuario de GDI: vive en una base propia (`citizens`) y firma con **firma electronica** en el mismo acto de creacion del documento.
 
-**11 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
+**12 endpoints** bajo el prefijo `/api/v1/tad/*`, pensados para consumo **server-to-server** desde el backend del portal municipal (la API Key nunca debe viajar a un navegador).
 
 ```
 Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
-                            <--webhook documents.notified--
+                            <──── webhooks ────
 ```
+
+!!! tip "¿Es tu primera integracion?"
+    Empeza por **[Conectar el portal de tramites](conectar-portal.md)**: que pedirle al
+    administrador antes de escribir codigo, el flujo completo de un tramite, como se
+    entera el portal del numero oficial y el checklist de puesta en produccion. Las demas
+    paginas son el contrato campo por campo.
 
 ## Autenticacion
 
@@ -85,7 +91,8 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 
 ## Contenido de la seccion
 
+- **[Conectar el portal de tramites](conectar-portal.md)** — guia de punta a punta: requisitos previos, flujo completo, como saber el numero oficial, reintentos y checklist de produccion. **Empeza aca.**
 - [Ciudadanos](ciudadanos.md) — alta, consulta y cambio de estado de la base de ciudadanos.
 - [Documentos](documentos.md) — catalogo de tipos y creacion + firma en un paso (HTML, formulario controlado FFCC e Importado PDF), con adjuntos embebidos.
 - [Expedientes](expedientes.md) — creacion de expedientes, consulta de los compartidos y propuesta de vinculacion de documentos.
-- [Webhook de notificaciones](webhook.md) — evento `documents.notified` con firma HMAC.
+- [Webhook de notificaciones](webhook.md) — eventos `documents.signed`, `documents.signature_failed` y `documents.notified`, con firma HMAC.

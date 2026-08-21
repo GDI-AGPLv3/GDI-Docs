@@ -203,6 +203,7 @@ nav:
               - Legajos (RLM): desarrollo/gateway/rest-api/legajos.md
               - TAD Ciudadano:
                   - desarrollo/gateway/rest-api/tad/index.md
+                  - Conectar el Portal de Tramites: desarrollo/gateway/rest-api/tad/conectar-portal.md
                   - Ciudadanos: desarrollo/gateway/rest-api/tad/ciudadanos.md
                   - Documentos: desarrollo/gateway/rest-api/tad/documentos.md
                   - Expedientes: desarrollo/gateway/rest-api/tad/expedientes.md

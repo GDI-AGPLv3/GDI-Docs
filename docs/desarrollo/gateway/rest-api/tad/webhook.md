@@ -4,11 +4,19 @@ GDI envia un `POST` a la URL de callback configurada en la API Key TAD
 (BackOffice → `/api-key`) cuando hay una novedad para el portal. Asi el portal se
 entera sin hacer polling.
 
-| Evento | Cuando llega |
-|---|---|
-| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el numero oficial y el PDF.** |
-| [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. |
-| [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
+| Evento | Cuando llega | Como se reconoce |
+|---|---|---|
+| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el numero oficial y el PDF.** | `document_id` + `status: "signed"` en la raiz |
+| [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. | `document_id` + `status: "failed"` en la raiz |
+| [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. | campo `event: "documents.notified"` |
+
+!!! warning "Como rutear los eventos en tu handler"
+    Los tres llegan a la **misma** URL de callback, pero **no todos traen el campo
+    `event`**: los dos eventos de firma se reconocen por `document_id` + `status` en la
+    raiz del cuerpo; `documents.notified` y `webhook.test` si traen `event`.
+
+    Un handler correcto mira primero si hay `document_id` en la raiz, y si no, cae al
+    campo `event`. Y descarta en silencio lo que no reconozca.
 
 ## Evento `documents.signed`
 
@@ -17,13 +25,17 @@ que avisa que la firma termino**, con el numero oficial y el link al PDF.
 
 ```json
 {
-  "event": "documents.signed",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
   "official_number": "PROV-2026-00003039-MDEV-TAD",
   "pdf_url": "https://...firma-presignada...&X-Amz-Expires=600&...",
-  "status": "signed"
+  "status": "signed",
+  "sent_at": "2026-07-24T18:12:31.412Z"
 }
 ```
+
+`sent_at` es el momento del envio: en un reintento se refresca junto con el `pdf_url`.
+El cuerpo puede incluir ademas un `documents: []` vacio, sin significado para este
+evento: ignoralo.
 
 !!! warning "El `pdf_url` expira en 10 minutos"
     Es un link presignado de descarga directa (600 segundos). Si el portal quiere
@@ -42,10 +54,10 @@ en el sistema sin numerar.
 
 ```json
 {
-  "event": "documents.signature_failed",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
   "status": "failed",
-  "failure_reason": "notary_business_error"
+  "failure_reason": "notary_business_error",
+  "sent_at": "2026-07-24T18:12:31.412Z"
 }
 ```
 
@@ -123,7 +135,7 @@ def verify_gdi_signature(header: str, secret: str, path: str, body: bytes) -> bo
 
 - El portal debe responder `2xx` rapido (idealmente encolar y procesar despues).
 - Si el envio falla, GDI reintenta con **backoff exponencial** durante varias horas.
-- La entrega es **al menos una vez**: ante reintentos el portal puede recibir el mismo evento repetido. Usar el par (`case.id`, `sent_at`) o el contenido de `documents` para deduplicar.
+- La entrega es **al menos una vez**: ante reintentos el portal puede recibir el mismo evento repetido. Para deduplicar: en los eventos de firma, por `document_id` (si ese documento ya tiene numero guardado, descartar); en `documents.notified`, por el par (`case.id`, `documents[].id`). **`sent_at` no sirve para deduplicar**: se refresca en cada reintento.
 
 ## Probar el webhook (sandbox)
 
