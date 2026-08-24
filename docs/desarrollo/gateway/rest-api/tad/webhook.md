@@ -10,6 +10,12 @@ entera sin hacer polling.
 | [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. |
 | [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
 
+!!! info "Disponibilidad por ambiente"
+    El campo `event` en los eventos de **firma** (`documents.signed` y
+    `documents.signature_failed`) esta disponible hoy en **DEV**; llega a **ARIES** y a
+    **produccion** con el proximo pase. En `documents.notified` y en `webhook.test` ya viene
+    en todos los ambientes. Detalle en [API TAD Ciudadano](index.md).
+
 !!! tip "Como rutear los eventos en tu handler"
     Todos llegan a la **misma** URL de callback y todos traen el campo **`event`**:
     ruteá por ahí. Y **descartá en silencio** los `event` que no conozcas — es lo que hace

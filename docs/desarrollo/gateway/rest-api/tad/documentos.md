@@ -184,6 +184,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 
 ---
 
+!!! info "Disponibilidad por ambiente"
+    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles hoy en
+    **DEV**; llegan a **ARIES** y a **produccion** con el proximo pase. Detalle en
+    [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
+
 ## Consultar el estado de un documento
 
 ```
@@ -213,6 +218,14 @@ Contesta si la firma sigue en cola, si ya termino — con el numero oficial y un
 | `queued` | La firma esta en cola o procesandose | Esperar. Trae ademas `session_id` y `expires_at` |
 | `signed` | Firmado y numerado | Guardar `official_number`, descargar el `pdf_url` |
 | `failed` | No se va a firmar solo | Mirar `failure_reason` y volver a dar de alta el documento |
+
+Dos detalles del cuerpo, para que el portal no se rompa con ellos:
+
+- Con `status: "signed"` el `pdf_url` puede venir en `null` si el link presignado no se pudo
+  armar en ese momento. **El `official_number` sigue siendo valido**: se vuelve a pedir el
+  estado y listo.
+- `failure_reason: "signing_never_enqueued"` significa que el documento se creo pero su firma
+  nunca llego a encolarse: hay que volver a darlo de alta.
 
 !!! warning "Esto no reemplaza al webhook"
     El webhook avisa **cuando pasa algo**; esto contesta **cuando preguntan**. Un portal

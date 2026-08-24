@@ -9,6 +9,18 @@ Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
                             <──── webhooks ────
 ```
 
+!!! info "Disponibilidad por ambiente"
+    El **flujo asincronico** (`POST /tad/documents` responde `202` y el numero oficial se
+    obtiene despues, por webhook o preguntando con `GET /tad/documents/{id}`), el header
+    **`Idempotency-Key`** y el campo **`event`** en los webhooks de firma estan disponibles
+    hoy en el **ambiente de desarrollo (DEV)**. Llegan a **ARIES** (homologacion) y a
+    **produccion** con el proximo pase.
+
+    Mientras tanto, en produccion `POST /tad/documents` responde `200` con el
+    `official_number` ya en el cuerpo, `GET /tad/documents/{id}` devuelve `404` y el header
+    `Idempotency-Key` se ignora. **Esta seccion documenta el contrato definitivo**: escribi
+    el portal contra el y confirma con el equipo GDI en que ambiente estas integrando.
+
 !!! tip "¿Es tu primera integracion?"
     Empeza por **[Conectar el portal de tramites](conectar-portal.md)**: que pedirle al
     administrador antes de escribir codigo, el flujo completo de un tramite, como se

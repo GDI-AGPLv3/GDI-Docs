@@ -4,7 +4,14 @@ Guia de punta a punta para el equipo que desarrolla el **portal de tramites del 
 
 Si buscas el contrato campo por campo de cada endpoint, esta en [Ciudadanos](ciudadanos.md), [Documentos](documentos.md), [Expedientes](expedientes.md) y [Webhook](webhook.md). Esta pagina es el hilo que los une.
 
+!!! info "Disponibilidad por ambiente"
+    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles hoy en
+    **DEV**; llegan a **ARIES** y a **produccion** con el proximo pase. Detalle en
+    [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
+
 ---
+
+## 1. Antes de empezar---
 
 ## 1. Antes de empezar
 
