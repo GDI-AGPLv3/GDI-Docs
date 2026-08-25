@@ -191,25 +191,6 @@ La copia incluye **36 tablas** con toda la informacion operativa del municipio:
 !!! note "Datos sensibles protegidos"
     De la tabla de usuarios solo se exporta informacion segura (nombre, email, sector). **Nunca** se descargan contrasenas, tokens ni credenciales de acceso.
 
-!!! info "Se copia TODO, incluidos los numeros anulados"
-    Desde agosto de 2026 la copia incluye **todos** los documentos, tambien los que tienen un
-    numero **reservado pero todavia no firmado** y los **anulados**. Antes se excluian.
-
-    Para que puedas distinguirlos, cada documento viaja con su campo **`reservation_status`**:
-
-    | Valor | Que significa |
-    |-------|---------------|
-    | `CONFIRMED` (o vacio) | Documento oficial valido |
-    | `RESERVED` / `CONFIRMING` | Numero tomado, firma en curso |
-    | `CANCELLED` | Numero anulado — **no es un documento valido** |
-
-    Si vas a usar la copia para contar o listar documentos oficiales, filtra por
-    `reservation_status` distinto de `CANCELLED`.
-
-    !!! warning "Los anulados quedan para siempre en tu copia"
-        Un numero anulado puede desaparecer del sistema GDI, pero el sync **nunca borra** de tu
-        base local: una vez copiado, se queda. Es la contracara de llevarte todo.
-
 ---
 
 ## Automatizar (opcional)
