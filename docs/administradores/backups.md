@@ -54,9 +54,26 @@ Solicitala por mail a **info@gdilatam.com** con el asunto *"Solicitud API Key Sy
 !!! tip "Tambien desde el BackOffice"
     En el BackOffice, en la seccion **Sync**, encontras el boton para solicitar la activacion y el enlace de descarga del cliente.
 
-### Paso 2 — Descargar el cliente
+### Paso 2 — Obtener el cliente
 
-Desde la seccion **Sync** del BackOffice, descarga el archivo **`gdi-sync.zip`** y descomprimilo en una carpeta de tu maquina.
+El cliente GDI Sync es **codigo abierto** (AGPL-3.0): podes leerlo y auditar exactamente que hace con tus datos en <https://github.com/GDI-AGPLv3/GDI-SyncSystem>.
+
+Hay dos formas de bajarlo, y **no dan lo mismo**:
+
+=== "Con git (recomendado)"
+
+    ```bash
+    git clone https://github.com/GDI-AGPLv3/GDI-SyncSystem.git
+    cd GDI-SyncSystem
+    ```
+
+    Es la unica via en la que el script **te avisa solo** cuando publicamos una version nueva, y actualizas con un `git pull`.
+
+=== "Sin git"
+
+    Desde la seccion **Sync** del BackOffice, o directamente desde el repositorio, descarga el ZIP y descomprimilo en una carpeta de tu maquina.
+
+    Funciona igual, con una diferencia: sin git el script **no puede avisarte de versiones nuevas**. Si vas por esta via, revisa el repositorio cada tanto o pedinos que te avisemos por mail.
 
 Necesitas tener **Python 3.8 o superior** instalado. No requiere instalar ninguna libreria adicional.
 
