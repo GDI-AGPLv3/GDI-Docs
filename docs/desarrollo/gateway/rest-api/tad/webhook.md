@@ -12,7 +12,7 @@ entera sin hacer polling.
 
 !!! info "Disponibilidad por ambiente"
     El campo `event` en los eventos de **firma** (`documents.signed` y
-    `documents.signature_failed`) esta disponible hoy en **DEV**; llega a **ARIES** y a
+    `documents.signature_failed`) esta disponible en **DEV** y en **ARIES**; llega a
     **produccion** con el proximo pase. En `documents.notified` y en `webhook.test` ya viene
     en todos los ambientes. Detalle en [API TAD Ciudadano](index.md).
 
@@ -65,8 +65,17 @@ en el sistema sin numerar.
 }
 ```
 
-`failure_reason` es un codigo para soporte, no un texto para mostrarle al ciudadano.
+`failure_reason` es un codigo para soporte, no un texto para mostrarle al ciudadano. Que
+significa cada valor y cuando conviene escalar en vez de reintentar esta en
+[Documentos](documentos.md#que-hacer-con-cada-failure_reason).
+
 Ante este evento, el portal puede volver a dar de alta el documento.
+
+!!! danger "El re-alta va con una `Idempotency-Key` NUEVA"
+    La clave del alta original ya quedo consumida: ese pedido **si** fue aceptado, lo que
+    fallo fue la firma posterior. Si reintentas con la misma clave recibis el `202` viejo
+    con `Idempotent-Replay: true` y el `document_id` de siempre — **no se crea nada** y el
+    tramite queda esperando para siempre un aviso que ya llego y fracaso.
 
 ## Evento `documents.notified`
 

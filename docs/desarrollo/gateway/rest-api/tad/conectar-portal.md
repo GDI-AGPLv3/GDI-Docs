@@ -5,13 +5,12 @@ Guia de punta a punta para el equipo que desarrolla el **portal de tramites del 
 Si buscas el contrato campo por campo de cada endpoint, esta en [Ciudadanos](ciudadanos.md), [Documentos](documentos.md), [Expedientes](expedientes.md) y [Webhook](webhook.md). Esta pagina es el hilo que los une.
 
 !!! info "Disponibilidad por ambiente"
-    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles hoy en
-    **DEV**; llegan a **ARIES** y a **produccion** con el proximo pase. Detalle en
-    [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
+    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles en
+    **DEV** y en **ARIES** (homologacion); llegan a **produccion** con el proximo pase.
+    Detalle en [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que
+    ambiente integras.
 
 ---
-
-## 1. Antes de empezar---
 
 ## 1. Antes de empezar
 
@@ -151,12 +150,24 @@ Que hacer con cada campo:
 | `status` | `queued` | La firma esta en cola |
 | `expires_at` | Vencimiento de la sesion de firma (30 min por defecto) | Si pasado ese plazo no llego ningun webhook, es un caso a revisar |
 
+!!! warning "Ponele al cliente un timeout de mas de 60 segundos"
+    El `202` llega rapido con el servicio caliente, pero la **primera llamada del dia puede
+    tardar mas de 40 segundos** (el armado del PDF todavia ocurre dentro del pedido, y ese
+    servicio arranca en frio). Justo la primera prueba de una integracion nueva es la peor.
+
+    Si tu cliente corta a los 30 segundos vas a recibir un error de red por **un alta que
+    salio bien**: cortar el pedido no cancela nada, el documento queda creado y encolado.
+    Por eso la `Idempotency-Key` del [punto 4](#4-reintentos-manda-siempre-una-idempotency-key)
+    deja de ser una buena practica y pasa a ser necesaria.
+
 !!! danger "Guardar el `document_id` no es opcional"
     Es el **unico** identificador que vincula tu solicitud con el webhook que va a llegar despues. Persistilo junto al tramite **en la misma transaccion** en la que registras el pedido del vecino, antes de contestarle nada al navegador. Si lo perdes, el documento se firma igual pero tu portal no tiene como saber de quien era.
 
 ### Paso 5 — Saber el numero oficial
 
-Esta es la parte que mas confunde al llegar de un modelo sincronico. **El numero no viene en el `202`.** La firma real (armado del PDF, sellado, subida) tarda unos segundos y bajo carga puede tardar mas, asi que GDI corta el request enseguida y avisa despues.
+Esta es la parte que mas confunde al llegar de un modelo sincronico. **El numero no viene en el `202`.** El sellado y la subida ocurren despues de contestarte, asi que GDI cierra el pedido y avisa cuando termina.
+
+Cuanto tarda, en la practica: **normalmente unos pocos segundos**, pero se midieron picos de **mas de un minuto** en homologacion sin que nada estuviera roto (la cola drena, con picos). No armes la experiencia del vecino asumiendo que el numero va a estar listo cuando termine de cargar la pagina siguiente: mostrale que el tramite fue recibido y actualizalo cuando llegue el aviso.
 
 #### Camino oficial: el webhook `documents.signed`
 
@@ -191,7 +202,7 @@ Y el par negativo, que hay que manejar si o si:
 }
 ```
 
-El documento **queda sin numerar**. El portal puede volver a dar de alta el documento (un `POST` nuevo). `failure_reason` es un codigo para soporte, no un texto para mostrarle al vecino.
+El documento **queda sin numerar**. El portal puede volver a dar de alta el documento (un `POST` nuevo) — **con una `Idempotency-Key` nueva**, porque la anterior ya quedo consumida por el alta que si se acepto y te devolveria el mismo `202` sin crear nada. `failure_reason` es un codigo para soporte, no un texto para mostrarle al vecino; el detalle de cada valor esta en [Documentos](documentos.md#que-hacer-con-cada-failure_reason).
 
 !!! tip "Un solo endpoint receptor para todos los eventos"
     Los tres eventos llegan a la **misma** URL de callback y todos traen el campo
@@ -247,7 +258,7 @@ A diferencia del documento, el expediente **si devuelve el numero al instante** 
 curl -X POST "$GW/api/v1/tad/cases" \
   -H "X-API-Key: $KEY" -H "X-Citizen-ID: 27333444556" \
   -H "Content-Type: application/json" \
-  -d '{"case_template_id": 4, "reference": "Poda de arbol - Calle Falsa 123"}'
+  -d '{"case_template_id": "50c22aa9-41c9-47cd-92eb-b3696f50f33f", "reference": "Poda de arbol - Calle Falsa 123"}'
 ```
 
 ```json
@@ -257,6 +268,9 @@ curl -X POST "$GW/api/v1/tad/cases" \
   "official_number": "CAEX-2026-00003045-MDF-TAD"
 }
 ```
+
+El `case_template_id` es el **UUID** que devuelve `GET /tad/case-templates`, no un numero
+correlativo: sacalo siempre del catalogo.
 
 El expediente nace con su caratula y **compartido con el ciudadano** que lo inicio. Despues, con el documento ya firmado (paso 5), se **propone** la vinculacion: el municipio la acepta o la rechaza desde la aplicacion. Es asi a proposito — el portal propone, el municipio dispone.
 
@@ -306,7 +320,11 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 - [ ] El PDF se **descarga al recibir el webhook** (el link vence a los 10 minutos).
 - [ ] El `document_id` se persiste junto al tramite antes de contestarle al vecino.
 - [ ] El `POST /tad/documents` manda `Idempotency-Key`, **una por tramite** (no por intento).
-- [ ] Se respeta el rate limit de 30 req/min por key y se maneja el `429`.
+- [ ] El re-alta despues de un `signature_failed` usa una `Idempotency-Key` **nueva**.
+- [ ] El timeout del cliente sobre `POST /tad/documents` es **&ge; 60 s** (la primera llamada del dia es la lenta).
+- [ ] El `503` se distingue por su mensaje: "servidor ocupado" se reintenta, migraciones pendientes se escala.
+- [ ] Se conoce el rate limit real **de tu API Key** (preguntarselo al administrador) y se maneja el `429`.
+- [ ] Si hay carga inicial de padron, se contemplo el limite de **5/min** del alta de ciudadanos.
 - [ ] Esta definido **quien y como** pasa un ciudadano de `pendiente` a `validado`.
 - [ ] Hay un tablero o alerta para tramites que quedaron en `queued` pasado el `expires_at`.
 
@@ -323,6 +341,10 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 | El webhook llega y el PDF da error al descargarlo | El `pdf_url` vencio (10 min). Hay que descargarlo al recibirlo |
 | Documentos duplicados | Reintento sin `Idempotency-Key`, o una clave nueva por intento. Ver [Reintentos](#4-reintentos-manda-siempre-una-idempotency-key) |
 | `409` al crear un documento | Reintento en curso con la misma `Idempotency-Key`, o clave reusada con otro contenido |
-| `429` | Rate limit: 30 req/min por key (10/min adicional en los `GET /tad/citizens/*`) |
-| `503` | Infraestructura del tenant incompleta (migraciones pendientes). No es un error del portal: avisar al equipo GDI |
+| El `POST /tad/documents` tarda 40 s o corta por timeout | Servicio en frio (la primera llamada del dia). El alta **igual salio**: no lo reintentes sin `Idempotency-Key`. Subi el timeout del cliente a &ge; 60 s |
+| Rehiciste un documento tras un `failed` y no pasa nada | Reusaste la `Idempotency-Key`: te devolvio el `202` viejo (`Idempotent-Replay: true`) sin crear nada. Va con clave nueva |
+| `429` | Rate limit. Fijate cual: el general **de tu key** (60/min por defecto), el de `POST /tad/citizens` (5/min), el de `GET /tad/citizens/*` (10/min) o el que va por IP (30/min) |
+| `429` al cargar el padron | Es el limite de 5/min del alta de ciudadanos. Coordinar la carga inicial con el equipo GDI |
+| `503` con "servidor ocupado" | Pico de carga momentaneo: **reintentar con backoff**, se resuelve solo |
+| `503` por migraciones pendientes | Infraestructura del tenant incompleta. No es un error del portal: avisar al equipo GDI |
 | El catalogo de expedientes vuelve vacio | Ningun tipo de expediente tiene canal `api` o `both` |

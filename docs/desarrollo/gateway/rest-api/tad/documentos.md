@@ -2,14 +2,32 @@
 
 Creacion y **firma electronica**: el documento nace y se firma con el sello del ciudadano, para quedar numerado oficialmente. No hay borradores por API.
 
-!!! info "La firma es asincronica (desde 3.12.0)"
-    El alta responde **`202 Accepted` al instante** y la firma se procesa a continuacion.
-    El numero oficial y el link al PDF **no vienen en esa respuesta**: llegan por
-    **webhook** (`documents.signed`), en segundos.
+!!! info "La firma es asincronica (desde 3.12.0, en DEV y ARIES)"
+    El alta responde **`202 Accepted`** y la firma se procesa a continuacion. El numero
+    oficial y el link al PDF **no vienen en esa respuesta**: llegan por **webhook**
+    (`documents.signed`).
 
     Antes el pedido se quedaba esperando a que la firma terminara, lo que bajo carga
     podia superar los 30 segundos y hacer que el portal cortara por timeout un
     documento que en realidad se estaba firmando bien.
+
+    En **produccion** este cambio todavia no esta: alli el alta responde `200` con el
+    `official_number` ya en el cuerpo. Ver la [tabla por ambiente](index.md).
+
+!!! warning "Configura el timeout del cliente en mas de 60 segundos"
+    El `202` es rapido **con el servicio caliente** (unos pocos segundos), pero la
+    **primera llamada del dia puede tardar mas de 40 segundos**: el armado del PDF todavia
+    ocurre dentro del pedido, y el servicio que lo genera arranca en frio.
+
+    Dos consecuencias practicas, y las dos importan:
+
+    1. **Un timeout de 30 segundos te va a cortar un alta que salio bien.** El documento
+       queda creado y encolado igual: cortar el pedido no lo cancela.
+    2. Por eso la **[`Idempotency-Key`](#reintentos-seguros-idempotency-key) no es opcional
+       en la practica**. Sin ella, ese reintento crea un segundo documento y el vecino
+       termina con dos tramites numerados.
+
+    Recomendacion: timeout de cliente **&ge; 60 s** y `Idempotency-Key` en todas las altas.
 
 Numeracion: `{ACRONIMO}-{ANIO}-{NUMERO}-{MUNI}-TAD` (el sufijo `TAD` identifica los documentos firmados por ciudadanos).
 
@@ -177,6 +195,21 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 | Misma clave con **otro contenido** | `409` — es una clave reciclada por error; cada solicitud distinta necesita la suya |
 | El alta falla (`400`/`403`) | La clave **queda libre**: se puede corregir el cuerpo y reintentar con la misma |
 
+!!! danger "Rehacer un documento despues de `documents.signature_failed` necesita una clave NUEVA"
+    La clave protege **el pedido de alta**, no el desenlace de la firma. Si el alta se
+    acepto (`202`) y la firma fallo despues, para GDI esa clave **ya cumplio** y quedo
+    consumida por 24 horas.
+
+    Entonces, cuando llega `documents.signature_failed` y volves a dar de alta el documento:
+
+    - con la **misma** clave → recibis el `202` viejo con `Idempotent-Replay: true` y el
+      `document_id` de siempre. **No se crea nada**, y te quedas esperando un webhook que
+      ya ocurrio y fracaso.
+    - con una clave **nueva** → se crea el documento nuevo, que es lo que querias.
+
+    Es la unica excepcion a la regla de "una clave por tramite": un re-alta despues de un
+    fracaso de firma es, a estos efectos, un pedido distinto.
+
 - **Una clave por trámite, no por reintento**: si el portal genera una clave nueva en cada intento, no protege de nada.
 - La clave vale **24 horas** y su alcance es la API Key (el municipio). Maximo 255 caracteres.
 - **No se deduplica por contenido**: dos solicitudes identicas del mismo vecino pueden ser dos tramites reales. El unico que sabe si son "el mismo" es el portal, por eso lo declara con la clave.
@@ -185,8 +218,8 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 ---
 
 !!! info "Disponibilidad por ambiente"
-    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles hoy en
-    **DEV**; llegan a **ARIES** y a **produccion** con el proximo pase. Detalle en
+    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles en
+    **DEV** y en **ARIES**; llegan a **produccion** con el proximo pase. Detalle en
     [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
 
 ## Consultar el estado de un documento
@@ -219,13 +252,36 @@ Contesta si la firma sigue en cola, si ya termino — con el numero oficial y un
 | `signed` | Firmado y numerado | Guardar `official_number`, descargar el `pdf_url` |
 | `failed` | No se va a firmar solo | Mirar `failure_reason` y volver a dar de alta el documento |
 
-Dos detalles del cuerpo, para que el portal no se rompa con ellos:
+Tres detalles del cuerpo, para que el portal no se rompa con ellos:
 
 - Con `status: "signed"` el `pdf_url` puede venir en `null` si el link presignado no se pudo
   armar en ese momento. **El `official_number` sigue siendo valido**: se vuelve a pedir el
   estado y listo.
 - `failure_reason: "signing_never_enqueued"` significa que el documento se creo pero su firma
   nunca llego a encolarse: hay que volver a darlo de alta.
+- **Podes ver `queued` durante unos instantes despues de recibir `documents.signed`.** La
+  firma y la escritura del documento oficial no son el mismo instante; mientras tanto el
+  endpoint contesta `queued` a proposito, porque todavia no hay numero para mostrar. No es
+  un error ni una vuelta atras: el numero que ya te llego por webhook es valido.
+
+### Que hacer con cada `failure_reason`
+
+`failure_reason` es un **codigo para soporte**, no un texto para mostrarle al vecino. No es
+una lista cerrada —pueden aparecer codigos nuevos— asi que trata cualquier valor desconocido
+como el caso general: **rehacer el alta con una `Idempotency-Key` nueva**, y si se repite,
+escalarlo con el `session_id`.
+
+| `failure_reason` | Que paso | Que hacer |
+|---|---|---|
+| `signing_never_enqueued` | El documento se creo pero la firma nunca llego a la cola | Rehacer el alta |
+| `notary_business_error` | El servicio de firma rechazo el documento | Rehacer el alta; si se repite con el mismo contenido, escalar |
+| `unknown` | El carril de firma no dejo causa registrada. Se vio en arranques en frio, y el reintento salio bien sin cambiar nada | Rehacer el alta una vez. Si vuelve a pasar, **escalar con el `session_id`**: no es un error del portal |
+| cualquier otro | — | Rehacer el alta; escalar si se repite |
+
+!!! warning "Un `failed` no siempre es culpa del contenido"
+    Antes de mostrarle un error al vecino o de marcar el tramite como rechazado, reintenta
+    al menos una vez. Varios de estos motivos son transitorios y el mismo documento, tal
+    cual, se firma bien en el segundo intento.
 
 !!! warning "Esto no reemplaza al webhook"
     El webhook avisa **cuando pasa algo**; esto contesta **cuando preguntan**. Un portal

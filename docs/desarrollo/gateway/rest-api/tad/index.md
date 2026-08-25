@@ -13,13 +13,18 @@ Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
     El **flujo asincronico** (`POST /tad/documents` responde `202` y el numero oficial se
     obtiene despues, por webhook o preguntando con `GET /tad/documents/{id}`), el header
     **`Idempotency-Key`** y el campo **`event`** en los webhooks de firma estan disponibles
-    hoy en el **ambiente de desarrollo (DEV)**. Llegan a **ARIES** (homologacion) y a
-    **produccion** con el proximo pase.
+    en **DEV** y en **ARIES** (homologacion). Llegan a **produccion** con el proximo pase.
 
-    Mientras tanto, en produccion `POST /tad/documents` responde `200` con el
-    `official_number` ya en el cuerpo, `GET /tad/documents/{id}` devuelve `404` y el header
-    `Idempotency-Key` se ignora. **Esta seccion documenta el contrato definitivo**: escribi
-    el portal contra el y confirma con el equipo GDI en que ambiente estas integrando.
+    | Ambiente | `POST /tad/documents` | `GET /tad/documents/{id}` | `Idempotency-Key` |
+    |---|---|---|---|
+    | **DEV** | `202` asincronico | disponible | se respeta |
+    | **ARIES** (homologacion) | `202` asincronico | disponible | se respeta |
+    | **Produccion** | `200` con el `official_number` en el cuerpo | `404` | se ignora |
+
+    **Esta seccion documenta el contrato definitivo** (el asincronico): escribi el portal
+    contra el. Si integras contra produccion antes de ese pase, el alta te devuelve el
+    numero en el mismo cuerpo y no hay nada que esperar. Confirma con el equipo GDI en que
+    ambiente estas integrando.
 
 !!! tip "¿Es tu primera integracion?"
     Empeza por **[Conectar el portal de tramites](conectar-portal.md)**: que pedirle al
@@ -72,16 +77,41 @@ La API usa un criterio **anti-enumeracion**: los 404 son genericos y no distingu
 | `404` | Recurso inexistente **o no accesible para ese ciudadano** (mismo mensaje en ambos casos). |
 | `409` | Conflicto de estado (ej. proponer un documento que no esta firmado). |
 | `429` | Rate limit excedido. |
-| `503` | Infraestructura del tenant incompleta (ej. migraciones pendientes). Reintentar mas tarde y avisar al municipio. |
+| `503` | **Dos causas distintas, y se manejan al reves una de la otra** — ver abajo. |
+
+### El `503` tiene dos causas
+
+| Mensaje | Que es | Que hace el portal |
+|---|---|---|
+| `Servidor ocupado, reintente en unos segundos` | Pico de carga momentaneo del lado de GDI | **Reintentar solo**, con backoff. Se resuelve sin que intervenga nadie |
+| Infraestructura del tenant incompleta (ej. migraciones pendientes) | Al municipio le falta una migracion en su base | **No reintentar en loop**: avisar al equipo GDI |
+
+Un portal que trate los dos igual falla de alguna de las dos formas: o le abre un ticket a
+soporte por un pico de trafico, o reintenta para siempre algo que ninguna cantidad de
+reintentos va a arreglar. **Ruteá por el mensaje del cuerpo**, no solo por el codigo.
 
 ## Rate limits
 
+Se aplican **varios baldes independientes a la vez**: una request tiene que pasar todos los
+que le correspondan. Superado cualquiera se responde `429`, y el portal debe encolar y
+reintentar pasado el minuto.
+
 | Alcance | Limite |
 |---------|--------|
-| Toda la API TAD (por key) | 30 requests/min |
+| Toda la API TAD (por key) | **el valor configurado en tu API Key** (por defecto **60**/min; el administrador lo puede cambiar desde BackOffice) |
+| `POST /tad/citizens` (adicional) | 5 requests/min |
 | `GET /tad/citizens/*` (adicional, anti-scraping) | 10 requests/min |
+| `POST` y `GET` de `/tad/citizens/*`, **por IP de origen** | 30 requests/min |
 
-Superado el limite se responde `429`. El portal debe encolar y reintentar pasado el minuto.
+!!! warning "El alta de ciudadanos es el limite mas apretado: 5/min"
+    Es a proposito (evita que la API sirva para recorrer CUILs), pero sorprende a cualquiera
+    que planee una **carga inicial del padron**. Si tenes que dar de alta muchos vecinos de
+    una, hablalo con el equipo GDI antes: a ese ritmo son 300 por hora.
+
+!!! note "El limite general no es un numero fijo"
+    Es un valor por API Key guardado en la base. Preguntale al administrador cual tiene la
+    tuya en vez de asumirlo — y no lo deduzcas midiendo, porque el balde por IP puede
+    cortarte antes por un motivo distinto.
 
 ## Errores por endpoint
 
@@ -89,12 +119,12 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 
 | Endpoint | Codigos especificos |
 |----------|---------------------|
-| `POST /tad/citizens` | `400` (`full_name`/`country_id` faltante, estado invalido) |
+| `POST /tad/citizens` | `400` (`full_name`/`country_id` faltante, estado invalido) · `429` (limite propio de 5/min) |
 | `GET /tad/citizens/{ref}` | `404` (no existe) |
 | `PATCH /tad/citizens/{ref}` | `400` (campo distinto de `estado`, estado invalido) · `404` (no existe) |
 | `GET /tad/document-types` · `GET /tad/case-templates` | — (solo transversales) |
 | `GET /tad/document-types/{id}/fields` | `404` (tipo inexistente, no habilitado, o sin formulario) |
-| `POST /tad/documents` | `400` (tipo no habilitado, campo de contenido incorrecto, PDF/base64 invalido, `form_data` invalido, `Idempotency-Key` vacia o >255) · `403` (ciudadano no validado o bloqueado) · `409` (reintento en curso o `Idempotency-Key` reusada con otro contenido) · `503` (migraciones pendientes) |
+| `POST /tad/documents` | `400` (tipo no habilitado, campo de contenido incorrecto, PDF/base64 invalido, `form_data` invalido, `Idempotency-Key` vacia o >255) · `403` (ciudadano no validado o bloqueado) · `409` (reintento en curso o `Idempotency-Key` reusada con otro contenido) · `503` (migraciones pendientes, **o** servidor ocupado: reintentar) |
 | `GET /tad/documents/{id}` | `404` (inexistente o de otro ciudadano) |
 | `POST /tad/cases` | `400` (`case_template_id` inexistente o canal no-API) · `403` (ciudadano no validado o bloqueado) |
 | `GET /tad/cases` | `403` (ciudadano bloqueado) |

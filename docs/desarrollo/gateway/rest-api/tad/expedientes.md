@@ -171,10 +171,12 @@ sequenceDiagram
     P->>G: POST /tad/citizens (alta vecino)
     P->>G: PATCH /tad/citizens/{id} {"estado":"validado"}
     P->>G: POST /tad/cases (inicia tramite)
-    G-->>P: case_id + CAEX firmada
-    P->>G: POST /tad/documents (declaracion firmada)
-    G-->>P: official_number + pdf_url
-    P->>G: POST /tad/cases/{id}/propose
+    G-->>P: case_id + CAEX (sincronico: el numero viene ya)
+    P->>G: POST /tad/documents (declaracion a firmar)
+    G-->>P: 202 Accepted + document_id (SIN numero)
+    Note over G: la firma se procesa aparte
+    G-->>P: Webhook documents.signed (official_number + pdf_url)
+    P->>G: POST /tad/cases/{id}/propose (recien ahora: el doc ya esta firmado)
     M->>M: Acepta la propuesta y trabaja el expediente
     M->>G: Notificar documentos al ciudadano
     G-->>P: Webhook documents.notified (HMAC)
