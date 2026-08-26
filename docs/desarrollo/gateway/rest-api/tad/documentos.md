@@ -14,20 +14,24 @@ Creacion y **firma electronica**: el documento nace y se firma con el sello del 
     En **produccion** este cambio todavia no esta: alli el alta responde `200` con el
     `official_number` ya en el cuerpo. Ver la [tabla por ambiente](index.md).
 
-!!! warning "Configura el timeout del cliente en mas de 60 segundos"
-    El `202` es rapido **con el servicio caliente** (unos pocos segundos), pero la
-    **primera llamada del dia puede tardar mas de 40 segundos**: el armado del PDF todavia
-    ocurre dentro del pedido, y el servicio que lo genera arranca en frio.
+!!! tip "Cuanto tarda el alta"
+    En **DEV y ARIES** el `202` sale en **1 o 2 segundos**, tambien en frio: el armado del
+    PDF ya no ocurre dentro del pedido, lo hace el worker. (Medido contra R2 real: 1,77 s
+    en la primera llamada del dia y 0,83 s en la siguiente; el `official_number` aparecio
+    a los 4,5 s del alta.)
 
-    Dos consecuencias practicas, y las dos importan:
+    En **produccion** el alta todavia es **sincronica**: el pedido espera el PDF, la firma y
+    la numeracion completas, y bajo carga eso **supera los 30 segundos**. Ahi el timeout del
+    cliente tiene que ser **&ge; 60 s**, y el riesgo es mayor que en el resto de los
+    ambientes porque `Idempotency-Key` todavia no se respeta: si cortas por timeout y
+    reintentas, te quedan **dos documentos numerados**. Ante un timeout en produccion, no
+    reintentes a ciegas — verifica primero.
 
-    1. **Un timeout de 30 segundos te va a cortar un alta que salio bien.** El documento
-       queda creado y encolado igual: cortar el pedido no lo cancela.
-    2. Por eso la **[`Idempotency-Key`](#reintentos-seguros-idempotency-key) no es opcional
-       en la practica**. Sin ella, ese reintento crea un segundo documento y el vecino
-       termina con dos tramites numerados.
-
-    Recomendacion: timeout de cliente **&ge; 60 s** y `Idempotency-Key` en todas las altas.
+!!! note "Igual manda siempre `Idempotency-Key`"
+    Aunque el alta ahora sea rapida, un timeout de red o un reintento automatico de tu
+    infraestructura siguen siendo posibles, y **un timeout nunca significa que el documento
+    no se creo**. La [clave](#reintentos-seguros-idempotency-key) es lo que hace que
+    reintentar sea seguro.
 
 Numeracion: `{ACRONIMO}-{ANIO}-{NUMERO}-{MUNI}-TAD` (el sufijo `TAD` identifica los documentos firmados por ciudadanos).
 
@@ -271,12 +275,28 @@ una lista cerrada —pueden aparecer codigos nuevos— asi que trata cualquier v
 como el caso general: **rehacer el alta con una `Idempotency-Key` nueva**, y si se repite,
 escalarlo con el `session_id`.
 
+!!! tip "Compara por PREFIJO, no por valor exacto"
+    La lista se afina con el tiempo y **no es identica en todos los ambientes**: una misma
+    falla puede llegarte como `unknown` en uno y como `unknown:TimeoutError` en otro, o
+    como `notary_503` en vez de `notary_5xx`. Un portal que compare por igualdad
+    (`reason == "unknown"`) se rompe en el proximo pase.
+
+    Regla practica: todo lo que empieza con **`notary_`** o con **`unknown`** es
+    transitorio y se reintenta.
+
 | `failure_reason` | Que paso | Que hacer |
 |---|---|---|
-| `signing_never_enqueued` | El documento se creo pero la firma nunca llego a la cola | Rehacer el alta |
-| `notary_business_error` | El servicio de firma rechazo el documento | Rehacer el alta; si se repite con el mismo contenido, escalar |
-| `unknown` | El carril de firma no dejo causa registrada. Se vio en arranques en frio, y el reintento salio bien sin cambiar nada | Rehacer el alta una vez. Si vuelve a pasar, **escalar con el `session_id`**: no es un error del portal |
-| cualquier otro | — | Rehacer el alta; escalar si se repite |
+| `notary_timeout` · `notary_connect_error` · `notary_5xx` · `notary_<codigo>` | El servicio de firma no respondio o fallo momentaneamente | **Reintentar**: suele salir al segundo intento |
+| `notary_circuit_open` | El servicio de firma quedo protegido tras fallas repetidas | Esperar un minuto y reintentar. Si sigue, avisar al municipio |
+| `unknown` · `unknown:<Clase>` | El carril de firma no dejo una causa clasificada. Se vio en arranques en frio, y el reintento salio bien sin cambiar nada | **Reintentar una vez.** Si vuelve a pasar, escalar con el `session_id`: no es un error del portal |
+| `db_error` | Falla momentanea de base de datos | Reintentar |
+| `signing_never_enqueued` | El documento se creo pero su firma nunca llego a encolarse | Rehacer el alta |
+| `notary_business_error` · `notary_fullpage` | El servicio de firma **rechazo el documento por su contenido** (por ejemplo, no queda lugar para la hoja de firma) | **No reintentar igual**: revisar el contenido. Si es correcto, escalar |
+| `pdf_too_large` | El PDF supera el limite permitido | Reducir el archivo; reintentar tal cual no sirve |
+| `pdf_integrity_failed` | El PDF firmado no coincide con el que se envio | **No reintentar en loop**: escalar con el `session_id` |
+| `preoficial_not_provisioned` | Al municipio le falta provisionar almacenamiento | No es un problema del portal: avisar al equipo GDI |
+| `document_rejected_while_in_queue` | El documento fue rechazado mientras esperaba en la cola | No reintentar: es una decision, no una falla |
+| cualquier otro | — | Reintentar una vez; escalar si se repite |
 
 !!! warning "Un `failed` no siempre es culpa del contenido"
     Antes de mostrarle un error al vecino o de marcar el tramite como rechazado, reintenta
