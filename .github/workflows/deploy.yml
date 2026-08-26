@@ -1,9 +1,15 @@
 name: Deploy MkDocs to GitHub Pages
 
 on:
+  # El sitio (docs.gdilatam.com) se publica SOLO desde `prd`.
+  # Flujo: feature -> dev -> hml -> prd (igual que el resto de los repos GDI).
+  # `hml` no tiene sitio propio: es el sello de "revisado, listo para publicar".
+  # Antes publicaba desde `main`, asi que CUALQUIER merge salia al aire al
+  # instante y no habia forma de tener doc escrita esperando a que el codigo
+  # que describe llegue a PRD. `main` se elimino: una sola rama publica.
   push:
     branches:
-      - main
+      - prd
 
 permissions:
   contents: write
