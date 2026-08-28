@@ -85,7 +85,7 @@ APP-GDILatam/         # Directorio raiz (NO es repo git)
 ├── GDI-PDFComposer/   # Genera PDFs (FastAPI :8002 local, :8080 Fly.io internal-only PRD)
 ├── GDI-Notary/        # Firma digital (FastAPI :8001 local, :8080 Fly.io internal-only PRD)
 ├── GDI-BD/            # Scripts SQL de BD
-└── .claude/           # Documentacion interna y agentes
+└── GDI-Docs/          # Esta documentacion
 ```
 
 !!! info "Git multi-repo"

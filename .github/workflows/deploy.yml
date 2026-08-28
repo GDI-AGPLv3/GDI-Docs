@@ -15,7 +15,13 @@ permissions:
   contents: write
 
 jobs:
+  # Corre ANTES del deploy: si encuentra datos que no deben publicarse, el
+  # sitio no se republica. Ver scripts/check_publishable.py.
+  guarda:
+    uses: ./.github/workflows/check-publishable.yml
+
   deploy:
+    needs: guarda
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
