@@ -97,8 +97,8 @@ python create_municipio.py
 
   --- Buckets Cloudflare R2 ---
 
-  Bucket oficial [gdi-lpla-oficial]:
-  Bucket tosign [gdi-lpla-tosign]:
+  Bucket oficial [gdi-ejemplo-oficial]:
+  Bucket tosign [gdi-ejemplo-tosign]:
 
 ======================================================================
   RESUMEN - Nuevo Municipio
@@ -109,10 +109,10 @@ python create_municipio.py
   Ciudad:          La Plata
   Color primario:  #1A5276
   Schema number:   101
-  Schema name:     101_lpla
-  Audit schema:    101_lpla_audit
-  Bucket oficial:  gdi-lpla-oficial
-  Bucket tosign:   gdi-lpla-tosign
+  Schema name:     101_ejemplo
+  Audit schema:    101_ejemplo_audit
+  Bucket oficial:  gdi-ejemplo-oficial
+  Bucket tosign:   gdi-ejemplo-tosign
 ======================================================================
 
   Confirmar creacion? (s/N): s

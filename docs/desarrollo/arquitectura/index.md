@@ -35,8 +35,8 @@ PostgreSQL
 ├── public             # Tablas globales (roles, tipos globales, api_keys)
 ├── 200_muni           # Schema del municipio "Test" (33 tablas)
 ├── 200_muni_audit     # Auditoria del municipio "Test"
-├── 200_salta          # Schema de otro municipio
-└── 200_salta_audit    # Su auditoria
+├── 200_ejemplo          # Schema de otro municipio
+└── 200_ejemplo_audit    # Su auditoria
 ```
 
 !!! warning "Regla critica: schema_name keyword-only"

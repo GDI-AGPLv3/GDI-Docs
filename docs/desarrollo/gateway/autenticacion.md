@@ -195,7 +195,7 @@ El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, c
 
 ```
 Audiences validos (api_gateway/auth_mcp.py):
-- MCP_RESOURCE_URI          (p.ej. https://gdi-gateway-dev.fly.dev)
+- MCP_RESOURCE_URI          (p.ej. https://<your-gateway-app>.fly.dev)
 - MCP_RESOURCE_URI + "/"    (variante canonicalizada por el cliente)
 ```
 
