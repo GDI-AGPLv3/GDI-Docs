@@ -613,6 +613,8 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 | `403` | Sin permisos para transferir |
 | `404` | Expediente o sector destino no encontrado |
 | `400` | Sector destino invalido o expediente no transferible |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): transitorio, reintentar en unos segundos (GDI-436) |
+| `422` | El expediente no esta activo por otro motivo (p. ej. **archivado**): esto NO se resuelve esperando |
 
 !!! tip "Preparar antes de transferir"
     Usar `GET /api/v1/cases/{case_id}/prepare-transfer` para obtener la lista de sectores disponibles antes de ejecutar la transferencia.

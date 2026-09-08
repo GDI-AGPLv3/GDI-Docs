@@ -201,6 +201,13 @@ Transfiere un expediente a otro sector.
 | `assigned_user_id` | Usuario especifico (opcional) |
 | `create_official_doc` | Si `true`, genera PV (Pase de Vista) automatico |
 
+**Errores de estado del expediente:**
+
+| Codigo | Cuando |
+|--------|--------|
+| `409` | El expediente todavia se esta **creando** (falta su caratula). Transitorio: reintentar en unos segundos, o esperar el `poll_url` que devolvio la creacion (GDI-436) |
+| `422` | El expediente no esta activo por otro motivo (p. ej. **archivado**). Esto NO se resuelve esperando |
+
 **Archivo:** `endpoints/cases/transfer_case.py`
 
 ---
