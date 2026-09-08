@@ -832,6 +832,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 |--------|-------------|
 | `400` | El documento no es oficial o ya esta vinculado |
 | `403` | Sin permisos sobre el expediente |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---
@@ -886,6 +887,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 |--------|-------------|
 | `400` | El documento no esta en estado borrador |
 | `403` | Sin permisos para proponer documentos a este expediente |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---

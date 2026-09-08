@@ -512,11 +512,16 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
 
 ```json
 {
+  "success": true,
   "case_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "case_number": "EE-2025-00042-SMG-ADGEN",
-  "reference": "Habilitacion comercial - Panaderia San Martin",
-  "status": "active",
-  "created_at": "2025-07-01T09:00:00Z"
+  "status": "creating",
+  "cover": {
+    "status": "queued",
+    "session_id": "9d3b50dc-8959-41df-bb71-bc0b8bd457e4",
+    "poll_url": "/signing/async-poll/9d3b50dc-8959-41df-bb71-bc0b8bd457e4"
+  },
+  "message": "Expediente creado exitosamente"
 }
 ```
 
@@ -526,6 +531,28 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
 |--------|-------------|
 | `400` | Datos invalidos o campos requeridos faltantes |
 | `404` | Plantilla no encontrada |
+
+!!! warning "El expediente nace `creating`: su numero ya es definitivo, su caratula todavia no"
+    El `case_number` se reserva dentro del request y **no cambia nunca**. El
+    PDF de la caratula (CAEX) lo genera un worker unos segundos despues
+    (GDI-436), y recien cuando sale, el expediente pasa a `active`.
+
+    Mientras `status` sea `"creating"`, sobre ESE expediente:
+
+    - `POST /cases/{id}/documents/link` y `POST /cases/{id}/documents/propose`
+      responden **`409`** ("El expediente todavía se está creando...").
+    - `GET /cases/{id}/permissions` devuelve los `can_*` en `false` con
+      `is_creating: true` -- **no es falta de permisos del usuario**, es
+      transitorio (GDI-470).
+
+    Para saber cuando termino, pollear `cover.poll_url` hasta `signed` --
+    mismos estados que la firma asincronica
+    (`queued | processing | signed | failed | expired`). Con el kill-switch
+    `CASE_COVER_ASYNC_ENABLED=false`, `status` llega en `"active"` y
+    `session_id`/`poll_url` en `null`: no hay nada que esperar.
+
+    Si la caratula falla, el expediente **no se pierde ni cambia de numero**:
+    queda esperandola y la cola reintenta.
 
 !!! tip "Obtener plantillas"
     Para listar las plantillas disponibles, usar `GET /api/v1/system/case-templates` antes de crear un expediente.
@@ -586,6 +613,8 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 | `403` | Sin permisos para transferir |
 | `404` | Expediente o sector destino no encontrado |
 | `400` | Sector destino invalido o expediente no transferible |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): transitorio, reintentar en unos segundos (GDI-436) |
+| `422` | El expediente no esta activo por otro motivo (p. ej. **archivado**): esto NO se resuelve esperando |
 
 !!! tip "Preparar antes de transferir"
     Usar `GET /api/v1/cases/{case_id}/prepare-transfer` para obtener la lista de sectores disponibles antes de ejecutar la transferencia.
