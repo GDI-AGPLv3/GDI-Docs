@@ -33,10 +33,10 @@ PostgreSQL
 ├── 200_muni_audit            # Auditoria del municipio "Test"
 │   └── audit_log
 │
-├── 200_salta                 # Otro municipio (misma estructura)
+├── 200_ejemplo                 # Otro municipio (misma estructura)
 │   └── ... (33 tablas)
 │
-└── 200_salta_audit
+└── 200_ejemplo_audit
     └── audit_log
 ```
 
@@ -243,8 +243,8 @@ El almacenamiento en Cloudflare R2 tambien es por tenant. Los nombres de bucket 
 Cloudflare R2
 ├── tenant-test-tosign     # PDFs pendientes de firma (200_muni)
 ├── tenant-test-oficial    # PDFs firmados (200_muni)
-├── tenant-salta-tosign    # PDFs pendientes (200_salta)
-└── tenant-salta-oficial   # PDFs firmados (200_salta)
+├── tenant-ejemplo-tosign    # PDFs pendientes (200_ejemplo)
+└── tenant-ejemplo-oficial   # PDFs firmados (200_ejemplo)
 ```
 
 La configuracion de buckets esta en la tabla `settings` de cada schema:

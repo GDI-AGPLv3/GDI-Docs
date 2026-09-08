@@ -2,7 +2,7 @@
 
 Creacion y **firma electronica**: el documento nace y se firma con el sello del ciudadano, para quedar numerado oficialmente. No hay borradores por API.
 
-!!! info "La firma es asincronica (desde 3.12.0, en DEV y ARIES)"
+!!! info "La firma es asincronica (desde 3.12.0, en DEV y HML)"
     El alta responde **`202 Accepted`** y la firma se procesa a continuacion. El numero
     oficial y el link al PDF **no vienen en esa respuesta**: llegan por **webhook**
     (`documents.signed`).
@@ -15,7 +15,7 @@ Creacion y **firma electronica**: el documento nace y se firma con el sello del 
     `official_number` ya en el cuerpo. Ver la [tabla por ambiente](index.md).
 
 !!! tip "Cuanto tarda el alta"
-    En **DEV y ARIES** el `202` sale en **1 o 2 segundos**, tambien en frio: el armado del
+    En **DEV y HML** el `202` sale en **1 o 2 segundos**, tambien en frio: el armado del
     PDF ya no ocurre dentro del pedido, lo hace el worker. (Medido contra R2 real: 1,77 s
     en la primera llamada del dia y 0,83 s en la siguiente; el `official_number` aparecio
     a los 4,5 s del alta.)
@@ -223,7 +223,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 
 !!! info "Disponibilidad por ambiente"
     El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles en
-    **DEV** y en **ARIES**; llegan a **produccion** con el proximo pase. Detalle en
+    **DEV** y en **HML**; llegan a **produccion** con el proximo pase. Detalle en
     [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
 
 ## Consultar el estado de un documento

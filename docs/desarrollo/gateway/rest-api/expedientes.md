@@ -75,8 +75,10 @@ Devuelve la informacion completa de un expediente.
 |-----------|------|---------|-------------|
 | `include_documents` | bool | `false` | Incluir documentos vinculados en la respuesta |
 
-!!! info "X-User-ID opcional"
-    Si se omite `X-User-ID`, se salta la validacion de permisos y se devuelve el expediente sin restricciones de visibilidad.
+!!! warning "X-User-ID es obligatorio"
+    Este endpoint exige `X-User-ID`. Si se omite, la API responde **401** y no
+    devuelve datos: no existe ningun modo de consulta que saltee la validacion
+    de permisos.
 
 **Ejemplo:**
 
@@ -238,8 +240,10 @@ Devuelve todos los documentos vinculados a un expediente.
 |-----------|------|-------------|
 | `case_id` | UUID | Identificador del expediente |
 
-!!! info "X-User-ID opcional"
-    Si se omite `X-User-ID`, se devuelven todos los documentos sin filtrar por permisos de visibilidad.
+!!! warning "X-User-ID es obligatorio"
+    Este endpoint exige `X-User-ID`. Si se omite, la API responde **401** y no
+    devuelve datos: los documentos siempre se filtran por los permisos de
+    visibilidad del usuario.
 
 **Ejemplo:**
 

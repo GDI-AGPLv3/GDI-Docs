@@ -85,7 +85,7 @@ La seccion de firmantes muestra a cada firmante con su estado actual y los badge
 Ejemplo de como se muestra un firmante numerador pendiente:
 
 ```
-Castor Polux  [NUM]  [Pendiente]
+Juan Perez  [NUM]  [Pendiente]
 ```
 
 ### Expedientes propuestos

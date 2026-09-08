@@ -5,7 +5,7 @@ site_url: https://docs.gdilatam.com/
 
 repo_name: GDI-AGPLv3/GDI-Docs
 repo_url: https://github.com/GDI-AGPLv3/GDI-Docs
-edit_uri: edit/main/docs/
+edit_uri: edit/prd/docs/
 
 theme:
   name: material

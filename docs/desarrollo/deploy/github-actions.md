@@ -4,9 +4,9 @@
 
 GDI Latam usa GitHub Actions para CI/CD. Cada push a las ramas `dev`, `hml` o `prd` dispara el workflow correspondiente, que corre lint/tests y luego hace deploy directamente a Fly.io usando `flyctl`.
 
-El flujo es escalonado de 3 niveles: **`dev` (DEV) → `hml` (HML = ARIES) → `prd` (PRD = ARG + DEMO)**. ARIES es ambiente de homologacion/sandbox (sin clientes reales) y se deploya desde `hml`; ARG es produccion real y DEMO son trials de prospectos, ambos desde `prd`.
+El flujo es escalonado de 3 niveles: **`dev` (DEV) → `hml` (HML = HML) → `prd` (PRD = PRD + DEMO)**. HML es ambiente de homologacion/sandbox (sin clientes reales) y se deploya desde `hml`; PRD es produccion real y DEMO son trials de prospectos, ambos desde `prd`.
 
-Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push a su Production Branch: `aries-frontend` y `aries-backoffice-front` apuntan a `hml`; los `arg-*`/`demo-*` apuntan a `prd`.
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push a su Production Branch: `hml-frontend` y `hml-backoffice-front` apuntan a `hml`; los `prd-*`/`prd-*` apuntan a `prd`.
 
 ---
 
@@ -31,12 +31,12 @@ Cada servicio es un repositorio independiente en la organizacion GitHub (your-or
 
 | Rama | Workflow | Deploy | Ambiente |
 |------|----------|--------|----------|
-| `dev` | `deploy-dev.yml` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: gdi-dev) |
-| `hml` | `deploy-hml.yml` | GitHub Actions → Fly.io HML | `aries-*-prd` (org: gdilatam) |
-| `prd` | `deploy-prd.yml` | GitHub Actions → Fly.io PRD | `arg-*-prd` + `demo-*-prd` (org: gdilatam) |
+| `dev` | `deploy-dev.yml` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: <your-fly-org-dev>) |
+| `hml` | `deploy-hml.yml` | GitHub Actions → Fly.io HML | `hml-*` (org: <your-fly-org>) |
+| `prd` | `deploy-prd.yml` | GitHub Actions → Fly.io PRD | `prd-*` + `prd-*` (org: <your-fly-org>) |
 | `feat/*`, `fix/*`, etc. | - | Sin deploy automatico | Solo CI (lint) |
 
-> **`deploy-hml.yml` existe en GDI-Backend, GDI-AgenteLANG y GDI-BackOffice-Back** (los repos con apps `aries-*`). Dispara en push a `hml` y deploya SOLO las apps `aries-*` (en Backend: `aries-backend` + `aries-gateway`). ARIES salio de `deploy-prd.yml`, asi que `prd` ahora deploya solo `arg-*` + `demo-*`.
+> **`deploy-hml.yml` existe en GDI-Backend, GDI-AgenteLANG y GDI-BackOffice-Back** (los repos con apps `hml-*`). Dispara en push a `hml` y deploya SOLO las apps `hml-*` (en Backend: `hml-backend` + `hml-gateway`). HML salio de `deploy-prd.yml`, asi que `prd` ahora deploya solo `prd-*` + `prd-*`.
 
 !!! warning "Nunca hacer deploy manual"
     Excepto para PostgreSQL, el deploy siempre es via `git push`. Nunca ejecutar `flyctl deploy` manualmente en apps de backend/microservicios.
@@ -115,29 +115,29 @@ jobs:
 
 ---
 
-## Workflow HML (rama: hml) — ARIES
+## Workflow HML (rama: hml) — HML
 
-`deploy-hml.yml` dispara en push a `hml` y deploya **solo el ambiente ARIES** (homologacion/sandbox, sin clientes reales). Existe en los repos con apps `aries-*`: GDI-Backend (`aries-backend` + `aries-gateway`), GDI-AgenteLANG (`aries-agentelang`) y GDI-BackOffice-Back (`aries-backoffice-back`).
+`deploy-hml.yml` dispara en push a `hml` y deploya **solo el ambiente HML** (homologacion/sandbox, sin clientes reales). Existe en los repos con apps `hml-*`: GDI-Backend (`hml-backend` + `hml-gateway`), GDI-AgenteLANG (`hml-agentelang`) y GDI-BackOffice-Back (`hml-backoffice-back`).
 
 ```mermaid
 graph TD
     A["git push hml"] --> B["lint + tests"]
-    B --> C["deploy aries-backend + aries-gateway (paralelo)"]
-    C --> D["Health check ARIES"]
+    B --> C["deploy hml-backend + hml-gateway (paralelo)"]
+    C --> D["Health check HML"]
 ```
 
-Usa `fly.aries.toml` / `fly.aries.gateway.toml` y el token `FLY_API_TOKEN_PRD` (ARIES vive en la org Fly `gdilatam`). Los fronts ARIES (`aries-frontend`, `aries-backoffice-front`) se deployan via Vercel con Production Branch = `hml`.
+Usa `fly.hml.toml` / `fly.hml.gateway.toml` y el token `FLY_API_TOKEN_PRD` (HML vive en la org Fly de produccion). Los fronts HML (`hml-frontend`, `hml-backoffice-front`) se deployan via Vercel con Production Branch = `hml`.
 
 ---
 
-## Workflow PRD (rama: prd) — ARG + DEMO
+## Workflow PRD (rama: prd) — PRD + DEMO
 
-`deploy-prd.yml` deploya **ARG (produccion real) y DEMO (trials) en jobs paralelos**, despues de lint+tests. Ya NO incluye ARIES (salio a `hml`) y ya NO usa cascada con health-checks encadenados entre clientes: ARG y DEMO se deployan en paralelo, cada uno con su propio `fly.{cliente}.toml`.
+`deploy-prd.yml` deploya **PRD (produccion real) y DEMO (trials) en jobs paralelos**, despues de lint+tests. Ya NO incluye HML (salio a `hml`) y ya NO usa cascada con health-checks encadenados entre clientes: PRD y DEMO se deployan en paralelo, cada uno con su propio `fly.{cliente}.toml`.
 
 ```mermaid
 graph TD
     A["git push prd"] --> B["lint + tests"]
-    B --> C["deploy ARG backend + gateway (paralelo)"]
+    B --> C["deploy PRD backend + gateway (paralelo)"]
     B --> D["deploy DEMO backend + gateway (paralelo)"]
 ```
 
@@ -145,9 +145,9 @@ Cada cliente tiene su propio `fly.{cliente}.toml` y `fly.{cliente}.gateway.toml`
 
 | Config | Rama | Ambiente |
 |--------|------|----------|
-| `fly.arg.toml` / `fly.arg.gateway.toml` | `prd` | ARG (produccion real) |
-| `fly.demo.toml` / `fly.demo.gateway.toml` | `prd` | DEMO (trials) |
-| `fly.aries.toml` / `fly.aries.gateway.toml` | `hml` | ARIES (homologacion) |
+| `fly.prd.toml` / `fly.prd.gateway.toml` | `prd` | PRD (produccion real) |
+| `fly.prd.toml` / `fly.prd.gateway.toml` | `prd` | DEMO (trials) |
+| `fly.hml.toml` / `fly.hml.gateway.toml` | `hml` | HML (homologacion) |
 
 ---
 
@@ -175,8 +175,8 @@ Los siguientes secrets se configuran en cada repositorio o a nivel de organizaci
 
 | Secret | Descripcion | Donde obtener |
 |--------|-------------|---------------|
-| `FLY_API_TOKEN` | Token Fly.io para DEV (org: gdi-dev) | `flyctl tokens create deploy -o gdi-dev` |
-| `FLY_API_TOKEN_PRD` | Token Fly.io para PRD (org: gdilatam) | `flyctl tokens create deploy -o gdilatam` |
+| `FLY_API_TOKEN` | Token Fly.io para DEV (org: <your-fly-org-dev>) | `flyctl tokens create deploy -o <your-fly-org-dev>` |
+| `FLY_API_TOKEN_PRD` | Token Fly.io para PRD (org: <your-fly-org>) | `flyctl tokens create deploy -o <your-fly-org>` |
 
 ### Configurar Secrets
 
@@ -201,13 +201,13 @@ graph TD
     A["git push prd"] --> B["GitHub Actions: deploy-prd.yml"]
     B --> C["Lint (Ruff ASYNC)"]
     C --> D["Tests (pytest --collect-only)"]
-    D --> E["flyctl deploy ARG backend + gateway (paralelo)"]
+    D --> E["flyctl deploy PRD backend + gateway (paralelo)"]
     D --> F["flyctl deploy DEMO backend + gateway (paralelo)"]
     E --> G["Deploy completado"]
     F --> G
 ```
 
-ARIES no aparece aca: se deploya por separado desde `hml` (`deploy-hml.yml`).
+HML no aparece aca: se deploya por separado desde `hml` (`deploy-hml.yml`).
 
 ---
 
@@ -229,8 +229,8 @@ git push origin feat/nueva-funcionalidad
 # Crear Pull Request en GitHub
 # Review + merge a dev = Deploy DEV automatico
 
-# Cuando DEV esta verificado, merge dev → hml = Deploy HML (ARIES, homologacion)
-# Cuando ARIES esta homologado, merge hml → prd = Deploy PRD (ARG + DEMO)
+# Cuando DEV esta verificado, merge dev → hml = Deploy HML (HML, homologacion)
+# Cuando HML esta homologado, merge hml → prd = Deploy PRD (PRD + DEMO)
 ```
 
 !!! tip "Proteccion de rama prd"
@@ -264,5 +264,5 @@ docs(deploy): update Fly.io configuration guide
 
 - [ ] Logs sin errores criticos (`flyctl logs -a <app>`)
 - [ ] Health check respondiendo 200
-- [ ] Funcionalidad testeada en DEV, luego homologada en HML (ARIES) antes de promover a prd
+- [ ] Funcionalidad testeada en DEV, luego homologada en HML (HML) antes de promover a prd
 - [ ] Servicios dependientes funcionando

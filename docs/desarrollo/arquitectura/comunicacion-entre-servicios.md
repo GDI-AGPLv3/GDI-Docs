@@ -26,7 +26,7 @@ El ecosistema GDI utiliza tres protocolos de comunicacion:
 | GDI-BackOffice-Back | PostgreSQL | TCP | Connection string | 5432 | Fly.io *.internal (privada) |
 
 !!! note "INTERNAL_API_KEY"
-    La variable `INTERNAL_API_KEY` es compartida entre el Backend y AgenteLANG de cada ambiente. Hay una key distinta por ambiente (dev, arg, demo, aries). Se usa en el header `X-API-Key` para llamadas de AgenteLANG al Backend.
+    La variable `INTERNAL_API_KEY` es compartida entre el Backend y AgenteLANG de cada ambiente. Hay una key distinta por ambiente. Se usa en el header `X-API-Key` para llamadas de AgenteLANG al Backend.
 
 !!! note "X-PDF-SHA256"
     El Backend envia el header `X-PDF-SHA256` junto con el PDF al PDFComposer para verificacion de integridad del contenido.

@@ -35,8 +35,8 @@ PostgreSQL
 ├── public             # Tablas globales (roles, tipos globales, api_keys)
 ├── 200_muni           # Schema del municipio "Test" (33 tablas)
 ├── 200_muni_audit     # Auditoria del municipio "Test"
-├── 200_salta          # Schema de otro municipio
-└── 200_salta_audit    # Su auditoria
+├── 200_ejemplo          # Schema de otro municipio
+└── 200_ejemplo_audit    # Su auditoria
 ```
 
 !!! warning "Regla critica: schema_name keyword-only"
@@ -85,7 +85,7 @@ APP-GDILatam/         # Directorio raiz (NO es repo git)
 ├── GDI-PDFComposer/   # Genera PDFs (FastAPI :8002 local, :8080 Fly.io internal-only PRD)
 ├── GDI-Notary/        # Firma digital (FastAPI :8001 local, :8080 Fly.io internal-only PRD)
 ├── GDI-BD/            # Scripts SQL de BD
-└── .claude/           # Documentacion interna y agentes
+└── GDI-Docs/          # Esta documentacion
 ```
 
 !!! info "Git multi-repo"

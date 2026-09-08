@@ -82,7 +82,7 @@ Audience soportado: solo la Custom API del gateway (`MCP_RESOURCE_URI`), con y s
 
 ```python
 VALID_AUDIENCES = [
-    MCP_RESOURCE_URI,          # p.ej. https://gdi-gateway-dev.fly.dev
+    MCP_RESOURCE_URI,          # p.ej. https://<your-gateway-app>.fly.dev
     MCP_RESOURCE_URI + "/",    # variante canonicalizada por el cliente (RFC 8707)
 ]
 ```

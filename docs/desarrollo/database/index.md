@@ -32,7 +32,7 @@ PostgreSQL
 |   +-- backup_access_log           # Log de accesos del sistema de backup
 |   +-- (tablas LangGraph)          # Creadas automaticamente por GDI-AgenteLANG
 |
-+-- {schema_municipio}/             # Ej: 100_test, 101_esco
++-- {schema_municipio}/             # Ej: 100_test, 101_ejemplo
 |   +-- 35 tablas (Grupos A-J)
 |   +-- ~52 indices
 |   +-- 34 triggers updated_at + 1 trigger sync user_registry

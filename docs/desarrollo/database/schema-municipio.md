@@ -1,6 +1,6 @@
 # Schema Municipio
 
-Cada organizacion tiene su propio schema PostgreSQL con **35 tablas** organizadas en 10 grupos funcionales. El nombre del schema sigue la convencion `{numero}_{acronimo}`, por ejemplo: `100_test`, `101_esco`.
+Cada organizacion tiene su propio schema PostgreSQL con **35 tablas** organizadas en 10 grupos funcionales. El nombre del schema sigue la convencion `{numero}_{acronimo}`, por ejemplo: `100_test`, `101_ejemplo`.
 
 ## Resumen por Grupo
 

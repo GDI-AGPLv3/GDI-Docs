@@ -138,7 +138,7 @@ Para que el flujo OAuth de MCP funcione, el tenant Auth0 necesita **cuatro** cos
 
 ### 1. API (resource server) creada
 
-Un resource server cuyo `identifier` sea la URL publica del gateway (`MCP_RESOURCE_URI`), firmado con RS256. Ejemplo DEV: `https://gdi-gateway-dev.fly.dev`.
+Un resource server cuyo `identifier` sea la URL publica del gateway (`MCP_RESOURCE_URI`), firmado con RS256. Ejemplo DEV: `https://<your-gateway-app>.fly.dev`.
 
 ### 2. DCR habilitado
 
@@ -175,7 +175,7 @@ El gateway solo acepta tokens emitidos contra su propia Custom API (`MCP_RESOURC
 ```python
 # _get_mcp_valid_audiences() en api_gateway/auth_mcp.py
 VALID_AUDIENCES = [
-    MCP_RESOURCE_URI,          # p.ej. https://gdi-gateway-dev.fly.dev
+    MCP_RESOURCE_URI,          # p.ej. https://<your-gateway-app>.fly.dev
     MCP_RESOURCE_URI + "/",    # variante canonicalizada por el cliente
 ]
 ```

@@ -12,7 +12,7 @@ entera sin hacer polling.
 
 !!! info "Disponibilidad por ambiente"
     El campo `event` en los eventos de **firma** (`documents.signed` y
-    `documents.signature_failed`) esta disponible en **DEV** y en **ARIES**; llega a
+    `documents.signature_failed`) esta disponible en **DEV** y en **HML**; llega a
     **produccion** con el proximo pase. En `documents.notified` y en `webhook.test` ya viene
     en todos los ambientes. Detalle en [API TAD Ciudadano](index.md).
 

@@ -13,12 +13,12 @@ Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
     El **flujo asincronico** (`POST /tad/documents` responde `202` y el numero oficial se
     obtiene despues, por webhook o preguntando con `GET /tad/documents/{id}`), el header
     **`Idempotency-Key`** y el campo **`event`** en los webhooks de firma estan disponibles
-    en **DEV** y en **ARIES** (homologacion). Llegan a **produccion** con el proximo pase.
+    en **DEV** y en **HML** (homologacion). Llegan a **produccion** con el proximo pase.
 
     | Ambiente | `POST /tad/documents` | Cuanto tarda esa respuesta | `GET /tad/documents/{id}` | `Idempotency-Key` |
     |---|---|---|---|---|
     | **DEV** | `202` asincronico | 1 a 2 s | disponible | se respeta |
-    | **ARIES** (homologacion) | `202` asincronico | 1 a 2 s | disponible | se respeta |
+    | **HML** (homologacion) | `202` asincronico | 1 a 2 s | disponible | se respeta |
     | **Produccion** | `200` con el `official_number` en el cuerpo | **espera la firma completa**: puede pasar de 30 s | `404` | se ignora |
 
     **Esta seccion documenta el contrato definitivo** (el asincronico): escribi el portal
