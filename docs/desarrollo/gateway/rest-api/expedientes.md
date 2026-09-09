@@ -144,28 +144,87 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/number/EE-2025-00001-S
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
 
-**Respuesta `200 OK`:**
+**Respuesta `200 OK`:** el expediente viene envuelto en `case`, junto con
+`found` y `total`.
 
 ```json
 {
-  "case_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "case_number": "EE-2025-00001-SMG-ADGEN",
-  "reference": "Habilitacion comercial",
-  "status": "active",
-  "created_at": "2025-06-15T10:30:00Z",
-  "current_sector": {
-    "sector_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-    "name": "Administracion General",
-    "acronym": "ADGEN"
-  }
+  "case": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "case_number": "EE-2025-00001-SMG-ADGEN",
+    "reference": "Habilitacion comercial",
+    "last_modified_at": "2025-06-15T10:30:00Z",
+    "case_type": { "name": "Habilitacion Comercial", "acronym": "HABI" },
+    "access_reason": "PUBLIC_SEARCH",
+    "admin_sector": {
+      "acronym": "ADGEN#PRIV",
+      "department": "Administracion General",
+      "sector_color": "#6C3483"
+    },
+    "assigned_sectors": [],
+    "is_reserved": false,
+    "status": "active",
+    "is_creating": false
+  },
+  "found": true,
+  "total": 1
 }
 ```
+
+| Campo | Que significa |
+|-------|---------------|
+| `access_reason` | **Por que** este usuario puede ver el expediente: `ADMINSECTOR` (es de su sector), `ASSIGNEDSECTOR` (se lo asignaron), `PUBLIC_SEARCH` (lo alcanzo por el permiso de busqueda global, ver abajo), `RESERVED_NUMBER_MATCH` (reservado: solo se confirma que existe) |
+| `is_reserved` | El expediente es de un tipo **reservado**: no se expone su contenido aunque se conozca el numero |
+| `is_creating` | Todavia espera su caratula (ver [Crear expediente](#crear-expediente)) |
 
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `404` | No se encontro expediente con ese numero |
+| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a proposito: no revela si existe) |
+
+---
+
+### Visibilidad y busqueda global
+
+Un usuario **no ve todos los expedientes del municipio**. El listado
+(`GET /cases/search`) devuelve solo los de sus sectores: los que administra y los
+que le asignaron.
+
+La **busqueda por numero exacto** es la unica excepcion, y esta gobernada por dos
+permisos de la ficha del usuario, que se administran **por usuario desde el
+BackOffice** y vienen **desactivados** por defecto:
+
+| Permiso | Habilita |
+|---------|----------|
+| `can_global_search_cases` | Recuperar por numero exacto un **expediente** de cualquier sector |
+| `can_global_search_documents` | Lo mismo para **documentos** |
+
+Con el permiso activo, `GET /cases/number/{n}` devuelve el expediente con
+`access_reason: "PUBLIC_SEARCH"` aunque no pertenezca a los sectores del usuario.
+Sin el permiso, responde `404`.
+
+!!! warning "Es un permiso de BUSQUEDA, no de listado"
+    Aunque el usuario lo tenga activo, el listado sigue mostrando **solo sus
+    sectores**: el permiso amplia el alcance unicamente cuando se busca un
+    numero exacto. Por eso es normal que un expediente que `GET /cases/number/`
+    devuelve no aparezca en `GET /cases/search`.
+
+!!! danger "Si exponés la consulta por numero al publico, filtra vos"
+    El caso de uso tipico de un portal municipal —*"consulta tu expediente
+    ingresando el numero"*— se vuelve riesgoso si la API Key esta asociada a un
+    usuario con `can_global_search_cases` activo: **cualquier vecino que pruebe
+    numeros correlativos veria expedientes ajenos**, incluidos sus PDFs.
+
+    Para ese caso, una de dos:
+
+    - usar una API Key asociada a un usuario **sin** el permiso global, **o**
+    - filtrar en el portal por `access_reason` y mostrar solo lo que corresponda.
+
+    Los expedientes **reservados** nunca se exponen por esta via: con el numero
+    exacto solo se confirma que existen (`access_reason:
+    "RESERVED_NUMBER_MATCH"`, sin `reference` ni sectores), para poder
+    proponerles un documento.
 
 ---
 

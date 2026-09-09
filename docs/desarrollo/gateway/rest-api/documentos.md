@@ -335,7 +335,22 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/search-official/IF
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `404` | No se encontro documento con ese numero |
+| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a proposito: no revela si existe) |
+
+!!! warning "Alcanzar un documento de otro sector depende de un permiso del usuario"
+    Igual que con los expedientes, un usuario solo ve los documentos de sus
+    sectores. La busqueda por numero exacto amplia ese alcance **unicamente si
+    su ficha tiene activado `can_global_search_documents`**, permiso que se
+    administra por usuario desde el BackOffice y viene **desactivado** por
+    defecto.
+
+    Sin ese permiso, un documento de otro sector responde `404` aunque el numero
+    sea correcto.
+
+    Vale la misma advertencia que para expedientes: si el portal expone
+    "consulta por numero" al publico, conviene usar una API Key asociada a un
+    usuario **sin** el permiso global, o filtrar antes de mostrar. Ver
+    [Visibilidad y busqueda global](expedientes.md#visibilidad-y-busqueda-global).
 
 ---
 
