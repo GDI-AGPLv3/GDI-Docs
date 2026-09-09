@@ -144,28 +144,87 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/number/EE-2025-00001-S
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
 ```
 
-**Respuesta `200 OK`:**
+**Respuesta `200 OK`:** el expediente viene envuelto en `case`, junto con
+`found` y `total`.
 
 ```json
 {
-  "case_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "case_number": "EE-2025-00001-SMG-ADGEN",
-  "reference": "Habilitacion comercial",
-  "status": "active",
-  "created_at": "2025-06-15T10:30:00Z",
-  "current_sector": {
-    "sector_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-    "name": "Administracion General",
-    "acronym": "ADGEN"
-  }
+  "case": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "case_number": "EE-2025-00001-SMG-ADGEN",
+    "reference": "Habilitacion comercial",
+    "last_modified_at": "2025-06-15T10:30:00Z",
+    "case_type": { "name": "Habilitacion Comercial", "acronym": "HABI" },
+    "access_reason": "PUBLIC_SEARCH",
+    "admin_sector": {
+      "acronym": "ADGEN#PRIV",
+      "department": "Administracion General",
+      "sector_color": "#6C3483"
+    },
+    "assigned_sectors": [],
+    "is_reserved": false,
+    "status": "active",
+    "is_creating": false
+  },
+  "found": true,
+  "total": 1
 }
 ```
+
+| Campo | Que significa |
+|-------|---------------|
+| `access_reason` | **Por que** este usuario puede ver el expediente: `ADMINSECTOR` (es de su sector), `ASSIGNEDSECTOR` (se lo asignaron), `PUBLIC_SEARCH` (lo alcanzo por el permiso de busqueda global, ver abajo), `RESERVED_NUMBER_MATCH` (reservado: solo se confirma que existe) |
+| `is_reserved` | El expediente es de un tipo **reservado**: no se expone su contenido aunque se conozca el numero |
+| `is_creating` | Todavia espera su caratula (ver [Crear expediente](#crear-expediente)) |
 
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `404` | No se encontro expediente con ese numero |
+| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a proposito: no revela si existe) |
+
+---
+
+### Visibilidad y busqueda global
+
+Un usuario **no ve todos los expedientes del municipio**. El listado
+(`GET /cases/search`) devuelve solo los de sus sectores: los que administra y los
+que le asignaron.
+
+La **busqueda por numero exacto** es la unica excepcion, y esta gobernada por dos
+permisos de la ficha del usuario, que se administran **por usuario desde el
+BackOffice** y vienen **desactivados** por defecto:
+
+| Permiso | Habilita |
+|---------|----------|
+| `can_global_search_cases` | Recuperar por numero exacto un **expediente** de cualquier sector |
+| `can_global_search_documents` | Lo mismo para **documentos** |
+
+Con el permiso activo, `GET /cases/number/{n}` devuelve el expediente con
+`access_reason: "PUBLIC_SEARCH"` aunque no pertenezca a los sectores del usuario.
+Sin el permiso, responde `404`.
+
+!!! warning "Es un permiso de BUSQUEDA, no de listado"
+    Aunque el usuario lo tenga activo, el listado sigue mostrando **solo sus
+    sectores**: el permiso amplia el alcance unicamente cuando se busca un
+    numero exacto. Por eso es normal que un expediente que `GET /cases/number/`
+    devuelve no aparezca en `GET /cases/search`.
+
+!!! danger "Si exponés la consulta por numero al publico, filtra vos"
+    El caso de uso tipico de un portal municipal —*"consulta tu expediente
+    ingresando el numero"*— se vuelve riesgoso si la API Key esta asociada a un
+    usuario con `can_global_search_cases` activo: **cualquier vecino que pruebe
+    numeros correlativos veria expedientes ajenos**, incluidos sus PDFs.
+
+    Para ese caso, una de dos:
+
+    - usar una API Key asociada a un usuario **sin** el permiso global, **o**
+    - filtrar en el portal por `access_reason` y mostrar solo lo que corresponda.
+
+    Los expedientes **reservados** nunca se exponen por esta via: con el numero
+    exacto solo se confirma que existen (`access_reason:
+    "RESERVED_NUMBER_MATCH"`, sin `reference` ni sectores), para poder
+    proponerles un documento.
 
 ---
 
@@ -314,17 +373,43 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
 {
   "can_view": true,
   "can_transfer": true,
-  "can_assign": false,
-  "can_add_documents": true,
-  "can_close": false
+  "can_assign": true,
+  "can_archive": true,
+  "can_link_documents": true,
+  "can_create_movements": true,
+  "can_subsanar": true,
+  "ownership_level": "owner",
+  "is_creating": false
 }
 ```
+
+| Campo | Que habilita |
+|-------|--------------|
+| `can_view` | Ver el expediente. **Es el unico que sigue en `true` mientras el expediente se esta creando** |
+| `can_transfer` | `POST /cases/{id}/transfer` |
+| `can_assign` | Asignar el expediente a un sector o usuario |
+| `can_archive` | Archivar el expediente |
+| `can_link_documents` | `POST /cases/{id}/documents/link` y `.../propose` |
+| `can_create_movements` | Generar movimientos (pases) |
+| `can_subsanar` | Subsanar un documento del expediente |
+| `ownership_level` | `owner`, `participant` o `creator`: de donde sale el acceso |
+| `is_creating` | `true` mientras el expediente espera su caratula (ver mas abajo) |
 
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
 | `404` | Expediente no encontrado |
+
+!!! warning "Los seis permisos de escritura se apagan mientras el expediente se crea"
+    Si `is_creating` es `true`, los seis `can_*` de escritura vienen en `false`
+    y **`can_view` sigue en `true`**: el expediente se puede mostrar, lo que no
+    se puede todavia es operarlo.
+
+    Eso **no es falta de permisos del usuario** — es transitorio y dura lo que
+    tarde la caratula (GDI-436/GDI-470). Para saber cuando termino, reconsultar
+    este mismo endpoint hasta que `is_creating` sea `false`: la señal esta en la
+    misma respuesta, no hace falta pollear otra cosa.
 
 ---
 
@@ -545,13 +630,26 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
 
     - `POST /cases/{id}/documents/link` y `POST /cases/{id}/documents/propose`
       responden **`409`** ("El expediente todavía se está creando...").
-    - `GET /cases/{id}/permissions` devuelve los `can_*` en `false` con
-      `is_creating: true` -- **no es falta de permisos del usuario**, es
-      transitorio (GDI-470).
+    - `GET /cases/{id}/permissions` devuelve los seis `can_*` de **escritura**
+      en `false` con `is_creating: true`, pero **`can_view` sigue en `true`**:
+      el expediente se puede mostrar, lo que no se puede es operarlo. No es
+      falta de permisos del usuario -- es transitorio (GDI-470).
 
-    Para saber cuando termino, pollear `cover.poll_url` hasta `signed` --
-    mismos estados que la firma asincronica
-    (`queued | processing | signed | failed | expired`). Con el kill-switch
+    **Como saber cuando termino** (cualquiera de las dos, la primera es la mas
+    simple):
+
+    1. Reconsultar `GET /cases/{id}` o `GET /cases/{id}/permissions` hasta que
+       `is_creating` sea `false`. No hace falta pollear nada aparte.
+    2. Pollear el `poll_url` del `cover` hasta `signed` -- mismos estados que
+       la firma asincronica
+       (`queued | processing | signed | failed | expired`).
+
+    !!! danger "`poll_url` viene sin el prefijo del Gateway"
+        El valor que devuelve es `/signing/async-poll/{session_id}`, **sin
+        `/api/v1`**. Concatenado tal cual al host del Gateway da `404`: hay que
+        pedirlo como `{host}/api/v1/signing/async-poll/{session_id}`.
+
+    Con el kill-switch
     `CASE_COVER_ASYNC_ENABLED=false`, `status` llega en `"active"` y
     `session_id`/`poll_url` en `null`: no hay nada que esperar.
 

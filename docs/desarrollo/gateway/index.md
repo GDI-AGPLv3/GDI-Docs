@@ -255,7 +255,19 @@ Si todo esta correcto, recibiras un JSON con los expedientes accesibles para ese
 ```
 
 !!! warning "Permisos"
-    El usuario asociado a la API Key solo vera los expedientes y documentos a los que tiene acceso segun su sector y rol dentro de GDI. Los mismos permisos que aplican en la interfaz web aplican en la API.
+    El usuario asociado a la API Key solo vera los expedientes y documentos a los
+    que tiene acceso segun su sector y rol dentro de GDI. Los mismos permisos que
+    aplican en la interfaz web aplican en la API.
+
+    **La busqueda por numero exacto es la excepcion, y depende de un permiso del
+    usuario.** Si su ficha tiene activado `can_global_search_cases` (o
+    `can_global_search_documents`), puede recuperar por **numero exacto** un
+    expediente o documento de otro sector, aunque no aparezca en su listado. Es
+    un permiso deliberado, viene **desactivado** por defecto y se administra por
+    usuario desde el BackOffice. Los expedientes **reservados** quedan fuera
+    siempre, incluso con el permiso activo.
+
+    Ver [Visibilidad y busqueda global](rest-api/expedientes.md#visibilidad-y-busqueda-global).
 
 ---
 
