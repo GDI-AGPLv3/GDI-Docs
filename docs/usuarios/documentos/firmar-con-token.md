@@ -13,17 +13,31 @@ Para firmar documentos con tu token físico (Feitian ePass2003) necesitas tener 
 
 - Windows 10 o superior (64 bits)
 - Token Feitian ePass2003 con certificado AC ONTI Argentina
+- **Controlador (driver) del token instalado** — es un programa aparte de FirmadorGDI y hay que instalarlo primero (paso 1)
 - Google Chrome o Microsoft Edge
 
 ### Pasos
 
-**1. Descargar el instalador**
+**1. Instalar el controlador del token**
+
+FirmadorGDI no habla con el token directamente: usa el controlador **PKCS#11** que publica el fabricante del dispositivo. Si ese controlador falta, la firma corta con el error *"token no encontrado: no se encontró driver PKCS#11 compatible"*, aunque Windows muestre el token conectado y con luz.
+
+Para el token Feitian ePass2003 el controlador se llama **EnterSafe Middleware (ePass2003)**. Lo entrega la Autoridad Certificante o el distribuidor que te dio el token; varios organismos públicos también lo publican (por ejemplo, la [DTI del Servicio Penitenciario Bonaerense](https://dti.spb.gba.gob.ar/token.html)).
+
+!!! warning "Desconectá el token antes de instalar el controlador"
+    El instalador falla o queda a medias si el token está enchufado. Desconectalo, instalá el controlador, reiniciá si te lo pide, y **recién ahí** volvé a conectarlo.
+
+A diferencia de FirmadorGDI, este instalador **sí pide permisos de administrador** (va a aparecer el cartel de Control de cuentas de usuario). Antes de ejecutarlo, verificá que esté firmado por *Feitian Technologies Co., Ltd.*: clic derecho sobre el archivo → **Propiedades** → pestaña **Firmas digitales**.
+
+Cuando termine, tiene que existir el archivo `C:\Windows\System32\eps2003csp11.dll`. Esa es exactamente la ruta que busca FirmadorGDI.
+
+**2. Descargar el instalador de FirmadorGDI**
 
 [Descargar FirmadorGDI](https://firmadorgdi.gdilatam.com/FirmadorGDI-latest.msi){ .md-button .md-button--primary }
 
 El archivo pesa menos de 1 MB.
 
-**2. Ejecutar el instalador**
+**3. Ejecutar el instalador**
 
 Abrir el archivo descargado. Windows puede mostrar esta advertencia:
 
@@ -34,7 +48,7 @@ Abrir el archivo descargado. Windows puede mostrar esta advertencia:
 
 Seguir los pasos del instalador (Next → Next → Install → Finish). No se requieren permisos de administrador.
 
-**3. Verificar la instalación**
+**4. Verificar la instalación**
 
 Al terminar la instalación, hacer doble clic en el acceso directo de FirmadorGDI. Debe aparecer este mensaje:
 
@@ -95,8 +109,23 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
 ??? question "El token no es detectado"
     - Desconectar y volver a conectar el token USB
     - Probar en otro puerto USB
-    - Verificar que el driver del token esté instalado (viene incluido con el token Feitian)
+    - Verificar que el controlador del token esté instalado (paso 1 de la instalación). No se instala solo al enchufar el token: la mayoría de los ePass2003 no traen ninguna partición con el instalador.
     - Si el problema persiste, contactar al administrador del sistema
+
+??? question "Aparece el error: 'token no encontrado: no se encontró driver PKCS#11 compatible'"
+    Falta el controlador del token, o está instalado el de otra marca. No es un problema de FirmadorGDI ni del token en sí: el dispositivo puede estar perfectamente conectado y aun así dar este error.
+
+    Instalá el controlador siguiendo el paso 1 de la instalación y volvé a intentar.
+
+    FirmadorGDI reconoce estos controladores:
+
+    | Token | Archivo que debe existir |
+    |-------|--------------------------|
+    | Feitian ePass2003 | `C:\Windows\System32\eps2003csp11.dll` |
+    | SafeNet eToken | `C:\Windows\System32\eTPKCS11.dll` |
+    | OpenSC (genérico) | `C:\Windows\System32\opensc-pkcs11.dll` |
+
+    Si ninguno de esos archivos existe, el controlador no quedó instalado. Ojo con la versión: FirmadorGDI es de 64 bits, así que necesita el controlador de 64 bits.
 
 ??? question "El PIN es correcto pero dice que es incorrecto"
     El certificado del token puede haber vencido. Verificar la fecha de vencimiento que muestra FirmadorGDI en el diálogo. Si venció, solicitar renovación ante la AC ONTI Argentina.
