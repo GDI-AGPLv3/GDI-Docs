@@ -335,7 +335,22 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/search-official/IF
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `404` | No se encontro documento con ese numero |
+| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a proposito: no revela si existe) |
+
+!!! warning "Alcanzar un documento de otro sector depende de un permiso del usuario"
+    Igual que con los expedientes, un usuario solo ve los documentos de sus
+    sectores. La busqueda por numero exacto amplia ese alcance **unicamente si
+    su ficha tiene activado `can_global_search_documents`**, permiso que se
+    administra por usuario desde el BackOffice y viene **desactivado** por
+    defecto.
+
+    Sin ese permiso, un documento de otro sector responde `404` aunque el numero
+    sea correcto.
+
+    Vale la misma advertencia que para expedientes: si el portal expone
+    "consulta por numero" al publico, conviene usar una API Key asociada a un
+    usuario **sin** el permiso global, o filtrar antes de mostrar. Ver
+    [Visibilidad y busqueda global](expedientes.md#visibilidad-y-busqueda-global).
 
 ---
 
@@ -832,6 +847,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 |--------|-------------|
 | `400` | El documento no es oficial o ya esta vinculado |
 | `403` | Sin permisos sobre el expediente |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---
@@ -886,6 +902,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 |--------|-------------|
 | `400` | El documento no esta en estado borrador |
 | `403` | Sin permisos para proponer documentos a este expediente |
+| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---
