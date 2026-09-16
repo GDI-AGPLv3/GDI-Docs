@@ -130,7 +130,6 @@ Detalle completo de un memo. Si el usuario es destinatario y es su primera apert
   "reference": "Asunto del memo",
   "content": { "html": "<p>Contenido del memo...</p>" },
   "signed_at": "2026-03-28T14:30:00Z",
-  "signed_pdf_url": "https://...",
   "ai_summary": "Resumen IA...",
   "signers": [
     { "user_id": "uuid", "full_name": "Juan Perez", "signed_at": "..." }

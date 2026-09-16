@@ -192,7 +192,6 @@ else:
     "signed_at": "2025-01-15T10:30:00",
     "is_numerator": True,
     "official_number": "IF-2025-0000157-SMG-ADGEN",  # null si comun
-    "signed_pdf_url": "https://..."  # null si comun
 }
 ```
 
