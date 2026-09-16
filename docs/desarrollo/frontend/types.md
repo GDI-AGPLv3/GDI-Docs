@@ -161,7 +161,6 @@ interface NoteDetail {
   reference: string;
   content: { html: string };
   signed_at: string | null;
-  signed_pdf_url: string | null;
   ai_summary: string | null;
   signers: NoteSigner[];
   document_type: NoteDocumentType;

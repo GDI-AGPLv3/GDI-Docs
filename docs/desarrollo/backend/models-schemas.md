@@ -99,7 +99,6 @@ class SuperSignResponse(BaseModel):
     signed_at: datetime
     is_numerator: bool
     official_number: Optional[str] = None
-    signed_pdf_url: Optional[str] = None
 ```
 
 ### Rechazo y Eliminacion

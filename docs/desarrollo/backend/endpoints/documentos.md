@@ -202,8 +202,7 @@ Endpoint unificado que detecta automaticamente si el usuario es firmante comun o
     "document_id": "uuid",
     "document_status": "signed",
     "is_numerator": true,
-    "official_number": "INF-2025-0001234-SMG-ADGEN",
-    "signed_pdf_url": "https://..."
+    "official_number": "INF-2025-0001234-SMG-ADGEN"
 }
 ```
 
