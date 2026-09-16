@@ -53,7 +53,7 @@ Cada documento se muestra como una tarjeta de dos filas.
 
 ### Buscador
 
-En la parte superior central hay un campo de busqueda con placeholder *"Que estas buscando?"*. Permite buscar por referencia, numero o contenido del documento.
+En la parte superior central hay un campo de busqueda con placeholder *"Que estas buscando?"*. Permite buscar por **referencia o numero**. No busca dentro del cuerpo del documento: para eso esta la [busqueda inteligente](../busqueda/buscador-general.md) del Home.
 
 ### Boton Crear
 
