@@ -50,7 +50,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 |----------|----------------|
 | `POST /tad/citizens`, `GET /tad/citizens/{id}`, `PATCH /tad/citizens/{id}` | No (gestion de la base de ciudadanos) |
 | `GET /tad/document-types`, `GET /tad/document-types/{id}/fields`, `GET /tad/case-templates` | No (catalogos) |
-| `POST /tad/documents`, `GET /tad/documents/{id}`, `POST /tad/cases`, `GET /tad/cases`, `GET /tad/cases/{id}`, `POST /tad/cases/{id}/propose` | **Si** |
+| `POST /tad/documents`, `GET /tad/documents/{id}`, `POST /tad/cases`, `GET /tad/cases`, `GET /tad/cases/{id}`, `GET /tad/cases/{id}/documents/{document_id}/url`, `POST /tad/cases/{id}/propose` | **Si** |
 
 !!! warning "Server-to-server"
     La API Key identifica al municipio completo. Nunca exponerla en frontend ni en apps moviles: todas las llamadas deben salir del backend del portal.
@@ -129,6 +129,7 @@ Codigos que puede devolver cada endpoint, mas alla de los transversales (`401` s
 | `POST /tad/cases` | `400` (`case_template_id` inexistente o canal no-API) · `403` (ciudadano no validado o bloqueado) |
 | `GET /tad/cases` | `403` (ciudadano bloqueado) |
 | `GET /tad/cases/{id}` | `404` (inexistente o no compartido) |
+| `GET /tad/cases/{id}/documents/{document_id}/url` | `404` (expediente/documento inexistente, no compartido, reservado, desvinculado o sin firmar) · `502` (fallo transitorio de storage: **reintentar**) |
 | `POST /tad/cases/{id}/propose` | `404` (expediente/documento inexistente, no compartido o ajeno) · `409` (documento no firmado, o propuesta ya pendiente) |
 | `POST /tad/webhook/test` | `422` (sin webhook configurado en la key TAD) |
 

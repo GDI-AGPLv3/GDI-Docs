@@ -261,6 +261,10 @@ Tres detalles del cuerpo, para que el portal no se rompa con ellos:
 - Con `status: "signed"` el `pdf_url` puede venir en `null` si el link presignado no se pudo
   armar en ese momento. **El `official_number` sigue siendo valido**: se vuelve a pedir el
   estado y listo.
+- El `pdf_url` de **este** endpoint no se toco con GDI-229: sigue viniendo armado. El que dejo
+  de traerlo es el detalle del expediente (`GET /tad/cases/{id}`), que ahora devuelve
+  `pdf_source` y tiene
+  [endpoint propio para la URL](expedientes.md#obtener-la-url-de-un-documento).
 - `failure_reason: "signing_never_enqueued"` significa que el documento se creo pero su firma
   nunca llego a encolarse: hay que volver a darlo de alta.
 - **Podes ver `queued` durante unos instantes despues de recibir `documents.signed`.** La
@@ -310,8 +314,8 @@ escalarlo con el `session_id`.
     no sea alcanzable desde GDI), para reconciliar trámites que quedaron sin aviso, y como
     respaldo — no como mecanismo principal.
 
-    El `pdf_url` es un link presignado de **10 minutos**, como el del webhook: se puede
-    volver a pedir cuantas veces haga falta.
+    El `pdf_url` es un link presignado de **3 minutos** (180 s), como el del webhook: se
+    puede volver a pedir cuantas veces haga falta.
 
 ---
 

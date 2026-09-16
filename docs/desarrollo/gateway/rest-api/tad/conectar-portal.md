@@ -68,7 +68,7 @@ El segundo comando te devuelve **que contesto tu propio servidor** (`delivered`,
         ├─ 4. POST /tad/documents ─────────────────────►  202 Accepted
         │                                                    │ (firma en cola)
         │  ◄──── webhook documents.signed ───────────────────┘
-        │        (numero oficial + pdf_url)
+        │        (numero oficial + pdf_url, 180s)
         │
         ├─ 5. POST /tad/cases ─────────────────────────►  expediente + caratula
         │                                                 (numero al instante)
@@ -179,7 +179,7 @@ No armes la experiencia del vecino asumiendo que el numero va a estar listo cuan
   "event": "documents.signed",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
   "official_number": "PROV-2026-00003039-MDEV-TAD",
-  "pdf_url": "https://...presignado-600s...",
+  "pdf_url": "https://...presignado-180s...",
   "status": "signed",
   "sent_at": "2026-07-24T18:12:31.412Z"
 }
@@ -190,7 +190,7 @@ Tu handler tiene que, en este orden:
 1. **Validar la firma HMAC** del header `X-GDI-Signature` ([como](webhook.md#verificacion-de-firma-hmac)). Sin esto cualquiera que descubra tu URL te inyecta numeros falsos.
 2. **Responder `2xx` rapido** — encolar y procesar despues. GDI reintenta con backoff exponencial durante horas si no contestas.
 3. Buscar el tramite por `document_id` y guardar el `official_number`.
-4. **Descargar el PDF ya**: el `pdf_url` es un link presignado que **vence a los 10 minutos**. Si lo guardas en tu base para usarlo mañana, mañana da error.
+4. **Descargar el PDF ya**: el `pdf_url` es un link presignado que **vence a los 3 minutos** (180 s, GDI-229; antes eran 10). Si lo guardas en tu base para usarlo mañana, mañana da error.
 5. **Deduplicar**: la entrega es *al menos una vez*. El mismo `documents.signed` puede llegar dos veces; si ya tenes numero para ese `document_id`, ignoralo.
 
 Y el par negativo, que hay que manejar si o si:
@@ -320,7 +320,7 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 - [ ] El handler **deduplica** por `document_id`.
 - [ ] El handler rutea por `event` e **ignora los desconocidos**.
 - [ ] Se maneja `documents.signature_failed`, no solo el camino feliz.
-- [ ] El PDF se **descarga al recibir el webhook** (el link vence a los 10 minutos).
+- [ ] El PDF se **descarga al recibir el webhook** (el link vence a los **3 minutos**).
 - [ ] El `document_id` se persiste junto al tramite antes de contestarle al vecino.
 - [ ] El `POST /tad/documents` manda `Idempotency-Key`, **una por tramite** (no por intento).
 - [ ] El re-alta despues de un `signature_failed` usa una `Idempotency-Key` **nueva**.
@@ -341,7 +341,7 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 | `403` al crear un documento | El ciudadano esta `pendiente` (falta el PATCH a `validado`) o `bloqueado` |
 | `400 Tipo de documento 'X' no habilitado...` | Falta tildar "Firmable por TAD" en BackOffice, o el acronimo no existe (el mensaje es el mismo en ambos casos, a proposito) |
 | El `202` llega pero **nunca** el webhook | La API Key no tiene `webhook_url` configurada. Confirmalo con `POST /tad/webhook/test`: si da `422`, es eso. Mientras tanto, el estado se consulta con `GET /tad/documents/{id}` |
-| El webhook llega y el PDF da error al descargarlo | El `pdf_url` vencio (10 min). Hay que descargarlo al recibirlo |
+| El webhook llega y el PDF da error al descargarlo | El `pdf_url` vencio (**3 min** desde GDI-229; antes 10). Hay que descargarlo al recibirlo |
 | Documentos duplicados | Reintento sin `Idempotency-Key`, o una clave nueva por intento. Ver [Reintentos](#4-reintentos-manda-siempre-una-idempotency-key) |
 | `409` al crear un documento | Reintento en curso con la misma `Idempotency-Key`, o clave reusada con otro contenido |
 | El `POST /tad/documents` tarda decenas de segundos o corta por timeout | Estas contra un despliegue donde el alta todavia es **sincronica** y espera la firma completa. El alta **igual salio**: subi el timeout a &ge; 60 s y no reintentes a ciegas. En un despliegue con el alta asincronica el `202` sale en 1 o 2 segundos |
