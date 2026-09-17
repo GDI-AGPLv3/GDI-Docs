@@ -182,4 +182,4 @@ Las tools MCP verifican permisos del usuario autenticado antes de ejecutar cualq
 | `strip_storage_urls` | `api_gateway/tools/_sanitize.py` | Remueve URLs de storage (R2) de las respuestas MCP |
 | `search_users` | Tools MCP | Reduce datos privados en resultados de busqueda de usuarios |
 
-Las respuestas del Gateway nunca exponen URLs directas de Cloudflare R2 (`pdf_url`, `signed_pdf_url`). Estos campos se eliminan recursivamente antes de devolver datos al cliente MCP.
+Las respuestas del Gateway nunca exponen URLs directas de Cloudflare R2 (`pdf_url`, `signed_pdf_url`). Estos campos se eliminan recursivamente antes de devolver datos al cliente MCP (GDI-522: `signed_pdf_url` dejo de existir en el REST tambien — queda la key en `_STORAGE_URL_KEYS` como defensa barata).

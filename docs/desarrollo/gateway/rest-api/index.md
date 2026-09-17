@@ -244,6 +244,13 @@ Documentacion completa: [Legajos (RLM)](legajos.md)
 | `GET` | `/sync/data` | Datos incrementales de una tabla |
 | `GET` | `/sync/documents` | PDFs firmados con presigned URLs |
 
-**Parametros `/sync/data`:** `table` (requerido), `since` (ISO 8601, requerido), `page`, `page_size` (max 100).
+**Parametros `/sync/data`:** `table` (requerido), `since` (ISO 8601, requerido), `page`, `page_size` (max 50).
 
-**Parametros `/sync/documents`:** `since` (ISO 8601, requerido), `page`, `page_size` (max 100).
+**Parametros `/sync/documents`:** `since` (ISO 8601, requerido), `page`, `page_size` (max 50).
+
+!!! warning "Vigencia de las presigned URLs del sync"
+    Las URLs que devuelve `/sync/documents` se firman **todas en el mismo instante**
+    y vencen a los **180 segundos** (`CF_R2_SIGN_EXPIRATION`). Un consumidor que
+    descargue los PDFs en serie debe terminar la pagina dentro de esa ventana o las
+    ultimas URLs le van a responder `403`. Por eso el tope de pagina es 50 y no 100.
+

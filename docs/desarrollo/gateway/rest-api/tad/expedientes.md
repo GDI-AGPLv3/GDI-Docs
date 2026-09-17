@@ -157,13 +157,57 @@ Solo si el expediente esta compartido con el ciudadano; si no, `404` generico (n
       "reference": "Creacion EE-2026-000227-MDEV-INNO",
       "linked_date": "2026-07-24T18:04:38Z",
       "is_active": true,
-      "pdf_url": "https://...presignado-600s..."
+      "pdf_source": "official"
     }
   ]
 }
 ```
 
-`documents` lista los documentos **vinculados** (oficiales) del expediente, cada uno con un `pdf_url` presignado fresco (10 minutos). Los documentos solo *propuestos* no aparecen hasta que el municipio los acepte.
+`documents` lista los documentos **vinculados** (oficiales) del expediente. Los documentos solo *propuestos* no aparecen hasta que el municipio los acepte.
+
+!!! warning "Cambio de contrato (GDI-229): aca ya no viene `pdf_url`"
+    Hasta la version 3.17.0 cada documento traia un `pdf_url` presignado listo para abrir.
+    **Ya no.** Ahora viene `pdf_source` (`"official"`), que dice de que carril sale el PDF, y
+    **la URL se pide aparte** al endpoint de abajo, cuando el ciudadano realmente va a ver el
+    documento.
+
+    El motivo: antes se firmaba una URL por CADA documento de CADA listado, aunque nadie
+    abriera ninguno, y el TTL empezaba a correr ahi mismo. Un expediente de 30 documentos
+    gastaba 30 firmas para mostrar una lista.
+
+## Obtener la URL de un documento
+
+```
+GET /api/v1/tad/cases/{case_id}/documents/{document_id}/url
+```
+
+Devuelve un link presignado **fresco** del PDF oficial. Mismo gate que el detalle del
+expediente: el share tiene que estar activo y el documento tiene que ser uno de los visibles
+en **ese** expediente.
+
+**Respuesta 200:**
+
+```json
+{
+  "document_id": "8bd9b4a2-692d-44dc-826f-22c6533545ac",
+  "official_number": "CAEX-2026-00003045-MDEV-TAD",
+  "pdf_url": "https://...presignado...",
+  "expires_in": 180
+}
+```
+
+`expires_in` es **un entero de segundos** (180), no un texto: se puede hacer aritmetica con el.
+
+| Codigo | Que significa | Que hacer |
+|--------|---------------|-----------|
+| `200` | URL generada | Descargar el PDF **ya** |
+| `404` | No existe, no es tuyo, esta reservado, desvinculado o todavia sin firmar | No reintentar |
+| `502` | Fallo transitorio de storage | **Reintentar** en unos segundos |
+| `500` | Error interno | Reportar |
+
+!!! danger "El `404` no distingue"
+    Por diseno (DISENO.md §6.b) un documento ajeno y uno inexistente dan el **mismo** 404:
+    el portal no puede usar el codigo de error para averiguar si un UUID existe.
 
 ---
 
