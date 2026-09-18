@@ -37,7 +37,11 @@ que avisa que la firma termino**, con el numero oficial y el link al PDF.
 }
 ```
 
-`sent_at` es el momento del envio: en un reintento se refresca junto con el `pdf_url`.
+`sent_at` es el momento del envio y se refresca en cada reintento. El `pdf_url` **no**: viaja tal
+como se firmo al encolar el evento. Si la cola tardo en drenar, o si el evento se reintenta con
+backoff, el link puede llegar **vencido**. Ante un `403` del storage no sirve reintentar la
+descarga: hay que pedir un link fresco con
+[`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento).
 
 !!! warning "El `pdf_url` expira en 3 minutos"
     Es un link presignado de descarga directa (**180 segundos**; hasta la version 3.17.0

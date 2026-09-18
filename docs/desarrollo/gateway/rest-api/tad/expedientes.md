@@ -206,7 +206,7 @@ en **ese** expediente.
 | `500` | Error interno | Reportar |
 
 !!! danger "El `404` no distingue"
-    Por diseno (DISENO.md §6.b) un documento ajeno y uno inexistente dan el **mismo** 404:
+    Por diseno, un documento ajeno y uno inexistente dan el **mismo** 404:
     el portal no puede usar el codigo de error para averiguar si un UUID existe.
 
 ---
