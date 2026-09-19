@@ -31,16 +31,22 @@ que avisa que la firma termino**, con el numero oficial y el link al PDF.
   "event": "documents.signed",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
   "official_number": "PROV-2026-00003039-MDEV-TAD",
-  "pdf_url": "https://...firma-presignada...&X-Amz-Expires=600&...",
+  "pdf_url": "https://...firma-presignada...&X-Amz-Expires=180&...",
   "status": "signed",
   "sent_at": "2026-07-24T18:12:31.412Z"
 }
 ```
 
-`sent_at` es el momento del envio: en un reintento se refresca junto con el `pdf_url`.
+`sent_at` es el momento del envio y se refresca en cada reintento. El `pdf_url` **no**: viaja tal
+como se firmo al encolar el evento. Si la cola tardo en drenar, o si el evento se reintenta con
+backoff, el link puede llegar **vencido**. Ante un `403` del storage no sirve reintentar la
+descarga: hay que pedir un link fresco con
+[`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento).
 
-!!! warning "El `pdf_url` expira en 10 minutos"
-    Es un link presignado de descarga directa (600 segundos). Si el portal quiere
+!!! warning "El `pdf_url` expira en 3 minutos"
+    Es un link presignado de descarga directa (**180 segundos**; hasta la version 3.17.0
+    eran 600). Bajo con GDI-229: la ventana se acorto a proposito, porque ahora la URL se
+    genera recien cuando se la va a usar. Si el portal quiere
     guardar el PDF, debe descargarlo al recibir el webhook. Siempre se puede volver a
     obtener un link fresco via
     [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento) o, si
@@ -99,13 +105,21 @@ Ante este evento, el portal puede volver a dar de alta el documento.
       "id": "8bd9b4a2-692d-44dc-826f-22c6533545ac",
       "official_number": "CAEX-2026-00003045-MDF-TAD",
       "name": "Creacion EE-2026-000227-MDF-INNO",
-      "url": "https://...presignado-600s..."
+      "url": "https://...presignado-180s..."
     }
   ]
 }
 ```
 
-Los `url` de los documentos son links presignados de **10 minutos**, regenerados en cada intento de envio: descargarlos al recibir el webhook, o pedir links frescos con `GET /tad/cases/{id}`.
+Los `url` de los documentos son links presignados de **3 minutos** (180 s), regenerados en
+cada intento de envio: descargarlos al recibir el webhook, o pedir un link fresco con
+[`GET /tad/cases/{id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento).
+
+!!! info "El webhook NO cambio con GDI-229"
+    Sigue trayendo los links armados, igual que antes: es el unico lugar del carril TAD
+    donde la URL viaja sin pedirla. Lo que cambio es **cuanto duran** (600 s -> 180 s). El
+    que si cambio es el detalle del expediente, que ahora devuelve `pdf_source` en vez de
+    `pdf_url`.
 
 ## Verificacion de firma HMAC
 

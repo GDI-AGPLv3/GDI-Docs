@@ -61,7 +61,7 @@ Se muestra un segundo modal con el titulo **"Buscar documento justificante"**. E
 
 ### Buscador
 
-Campo de busqueda con el placeholder *"Buscar documento que justifique la subsanacion..."*. Permite buscar por numero, referencia o contenido.
+Campo de busqueda con el placeholder *"Buscar documento que justifique la subsanacion..."*. Permite buscar por **numero o referencia** (no por el contenido del documento).
 
 ### Tabla de resultados
 

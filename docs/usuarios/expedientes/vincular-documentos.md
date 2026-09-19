@@ -40,11 +40,10 @@ La pestana **Documentos Existentes** permite buscar y seleccionar un documento e
 
 ### Buscador
 
-En la parte superior del modal hay un campo de busqueda con el texto guia: *"Selecciona el documento a vincular o busca aqui por Numero, referencia o contenido."* Se puede buscar por:
+En la parte superior del modal hay un campo de busqueda con el texto guia: *"Selecciona el documento a vincular o busca por numero o referencia."* Se puede buscar por:
 
 - Numero oficial del documento (ej: `IF-2026-00000134`)
 - Referencia o titulo del documento
-- Contenido del documento
 
 !!! info "Que documentos se listan"
     - Sin escribir nada, la tabla lista los documentos **firmados del sector del usuario**. Los borradores y los documentos en proceso de firma no aparecen: no se pueden vincular.
