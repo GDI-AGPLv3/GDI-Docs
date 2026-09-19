@@ -65,7 +65,7 @@ Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la r
 
 `400` si el `case_template_id` no existe o su canal no admite creacion por API.
 
-!!! warning "El expediente nace `creating`: su numero ya es definitivo, su caratula todavia no existe"
+!!! warning "El expediente nace sin caratula: su numero ya es definitivo, el PDF todavia no existe"
     El `case_number` y el `official_number` de la caratula se reservan dentro
     del request y **no cambian nunca**. El PDF de la caratula, en cambio, lo
     genera un worker unos segundos despues (GDI-436), y recien cuando sale el
@@ -81,9 +81,25 @@ Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la r
     Las dos cosas son transitorias y se resuelven solas.
 
     **Como saber cuando termino:** pollear `GET /tad/cases/{id}` hasta que
-    `status` sea **`active`** — mientras se crea vale `inactive` y `documents`
-    viene vacio. Cuando pasa a `active`, en el mismo momento, la caratula ya
-    esta vinculada y el `propose` deja de responder `409`.
+    `status` sea **`active`**. Cuando pasa a `active`, en el mismo momento, la
+    caratula ya esta vinculada y el `propose` deja de responder `409`.
+
+    !!! danger "Ese `creating` de arriba NO es el valor que vas a leer despues"
+        Los dos endpoints usan la misma clave con **valores distintos**, y esto
+        rompe a cualquiera que compare contra `"creating"` en el poll:
+
+        | Endpoint | Mientras se crea | Cuando termino |
+        |---|---|---|
+        | `POST /tad/cases` (respuesta del alta) | `"creating"` | `"active"` (kill-switch) |
+        | `GET /tad/cases/{id}` y `GET /tad/cases` | **`"inactive"`** | `"active"` |
+
+        `creating` es un valor **sintetico** que solo existe en la respuesta del
+        alta, para que el portal sepa que falta la caratula. En la base el
+        expediente nace `inactive`, y el worker lo pasa a `active` al salir el
+        PDF: por eso el detalle y el listado nunca devuelven `creating`.
+
+        **Pollea contra `active`** (`status == "active"`), nunca esperando que
+        `creating` desaparezca.
 
     !!! danger "El `poll_url` del `cover` NO se puede usar por este canal"
         Viene en la respuesta por consistencia con el canal interno, pero el
