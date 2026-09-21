@@ -2,7 +2,7 @@
 
 Creacion y **firma electronica**: el documento nace y se firma con el sello del ciudadano, para quedar numerado oficialmente. No hay borradores por API.
 
-!!! info "La firma es asincronica (desde 3.12.0, en DEV y HML)"
+!!! info "La firma es asincronica"
     El alta responde **`202 Accepted`** y la firma se procesa a continuacion. El numero
     oficial **no viene en esa respuesta**: llega por **webhook** (`documents.signed`). El
     link al PDF se pide despues con
@@ -12,21 +12,11 @@ Creacion y **firma electronica**: el documento nace y se firma con el sello del 
     podia superar los 30 segundos y hacer que el portal cortara por timeout un
     documento que en realidad se estaba firmando bien.
 
-    En **produccion** este cambio todavia no esta: alli el alta responde `200` con el
-    `official_number` ya en el cuerpo. Ver la [tabla por ambiente](index.md).
-
 !!! tip "Cuanto tarda el alta"
-    En **DEV y HML** el `202` sale en **1 o 2 segundos**, tambien en frio: el armado del
+    El `202` sale en **1 o 2 segundos**, tambien en frio: el armado del
     PDF ya no ocurre dentro del pedido, lo hace el worker. (Medido contra R2 real: 1,77 s
     en la primera llamada del dia y 0,83 s en la siguiente; el `official_number` aparecio
     a los 4,5 s del alta.)
-
-    En **produccion** el alta todavia es **sincronica**: el pedido espera el PDF, la firma y
-    la numeracion completas, y bajo carga eso **supera los 30 segundos**. Ahi el timeout del
-    cliente tiene que ser **&ge; 60 s**, y el riesgo es mayor que en el resto de los
-    ambientes porque `Idempotency-Key` todavia no se respeta: si cortas por timeout y
-    reintentas, te quedan **dos documentos numerados**. Ante un timeout en produccion, no
-    reintentes a ciegas — verifica primero.
 
 !!! note "Igual manda siempre `Idempotency-Key`"
     Aunque el alta ahora sea rapida, un timeout de red o un reintento automatico de tu
@@ -223,11 +213,6 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 - El header es **opcional**: sin el, el comportamiento es el de siempre y la proteccion contra duplicados queda enteramente del lado del portal. Ver [Reintentos](conectar-portal.md#4-reintentos-manda-siempre-una-idempotency-key).
 
 ---
-
-!!! info "Disponibilidad por ambiente"
-    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles en
-    **DEV** y en **HML**; llegan a **produccion** con el proximo pase. Detalle en
-    [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que ambiente integras.
 
 ## Consultar el estado de un documento
 
