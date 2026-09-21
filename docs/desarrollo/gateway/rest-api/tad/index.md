@@ -10,21 +10,13 @@ Portal municipal (backend)  --X-API-Key-->  Gateway GDI  -->  GDI
 ```
 
 !!! info "Disponibilidad por ambiente"
-    El **flujo asincronico** (`POST /tad/documents` responde `202` y el numero oficial se
-    obtiene despues, por webhook o preguntando con `GET /tad/documents/{id}`), el header
-    **`Idempotency-Key`** y el campo **`event`** en los webhooks de firma estan disponibles
-    en **DEV** y en **HML** (homologacion). Llegan a **produccion** con el proximo pase.
+    El flujo asincronico (`202`), `GET /tad/documents/{id}`, la `Idempotency-Key` y el campo
+    `event` en los webhooks estan disponibles en **todos** los ambientes.
 
-    | Ambiente | `POST /tad/documents` | Cuanto tarda esa respuesta | `GET /tad/documents/{id}` | `Idempotency-Key` |
-    |---|---|---|---|---|
-    | **DEV** | `202` asincronico | 1 a 2 s | disponible | se respeta |
-    | **HML** (homologacion) | `202` asincronico | 1 a 2 s | disponible | se respeta |
-    | **Produccion** | `200` con el `official_number` en el cuerpo | **espera la firma completa**: puede pasar de 30 s | `404` | se ignora |
-
-    **Esta seccion documenta el contrato definitivo** (el asincronico): escribi el portal
-    contra el. Si integras contra produccion antes de ese pase, el alta te devuelve el
-    numero en el mismo cuerpo y no hay nada que esperar. Confirma con el equipo GDI en que
-    ambiente estas integrando.
+    **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
+    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
+    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
+    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
 
 !!! tip "¿Es tu primera integracion?"
     Empeza por **[Conectar el portal de tramites](conectar-portal.md)**: que pedirle al

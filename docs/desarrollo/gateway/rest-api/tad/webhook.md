@@ -6,15 +6,31 @@ entera sin hacer polling.
 
 | Evento | Cuando llega |
 |---|---|
-| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el numero oficial y el PDF.** |
+| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el ID y el numero oficial.** |
 | [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. |
 | [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
 
 !!! info "Disponibilidad por ambiente"
-    El campo `event` en los eventos de **firma** (`documents.signed` y
-    `documents.signature_failed`) esta disponible en **DEV** y en **HML**; llega a
-    **produccion** con el proximo pase. En `documents.notified` y en `webhook.test` ya viene
-    en todos los ambientes. Detalle en [API TAD Ciudadano](index.md).
+    El campo `event` viene en todos los eventos y en todos los ambientes.
+
+    **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
+    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
+    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
+    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
+
+!!! info "El webhook trae IDs, no links"
+    Ningun evento trae la URL del PDF. Trae el **ID** del documento (y su numero oficial), y
+    el portal pide el link cuando lo va a usar:
+
+    | Evento | Con que pedir la URL |
+    |---|---|
+    | `documents.signed` | [`GET /tad/documents/{document_id}`](documentos.md#consultar-el-estado-de-un-documento) → `pdf_url` |
+    | `documents.notified` | [`GET /tad/cases/{case_id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento) |
+
+    Los links presignados duran **3 minutos** y el webhook se reintenta con backoff de
+    minutos: un link adentro del aviso llegaba vencido. Hasta la version 4.2.1 del backend
+    `documents.signed` traia `pdf_url` y cada documento de `documents.notified` traia `url`;
+    si tu handler los leia, cambialo a pedir la URL con el ID.
 
 !!! tip "Como rutear los eventos en tu handler"
     Todos llegan a la **misma** URL de callback y todos traen el campo **`event`**:
@@ -24,37 +40,24 @@ entera sin hacer polling.
 ## Evento `documents.signed`
 
 El cierre del alta de documento: `POST /tad/documents` devolvio `202` y **esto es lo
-que avisa que la firma termino**, con el numero oficial y el link al PDF.
+que avisa que la firma termino**, con el numero oficial del documento.
 
 ```json
 {
   "event": "documents.signed",
   "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
   "official_number": "PROV-2026-00003039-MDEV-TAD",
-  "pdf_url": "https://...firma-presignada...&X-Amz-Expires=180&...",
   "status": "signed",
   "sent_at": "2026-07-24T18:12:31.412Z"
 }
 ```
 
-`sent_at` es el momento del envio y se refresca en cada reintento. El `pdf_url` **no**: viaja tal
-como se firmo al encolar el evento. Si la cola tardo en drenar, o si el evento se reintenta con
-backoff, el link puede llegar **vencido**. Ante un `403` del storage no sirve reintentar la
-descarga: hay que pedir un link fresco con
-[`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento).
+`sent_at` es el momento del envio y se refresca en cada reintento.
 
-!!! warning "El `pdf_url` expira en 3 minutos"
-    Es un link presignado de descarga directa (**180 segundos**; hasta la version 3.17.0
-    eran 600). Bajo con GDI-229: la ventana se acorto a proposito, porque ahora la URL se
-    genera recien cuando se la va a usar. Si el portal quiere
-    guardar el PDF, debe descargarlo al recibir el webhook. Siempre se puede volver a
-    obtener un link fresco via
-    [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento) o, si
-    el documento ya esta vinculado a un expediente, via `GET /tad/cases/{id}`.
-
-    El campo puede venir en `null` si el link no se pudo generar en ese momento: el
-    documento **igual esta firmado y numerado**, y el PDF se obtiene por la via de
-    arriba.
+Para obtener el PDF, pedi el link con el `document_id` a
+[`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento): la respuesta
+trae un `pdf_url` recien firmado, valido por **3 minutos** (180 s). Si el portal quiere guardar
+el PDF, conviene descargarlo apenas pide el link. Si el link vence, se pide otro: no hay limite.
 
 ## Evento `documents.signature_failed`
 
@@ -104,22 +107,15 @@ Ante este evento, el portal puede volver a dar de alta el documento.
     {
       "id": "8bd9b4a2-692d-44dc-826f-22c6533545ac",
       "official_number": "CAEX-2026-00003045-MDF-TAD",
-      "name": "Creacion EE-2026-000227-MDF-INNO",
-      "url": "https://...presignado-180s..."
+      "name": "Creacion EE-2026-000227-MDF-INNO"
     }
   ]
 }
 ```
 
-Los `url` de los documentos son links presignados de **3 minutos** (180 s), regenerados en
-cada intento de envio: descargarlos al recibir el webhook, o pedir un link fresco con
-[`GET /tad/cases/{id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento).
-
-!!! info "El webhook NO cambio con GDI-229"
-    Sigue trayendo los links armados, igual que antes: es el unico lugar del carril TAD
-    donde la URL viaja sin pedirla. Lo que cambio es **cuanto duran** (600 s -> 180 s). El
-    que si cambio es el detalle del expediente, que ahora devuelve `pdf_source` en vez de
-    `pdf_url`.
+Los documentos llegan con su `id`, sin link. Para descargar cada uno, pedi la URL con
+[`GET /tad/cases/{case_id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento):
+devuelve un link presignado de **3 minutos** (180 s), y se puede pedir de nuevo cuando venza.
 
 ## Verificacion de firma HMAC
 
@@ -205,7 +201,7 @@ El cuerpo del `webhook.test` que recibe tu servidor tiene la misma forma que `do
   "municipality": {"name": "...", "acronym": "..."},
   "citizen": {"id": "00000000-...", "country_id": "20000000001", "full_name": "Ciudadano de Prueba"},
   "case": {"id": "00000000-...", "number": "EE-2026-000000-TEST-XXXX", "reference": "Expediente de prueba (webhook.test)"},
-  "documents": [{"id": "00000000-...", "official_number": "TEST-2026-00000000-XXXX-TAD", "name": "Documento de prueba", "url": "https://ejemplo.invalido/documento-de-prueba.pdf"}],
+  "documents": [{"id": "00000000-...", "official_number": "TEST-2026-00000000-XXXX-TAD", "name": "Documento de prueba"}],
   "note": "Webhook de PRUEBA disparado desde POST /api/v1/tad/webhook/test. No corresponde a un tramite real."
 }
 ```
