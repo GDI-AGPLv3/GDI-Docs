@@ -297,7 +297,8 @@ sequenceDiagram
     P->>G: POST /tad/documents (declaracion a firmar)
     G-->>P: 202 Accepted + document_id (SIN numero)
     Note over G: la firma se procesa aparte
-    G-->>P: Webhook documents.signed (official_number + pdf_url)
+    G-->>P: Webhook documents.signed (document_id + official_number, sin link)
+    P->>G: GET /tad/documents/{id} (pdf_url fresco, 180 s)
     P->>G: POST /tad/cases/{id}/propose (recien ahora: el doc ya esta firmado)
     M->>M: Acepta la propuesta y trabaja el expediente
     M->>G: Notificar documentos al ciudadano
