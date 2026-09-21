@@ -4,8 +4,9 @@ Creacion y **firma electronica**: el documento nace y se firma con el sello del 
 
 !!! info "La firma es asincronica (desde 3.12.0, en DEV y HML)"
     El alta responde **`202 Accepted`** y la firma se procesa a continuacion. El numero
-    oficial y el link al PDF **no vienen en esa respuesta**: llegan por **webhook**
-    (`documents.signed`).
+    oficial **no viene en esa respuesta**: llega por **webhook** (`documents.signed`). El
+    link al PDF se pide despues con
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
 
     Antes el pedido se quedaba esperando a que la firma terminara, lo que bajo carga
     podia superar los 30 segundos y hacer que el portal cortara por timeout un
@@ -163,7 +164,9 @@ El `session_id` identifica esta firma: sirve para trazar el caso con soporte si 
 no llega.
 
 !!! warning "El numero oficial NO viene aca"
-    Llega por webhook, en el evento **`documents.signed`**, junto con el `pdf_url`.
+    Llega por webhook, en el evento **`documents.signed`**, junto con el `document_id`.
+    El aviso no trae el PDF: el link se pide con
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
     Si la firma falla definitivamente, llega **`documents.signature_failed`** — el
     portal nunca se queda esperando un aviso que no va a existir.
 
@@ -261,8 +264,9 @@ Tres detalles del cuerpo, para que el portal no se rompa con ellos:
 - Con `status: "signed"` el `pdf_url` puede venir en `null` si el link presignado no se pudo
   armar en ese momento. **El `official_number` sigue siendo valido**: se vuelve a pedir el
   estado y listo.
-- El `pdf_url` de **este** endpoint no se toco con GDI-229: sigue viniendo armado. El que dejo
-  de traerlo es el detalle del expediente (`GET /tad/cases/{id}`), que ahora devuelve
+- **Este es el endpoint para pedir el PDF de un documento firmado**: su `pdf_url` viene armado y
+  recien firmado en cada consulta. El webhook `documents.signed` ya no trae link (vencia antes
+  de los reintentos), y el detalle del expediente (`GET /tad/cases/{id}`) devuelve
   `pdf_source` y tiene
   [endpoint propio para la URL](expedientes.md#obtener-la-url-de-un-documento).
 - `failure_reason: "signing_never_enqueued"` significa que el documento se creo pero su firma
@@ -314,8 +318,9 @@ escalarlo con el `session_id`.
     no sea alcanzable desde GDI), para reconciliar trámites que quedaron sin aviso, y como
     respaldo — no como mecanismo principal.
 
-    El `pdf_url` es un link presignado de **3 minutos** (180 s), como el del webhook: se
-    puede volver a pedir cuantas veces haga falta.
+    El `pdf_url` es un link presignado de **3 minutos** (180 s): se puede volver a pedir
+    cuantas veces haga falta. Es **el** camino para obtener el PDF despues del webhook
+    `documents.signed`, que trae el `document_id` pero no el link.
 
 ---
 
