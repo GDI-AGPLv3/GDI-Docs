@@ -11,10 +11,12 @@ entera sin hacer polling.
 | [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
 
 !!! info "Disponibilidad por ambiente"
-    El campo `event` en los eventos de **firma** (`documents.signed` y
-    `documents.signature_failed`) esta disponible en **DEV** y en **HML**; llega a
-    **produccion** con el proximo pase. En `documents.notified` y en `webhook.test` ya viene
-    en todos los ambientes. Detalle en [API TAD Ciudadano](index.md).
+    El campo `event` viene en todos los eventos y en todos los ambientes.
+
+    **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
+    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
+    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
+    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
 
 !!! info "El webhook trae IDs, no links"
     Ningun evento trae la URL del PDF. Trae el **ID** del documento (y su numero oficial), y

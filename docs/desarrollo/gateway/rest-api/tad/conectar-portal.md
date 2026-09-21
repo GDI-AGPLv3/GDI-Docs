@@ -5,10 +5,13 @@ Guia de punta a punta para el equipo que desarrolla el **portal de tramites del 
 Si buscas el contrato campo por campo de cada endpoint, esta en [Ciudadanos](ciudadanos.md), [Documentos](documentos.md), [Expedientes](expedientes.md) y [Webhook](webhook.md). Esta pagina es el hilo que los une.
 
 !!! info "Disponibilidad por ambiente"
-    El `202`, el `GET /tad/documents/{id}` y la `Idempotency-Key` estan disponibles en
-    **DEV** y en **HML** (homologacion); llegan a **produccion** con el proximo pase.
-    Detalle en [API TAD Ciudadano](index.md). Confirma con el equipo GDI contra que
-    ambiente integras.
+    El flujo asincronico (`202`), `GET /tad/documents/{id}`, la `Idempotency-Key` y el campo
+    `event` en los webhooks estan disponibles en **todos** los ambientes.
+
+    **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
+    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
+    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
+    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
 
 ---
 
@@ -152,16 +155,10 @@ Que hacer con cada campo:
 | `status` | `queued` | La firma esta en cola |
 | `expires_at` | Vencimiento de la sesion de firma (30 min por defecto) | Si pasado ese plazo no llego ningun webhook, es un caso a revisar |
 
-!!! warning "El timeout del cliente: 60 s si integras contra produccion"
-    En **DEV y HML** el `202` sale en **1 o 2 segundos**, tambien en la primera llamada
-    del dia: el PDF lo arma el worker, no el pedido.
-
-    En **produccion** el alta todavia es sincronica y espera el PDF, la firma y la
-    numeracion completas: bajo carga pasa de 30 segundos. Ahi el timeout tiene que ser
-    **&ge; 60 s**, porque si cortas vas a recibir un error de red por **un alta que salio
-    bien** — y en ese ambiente la `Idempotency-Key` todavia no se respeta, asi que
-    reintentar te deja dos documentos numerados. Ver la
-    [tabla por ambiente](index.md).
+!!! tip "Cuanto tarda el `202`"
+    Sale en **1 o 2 segundos**, tambien en la primera llamada del dia: el PDF lo arma el
+    worker, no el pedido. Si un alta corta por timeout de red, **no asumas que fallo**:
+    reintenta con la **misma** `Idempotency-Key` y vas a recibir el `202` original.
 
 !!! danger "Guardar el `document_id` no es opcional"
     Es el **unico** identificador que vincula tu solicitud con el webhook que va a llegar despues. Persistilo junto al tramite **en la misma transaccion** en la que registras el pedido del vecino, antes de contestarle nada al navegador. Si lo perdes, el documento se firma igual pero tu portal no tiene como saber de quien era.
@@ -325,7 +322,6 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 - [ ] El `document_id` se persiste junto al tramite antes de contestarle al vecino.
 - [ ] El `POST /tad/documents` manda `Idempotency-Key`, **una por tramite** (no por intento).
 - [ ] El re-alta despues de un `signature_failed` usa una `Idempotency-Key` **nueva**.
-- [ ] Si integras contra **produccion**: el timeout del cliente sobre `POST /tad/documents` es **&ge; 60 s** (alli el alta es sincronica).
 - [ ] El `503` se distingue por su mensaje: "servidor ocupado" se reintenta, migraciones pendientes se escala.
 - [ ] Se conoce el rate limit real **de tu API Key** (preguntarselo al administrador) y se maneja el `429`.
 - [ ] Si hay carga inicial de padron, se contemplo el limite de **5/min** del alta de ciudadanos.
@@ -346,7 +342,7 @@ Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-k
 | El handler busca `pdf_url` en el webhook y no lo encuentra | Despues de la version 4.2.1 del backend el aviso **no trae link**: pedilo con el `document_id` ([Webhook](webhook.md)) |
 | Documentos duplicados | Reintento sin `Idempotency-Key`, o una clave nueva por intento. Ver [Reintentos](#4-reintentos-manda-siempre-una-idempotency-key) |
 | `409` al crear un documento | Reintento en curso con la misma `Idempotency-Key`, o clave reusada con otro contenido |
-| El `POST /tad/documents` tarda decenas de segundos o corta por timeout | Estas contra un despliegue donde el alta todavia es **sincronica** y espera la firma completa. El alta **igual salio**: subi el timeout a &ge; 60 s y no reintentes a ciegas. En un despliegue con el alta asincronica el `202` sale en 1 o 2 segundos |
+| El `POST /tad/documents` corta por timeout | El alta **puede haber salido igual**. Reintenta con la **misma** `Idempotency-Key`: si ya existia, recibis el `202` original con `Idempotent-Replay: true` |
 | Rehiciste un documento tras un `failed` y no pasa nada | Reusaste la `Idempotency-Key`: te devolvio el `202` viejo (`Idempotent-Replay: true`) sin crear nada. Va con clave nueva |
 | `429` | Rate limit. Fijate cual: el general **de tu key** (60/min por defecto), el de `POST /tad/citizens` (5/min), el de `GET /tad/citizens/*` (10/min) o el que va por IP (30/min) |
 | `429` al cargar el padron | Es el limite de 5/min del alta de ciudadanos. Coordinar la carga inicial con el equipo GDI |
