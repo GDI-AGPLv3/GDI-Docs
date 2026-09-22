@@ -43,6 +43,7 @@
 | `<VERSION>` | versión del set de GDI (formato `AAAA.MM.N`) | `2026.09.10` |
 | `<AUTH0_DOMAIN>` | dominio del tenant de Auth0 | `tu-municipio.us.auth0.com` |
 | `<IP>` | IP pública del servidor | `203.0.113.10` |
+| `<IMAGEN_INSTALADOR>` | dirección de la imagen del instalador | te la indica GDI en el mail de entrega |
 
 ---
 
@@ -56,7 +57,7 @@ Sin **todo** lo de la tabla 1.1 la instalación no termina. Juntalo antes de toc
 |---|---|---|---|---|
 | 1 | **Token de `ghcr.io`** | lo entrega GDI Latam | bajar el instalador y las 12 imágenes | no baja nada |
 | 2 | **Código de activación** (`GDI-XXXX-XXXX-XXXX`) | lo entrega GDI Latam | el servidor se baja solo su licencia | sin BackOffice, sin IA, sin poder crear municipios |
-| 3 | **Número de versión** (`AAAA.MM.N`) | lo entrega GDI Latam | la misma para el instalador y las imágenes | `manifest unknown` |
+| 3 | **Número de versión** (`AAAA.MM.N`) y **dirección del instalador** | lo entrega GDI Latam | la misma versión para el instalador y las imágenes | `manifest unknown` |
 | 4 | **Servidor Linux** | el municipio | ver 1.3 | — |
 | 5 | **Dominio con 7 registros DNS** tipo A → `<IP>` | el municipio | ver 1.4 | sin HTTPS no hay login |
 | 6 | **Tenant de Auth0** | el municipio (cuenta gratis) | el login de todas las personas | **no hay alternativa**: ver 1.2 |
@@ -167,7 +168,7 @@ unset GDI_TOKEN
 
 ```bash
 sudo mkdir -p /opt/gdi && sudo chown $USER /opt/gdi
-docker run --rm ghcr.io/gdi-live/instalador:<VERSION> | tar x -C /opt/gdi
+docker run --rm <IMAGEN_INSTALADOR>:<VERSION> | tar x -C /opt/gdi
 cd /opt/gdi && ls
 ```
 
@@ -628,7 +629,7 @@ el día y la hora, fuera del horario de atención.
 cd /opt/gdi
 # 1. Backup completo (paso 13) y verificar que no quedó vacío.
 # 2. El instalador de la versión nueva. Pisa compose, scripts y manual; NO toca .env ni license/.
-docker run --rm ghcr.io/gdi-live/instalador:<VERSION_NUEVA> | tar x -C /opt/gdi
+docker run --rm <IMAGEN_INSTALADOR>:<VERSION_NUEVA> | tar x -C /opt/gdi
 # 3. La versión en el .env: una sola línea, la misma para todo.
 sed -i 's/^IMAGE_VERSION=.*/IMAGE_VERSION=<VERSION_NUEVA>/' .env
 # 4. Imágenes nuevas y contenedores nuevos (el migrator aplica las migraciones antes del backend).

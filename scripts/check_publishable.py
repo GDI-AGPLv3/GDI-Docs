@@ -67,6 +67,12 @@ RULES = [
         "nunca va en la doc: reemplazalo por <TU_TOKEN>",
     ),
     (
+        "interno:registro-distribucion",
+        re.compile(r"ghcr\.io/gdi-live|\bGDI-LIVE/", re.I),
+        "direccion del registro privado de distribucion OnPremise o de un repo privado (GDI-LIVE)",
+        "no se publica: el municipio la recibe en el mail de entrega. Usa <IMAGEN_INSTALADOR>",
+    ),
+    (
         "secreto:clave-privada",
         re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----"),
         "clave privada embebida",
