@@ -48,7 +48,7 @@ Para activar Sync necesitas una **API Key de backup**, distinta de las claves de
 
 Solicitala por mail a **info@gdilatam.com** con el asunto *"Solicitud API Key Sync"*, indicando tu municipio. Te van a enviar:
 
-- La **API Key** (empieza con `bk-gdi-sync-...`)
+- La **API Key** (empieza con `sk-gdi-...`)
 - La **URL del Gateway** de tu municipio (por ejemplo `https://tu-municipio-gateway.gdilatam.com`)
 
 !!! tip "Tambien desde el BackOffice"
@@ -82,7 +82,7 @@ Necesitas tener **Python 3.8 o superior** instalado. No requiere instalar ningun
 Dentro de la carpeta, copia el archivo `config.example.env` a un nuevo archivo llamado **`.env`** y completalo con los datos que te entrego GDI Latam:
 
 ```bash
-GDI_API_KEY=bk-gdi-sync-xxxxxxxxxxxxxxxxxxxx
+GDI_API_KEY=sk-gdi-xxxxxxxxxxxxxxxxxxxx
 GDI_GATEWAY_URL=https://tu-municipio-gateway.gdilatam.com
 ```
 

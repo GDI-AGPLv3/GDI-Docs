@@ -172,6 +172,9 @@ nav:
       - Familias de Registro: administradores/familias-registro.md
       - Usuarios: administradores/usuarios.md
       - Administracion: administradores/administracion.md
+      - Operar con IA (API):
+          - administradores/operar-por-api.md
+          - Referencia de Endpoints: administradores/operar-por-api-referencia.md
       - Certificados: administradores/certificados.md
       - Backups (GDI Sync): administradores/backups.md
       - LOGs del Sistema: administradores/logs.md
