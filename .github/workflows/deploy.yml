@@ -42,5 +42,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Las skills descargables (docs/descargas/*.zip) se arman aca desde
+      # skills/: no se versionan, asi el ZIP publicado nunca queda viejo.
+      - name: Empaquetar skills descargables
+        run: python scripts/build_skill_zips.py
+
       - name: Build and deploy
         run: mkdocs gh-deploy --force

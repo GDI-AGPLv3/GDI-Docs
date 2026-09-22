@@ -6,3 +6,6 @@ __pycache__/
 .env
 
 .claude/settings.local.json
+
+# ZIPs de skills: se generan en el deploy (scripts/build_skill_zips.py)
+docs/descargas/*.zip
