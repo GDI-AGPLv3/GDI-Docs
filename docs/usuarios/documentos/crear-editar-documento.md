@@ -48,7 +48,7 @@ La referencia es el titulo descriptivo del documento. Aparece en el listado de d
 | **Crear** | Crea el documento en estado borrador y abre el editor |
 
 !!! warning "Importante"
-    La referencia se puede editar despues en el editor. El limite de 100 caracteres aplica solo en este dialogo; en el editor se permite hasta 250 caracteres.
+    La referencia se puede editar despues en el editor. El limite es de 100 caracteres, tanto en este dialogo como en el editor.
 
 ---
 
@@ -75,7 +75,7 @@ En la parte superior se muestra:
 |-----------|-------|
 | **Tipo de campo** | Texto libre (input) |
 | **Obligatorio** | Si |
-| **Limite** | 250 caracteres |
+| **Limite** | 100 caracteres (con contador) |
 | **Ubicacion** | Arriba del editor, campo con borde inferior |
 
 Se carga con el valor ingresado en el dialogo de creacion. Se puede modificar libremente.
