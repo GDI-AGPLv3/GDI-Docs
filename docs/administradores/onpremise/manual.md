@@ -430,13 +430,17 @@ Definí un alias para no equivocarte de archivos (con R2, sin el último `-f`):
 
 ```bash
 cd /opt/gdi
-alias gdi='docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml'
+gdi() { ( cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml "$@" ); }
 gdi up -d
 ```
 
 La primera vez tarda unos minutos (baja las imágenes). En el resto del manual, **`gdi up -d`**
-es este comando. El alias dura lo que la sesión SSH: para dejarlo fijo,
-`echo "alias gdi='cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml'" >> ~/.bashrc`.
+es este comando. La función dura lo que la sesión SSH: para dejarla fija, copiá esa misma línea
+`gdi() { … }` a `~/.bashrc`. Corre siempre en `/opt/gdi` sin cambiarte de carpeta.
+
+> ⚠️ **`gdi` no existe fuera de tu sesión.** En un `cron`, en un script o con `sudo` hay que
+> escribir el comando completo (`docker compose -f … -f … -f …`): es lo que pasa con el backup
+> automático del [paso 13](#13-backups).
 
 **CHECK** (1 o 2 minutos después):
 
@@ -662,7 +666,7 @@ Un servidor perdido se recupera con **cinco** cosas:
 cd /opt/gdi && mkdir -p backups && FECHA=$(date +%F)
 gdi exec -T postgres pg_dump -U postgres railway -Fc > backups/gdi-$FECHA.dump
 docker run --rm -v gdi_minio_data:/data -v /opt/gdi/backups:/backup alpine tar czf /backup/minio-$FECHA.tar.gz -C /data .
-tar czf backups/config-$FECHA.tar.gz .env license/ npm-admin.txt
+tar czf backups/config-$FECHA.tar.gz .env license/ $( [ -f npm-admin.txt ] && echo npm-admin.txt )
 # Solo al actualizar (una vez por versión):
 gdi images | awk 'NR>1 {print $2":"$3}' | sort -u > backups/imagenes-$FECHA.txt
 docker save $(cat backups/imagenes-$FECHA.txt) | gzip > backups/imagenes-$FECHA.tar.gz
@@ -671,8 +675,17 @@ ls -lh backups/
 
 **CHECK:** ningún archivo pesa unos pocos KB. Un dump de 5 KB es un error, no un backup.
 
-**Reglas:** backup diario automático (`cron` con las tres primeras líneas), copia **fuera** del
-servidor, y al menos una restauración de prueba en otra máquina. El `.env` y el `.lic` son
+**Automatizarlo.** En `cron` **no existe** la función `gdi`: va el comando completo. Por ejemplo,
+todos los días a las 3, con un archivo por día de la semana:
+
+```cron
+0 3 * * * cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml exec -T postgres pg_dump -U postgres railway -Fc > /opt/gdi/backups/gdi-$(date +\%u).dump 2>> /opt/gdi/backups/cron.log
+```
+
+Revisá `backups/cron.log` y el tamaño de los archivos cada tanto: un backup automático que
+falla no avisa.
+
+**Reglas:** copia **fuera** del servidor, y al menos una restauración de prueba en otra máquina. El `.env` y el `.lic` son
 secretos: guardalos como contraseñas.
 
 **Restaurar:**
