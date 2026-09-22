@@ -38,7 +38,7 @@ En la parte superior se muestra:
 |-----------|-------|
 | **Tipo de campo** | Texto libre (input) |
 | **Obligatorio** | Si |
-| **Limite** | 250 caracteres |
+| **Limite** | 100 caracteres (con contador) |
 | **Ubicacion** | Arriba de la zona de carga, campo con borde inferior |
 
 Se carga con el valor ingresado en el dialogo de creacion. Se puede modificar libremente.

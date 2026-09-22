@@ -54,7 +54,7 @@ Ubicados en `models/documents/`.
 # models/documents/creation.py
 class CreateDocumentRequest(BaseModel):
     document_type_acronym: str    # "INF", "DICT", "NOTA", etc.
-    reference: str                # Asunto (max 250 chars)
+    reference: str                # Asunto (max 100 chars = VARCHAR(100) de la columna)
     recipients: Optional[RecipientsSchema] = None  # Solo para NOTA
 
 class CreateDocumentResponse(BaseModel):
