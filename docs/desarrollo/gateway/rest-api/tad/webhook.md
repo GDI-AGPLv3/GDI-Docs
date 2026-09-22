@@ -13,10 +13,9 @@ entera sin hacer polling.
 !!! info "Disponibilidad por ambiente"
     El campo `event` viene en todos los eventos y en todos los ambientes.
 
-    **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
-    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
-    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
-    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
+    **Webhooks sin links**: desde el 22/09/2026 los avisos no traen `pdf_url` ni
+    `documents[].url` en **ningun ambiente** (DEV, HML y produccion). La URL se pide con el ID,
+    como se explica abajo.
 
 !!! info "El webhook trae IDs, no links"
     Ningun evento trae la URL del PDF. Trae el **ID** del documento (y su numero oficial), y
