@@ -178,6 +178,9 @@ nav:
       - Certificados: administradores/certificados.md
       - Backups (GDI Sync): administradores/backups.md
       - LOGs del Sistema: administradores/logs.md
+      - Instalación OnPremise:
+          - administradores/onpremise/index.md
+          - Manual de instalación: administradores/onpremise/manual.md
       - Implementación GDI:
           - administradores/implementacion/index.md
           - Marco Normativo: administradores/implementacion/marco-normativo.md
