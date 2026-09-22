@@ -6,7 +6,7 @@ Este repositorio NO tiene version privada: todo lo que entra se publica en
 docs.gdilatam.com. Por eso el control corre ANTES del deploy y lo bloquea.
 
 Uso:
-    python scripts/check_publishable.py            # revisa docs/ y mkdocs.yml
+    python scripts/check_publishable.py            # revisa docs/, skills/ y mkdocs.yml
     python scripts/check_publishable.py <ruta>...  # revisa rutas puntuales
 
 Salida: 0 si esta limpio, 1 si encontro algo (con archivo:linea y que hacer).
@@ -186,7 +186,7 @@ def collect(targets):
 
 
 def main():
-    targets = sys.argv[1:] or ["docs", "mkdocs.yml", "README.md"]
+    targets = sys.argv[1:] or ["docs", "skills", "mkdocs.yml", "README.md"]
     targets = [t for t in targets if os.path.exists(t)]
     files = collect(targets)
 
