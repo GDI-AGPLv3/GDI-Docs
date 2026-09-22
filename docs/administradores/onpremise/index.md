@@ -56,8 +56,6 @@ demora suele ser lo que depende de terceros: los subdominios y la apertura de pu
   documentos, la configuración y la licencia) y recomienda una copia diaria **fuera** del servidor.
 - **Licencia:** se renueva sola mientras el contrato esté vigente. Si se amplía el contrato (más
   municipios, módulos nuevos), la instalación lo recibe sin tocar el servidor.
-- **Asistentes de IA:** los empleados pueden conectar su asistente (Claude, ChatGPT u otro) para
-  operar GDI con sus mismos permisos. Cada uno lo autoriza con su propio usuario.
 
 ## Qué hace cada parte
 
