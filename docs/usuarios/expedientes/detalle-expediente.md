@@ -85,6 +85,7 @@ La seccion colapsable **"DOCUMENTOS OFICIALES (N)"** muestra un contador con la 
 | **Referencia** | Titulo descriptivo del documento | *Creacion del expediente* |
 | **Linea de vinculacion** | `Vinculado el FECHA por USUARIO / Sector: SECTOR` | — |
 | **Resumen IA** | A veces, un resumen de una linea generado por inteligencia artificial | — |
+| **Clip de embebidos** | Icono de clip con un numero cuando el documento tiene **archivos embebidos** (adjuntos que quedaron dentro del PDF firmado). Tooltip: *"Tiene N archivos embebidos"*. Si el documento no tiene embebidos, no aparece nada | 📎 2 |
 
 Al hacer click en un documento de la lista, se muestra una **vista previa del PDF** en el panel derecho.
 
@@ -92,6 +93,31 @@ Al hacer click en un documento de la lista, se muestra una **vista previa del PD
     El documento numero 001 de todo expediente es siempre la **caratula** (tipo CAEX), generada automaticamente por el sistema al crear el expediente. Contiene los datos basicos: tipo, numero, motivo y reparticion iniciadora.
 
 El boton **"Vincular Documento"** abre el flujo de vinculacion. Ver [Vincular Documentos](vincular-documentos.md).
+
+### Archivos embebidos en documentos oficiales
+
+Cuando un documento oficial se creo con archivos adjuntos (por ejemplo, planillas, imagenes o PDFs complementarios), esos archivos quedan **embebidos dentro del PDF firmado**. Se llaman **archivos embebidos** porque viajan adentro del documento oficial, no como piezas sueltas del expediente.
+
+#### Como saber si un documento tiene embebidos
+
+En la lista de **DOCUMENTOS OFICIALES**, los documentos que tienen archivos embebidos muestran un **clip 📎 con un numero** al lado (cantidad de embebidos). Si no ves el clip, ese documento no tiene embebidos.
+
+#### Como verlos y descargarlos
+
+1. Hacer click en el documento en la lista para abrirlo en el panel derecho.
+2. Arriba del visor del PDF aparece una barra **"📎 Archivos embebidos (N)"**.
+3. Desplegar la barra para ver la lista de adjuntos. Por cada archivo tenes:
+
+    - **Ver** (icono de ojo): abre el archivo en una nueva pestana del navegador. Disponible solo para formatos que el navegador puede mostrar: **PDF, PNG, JPG, JPEG, GIF, WEBP y TXT**.
+    - **Descargar** (icono de flecha): baja el archivo a tu computadora. Siempre disponible, para cualquier extension.
+
+!!! info "Son de solo lectura"
+    Los archivos embebidos quedaron dentro del PDF cuando el documento se oficializo. Se pueden **ver y descargar**, pero **no se editan ni se agregan nuevos**: forman parte del documento firmado y cambiarlos romperia la firma. Si necesitas incorporar informacion adicional, lo correcto es vincular un documento nuevo al expediente.
+
+!!! note "Si el documento no tiene embebidos"
+    La barra "📎 Archivos embebidos" no aparece. Directamente se muestra el visor del PDF.
+
+---
 
 ### Documentos propuestos
 
@@ -174,6 +200,12 @@ La opcion **"Descargar"** del menu Acciones genera y descarga un archivo `.zip` 
 
 ??? question "Que es la estrella junto al boton Acciones?"
     Es el boton de **favorito**. Al hacer click, marca el expediente como favorito (estrella amarilla) o lo desmarca. Los expedientes marcados como favoritos aparecen en la solapa "Favoritos" del listado de expedientes.
+
+??? question "Que es el clip 📎 con un numero al lado de un documento?"
+    Indica que ese documento oficial tiene **archivos embebidos** (adjuntos que quedaron dentro del PDF firmado). El numero es la cantidad. Al abrir el documento, arriba del visor aparece la barra **"📎 Archivos embebidos (N)"** con los botones **Ver** y **Descargar** por archivo. Ver [Archivos embebidos en documentos oficiales](#archivos-embebidos-en-documentos-oficiales).
+
+??? question "Puedo agregar o cambiar los archivos embebidos de un documento oficial?"
+    No. Los embebidos son de **solo lectura**: viajan dentro del PDF firmado y se ven y descargan, pero no se editan ni se suman nuevos. Si necesitas incorporar mas informacion, vincula un documento nuevo al expediente.
 
 ??? question "El ZIP incluye todos los documentos del expediente?"
     Incluye todos los documentos **oficiales** activos. No incluye documentos en estado de propuesta de vinculacion ni documentos que hayan sido subsanados (reemplazados por otro documento).
