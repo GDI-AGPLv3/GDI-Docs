@@ -11,13 +11,16 @@ Por ejemplo:
 - *"¿Quién cambió el organigrama la semana pasada?"*
 - *"Habilitá el tipo de documento Acta para Legales y que solo lo firmen Directores."*
 
-No hace falta instalar nada. Le pegás a Claude un **prompt de arranque** corto, que le pide
-dos cosas antes de empezar: bajar de este sitio la **referencia completa** del BackOffice (las
-reglas de cuidado y todos los endpoints) y trabajar según esa referencia. Como la referencia se
-baja en cada conversación, Claude siempre trabaja con la versión vigente.
+Para eso GDI publica una **skill**: las instrucciones que le enseñan a Claude cómo funciona el
+BackOffice, qué reglas de cuidado seguir y cómo resolver las tareas más comunes. No hace falta
+instalarla: **la descargás como texto y se la pegás a Claude** al empezar la conversación.
 
-[:material-download: Descargar el prompt (.txt)](../descargas/gdi-backoffice-admin-prompt.txt){ .md-button .md-button--primary }
-[:material-file-document-outline: Referencia completa (.txt)](../descargas/gdi-backoffice-admin-referencia.txt){ .md-button }
+Lo primero que la skill le pide a Claude es bajar de este sitio la **referencia de endpoints**
+vigente. Así, aunque la skill la hayas descargado hace meses, Claude siempre trabaja con la lista
+de endpoints actual.
+
+[:material-download: Descargar la skill (.txt)](../descargas/gdi-backoffice-admin-prompt.txt){ .md-button .md-button--primary }
+[:material-file-document-outline: Referencia de endpoints (.txt)](../descargas/gdi-backoffice-admin-referencia.txt){ .md-button }
 [:material-book-open-variant: Ver los endpoints](operar-por-api-referencia.md){ .md-button }
 
 !!! warning "Todo lo que haga la IA queda a tu nombre"
@@ -33,7 +36,7 @@ baja en cada conversación, Claude siempre trabaja con la versión vigente.
 | Requisito | Detalle |
 |---|---|
 | **Rol Administrador** en el BackOffice | Solo un administrador puede operar la API |
-| **Claude con acceso a internet** | Claude Code, Claude Desktop o claude.ai: tiene que poder bajar la referencia de este sitio y llamar a la API (ver [paso 3](#paso-3-pasarle-el-prompt-a-claude)) |
+| **Claude con acceso a internet** | Claude Code, Claude Desktop o claude.ai: tiene que poder bajar la referencia de este sitio y llamar a la API (ver [paso 3](#paso-3-pasarle-la-skill-a-claude)) |
 | **Una API Key** | La creás vos mismo en el BackOffice ([paso 1](#paso-1-crear-la-api-key)) |
 | **Los datos de conexión** | URL, identificador del municipio y tu ID de usuario ([paso 2](#paso-2-pedir-los-datos-de-conexion)) |
 
@@ -70,18 +73,20 @@ Además de la key, Claude necesita tres datos que hoy entrega GDI. Pedilos a
 | `GDI_BO_USER_ID` | Tu ID de usuario (UUID) | `550e8400-e29b-41d4-a716-446655440000` |
 | `GDI_BO_API_KEY` | La key del paso 1 | `sk-gdi-…` |
 
-## Paso 3: pasarle el prompt a Claude
+## Paso 3: pasarle la skill a Claude
 
-1. Copiá el prompt de abajo (botón de copiar, arriba a la derecha) o
-   [descargalo como .txt](../descargas/gdi-backoffice-admin-prompt.txt).
-2. Completá los tres `<completar>` con tus datos de conexión (paso 2).
-3. Pegalo al **empezar cada conversación** con Claude. Lo primero que va a hacer es bajar la
-   referencia completa de `docs.gdilatam.com` y leerla; después prueba la conexión y espera tu
-   pedido.
+1. [Descargá la skill como .txt](../descargas/gdi-backoffice-admin-prompt.txt) o copiala del
+   recuadro de abajo (botón de copiar, arriba a la derecha).
+2. Arriba de todo, completá los tres `<completar>` con tus datos de conexión (paso 2).
+3. Pegala al **empezar cada conversación** con Claude. Lo primero que va a hacer es bajar la
+   referencia de endpoints de `docs.gdilatam.com` y leerla; después prueba la conexión y espera
+   tu pedido.
 
-```text
---8<-- "docs/descargas/gdi-backoffice-admin-prompt.txt"
-```
+??? example "Ver la skill completa para copiar"
+
+    ```text
+    --8<-- "docs/descargas/gdi-backoffice-admin-prompt.txt"
+    ```
 
 !!! info "Acceso a internet"
     Claude tiene que poder salir a internet a **dos** lugares: `docs.gdilatam.com`, para bajar
@@ -104,9 +109,9 @@ Además de la key, Claude necesita tres datos que hoy entrega GDI. Pedilos a
       conversación si la compartís.
 
 !!! tip "Si Claude no puede bajar la referencia"
-    El prompt le pide que te avise y no siga. En ese caso, descargá vos la
-    [referencia completa (.txt)](../descargas/gdi-backoffice-admin-referencia.txt) y adjuntásela
-    en la conversación junto con el prompt.
+    La skill le pide que te avise y no siga. En ese caso, descargá vos la
+    [referencia de endpoints (.txt)](../descargas/gdi-backoffice-admin-referencia.txt) y adjuntásela
+    en la conversación junto con la skill.
 
 ## Paso 4: probar
 
@@ -141,10 +146,10 @@ hacerlo desde la pantalla: llevan archivos y contraseñas.
 
 ## Opcional: instalarla como skill
 
-Si usás Claude todos los días y no querés pegar el prompt en cada conversación, podés
-instalar el mismo contenido como **skill**. Claude la carga sola cuando le pedís algo del
-BackOffice. La contra es que queda fija la versión que bajaste: cuando GDI actualice la
-referencia, hay que volver a descargarla.
+Si usás Claude todos los días y no querés pegar la skill en cada conversación, podés
+**instalarla**: es el mismo contenido, y Claude la carga sola cuando le pedís algo del
+BackOffice. La referencia de endpoints la sigue bajando actualizada en cada uso; solo las
+instrucciones quedan en la versión que instalaste, así que conviene reinstalarla cada tanto.
 
 [:material-download: Descargar la skill (ZIP)](../descargas/gdi-backoffice-admin.zip){ .md-button }
 

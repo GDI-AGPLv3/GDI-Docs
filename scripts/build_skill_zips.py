@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Empaqueta cada skill de `skills/` en un ZIP y en una referencia .txt descargables.
+"""Arma las descargas de cada skill de `skills/`: ZIP, prompt y referencia.
 
-Fuente unica: `skills/<nombre>/` (SKILL.md + archivos de apoyo). El ZIP se genera
-en el deploy y NO se versiona, asi nunca queda uno viejo publicado.
+Fuente unica: `skills/<nombre>/` (SKILL.md + archivos de apoyo). Todo se genera
+en el deploy y NO se versiona, asi nunca queda una descarga vieja publicada.
 
-Formato: el ZIP contiene la carpeta `<nombre>/` con el SKILL.md adentro, que es
-lo que pide claude.ai para subir una skill y lo que Claude Code espera en
-`~/.claude/skills/`.
+Escribe en docs/descargas/:
+- `<nombre>.zip`: la carpeta `<nombre>/` con el SKILL.md adentro, que es lo que
+  pide claude.ai para subir una skill y lo que Claude Code espera en
+  `~/.claude/skills/`.
+- `<nombre>-prompt.txt`: la MISMA skill (el SKILL.md sin su cabecera) con los
+  datos de conexion arriba, para pegarla en una conversacion sin instalar nada.
+  El prompt ES la skill: no hay un texto aparte que se pueda desfasar.
+- `<nombre>-referencia.txt`: los archivos de apoyo (la referencia de endpoints)
+  en texto plano. El paso 0 del SKILL.md le pide al agente bajarla de aca, asi
+  trabaja siempre con la version vigente.
 
 Uso:
     python scripts/build_skill_zips.py
-
-Ademas arma `<nombre>-referencia.txt`: el SKILL.md y sus archivos de apoyo en
-un solo texto plano. Es lo que baja el agente cuando el administrador le pega el
-prompt de arranque (`docs/descargas/<nombre>-prompt.txt`): con un archivo y una
-URL alcanza, no hace falta instalar la skill. Se genera en el deploy por lo
-mismo que el ZIP: asi nunca queda una referencia vieja publicada.
-
-Escribe: docs/descargas/<nombre>.zip y docs/descargas/<nombre>-referencia.txt
 """
 import os
 import sys
@@ -29,17 +28,36 @@ OUT = os.path.join("docs", "descargas")
 # Fecha fija: el mismo contenido produce el mismo ZIP byte a byte.
 FIXED_DATE = (2026, 1, 1, 0, 0, 0)
 
+CABECERA_PROMPT = """\
+Esta es la skill "{name}" de GDI. Seguí estas instrucciones durante toda la conversación.
+
+DATOS DE CONEXIÓN (completar antes de pegar)
+- GDI_BO_URL (URL de la API): <completar>
+- GDI_BO_SCHEMA (identificador del municipio): <completar>
+- GDI_BO_USER_ID (mi usuario, UUID): <completar>
+- GDI_BO_API_KEY: la tenés en la variable de entorno GDI_BO_API_KEY o te la paso aparte. Nunca la muestres ni la escribas en archivos.
+
+Empezá por el paso 0 (bajar la referencia de endpoints), después probá la conexión y esperá mi pedido.
+"""
+
 
 def build(name):
     base = os.path.join(SRC, name)
-    if not os.path.isfile(os.path.join(base, "SKILL.md")):
+    skill = os.path.join(base, "SKILL.md")
+    if not os.path.isfile(skill):
         sys.exit("%s no tiene SKILL.md" % base)
-    target = os.path.join(OUT, name + ".zip")
     files = []
     for root, dirs, names in os.walk(base):
         dirs.sort()
         for n in sorted(names):
             files.append(os.path.join(root, n))
+    build_zip(name, files)
+    build_prompt(name, skill)
+    build_referencia(name, base, [f for f in files if f != skill])
+
+
+def build_zip(name, files):
+    target = os.path.join(OUT, name + ".zip")
     with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as z:
         for path in files:
             arc = os.path.relpath(path, SRC).replace(os.sep, "/")
@@ -48,29 +66,47 @@ def build(name):
             with open(path, "rb") as f:
                 z.writestr(info, f.read())
     print("OK: %s (%d archivos)" % (target, len(files)))
-    build_referencia(name, base, files)
 
 
-def build_referencia(name, base, files):
-    """Todo el contenido de la skill en un .txt: SKILL.md primero, despues el resto."""
-    skill = os.path.join(base, "SKILL.md")
-    resto = [f for f in files if f != skill]
+def _sin_cabecera(texto):
+    """Saca el bloque `---` del principio: es metadata de la skill, no instrucciones."""
+    if texto.startswith("---"):
+        fin = texto.find("\n---", 3)
+        if fin != -1:
+            return texto[fin + 4:].lstrip("\n")
+    return texto
+
+
+def _escribir(target, texto):
+    with open(target, "w", encoding="utf-8", newline="\n") as f:
+        f.write(texto)
+
+
+def build_prompt(name, skill):
+    with open(skill, encoding="utf-8") as f:
+        cuerpo = _sin_cabecera(f.read()).strip()
+    target = os.path.join(OUT, name + "-prompt.txt")
+    _escribir(target, CABECERA_PROMPT.format(name=name) + "\n" + "=" * 78 + "\n\n" + cuerpo + "\n")
+    print("OK: %s" % target)
+
+
+def build_referencia(name, base, apoyo):
+    if not apoyo:
+        return
     partes = [
-        "REFERENCIA COMPLETA: %s\n"
+        "REFERENCIA DE ENDPOINTS: %s\n"
         "Fuente: https://docs.gdilatam.com (se regenera en cada publicacion).\n"
-        "Contiene las instrucciones (SKILL.md) y, a continuacion, sus archivos de apoyo.\n"
-        "Donde las instrucciones remiten a otro archivo (por ejemplo reference/endpoints.md),\n"
-        "ese archivo esta MAS ABAJO en este mismo texto." % name
+        "Es la lista completa y vigente de endpoints de la API: si un endpoint o un campo\n"
+        "no esta aca, no existe." % name
     ]
-    for path in [skill] + resto:
+    for path in apoyo:
         with open(path, encoding="utf-8") as f:
             texto = f.read().strip()
         rel = os.path.relpath(path, base).replace(os.sep, "/")
         partes.append("=" * 78 + "\nARCHIVO: %s\n" % rel + "=" * 78 + "\n\n" + texto)
     target = os.path.join(OUT, name + "-referencia.txt")
-    with open(target, "w", encoding="utf-8", newline="\n") as f:
-        f.write("\n\n".join(partes) + "\n")
-    print("OK: %s (%d archivos)" % (target, 1 + len(resto)))
+    _escribir(target, "\n\n".join(partes) + "\n")
+    print("OK: %s (%d archivos)" % (target, len(apoyo)))
 
 
 def main():
