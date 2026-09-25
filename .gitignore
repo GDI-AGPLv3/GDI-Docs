@@ -9,3 +9,5 @@ __pycache__/
 
 # ZIPs de skills: se generan en el deploy (scripts/build_skill_zips.py)
 docs/descargas/*.zip
+# La referencia en texto plano, tambien generada en el deploy
+docs/descargas/*-referencia.txt
