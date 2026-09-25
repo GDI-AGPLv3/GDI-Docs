@@ -86,7 +86,7 @@ proveedor soportado hoy (Keycloak dentro del compose está planificado: card GDI
 | Sistema | Ubuntu 22.04 o 24.04 (probado en 24.04). Windows solo con WSL2, sin soporte |
 | CPU | 4 vCPU |
 | RAM | 8 GB recomendado · 4 GB mínimo (medido: ~2,1 GB en uso con los 16 contenedores) |
-| Disco | 80 GB (crece con los documentos si usás MinIO local) |
+| Disco | 80 GB (crece con los documentos si usás el almacenamiento local) |
 | IP | pública y fija |
 | Puertos de entrada | **80 y 443 abiertos a internet** (Let's Encrypt valida por el 80; la gente entra por el 443) · 22 para administrar |
 | Acceso | SSH con un usuario con `sudo` |
@@ -105,7 +105,7 @@ Todos tipo **A**, apuntando a `<IP>`, cargados **antes** del paso 8:
 | `admin-api.<BASE>` | API del BackOffice |
 | `mcp.<BASE>` | conexión de asistentes de IA (MCP) |
 | `panel.<BASE>` | Panel: crear y activar municipios |
-| `storage.<BASE>` | documentos (MinIO). **Solo con MinIO local**; con Cloudflare R2 son 6 |
+| `storage.<BASE>` | documentos (almacenamiento local). **Solo con almacenamiento local**; con Cloudflare R2 son 6 |
 
 **CHECK** (desde cualquier máquina): `dig +short gdi.<BASE>` y los otros seis devuelven `<IP>`.
 
@@ -114,7 +114,7 @@ Todos tipo **A**, apuntando a `<IP>`, cargados **antes** del paso 8:
 | Destino | Para qué | Cuándo |
 |---|---|---|
 | `ghcr.io` y `pkg-containers.githubusercontent.com` | instalador e imágenes de GDI | al instalar y actualizar |
-| `registry-1.docker.io`, `quay.io` | proxy, Redis y MinIO | al instalar y actualizar |
+| `registry-1.docker.io` | proxy y Redis | al instalar y actualizar |
 | `download.docker.com`, `get.docker.com` | instalar Docker | una vez |
 | `license.gdilatam.com` | activar y **renovar** la licencia (cada semana) | **siempre** |
 | `acronimos.gdilatam.com` | registro central de siglas (no puede haber dos municipios con la misma) | al crear municipios |
@@ -173,7 +173,7 @@ cd /opt/gdi && ls
 ```
 
 **CHECK:** en `/opt/gdi` están `docker-compose.yml`, `docker-compose.premium.yml`,
-`docker-compose.minio.yml`, `.env.example`, `scripts/` y `docs/`, y
+`docker-compose.storage.yml`, `.env.example`, `scripts/` y `docs/`, y
 `grep ^IMAGE_VERSION= .env.example` dice `<VERSION>`.
 
 - No apareció `Login Succeeded` → token mal copiado o vencido: [14](#14-problemas).
@@ -326,10 +326,11 @@ chmod 600 .env
 sudo ./scripts/generar-claves.sh
 ```
 
-`generar-claves.sh` genera las claves internas y las contraseñas de la base y de MinIO, y deja la
-carpeta `license/` con el dueño correcto (uid 999). Se puede correr de nuevo sin riesgo: lo que
-ya tiene valor y no se puede cambiar (`CERT_MASTER_KEY`, `DB_PASSWORD`, contraseñas de MinIO)
-no lo toca.
+`generar-claves.sh` genera las claves internas, la contraseña de la base y las **dos cuentas del
+almacenamiento** (la administradora, que solo se usa al arrancar, y la de la aplicación, que solo
+ve sus propios buckets), y deja la carpeta `license/` con el dueño correcto (uid 999). Se puede
+correr de nuevo sin riesgo: lo que ya tiene valor y no se puede cambiar (`CERT_MASTER_KEY`,
+`DB_PASSWORD`, claves del almacenamiento) no lo toca.
 
 > ⚠️ **`CERT_MASTER_KEY` no se cambia ni se pierde nunca.** Cifra los certificados de firma: sin
 > la original, los certificados cargados no se pueden volver a usar. Viaja en el backup (paso 13).
@@ -360,8 +361,8 @@ BACKOFFICE_API_URL=https://admin-api.<BASE>
 GATEWAY_URL=https://mcp.<BASE>
 PANEL_URL=https://panel.<BASE>
 
-# Almacenamiento con MinIO local
-CF_R2_ENDPOINT=https://storage.<BASE>         # el dominio PÚBLICO, nunca http://minio:9000
+# Almacenamiento local (las claves ya las puso generar-claves.sh; S3_REGION=us-east-1 ya viene)
+CF_R2_ENDPOINT=https://storage.<BASE>         # el dominio PÚBLICO, nunca http://storage:7070
 STORAGE_DOMAIN=storage.<BASE>                 # el mismo host, sin https://
 CF_R2_AVATARS_PUBLIC_URL=https://api.<BASE>/avatars
 CF_R2_PUBLIC_URL=https://storage.<BASE>/gdi-assets
@@ -390,8 +391,9 @@ sin eso, con muchos routers el sistema no puede guardar ni un PDF. **No borres
   `SMTP_USER`, `SMTP_PASSWORD` 🔐 y `FROM_EMAIL=Municipio <noreply@<BASE>>`.
 - Resend: `RESEND_API_KEY` 🔐 y `FROM_EMAIL`. Si están las dos, manda por Resend.
 
-**Cloudflare R2 en lugar de MinIO:** usá el bloque "Opción B" del `.env.example`, sin
-`STORAGE_DOMAIN`, y en los pasos 7 y 8 sacá `docker-compose.minio.yml` y el host `storage.`.
+**Cloudflare R2 en lugar del almacenamiento local:** usá el bloque "Opción B" del `.env.example`,
+sin `STORAGE_DOMAIN` ni `S3_REGION`, y en los pasos 7 y 8 sacá `docker-compose.storage.yml` y el
+host `storage.`.
 
 **CHECK:**
 
@@ -430,7 +432,7 @@ Definí un alias para no equivocarte de archivos (con R2, sin el último `-f`):
 
 ```bash
 cd /opt/gdi
-gdi() { ( cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml "$@" ); }
+gdi() { ( cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.storage.yml "$@" ); }
 gdi up -d
 ```
 
@@ -447,8 +449,13 @@ es este comando. La función dura lo que la sesión SSH: para dejarla fija, copi
 ```bash
 gdi ps -a --format '{{.Service}}\t{{.Status}}'
 ```
-- `migrator` y `minio-init` → **Exited (0)**. Cualquier otro código → [14](#14-problemas).
-- `postgres`, `redis`, `minio`, `backend`, `gateway` y `panel-front` → `healthy`.
+- `migrator`, `storage-users` y `storage-init` → **Exited (0)**. Cualquier otro código → [14](#14-problemas).
+- `postgres`, `redis`, `storage`, `backend`, `gateway` y `panel-front` → `healthy`.
+
+```bash
+gdi logs storage-init | tail -1
+```
+- Tiene que decir `[OK] buckets listos: gdi-avatars, gdi-assets (lectura publica), gdi-certificates (privado)`.
 - El resto → `Up`. Ninguno en `Restarting`.
 
 ```bash
@@ -492,7 +499,7 @@ prefiere hacerlo a mano: túnel `ssh -L 8181:localhost:81 usuario@<IP>`, abrir
 ```bash
 cd /opt/gdi
 set -a; . ./npm-admin.txt; set +a
-./scripts/configurar-proxy.sh                   # con R2: SIN_MINIO=1 ./scripts/configurar-proxy.sh
+./scripts/configurar-proxy.sh                   # con R2: SIN_STORAGE=1 ./scripts/configurar-proxy.sh
 ```
 
 El script crea cada host con su destino, los buffers que necesita el login de Auth0 (sin ellos
@@ -508,7 +515,7 @@ host ya tiene certificado, no pide otro.
 
 ```bash
 for u in gdi.<BASE> api.<BASE>/health admin.<BASE> admin-api.<BASE>/health \
-         mcp.<BASE>/health panel.<BASE> storage.<BASE>/minio/health/live; do
+         mcp.<BASE>/health panel.<BASE> storage.<BASE>/health; do
   printf '%-45s %s\n' "$u" "$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://$u)"
 done
 # → 200 en los 7
@@ -564,8 +571,9 @@ gdi exec -T postgres psql -U postgres railway -At -c \
 gdi exec -T postgres psql -U postgres railway -At -c \
   "select count(*) from information_schema.tables where table_schema='<schema>'"
 # → 46
-gdi exec -T minio sh -c 'ls /data'
-# → 4 buckets por instancia: gdi-<sigla>-oficial, -tosign, -preoficial y -publico
+gdi exec -T storage ls /srv/data
+# → gdi-avatars, gdi-assets, gdi-certificates y 4 buckets por instancia:
+#   gdi-<sigla>-oficial, -tosign, -preoficial y -publico
 ```
 
 Si el Panel abre pero la lista sale vacía → `SUPERADMIN_KEY` sin valor: [14](#14-problemas).
@@ -652,12 +660,19 @@ primero deja la base migrada contra código viejo: no es volver atrás, es otro 
 
 ## 13. Backups
 
+> **Los backups son del municipio y van FUERA de este servidor.** Una copia en el mismo disco no
+> protege de nada: si se rompe el disco o se pierde la máquina, se pierde con ella. GDI no trae un
+> backup automático a propósito: el destino (un NAS, un disco externo, otro servidor, un
+> almacenamiento en la nube) y la frecuencia los decide el municipio con su herramienta.
+> La guía [Copias de seguridad del servidor propio](backups.md) trae un ejemplo completo,
+> incremental y cifrado, con su restauración.
+
 Un servidor perdido se recupera con **cinco** cosas:
 
 | Qué | Dónde | Sin esto… |
 |---|---|---|
 | Base de datos | volumen `gdi_postgres_data` | no hay nada |
-| Documentos (solo MinIO) | volumen `gdi_minio_data` | la base apunta a archivos que no existen |
+| Documentos (solo almacenamiento local) | volumen `gdi_storage_data` | la base apunta a archivos que no existen |
 | `.env` | `/opt/gdi/.env` | no levanta: claves, Auth0, `CERT_MASTER_KEY` |
 | Licencia | `/opt/gdi/license/` | arranca sin BackOffice ni IA hasta reactivar |
 | Imágenes | el registro, o una copia local | si el token no está activo, no se puede reinstalar |
@@ -665,7 +680,7 @@ Un servidor perdido se recupera con **cinco** cosas:
 ```bash
 cd /opt/gdi && mkdir -p backups && FECHA=$(date +%F)
 gdi exec -T postgres pg_dump -U postgres railway -Fc > backups/gdi-$FECHA.dump
-docker run --rm -v gdi_minio_data:/data -v /opt/gdi/backups:/backup alpine tar czf /backup/minio-$FECHA.tar.gz -C /data .
+docker run --rm -v gdi_storage_data:/srv -v /opt/gdi/backups:/backup alpine tar czf /backup/documentos-$FECHA.tar.gz -C /srv .
 tar czf backups/config-$FECHA.tar.gz .env license/ $( [ -f npm-admin.txt ] && echo npm-admin.txt )
 # Solo al actualizar (una vez por versión):
 gdi images | awk 'NR>1 {print $2":"$3}' | sort -u > backups/imagenes-$FECHA.txt
@@ -673,20 +688,20 @@ docker save $(cat backups/imagenes-$FECHA.txt) | gzip > backups/imagenes-$FECHA.
 ls -lh backups/
 ```
 
+Esta es la copia **puntual**, la que se hace antes de actualizar (paso 12). Deja los archivos en
+`/opt/gdi/backups/` solo de paso: **copialos fuera del servidor** y borralos de acá.
+
 **CHECK:** ningún archivo pesa unos pocos KB. Un dump de 5 KB es un error, no un backup.
 
-**Automatizarlo.** En `cron` **no existe** la función `gdi`: va el comando completo. Por ejemplo,
-todos los días a las 3, con un archivo por día de la semana:
+Los documentos son archivos comunes (`data/<bucket>/<ruta>`) y sus datos (tipo de archivo, dueño,
+lectura pública) van al lado en `meta/`: un `tar` común alcanza, no hacen falta opciones especiales.
 
-```cron
-0 3 * * * cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.minio.yml exec -T postgres pg_dump -U postgres railway -Fc > /opt/gdi/backups/gdi-$(date +\%u).dump 2>> /opt/gdi/backups/cron.log
-```
+**Automatizarlo** (base + documentos + configuración, todos los días, hacia el destino del
+municipio): ver la [guía de copias de seguridad](backups.md). Si se arma con `cron`, ahí
+**no existe** la función `gdi`: va el comando completo.
 
-Revisá `backups/cron.log` y el tamaño de los archivos cada tanto: un backup automático que
-falla no avisa.
-
-**Reglas:** copia **fuera** del servidor, y al menos una restauración de prueba en otra máquina. El `.env` y el `.lic` son
-secretos: guardalos como contraseñas.
+**Reglas:** siempre **fuera** del servidor, y al menos una restauración de prueba en otra máquina.
+El `.env` y el `.lic` son secretos: guardalos como contraseñas.
 
 **Restaurar:**
 
@@ -696,7 +711,7 @@ gunzip -c backups/imagenes-AAAA-MM-DD.tar.gz | docker load        # si no hay ac
 tar xzf backups/config-AAAA-MM-DD.tar.gz
 gdi up -d postgres
 gdi exec -T postgres pg_restore -U postgres -d railway --clean --if-exists < backups/gdi-AAAA-MM-DD.dump
-docker run --rm -v gdi_minio_data:/data -v /opt/gdi/backups:/backup alpine tar xzf /backup/minio-AAAA-MM-DD.tar.gz -C /data
+docker run --rm -v gdi_storage_data:/srv -v /opt/gdi/backups:/backup alpine tar xzf /backup/documentos-AAAA-MM-DD.tar.gz -C /srv
 sudo chown -R 999:999 license && sudo chmod 644 license/*.lic
 gdi up -d
 ```
@@ -765,14 +780,16 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 
 | Síntoma | Causa | Qué hacer |
 |---|---|---|
-| `NoSuchBucket` al subir un documento | los buckets no se crearon, o falta `S3_FORCE_PATH_STYLE=true` | `gdi logs minio-init`; revisar el `.env` |
+| `NoSuchBucket` al subir un documento | los buckets no se crearon, o falta `S3_FORCE_PATH_STYLE=true` | `gdi logs storage-init`; revisar el `.env` |
+| `AuthorizationHeaderMalformed` o `IncorrectRegion` en los logs del backend | falta `S3_REGION=us-east-1` en el `.env` (el almacenamiento local no acepta la región `auto`) | agregarla y `gdi up -d` |
+| `storage-users` o `storage-init` terminan con error | las claves `STORAGE_ROOT_*` o `CF_R2_*` cambiaron después del primer arranque, o siguen en `CAMBIAR` | `gdi logs storage-users storage-init`; no rotarlas a mano: correr `scripts/generar-claves.sh` solo en una instalación nueva |
 | La URL de un documento tiene el bucket como subdominio (`https://gdi-oficial.storage.<BASE>/…`) | falta `S3_FORCE_PATH_STYLE=true` | agregarlo y `gdi up -d` |
-| `SignatureDoesNotMatch` / `AccessDenied` al abrir un PDF | `CF_R2_ENDPOINT` apunta a `minio:9000` | `CF_R2_ENDPOINT=https://storage.<BASE>` y `gdi up -d` |
+| `SignatureDoesNotMatch` / `AccessDenied` al abrir un PDF | `CF_R2_ENDPOINT` apunta a `storage:7070` (el nombre interno) | `CF_R2_ENDPOINT=https://storage.<BASE>` y `gdi up -d` |
 | Los documentos no cargan nunca | `STORAGE_DOMAIN` falta o no coincide | `gdi exec backend getent hosts storage.<BASE>` tiene que dar una IP interna; corregir y `gdi up -d` |
 | Documento firmado, pero la API da 500 "No se pudo generar URL" o el portal TAD da 404 | al `gateway` le faltan las variables `CF_R2_*` | `gdi exec gateway env \| grep CF_R2` → tienen que salir tres; si no, el instalador está desactualizado |
 | Ningún documento se firma y `gdi logs notary` dice `host no permitido` | `STORAGE_DOMAIN` desalineado con `CF_R2_ENDPOINT` | alinearlos y `gdi up -d` |
 | Un tipo de documento nuevo tarda en aparecer | caché sin Redis | `gdi ps redis` → `healthy` |
-| Después de firmar, "Ver Documento" muestra el documento como pendiente y el visor dice "No se pudo abrir" (versión 2026.09.9) | la pantalla muestra un estado viejo; el documento **sí** quedó firmado | salir y volver a entrar al documento. Se corrige en una próxima versión |
+| Después de firmar, "Ver Documento" muestra el documento como pendiente y el visor dice "No se pudo abrir" (versión 2026.09.9) | la pantalla muestra un estado viejo; el documento **sí** quedó firmado | salir y volver a entrar al documento. Corregido en `2026.09.10`: actualizar |
 
 ---
 
