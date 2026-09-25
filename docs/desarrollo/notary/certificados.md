@@ -68,7 +68,7 @@ cualquier `search_path`), un registro por tenant (`ON CONFLICT (tenant_id) DO UP
 | `CERT_R2_BUCKET` | BackOffice-Back + Backend | Bucket de certificados (default `gdi-certificates`) |
 | `CF_R2_ENDPOINT` | BackOffice-Back + Backend | Endpoint S3 de R2 |
 | `CF_R2_ACCESS_KEY_ID` / `CF_R2_SECRET_ACCESS_KEY` | BackOffice-Back + Backend | Credenciales R2 |
-| `S3_FORCE_PATH_STYLE` | Backend | `true` para MinIO (on-premise). R2 usa virtual-hosted |
+| `S3_FORCE_PATH_STYLE` | Backend | `true` para el almacenamiento local (on-premise). R2 usa virtual-hosted |
 | `FALLBACK_TO_VISUAL` | Notary | `false` en PRD: sin certificado, la firma falla en vez de degradar a visual |
 
 ## Endpoints de administracion (BackOffice-Back)
