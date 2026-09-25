@@ -52,8 +52,10 @@ demora suele ser lo que depende de terceros: los subdominios y la apertura de pu
 
 - **Actualizaciones:** GDI Latam avisa por mail cuando hay versión nueva. **Nada se actualiza
   solo**: el municipio elige el día y la hora, siempre con un backup hecho antes.
-- **Backups:** son responsabilidad del municipio. El manual indica qué copiar (la base, los
-  documentos, la configuración y la licencia) y recomienda una copia diaria **fuera** del servidor.
+- **Backups:** son responsabilidad del municipio y van **fuera** del servidor: una copia en el
+  mismo disco no protege de nada. El manual indica qué copiar (la base, los documentos, la
+  configuración y la licencia); dónde guardarlo y cada cuánto lo decide el municipio, con
+  la [guía de copias de seguridad](backups.md) como ejemplo.
 - **Licencia:** se renueva sola mientras el contrato esté vigente. Si se amplía el contrato (más
   municipios, módulos nuevos), la instalación lo recibe sin tocar el servidor.
 

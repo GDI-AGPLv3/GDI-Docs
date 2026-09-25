@@ -181,6 +181,7 @@ nav:
       - Instalación OnPremise:
           - administradores/onpremise/index.md
           - Manual de instalación: administradores/onpremise/manual.md
+          - Copias de seguridad: administradores/onpremise/backups.md
       - Implementación GDI:
           - administradores/implementacion/index.md
           - Marco Normativo: administradores/implementacion/marco-normativo.md
