@@ -113,8 +113,15 @@ $COMPOSE exec -T postgres pg_dump -U postgres railway -Fc > "$DUMP"
 $COMPOSE exec -T postgres pg_restore -l < "$DUMP" > /dev/null
 restic backup "$DUMP" --tag base
 
-# 2. Documentos (el volumen completo: datos, metadatos y cuentas del almacenamiento)
+# 2. Documentos (el volumen completo: datos, metadatos y cuentas del almacenamiento).
+#    Con el almacenamiento DETENIDO unos segundos: cada documento se guarda en dos partes
+#    (data/ y meta/) y uno que entre justo durante la copia podría quedar a medias.
+#    Va DESPUÉS de la base: todo lo que la base nombra ya está en la copia.
+$COMPOSE stop storage
+trap '$COMPOSE start storage; rm -f "$DUMP"' EXIT
 restic backup /var/lib/docker/volumes/gdi_storage_data/_data --tag documentos
+$COMPOSE start storage
+trap 'rm -f "$DUMP"' EXIT
 
 # 3. Configuración y licencia
 restic backup /opt/gdi/.env /opt/gdi/license $( [ -f /opt/gdi/npm-admin.txt ] && echo /opt/gdi/npm-admin.txt ) --tag config
@@ -129,6 +136,10 @@ echo "$(date -Is) copia OK"
 sudo chmod 700 /usr/local/sbin/gdi-backup.sh
 sudo /usr/local/sbin/gdi-backup.sh          # la primera corrida copia todo y tarda más
 ```
+
+La primera corrida copia todos los documentos, y mientras tanto no se pueden abrir ni subir
+documentos: hacela fuera del horario de atención. Las siguientes solo copian lo nuevo y el
+almacenamiento queda detenido pocos segundos.
 
 ### 3. Programarla
 
@@ -149,7 +160,14 @@ sudo crontab -e
 ## Restaurar
 
 Con GDI instalado (o reinstalado con el [manual](manual.md) hasta el paso 7) y el mismo
-`/root/gdi-backup.env` y contraseña de cifrado:
+`/root/gdi-backup.env` y contraseña de cifrado.
+
+!!! note "Si en el servidor nuevo se generaron claves nuevas"
+    Lo normal es restaurar también el `.env` (paso 1 de abajo), y entonces las claves son las
+    mismas. Si el `.env` del servidor nuevo tiene **otras** claves del almacenamiento, no hace
+    falta nada a mano: al arrancar, la cuenta de la aplicación del `.env` actual pasa a ser dueña
+    de todos los documentos y la cuenta anterior **se borra**, así un `.env` viejo deja de servir.
+
 
 ```bash
 sudo -i
