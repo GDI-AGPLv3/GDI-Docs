@@ -329,8 +329,8 @@ sudo ./scripts/generar-claves.sh
 `generar-claves.sh` genera las claves internas, la contraseña de la base y las **dos cuentas del
 almacenamiento** (la administradora, que solo se usa al arrancar, y la de la aplicación, que solo
 ve sus propios buckets), y deja la carpeta `license/` con el dueño correcto (uid 999). Se puede
-correr de nuevo sin riesgo: lo que ya tiene valor y no se puede cambiar (`CERT_MASTER_KEY`,
-`DB_PASSWORD`, claves del almacenamiento) no lo toca.
+correr de nuevo sin riesgo: solo completa las claves que faltan (vacías o en `CAMBIAR`); las que
+ya tienen valor no las toca.
 
 > ⚠️ **`CERT_MASTER_KEY` no se cambia ni se pierde nunca.** Cifra los certificados de firma: sin
 > la original, los certificados cargados no se pueden volver a usar. Viaja en el backup (paso 13).
@@ -680,7 +680,9 @@ Un servidor perdido se recupera con **cinco** cosas:
 ```bash
 cd /opt/gdi && mkdir -p backups && FECHA=$(date +%F)
 gdi exec -T postgres pg_dump -U postgres railway -Fc > backups/gdi-$FECHA.dump
+gdi stop storage     # unos segundos: que no entre un documento a medio guardar
 docker run --rm -v gdi_storage_data:/srv -v /opt/gdi/backups:/backup alpine tar czf /backup/documentos-$FECHA.tar.gz -C /srv .
+gdi start storage
 tar czf backups/config-$FECHA.tar.gz .env license/ $( [ -f npm-admin.txt ] && echo npm-admin.txt )
 # Solo al actualizar (una vez por versión):
 gdi images | awk 'NR>1 {print $2":"$3}' | sort -u > backups/imagenes-$FECHA.txt
@@ -695,6 +697,9 @@ Esta es la copia **puntual**, la que se hace antes de actualizar (paso 12). Deja
 
 Los documentos son archivos comunes (`data/<bucket>/<ruta>`) y sus datos (tipo de archivo, dueño,
 lectura pública) van al lado en `meta/`: un `tar` común alcanza, no hacen falta opciones especiales.
+Se copian **con el almacenamiento detenido** porque cada documento se guarda en esas dos partes: si
+justo entra uno durante la copia, puede quedar una sin la otra. La base va **antes** que los
+documentos: así todo lo que la base nombra ya está en la copia.
 
 **Automatizarlo** (base + documentos + configuración, todos los días, hacia el destino del
 municipio): ver la [guía de copias de seguridad](backups.md). Si se arma con `cron`, ahí
@@ -781,9 +786,9 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 | Síntoma | Causa | Qué hacer |
 |---|---|---|
 | `NoSuchBucket` al subir un documento | los buckets no se crearon, o falta `S3_FORCE_PATH_STYLE=true` | `gdi logs storage-init`; revisar el `.env` |
-| `AuthorizationHeaderMalformed` o `IncorrectRegion` en los logs del backend | falta `S3_REGION=us-east-1` en el `.env` (el almacenamiento local no acepta la región `auto`) | agregarla y `gdi up -d` |
-| `storage-users` o `storage-init` terminan con error | las claves `STORAGE_ROOT_*` o `CF_R2_*` cambiaron después del primer arranque, o siguen en `CAMBIAR` | `gdi logs storage-users storage-init`; no rotarlas a mano: correr `scripts/generar-claves.sh` solo en una instalación nueva |
-| La URL de un documento tiene el bucket como subdominio (`https://gdi-oficial.storage.<BASE>/…`) | falta `S3_FORCE_PATH_STYLE=true` | agregarlo y `gdi up -d` |
+| `AuthorizationHeaderMalformed` o `IncorrectRegion` en los logs del backend | `S3_REGION` en el `.env` tiene otro valor que `us-east-1` (el almacenamiento local no acepta otra región, ni `auto`) | dejar `S3_REGION=us-east-1` (o borrar la línea) y `gdi up -d` |
+| `storage-users` o `storage-init` terminan con error | las claves `STORAGE_ROOT_*` o `CF_R2_*` siguen en `CAMBIAR` o vacías | `gdi logs storage-users storage-init`; `sudo ./scripts/generar-claves.sh` y `gdi up -d`. Cambiar las claves `CF_R2_*` después es seguro: al arrancar, la cuenta nueva pasa a ser dueña de todo y la anterior se borra |
+| La URL de un documento tiene el bucket como subdominio (`https://gdi-oficial.storage.<BASE>/…`) | `S3_FORCE_PATH_STYLE` quedó en `false` en el `.env` | dejarlo en `true` (o borrar la línea) y `gdi up -d` |
 | `SignatureDoesNotMatch` / `AccessDenied` al abrir un PDF | `CF_R2_ENDPOINT` apunta a `storage:7070` (el nombre interno) | `CF_R2_ENDPOINT=https://storage.<BASE>` y `gdi up -d` |
 | Los documentos no cargan nunca | `STORAGE_DOMAIN` falta o no coincide | `gdi exec backend getent hosts storage.<BASE>` tiene que dar una IP interna; corregir y `gdi up -d` |
 | Documento firmado, pero la API da 500 "No se pudo generar URL" o el portal TAD da 404 | al `gateway` le faltan las variables `CF_R2_*` | `gdi exec gateway env \| grep CF_R2` → tienen que salir tres; si no, el instalador está desactualizado |
