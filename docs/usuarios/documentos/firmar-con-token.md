@@ -200,7 +200,7 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
     - Si el problema persiste, contactar al administrador del sistema
 
 ??? question "Aparece el error: 'token no encontrado: no se encontró driver PKCS#11 compatible'"
-    Falta el controlador del token, o está instalado el de otra marca. No es un problema de FirmadorGDI ni del token en sí: el dispositivo puede estar perfectamente conectado y aun así dar este error.
+    En la computadora no hay instalado ningún controlador de token. No es un problema de FirmadorGDI ni del token en sí: el dispositivo puede estar perfectamente conectado y aun así dar este error.
 
     Instalá el controlador siguiendo el paso 1 de la instalación y volvé a intentar.
 
@@ -213,6 +213,14 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
     | OpenSC (genérico) | `C:\Windows\System32\opensc-pkcs11.dll` | `/Library/OpenSC/lib/opensc-pkcs11.so` |
 
     Si ninguno de esos archivos existe, el controlador no quedó instalado. Ojo con la versión: en Windows, FirmadorGDI es de 64 bits, así que necesita el controlador de 64 bits.
+
+??? question "Aparece el error: 'token no encontrado: no hay tokens conectados'"
+    Hay controladores instalados, pero ninguno detecta un token. El mensaje nombra los controladores que se probaron.
+
+    - Si el token no está enchufado, conectalo y volvé a intentar.
+    - Si está enchufado, el controlador instalado es **el de otra marca**: falta el de tu token. Instalalo siguiendo el paso 1 de la instalación.
+
+    Se pueden tener instalados los controladores de varias marcas a la vez (por ejemplo, Feitian y SafeNet): desde la versión 1.8.0, FirmadorGDI usa el que corresponde al token que está enchufado. Con una versión anterior, en ese caso daba este mismo error aunque el token estuviera conectado: actualizá FirmadorGDI.
 
 ??? question "En una Mac con procesador Apple el controlador está instalado y el token igual no se detecta"
     Puede ser un controlador viejo, hecho solo para Mac con Intel: una aplicación para procesador Apple no puede cargarlo.
