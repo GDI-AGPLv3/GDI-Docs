@@ -101,3 +101,4 @@ Cada solapa muestra un contador con la cantidad de expedientes correspondientes 
 | [Movimientos](movimientos.md) | Historial de actividad, acciones en curso/finalizadas, y como crear actuaciones internas o transferencias |
 | [Vincular Documentos](vincular-documentos.md) | Como vincular documentos oficiales a un expediente, aceptar o rechazar propuestas de vinculacion |
 | [Subsanar en Expediente](subsanar-expediente.md) | Como reemplazar un documento dentro de un expediente aportando un justificante |
+| [Expedientes Reservados](reservados.md) | Quien ve un expediente o documento reservado, como reconocerlo y que pasa si no tenes acceso |

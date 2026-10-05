@@ -3,7 +3,7 @@
 Los **expedientes y documentos reservados** son items confidenciales cuya existencia y contenido solo son visibles para un conjunto acotado de personas. Sirven para tramites sensibles (sumarios, RRHH, legales, seguridad) que no deben aparecer en busquedas, listados ni en el asistente de IA para quien no tiene acceso.
 
 !!! abstract "La idea en una frase"
-    La reserva se marca **por TIPO** (no item por item) con un flag `is_reserved`. Con ese flag activado, todas las puertas del sistema (interfaz, API REST, Gateway y MCP) aplican solas las mismas reglas de acceso, sin necesidad de dar permisos a mano.
+    La reserva se marca **por TIPO** (no item por item), eligiendo la visibilidad **Reservado** en el tipo. Con eso, todas las puertas del sistema (interfaz, API REST, Gateway y MCP) aplican solas las mismas reglas de acceso, sin necesidad de dar permisos a mano.
 
 ---
 
@@ -11,20 +11,22 @@ Los **expedientes y documentos reservados** son items confidenciales cuya existe
 
 La confidencialidad se define a nivel de **tipo**, no de cada expediente o documento individual:
 
-| Donde se marca | Campo | Efecto |
-|----------------|-------|--------|
-| Tipo de Documento (`document_types`) | `is_reserved` | Todo documento de ese tipo nace reservado |
-| Tipo de Expediente (`case_templates`) | `is_reserved` | Todo expediente de ese tipo nace reservado |
+| Donde se marca | Campo | Valores | Efecto |
+|----------------|-------|---------|--------|
+| Tipo de Documento (`document_types`) | `visibility` | Interno / Reservado / Publico | Con *Reservado*, todo documento de ese tipo nace reservado |
+| Tipo de Expediente (`case_templates`) | `visibility` | Interno / Reservado | Con *Reservado*, todo expediente de ese tipo nace reservado |
 
-La ventaja de hacerlo por tipo: cero tablas nuevas de permisos y cero pantallas para dar acceso manual. Las reglas son fijas y viven en el flag del tipo.
+Por debajo, el sistema deriva de `visibility` la marca de solo lectura `is_reserved` (`visibility = 'reservado'`), que es la que consultan todas las reglas de acceso.
 
-!!! warning "El flag es irreversible y solo se activa en tipos virgenes"
+La ventaja de hacerlo por tipo: cero tablas nuevas de permisos y cero pantallas para dar acceso manual. Las reglas son fijas y viven en la visibilidad del tipo.
+
+!!! warning "La reserva es irreversible y solo se activa en tipos virgenes"
     - Marcar un tipo como reservado **solo se permite si el tipo no tiene ningun item creado** (0 expedientes o 0 documentos). Un tipo con items ya usados no se puede pasar a reservado.
-    - Una vez marcado como reservado, el flag **no se puede desactivar** (es irreversible).
+    - Una vez marcado como reservado, **no se puede volver a Interno** (es irreversible).
 
     Esto garantiza que nunca exista un item que haya sido publico antes y luego se oculte (o al reves), y elimina cualquier ambiguedad historica.
 
-Quien puede activar el flag: el mismo administrador del BackOffice que edita hoy los tipos de documento y expediente. El toggle "Reservado" aparece en el ABM de **Tipos de Documentos** y **Tipos de Expedientes**, con un aviso de que el cambio es inmediato e irreversible.
+Quien puede marcarlo: el mismo administrador del BackOffice que edita hoy los tipos de documento y expediente. La opcion **Reservado** aparece en el selector de visibilidad del ABM de **Tipos de Documentos** y **Tipos de Expedientes**, con la descripcion *"Confidencial e irreversible"*. En la practica se elige al dar de alta el tipo.
 
 ---
 
@@ -46,14 +48,16 @@ Para un expediente reservado, el modelo de acceso habitual por sector **no aplic
     R2 y R3 se refieren al titular de la reparticion **directa** del sector, nunca al titular de una reparticion padre ni al Intendente. Si un sector no tiene titular cargado, esa via simplemente no aporta ningun visor: en ese caso, la unica forma de acceder es figurar como responsable (R1).
 
 !!! danger "Nadie hace bypass"
-    Ni el permiso de **busqueda global** de expedientes, ni un super-rol, ni la busqueda por numero exacto abren un expediente reservado fuera del modelo R1/R2/R3/R4. No hay excepciones.
+    Ni el permiso de **busqueda global** de expedientes, ni pertenecer al sector, ni un super-rol, ni haber creado el expediente abren un expediente reservado fuera del modelo R1/R2/R3/R4. Para quien no cumple ninguna rama, el expediente no aparece en listados, contadores, busquedas ni tareas del Inicio, y abrirlo da *no encontrado*. Tampoco puede operarlo (pasar, asignar, archivar, vincular documentos ni subsanar). La unica excepcion es la busqueda por numero exacto para proponer un documento, que **no** abre el expediente (ver [Busqueda por numero](#busqueda-por-numero)).
 
 ### El creador y su propio expediente
 
 El creador de un expediente **no tiene acceso por el solo hecho de haberlo creado**. Para que no quede afuera de su propio tramite al nacer, al crear un expediente reservado el sistema lo **auto-agrega como responsable**.
 
 !!! question "Responsable de que, exactamente"
-    Al crear un expediente reservado, el creador queda dado de alta automaticamente como **responsable del expediente de tipo ADDITIONAL, en el Sector Administrador** del expediente. Es decir, responsable/actuante del propio expediente (la misma lista de responsables que usa R1), no de un documento ni de otra cosa. Ese alta es **removible** despues: si se lo quita, deja de verlo, salvo que acceda por otra via (R1/R2/R3).
+    Al crear un expediente reservado, el creador queda dado de alta automaticamente como **responsable ADMIN del expediente, en el Sector Administrador** del expediente. Es decir, responsable/actuante del propio expediente (la misma lista de responsables que usa R1), no de un documento ni de otra cosa. Ese alta es **removible** despues (por ejemplo con "sacarme como responsable"): si se lo quita, deja de verlo, salvo que acceda por otra via (R2/R3/R4).
+
+    Si el expediente lo crea un **ciudadano** desde TAD, no se lo da de alta como responsable: el ciudadano lo ve porque el expediente se comparte automaticamente con el.
 
 ---
 
@@ -90,17 +94,19 @@ Un documento reservado **solo puede vivir dentro de un expediente reservado**. E
 
 ## Regla 2: fuera de todo lo que expone contenido
 
-El contenido de un documento reservado queda afuera de todos los procesos de IA y busqueda de contenido, **salvo para sus firmantes**:
+El contenido de un documento reservado queda afuera de todos los procesos de IA y busqueda de contenido, **para todos los usuarios, incluidos sus firmantes** (sus firmantes lo abren normalmente, pero la IA nunca lo procesa):
 
 - **No** se le genera resumen de IA.
 - **No** se indexa su contenido para la busqueda inteligente por significado.
 - **No** se transcribe su PDF (en documentos importados, su contenido nunca se procesa por IA).
 - **No** aparece en busquedas por contenido ni por similitud.
 
-El **asistente de IA (chat)** no cita ni menciona el contenido de un documento reservado a quien no tiene acceso a el.
+Ademas, un documento reservado **nunca aporta datos** (numero, referencia, tipo) al resumen de IA de un expediente ni de un legajo.
 
-!!! info "Los expedientes reservados si tienen resumen"
-    Un expediente reservado que contiene documentos NO reservados **si obtiene su resumen de IA**, armado a partir de esos documentos no reservados. La reserva bloquea el contenido de los documentos reservados, no impide que el expediente tenga su resumen.
+El **asistente de IA (chat)** no cita ni menciona el contenido de un documento reservado.
+
+!!! warning "Los expedientes reservados NO tienen resumen de IA"
+    El resumen automatico de IA **no se genera** para ningun expediente de tipo reservado, aunque adentro tenga documentos no reservados. La busqueda inteligente solo muestra un expediente reservado a quien cumple R1/R2/R3/R4.
 
 ---
 
@@ -115,12 +121,23 @@ El mismo dato se expone por tres puertas: la **interfaz / API REST**, el **Gatew
 
 ## Busqueda por numero
 
-Un expediente o documento reservado al que no tenes acceso **nunca aparece por busqueda exacta de numero**, ni por la busqueda global, ni tildandolo en ningun buscador. Se comporta igual que cualquier otra puerta: si no tenes acceso (segun R1/R2/R3/R4 para expedientes, o firmante/creador/herencia para documentos), no aparece. Punto.
+Un expediente o documento reservado al que no tenes acceso **no aparece** en la busqueda global, en los listados ni en los buscadores por texto. Se comporta igual que cualquier otra puerta: si no tenes acceso (segun R1/R2/R3/R4 para expedientes, o firmante/creador/herencia para documentos), no aparece.
+
+!!! info "Excepcion: el numero exacto de un expediente reservado, para proponerle un documento"
+    Quien escribe el **numero exacto y completo** de un expediente reservado al vincular un documento recibe un resultado **minimo**: solo el numero, con el candado y la leyenda *"Expediente reservado"*. **No** se muestra la referencia, el tipo, los sectores ni las fechas. Sirve para poder **proponerle** un documento al expediente; la propuesta la acepta o la rechaza alguien con acceso.
+
+    Tener el numero revela que el expediente **existe**, no su **contenido**: abrir el expediente sigue respondiendo *no encontrado*. Aplica solo a expedientes; un documento reservado no se encuentra por su numero si no tenes acceso.
 
 !!! note "Ver el numero no es el problema"
     El principio del modelo es que lo que hay que proteger es el **ingreso** y el **contenido** del item reservado. Que el numero de un expediente pueda figurar como dato lateral en otro contexto (por ejemplo, en la ficha de un documento vinculado que si podes ver) no se considera una fuga: lo que nunca debe pasar es que alguien sin acceso pueda **entrar** al expediente o **leer su contenido**.
 
 ---
 
+## Aviso de responsable
+
+Cuando a alguien lo nombran responsable de un expediente reservado, el aviso del **Inicio** ("Te nombraron responsable") muestra el numero y la referencia del expediente, **aunque despues lo hayan quitado** como responsable. Es intencional: si se ocultara, la persona nunca se enteraria de que la nombraron. Al intentar abrirlo sin acceso, el sistema lo rechaza.
+
+---
+
 !!! example "Estado de la funcionalidad"
-    El comportamiento descripto en esta pagina corresponde al **modelo disenado** de expedientes y documentos reservados. La implementacion se esta verificando en el ambiente de desarrollo (DEV) durante julio de 2026. Si detectas una diferencia entre lo documentado aca y lo que ves en la aplicacion, prevalece este modelo como comportamiento esperado.
+    El comportamiento descripto en esta pagina esta **en produccion** y fue verificado contra el codigo en octubre de 2026. La version para usuarios finales esta en [Expedientes reservados](../usuarios/expedientes/reservados.md).
