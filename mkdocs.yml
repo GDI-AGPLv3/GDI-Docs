@@ -141,6 +141,7 @@ nav:
           - Historial y Comentarios: usuarios/expedientes/movimientos.md
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
+          - Expedientes Reservados: usuarios/expedientes/reservados.md
       - Legajos:
           - usuarios/legajos/index.md
           - Crear y Gestionar: usuarios/legajos/crear-legajo.md
@@ -181,6 +182,7 @@ nav:
       - Instalación OnPremise:
           - administradores/onpremise/index.md
           - Manual de instalación: administradores/onpremise/manual.md
+          - Copias de seguridad: administradores/onpremise/backups.md
       - Implementación GDI:
           - administradores/implementacion/index.md
           - Marco Normativo: administradores/implementacion/marco-normativo.md
