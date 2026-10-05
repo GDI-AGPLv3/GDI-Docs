@@ -123,20 +123,20 @@ FirmadorGDI solo le obedece a los servidores que tiene autorizados. El servidor 
 
     Para una instalación desatendida:
 
-    ```
+    ```bat
     msiexec /i FirmadorGDI-latest.msi SERVIDORGDI="api.mi-municipio.gob.ar"
     ```
 
 === "Mac"
 
-    El instalador no lo pregunta. Después de instalar, un administrador abre la **Terminal** y ejecuta estas dos líneas, cambiando el nombre del servidor por el suyo:
+    El instalador no lo pregunta, pero muestra estos mismos comandos en su última pantalla. Después de instalar, un administrador abre la **Terminal** y ejecuta estas dos líneas, cambiando el nombre del servidor por el suyo. La autorización no se pierde al actualizar FirmadorGDI:
 
     ```bash
     sudo mkdir -p "/Library/Application Support/GDILatam/FirmadorGDI"
     echo "api.mi-municipio.gob.ar" | sudo tee "/Library/Application Support/GDILatam/FirmadorGDI/HostsAutorizados"
     ```
 
-    Solo el nombre del servidor: sin `https://`, sin barras, sin puerto y sin comodines. Si son varios, uno por línea. No se pierde al actualizar FirmadorGDI.
+    Solo el nombre del servidor: sin `https://`, sin barras, sin puerto y sin comodines. Si son varios, uno por línea.
 
 ---
 
@@ -209,8 +209,8 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
     | Token | Archivo que debe existir en Windows | Archivo que debe existir en Mac |
     |-------|-------------------------------------|---------------------------------|
     | Feitian ePass2003 | `C:\Windows\System32\eps2003csp11.dll` | `/usr/local/lib/libcastle_v2.1.0.0.dylib` o `/usr/local/lib/libcastle.1.0.0.dylib` |
-    | SafeNet eToken | `C:\Windows\System32\eTPKCS11.dll` | `/usr/local/lib/libeTPkcs11.dylib` |
-    | OpenSC (genérico) | `C:\Windows\System32\opensc-pkcs11.dll` | `/Library/OpenSC/lib/opensc-pkcs11.so` |
+    | SafeNet eToken | `C:\Windows\System32\eTPKCS11.dll` | `/usr/local/lib/libeTPkcs11.dylib` o `/Library/Frameworks/eToken.framework/Versions/Current/libeToken.dylib` |
+    | OpenSC (genérico) | `C:\Windows\System32\opensc-pkcs11.dll` | `/Library/OpenSC/lib/opensc-pkcs11.so`, o si se instaló con Homebrew: `/opt/homebrew/lib/opensc-pkcs11.so` (procesador Apple) o `/usr/local/lib/opensc-pkcs11.so` (Intel) |
 
     Si ninguno de esos archivos existe, el controlador no quedó instalado. Ojo con la versión: en Windows, FirmadorGDI es de 64 bits, así que necesita el controlador de 64 bits.
 
