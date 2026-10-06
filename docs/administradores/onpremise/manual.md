@@ -587,6 +587,9 @@ gdi exec -T postgres psql -U postgres railway -At -c \
 gdi exec -T storage ls /srv/data
 # → gdi-avatars, gdi-assets, gdi-certificates y 4 buckets por instancia:
 #   gdi-<sigla>-oficial, -tosign, -preoficial y -publico
+gdi logs backoffice-back | grep -E "CORS de subida directa|SIN CORS"
+# → "CORS de subida directa ok" una vez por instancia. "SIN CORS" = nadie va a poder importar
+#   PDF ni adjuntar archivos desde la pantalla: ver 14.
 ```
 
 Si el Panel abre pero la lista sale vacía → `SUPERADMIN_KEY` sin valor: [14](#14-problemas).
@@ -659,6 +662,10 @@ docker run --rm <IMAGEN_INSTALADOR>:<VERSION_NUEVA> | tar x -C /opt/gdi
 sed -i 's/^IMAGE_VERSION=.*/IMAGE_VERSION=<VERSION_NUEVA>/' .env
 # 4. Imágenes nuevas y contenedores nuevos (el migrator aplica las migraciones antes del backend).
 gdi pull && gdi up -d
+# 5. La configuración del proxy de la versión nueva. No pide certificados nuevos: los que ya
+#    existen se conservan. (Desde 2026.09.15 evita que storage.<BASE> quede en 502 al actualizar.)
+set -a; . ./npm-admin.txt; set +a
+./scripts/configurar-proxy.sh                   # con R2: SIN_STORAGE=1 ./scripts/configurar-proxy.sh
 ```
 
 **CHECK:** el mismo del paso 7, y además `curl -s https://panel.<BASE>/api/version | jq -r .paquete`
@@ -770,6 +777,7 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 | `Let's Encrypt no emitio` con `data/meta must NOT have additional properties` | el proxy no es la versión que fija el compose | volver `jc21/nginx-proxy-manager` a la versión del compose y `gdi up -d` |
 | Primer login: el sitio carga, Auth0 pide la clave y vuelve con **502** | faltan los buffers del proxy | volver a correr `configurar-proxy.sh` |
 | `Invalid email or password` al correr el script | no son las credenciales del administrador del proxy | usar las de `npm-admin.txt` |
+| Después de actualizar o de un `gdi up -d`, **todos** los documentos y logos dan **502** (`storage.<BASE>`) y el log del proxy dice `connect() failed (111: Connection refused)` | el proxy quedó apuntando a la dirección vieja del almacenamiento: pasa en instalaciones configuradas con un `configurar-proxy.sh` anterior a la versión `2026.09.15` | ya mismo: `gdi restart npm`. Para que no vuelva a pasar: volver a correr `configurar-proxy.sh` una vez (no pide certificados nuevos) |
 
 ### Login y usuarios
 
@@ -801,6 +809,8 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 | `NoSuchBucket` al subir un documento | los buckets no se crearon, o falta `S3_FORCE_PATH_STYLE=true` | `gdi logs storage-init`; revisar el `.env` |
 | `AuthorizationHeaderMalformed` o `IncorrectRegion` en los logs del backend | `S3_REGION` en el `.env` tiene otro valor que `us-east-1` (el almacenamiento local no acepta otra región, ni `auto`) | dejar `S3_REGION=us-east-1` (o borrar la línea) y `gdi up -d` |
 | `storage-users` o `storage-init` terminan con error | las claves `STORAGE_ROOT_*` o `CF_R2_*` siguen en `CAMBIAR` o vacías | `gdi logs storage-users storage-init`; `sudo ./scripts/generar-claves.sh` y `gdi up -d`. Cambiar las claves `CF_R2_*` después es seguro: al arrancar, la cuenta nueva pasa a ser dueña de todo y la anterior se borra |
+| Importar un PDF o adjuntar un archivo no hace nada o da error, y la consola del navegador (F12) dice **CORS** | el bucket `-tosign` de esa instancia no tiene la regla de subida directa: la instancia se creó con `TOSIGN_UPLOAD_CORS_ORIGINS` vacía y `FRONTEND_URL` mal, o el log dice `SIN CORS` | revisar que `FRONTEND_URL` sea la dirección exacta del front de usuarios (con `https://`, sin barra final) y `gdi up -d`. Las instancias que **ya existían** no se corrigen solas: avisar a GDI |
+| `SIN regla de vencimiento de 'uploads/'` en los logs del BackOffice al crear una instancia | el almacenamiento local no implementa el vencimiento automático | **es esperado**, no hace falta hacer nada: GDI borra cada subida al confirmarla y limpia las abandonadas de cada usuario la próxima vez que sube algo |
 | La URL de un documento tiene el bucket como subdominio (`https://gdi-oficial.storage.<BASE>/…`) | `S3_FORCE_PATH_STYLE` quedó en `false` en el `.env` | dejarlo en `true` (o borrar la línea) y `gdi up -d` |
 | `SignatureDoesNotMatch` / `AccessDenied` al abrir un PDF | `CF_R2_ENDPOINT` apunta a `storage:7070` (el nombre interno) | `CF_R2_ENDPOINT=https://storage.<BASE>` y `gdi up -d` |
 | Los documentos no cargan nunca | `STORAGE_DOMAIN` falta o no coincide | `gdi exec backend getent hosts storage.<BASE>` tiene que dar una IP interna; corregir y `gdi up -d` |
