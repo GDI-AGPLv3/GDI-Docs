@@ -218,6 +218,7 @@ nav:
                   - Webhook de Notificaciones: desarrollo/gateway/rest-api/tad/webhook.md
           - Flujos Completos: desarrollo/gateway/flujos.md
           - Errores y Codigos: desarrollo/gateway/errores.md
+          - Cambios de la API: desarrollo/gateway/changelog.md
       - Arquitectura:
           - desarrollo/arquitectura/index.md
           - Diagrama de Servicios: desarrollo/arquitectura/diagrama-servicios.md
