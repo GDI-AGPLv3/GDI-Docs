@@ -23,6 +23,7 @@ infraestructura. Es el mismo sistema que GDI Latam ofrece en la nube.
 | 6 | **Token de descarga, código de activación y número de versión** | Los entrega **GDI Latam** al contratar |
 
 **Recomendado, no obligatorio:**
+
 - el **servidor de correo** del municipio (sin él, los accesos de cada empleado se entregan a mano);
 - el **certificado de firma digital** del municipio (sin él, se firma con uno de prueba **sin validez legal**);
 - una **clave de OpenRouter** si se van a usar las funciones de IA.
