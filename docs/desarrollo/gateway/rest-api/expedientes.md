@@ -25,7 +25,7 @@ Busca expedientes con filtros opcionales. Soporta paginacion.
 | `search` | string | - | Busca por `case_number` o `reference` |
 | `status` | string | - | Filtrar por estado: `active`, `inactive`, `archived` |
 | `date_filter` | string | - | Filtrar por fecha: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
-| `sector_filter` | string | - | Filtrar por acronimo del sector |
+| `sector_filter` | string | - | Filtrar por UN sector: acronimo exacto (ej. `HAC`), `DEPT#SECTOR` (ej. `HAC#PRIV`) o UUID. Si no resuelve a un sector activo, o trae comas, responde **400** (desde el 06/10/2026, ver [Cambios de la API](../changelog.md)) |
 
 **Ejemplo:**
 
