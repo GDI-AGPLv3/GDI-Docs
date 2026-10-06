@@ -5,6 +5,9 @@ Algunos trámites son confidenciales: sumarios, recursos humanos, asuntos legale
 !!! abstract "En una frase"
     Lo reservado se define por **tipo** (lo configura el administrador del municipio). Si el tipo es reservado, todo expediente o documento de ese tipo nace reservado, y nadie tiene que dar permisos a mano.
 
+!!! info "Solo desde la APP interna"
+    Un expediente reservado se crea únicamente desde la APP interna del municipio: **no se puede iniciar por Trámites a Distancia (TAD)**.
+
 ---
 
 ## Cómo reconocerlo

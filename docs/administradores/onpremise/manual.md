@@ -204,7 +204,14 @@ Crear una cuenta en [auth0.com](https://auth0.com) y un tenant. Su dominio (por 
 *Applications → APIs → **Create API***
 - **Name:** `GDI API`
 - **Identifier:** `https://gdi-api`. Es un identificador, **no una URL real**. Va a `AUTH0_AUDIENCE`.
-- Signing algorithm: RS256 → **Create**.
+- Signing algorithm: RS256.
+- **Access Policy → Within user-delegated access: All apps allowed.** Auth0 trae por defecto
+  *Per-app authorization* en las APIs nuevas: con eso **nadie puede loguearse** en GDI.
+- **Create**.
+
+> Al crear la API, Auth0 agrega sola una aplicación "GDI API (Test Application)", de tipo Machine
+> to Machine y con acceso a la API sin usuario. No se usa: **borrala** (*Applications →
+> Applications*).
 
 ### 4.3. Tres aplicaciones de login
 *Applications → Applications → **Create Application** → **Regular Web Application***, tres veces:
@@ -231,7 +238,8 @@ abierto, cualquiera puede crearse un usuario en el Auth0 del municipio.
 ### 4.6. El email dentro del token (sin esto nadie entra)
 GDI identifica a cada persona por su email, y Auth0 no lo pone en el token por defecto.
 
-1. *Actions → Library → **Build Custom***: nombre `GDI - email en el access token`, trigger
+1. *Actions → Library → **Create Action → Create Custom Action*** (en versiones viejas del panel
+   el botón se llama *Build Custom*): nombre `GDI - email en el access token`, trigger
    **Login / Post Login**, runtime **Node 22**.
 2. Pegar este código → **Deploy**:
    ```js
@@ -254,6 +262,11 @@ por el dominio del municipio.
 - Autorizarla contra **Auth0 Management API** (la que viene de fábrica, **no** la del 4.2).
 - Permisos: `read:users`, `create:users`, `update:users`, `create:user_tickets`. Exactamente esos.
 - Su Client ID / Secret van a `AUTH0_M2M_CLIENT_ID` / `AUTH0_M2M_CLIENT_SECRET`.
+
+> En el plan gratuito de Auth0 las aplicaciones Machine to Machine tienen un tope de **5.000
+> tokens por mes**. GDI pide uno solo cuando crea o modifica usuarios, así que alcanza de sobra.
+> Si el panel de Auth0 avisa que se acerca al tope, revisá que nada externo esté usando esa
+> aplicación.
 
 ### 4.8. Asistentes de IA (MCP)
 Por `mcp.<BASE>` un asistente de IA opera GDI **a nombre del empleado**, con sus mismos permisos.
@@ -297,8 +310,8 @@ para su propia dirección. *Applications → APIs → **Create API***:
 > usuario" y solo obtiene lo del punto d). Cada tanto revisá *Applications* y borrá las que
 > empiezan con `tpc_` y no reconozcas. Es el mismo esquema que usa GDI en la nube.
 
-> Al crear la API del punto c), Auth0 agrega sola una aplicación "GDI MCP (Test Application)".
-> No se usa: se puede borrar.
+> Al crear la API del punto c), Auth0 agrega sola una aplicación "GDI MCP (Test Application)",
+> de tipo Machine to Machine y con acceso a la API sin usuario. No se usa: **borrala**.
 
 ### 4.9. Google en producción (solo si usan Google)
 La conexión `google-oauth2` viene con **claves de desarrollo de Auth0**, y el propio Auth0 avisa

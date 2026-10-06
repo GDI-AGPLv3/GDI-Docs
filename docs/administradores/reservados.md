@@ -28,6 +28,12 @@ La ventaja de hacerlo por tipo: cero tablas nuevas de permisos y cero pantallas 
 
 Quien puede marcarlo: el mismo administrador del BackOffice que edita hoy los tipos de documento y expediente. La opcion **Reservado** aparece en el selector de visibilidad del ABM de **Tipos de Documentos** y **Tipos de Expedientes**, con la descripcion *"Confidencial e irreversible"*. En la practica se elige al dar de alta el tipo.
 
+!!! danger "Un expediente reservado no se crea por TAD"
+    Un **Tipo de Expediente reservado** solo admite el canal de creacion **APP Interna**: no se puede iniciar por Tramites a Distancia (TAD). El BackOffice lo controla en los dos sentidos:
+
+    - Al marcar un tipo como **Reservado**, el canal queda fijo en *APP Interna*; las opciones *Ciudadano* y *Ambos* no se pueden elegir.
+    - Un tipo reservado no se puede pasar despues a *Ciudadano* ni a *Ambos*, y un tipo habilitado para TAD no se puede marcar como reservado. Cualquiera de las dos combinaciones se rechaza con error.
+
 ---
 
 ## Quien puede ver un expediente reservado
@@ -56,8 +62,6 @@ El creador de un expediente **no tiene acceso por el solo hecho de haberlo cread
 
 !!! question "Responsable de que, exactamente"
     Al crear un expediente reservado, el creador queda dado de alta automaticamente como **responsable ADMIN del expediente, en el Sector Administrador** del expediente. Es decir, responsable/actuante del propio expediente (la misma lista de responsables que usa R1), no de un documento ni de otra cosa. Ese alta es **removible** despues (por ejemplo con "sacarme como responsable"): si se lo quita, deja de verlo, salvo que acceda por otra via (R2/R3/R4).
-
-    Si el expediente lo crea un **ciudadano** desde TAD, no se lo da de alta como responsable: el ciudadano lo ve porque el expediente se comparte automaticamente con el.
 
 ---
 
