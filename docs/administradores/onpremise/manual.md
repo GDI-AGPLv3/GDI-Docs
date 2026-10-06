@@ -201,7 +201,8 @@ Crear una cuenta en [auth0.com](https://auth0.com) y un tenant. Su dominio (por 
 `tu-municipio.us.auth0.com`) es `<AUTH0_DOMAIN>`.
 
 ### 4.2. API principal
-*Applications → APIs → **Create API***
+*Applications → APIs →* **Create API**
+
 - **Name:** `GDI API`
 - **Identifier:** `https://gdi-api`. Es un identificador, **no una URL real**. Va a `AUTH0_AUDIENCE`.
 - Signing algorithm: RS256.
@@ -214,7 +215,7 @@ Crear una cuenta en [auth0.com](https://auth0.com) y un tenant. Su dominio (por 
 > Applications*).
 
 ### 4.3. Tres aplicaciones de login
-*Applications → Applications → **Create Application** → **Regular Web Application***, tres veces:
+*Applications → Applications →* **Create Application** → **Regular Web Application**, tres veces:
 
 | Aplicación | Allowed Callback URLs | Allowed Logout URLs y Allowed Web Origins | Va a |
 |---|---|---|---|
@@ -238,7 +239,7 @@ abierto, cualquiera puede crearse un usuario en el Auth0 del municipio.
 ### 4.6. El email dentro del token (sin esto nadie entra)
 GDI identifica a cada persona por su email, y Auth0 no lo pone en el token por defecto.
 
-1. *Actions → Library → **Create Action → Create Custom Action*** (en versiones viejas del panel
+1. *Actions → Library →* **Create Action → Create Custom Action** (en versiones viejas del panel
    el botón se llama *Build Custom*): nombre `GDI - email en el access token`, trigger
    **Login / Post Login**, runtime **Node 22**.
 2. Pegar este código → **Deploy**:
@@ -258,7 +259,8 @@ El nombre del claim (`https://gdilatam.com/...`) es **fijo**: lo espera el códi
 por el dominio del municipio.
 
 ### 4.7. Aplicación Machine to Machine (sin esto no se crean usuarios)
-*Applications → Create Application → **Machine to Machine***
+*Applications → Create Application →* **Machine to Machine**
+
 - Autorizarla contra **Auth0 Management API** (la que viene de fábrica, **no** la del 4.2).
 - Permisos: `read:users`, `create:users`, `update:users`, `create:user_tickets`. Exactamente esos.
 - Su Client ID / Secret van a `AUTH0_M2M_CLIENT_ID` / `AUTH0_M2M_CLIENT_SECRET`.
@@ -279,13 +281,15 @@ sección. Aparece **DCR Security Mode**: dejalo en **Strict**.
 
 **b) Conexiones a nivel de dominio.** Los asistentes que se registran solos solo pueden usar
 conexiones "promovidas":
+
 - *Authentication → Database → Username-Password-Authentication* → **Promote Connection to
   Domain Level: ON** → Save.
 - Si usan Google: *Authentication → Social → google-oauth2 → Advanced* → **Promote Connection
   to Domain Level: ON** → Save. Sin esto, el asistente solo ofrece usuario y contraseña.
 
 **c) Una segunda API, con la dirección del MCP.** El servidor MCP solo acepta tokens emitidos
-para su propia dirección. *Applications → APIs → **Create API***:
+para su propia dirección. *Applications → APIs →* **Create API**:
+
 - **Name:** `GDI MCP`
 - **Identifier:** `https://mcp.<BASE>/`, **con la barra final**, exacto. Es lo que piden los
   asistentes, y no se puede cambiar después.
@@ -295,6 +299,7 @@ para su propia dirección. *Applications → APIs → **Create API***:
 - **Create**.
 
 **d) En esa API nueva, pestaña Settings:**
+
 - **Allow Offline Access: ON**, para que el asistente renueve su sesión sin pedir login cada
   vez → Save.
 - **Default Permissions for third-party applications:**
@@ -400,6 +405,7 @@ sin eso, con muchos routers el sistema no puede guardar ni un PDF. **No borres
 `S3_FORCE_PATH_STYLE=true` ni `GDI_LICENSE_HEARTBEAT_URL`**: ya vienen en el `.env.example`.
 
 **Correo (opcional, sección 1.6).** Descomentá y completá en el `.env` **una** de estas dos:
+
 - SMTP propio: `SMTP_HOST`, `SMTP_PORT` (587 = STARTTLS; con 465 agregá `SMTP_SSL=true`),
   `SMTP_USER`, `SMTP_PASSWORD` 🔐 y `FROM_EMAIL=Municipio <noreply@<BASE>>`.
 - Resend: `RESEND_API_KEY` 🔐 y `FROM_EMAIL`. Si están las dos, manda por Resend.
@@ -462,18 +468,21 @@ es este comando. La función dura lo que la sesión SSH: para dejarla fija, copi
 ```bash
 gdi ps -a --format '{{.Service}}\t{{.Status}}'
 ```
+
 - `migrator`, `storage-users` y `storage-init` → **Exited (0)**. Cualquier otro código → [14](#14-problemas).
 - `postgres`, `redis`, `storage`, `backend`, `gateway` y `panel-front` → `healthy`.
 
 ```bash
 gdi logs storage-init | tail -1
 ```
+
 - Tiene que decir `[OK] buckets listos: gdi-avatars, gdi-assets (lectura publica), gdi-certificates (privado)`.
 - El resto → `Up`. Ninguno en `Restarting`.
 
 ```bash
 gdi logs backoffice-back | grep -E '\[OK\]|\[FALTA\]|Licencia ACTIVADA'
 ```
+
 - Tiene que aparecer `Licencia ACTIVADA contra el Panel: GDI-… para <municipio>`.
 - Tiene que aparecer `[OK] Alta de usuarios: credenciales de Auth0 presentes`.
 - `[FALTA] Correo NO CONFIGURADO` es esperable si no configuraste correo.
@@ -551,6 +560,7 @@ Cada municipio tiene **dos instancias**: una de **capacitación** (para practica
 **9.1. Capacitación.** Entrar a `https://panel.<BASE>` con un mail de `PANEL_ADMIN_EMAILS` →
 **Crear Instancia**: nombre, color y **administrador** (mail y nombre). La sigla de capacitación
 la asigna el sistema.
+
 - Si el administrador no existía en Auth0, se le crea el usuario. Sin correo configurado, el
   Panel muestra en pantalla el **enlace de activación**: sirve una sola vez, vence a los 5 días
   y se pasa por un canal seguro. Si ya existía, entra con su clave de siempre.
@@ -561,6 +571,7 @@ y usuarios de prueba. Los tipos de documento con **formulario controlado** nacen
 hay que activarlos para que aparezcan en el portal.
 
 **9.3. Producción.** *Instancias* → en la fila de la capacitación, **Crear Tenant PRD**:
+
 - el nombre del municipio **tal como va a figurar en los documentos** (sin el prefijo de
   capacitación);
 - la **sigla definitiva** (2 a 8 letras o números), escrita dos veces;
