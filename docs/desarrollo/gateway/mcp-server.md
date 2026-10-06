@@ -52,7 +52,7 @@ Busca expedientes por texto en contenido completo.
 | `page_size` | int | 20 | Items por pagina (max 100) |
 | `status` | string | null | `active`, `inactive`, `archived` |
 | `date_filter` | string | null | `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
-| `sector_filter` | string | null | Acronimo del sector |
+| `sector_filter` | string | null | UN sector: acronimo exacto, `DEPT#SECTOR` o UUID. Si no resuelve, la tool devuelve error (no la lista completa). Ver [Cambios de la API](changelog.md) |
 
 **Respuesta:**
 
