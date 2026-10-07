@@ -159,41 +159,50 @@ sudo crontab -e
 
 ## Restaurar
 
-Con GDI instalado (o reinstalado con el [manual](manual.md) hasta el paso 7) y el mismo
-`/root/gdi-backup.env` y contraseña de cifrado.
+Se saca la copia de restic con el formato del paso 13 del [manual](manual.md) y se restaura con
+`scripts/restaurar.sh`, el mismo script para los dos casos:
 
-!!! note "Si en el servidor nuevo se generaron claves nuevas"
-    Lo normal es restaurar también el `.env` (paso 1 de abajo), y entonces las claves son las
-    mismas. Si el `.env` del servidor nuevo tiene **otras** claves del almacenamiento, no hace
-    falta nada a mano: al arrancar, la cuenta de la aplicación del `.env` actual pasa a ser dueña
-    de todos los documentos y la cuenta anterior **se borra**, así un `.env` viejo deja de servir.
+- **Servidor nuevo** (se perdió el anterior): el [manual](manual.md) paso 13.1. Docker y el
+  instalador (pasos 2 y 3), **sin** los pasos 4 a 7, restic instalado y el mismo
+  `/root/gdi-backup.env` con su contraseña de cifrado.
+- **Mismo servidor** (volver atrás una actualización, o datos dañados): el [manual](manual.md)
+  paso 12.1.
 
+!!! danger "No restaures encima de lo que hay"
+    Restaurar la base con `pg_restore --clean` y los documentos con `restic restore` sobre una
+    instalación que anda **no funciona** (probado el 07/10/2026). En un servidor reinstalado, la base
+    tiene otra contraseña que el `.env` de la copia y no levanta nada. En el mismo servidor quedan
+    las tablas de la versión nueva y los PDF firmados después de la copia: el primero que choca con
+    un número traba la firma de ese tipo de documento. `restaurar.sh` vacía la base y los documentos
+    antes de restaurar.
 
 ```bash
 sudo -i
 set -a; . /root/gdi-backup.env; set +a
-cd /opt/gdi
-gdi() { ( cd /opt/gdi && docker compose -f docker-compose.yml -f docker-compose.premium.yml -f docker-compose.storage.yml "$@" ); }
+restic snapshots                                   # elegir la copia (acá: la última, "latest")
 
-restic snapshots                                   # elegir la fecha (o usar "latest")
+# 1. La versión de la copia: el instalador de /opt/gdi tiene que ser ESA (pasos 2 y 3 del manual).
+restic dump latest --tag config /opt/gdi/.env | grep ^IMAGE_VERSION=
 
-# 1. Configuración y licencia
-restic restore latest --tag config --target /
-chown -R 999:999 /opt/gdi/license && chmod 644 /opt/gdi/license/*.lic
+# 2. Sacar la copia a /opt/gdi/backups con los nombres que espera restaurar.sh
+R=/var/tmp/restaurar; F=$(date +%F); rm -rf $R; mkdir -p $R /opt/gdi/backups
+restic restore latest --tag base --target $R
+restic restore latest --tag documentos --target $R
+restic restore latest --tag config --target $R
+cp "$(find $R -name 'gdi-*.dump' | head -1)" /opt/gdi/backups/gdi-$F.dump
+tar czf /opt/gdi/backups/documentos-$F.tar.gz -C $R/var/lib/docker/volumes/gdi_storage_data/_data .
+tar czf /opt/gdi/backups/config-$F.tar.gz -C $R/opt/gdi .env license $( [ -f $R/opt/gdi/npm-admin.txt ] && echo npm-admin.txt )
+rm -rf $R
 
-# 2. Documentos (con el almacenamiento detenido)
-gdi stop storage
-restic restore latest --tag documentos --target /
-gdi start storage
-
-# 3. Base de datos
-restic restore latest --tag base --target /var/tmp/restaurar
-gdi exec -T postgres pg_restore -U postgres -d railway --clean --if-exists < "$(find /var/tmp/restaurar -name 'gdi-*.dump' | head -1)"
-
-gdi up -d
+# 3. Restaurar (pide escribir RESTAURAR)
+cd /opt/gdi && ./scripts/restaurar.sh $F
 ```
 
-**Verificar:** entrar al portal, abrir un expediente y un documento firmado. Si el PDF abre, la base
+Después: en un servidor nuevo, el paso 8 del manual (proxy y certificados); en el mismo
+servidor, `./scripts/configurar-proxy.sh`.
+
+**Verificar:** entrar al portal, abrir un expediente y un documento firmado, y firmar uno de
+prueba. Si el PDF viejo abre y el nuevo sale con el número siguiente al último de la copia, la base
 y los documentos quedaron alineados.
 
 !!! tip "Probalo antes de necesitarlo"
