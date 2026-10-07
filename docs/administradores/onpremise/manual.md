@@ -658,34 +658,87 @@ del empleado. Si Auth0 muestra *"Oops!, something went wrong"* → [14](#14-prob
 
 ## 12. Actualizar GDI
 
-> 🛑 **Primero el backup** (paso 13). Una actualización aplica migraciones a la base y **eso no
-> tiene vuelta atrás**: volver a la imagen anterior no revierte el schema.
+> 🛑 **Primero el backup** (paso 13). Una actualización aplica migraciones a la base: volver a
+> las imágenes anteriores **no** revierte la base. La única vuelta atrás es restaurar ese backup.
 
 GDI avisa por mail cuando hay una versión nueva. **Nada se actualiza solo**: el municipio elige
-el día y la hora, fuera del horario de atención.
+el día y la hora, fuera del horario de atención. El sistema queda cortado **uno o dos minutos**
+(entre el `up` del punto 5 y que los servicios vuelven a estar `healthy`); la bajada de imágenes
+del punto 4 no corta nada.
 
 ```bash
 cd /opt/gdi
-# 1. Backup completo (paso 13) y verificar que no quedó vacío.
-# 2. El instalador de la versión nueva. Pisa compose, scripts y manual; NO toca .env ni license/.
-docker run --rm <IMAGEN_INSTALADOR>:<VERSION_NUEVA> | tar x -C /opt/gdi
-# 3. La versión en el .env: una sola línea, la misma para todo.
-sed -i 's/^IMAGE_VERSION=.*/IMAGE_VERSION=<VERSION_NUEVA>/' .env
-# 4. Imágenes nuevas y contenedores nuevos (el migrator aplica las migraciones antes del backend).
-gdi pull && gdi up -d
-# 5. La configuración del proxy de la versión nueva. No pide certificados nuevos: los que ya
+# 1. Backup completo (paso 13), copiado FUERA del servidor, y verificar que no quedó vacío.
+# 2. La versión nueva (el número que vino en el aviso de GDI). Anotá también la actual:
+#    es a la que se vuelve si algo sale mal.
+NUEVA=2026.MM.NN                                 # ← el número real, sin < >
+grep ^IMAGE_VERSION= .env | tee backups/version-anterior.txt
+[[ $NUEVA =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]+$ ]] && echo "OK $NUEVA" || echo "FALTA el número en NUEVA"
+# 3. El instalador de la versión nueva. Pisa compose, scripts y manual; NO toca .env ni license/.
+docker run --rm <IMAGEN_INSTALADOR>:$NUEVA | tar x -C /opt/gdi
+# ¿Trae variables nuevas? Lista las que están en el ejemplo y no en tu .env:
+comm -23 <(grep -oE '^[A-Z0-9_]+=' .env.example | sort -u) <(grep -oE '^[A-Z0-9_]+=' .env | sort -u)
+sed -i "s/^IMAGE_VERSION=.*/IMAGE_VERSION=$NUEVA/" .env
+# 4. Imágenes nuevas. No corta nada: los servicios siguen andando con las anteriores.
+gdi pull
+# 5. Contenedores nuevos (el migrator aplica las migraciones antes del backend).
+gdi up -d
+# 6. La configuración del proxy de la versión nueva. No pide certificados nuevos: los que ya
 #    existen se conservan. (Desde 2026.09.15 evita que storage.<BASE> quede en 502 al actualizar.)
 set -a; . ./npm-admin.txt; set +a
 ./scripts/configurar-proxy.sh                   # con R2: SIN_STORAGE=1 ./scripts/configurar-proxy.sh
 ```
 
-**CHECK:** el mismo del paso 7, y además `curl -s https://panel.<BASE>/api/version | jq -r .paquete`
-→ `<VERSION_NUEVA>`. Entrá al portal y abrí un expediente: si algo quedó mal, es ahora cuando
-querés enterarte, con el backup fresco.
+- **El `comm` del punto 3 lista algo** → el aviso de la versión dice qué valor lleva cada
+  variable nueva. Agregala al `.env` con `nano .env` antes del punto 5. Si no lista nada, no hay
+  variables nuevas.
+- **El `pull` falla a la mitad** (red, token vencido) → todavía no cambió nada que importe: los
+  servicios siguen con la versión anterior. Repetí `gdi pull` hasta que termine. Si no se puede
+  hoy, dejá todo como estaba: `docker run --rm <IMAGEN_INSTALADOR>:<la anterior> | tar x -C /opt/gdi`
+  y el `sed` del punto 3 con ese número (el que guardaste en `backups/version-anterior.txt`).
+- **Saltar versiones** (de la `.13` a la `.15` sin pasar por la `.14`) se puede: el migrator
+  aplica en orden todas las migraciones pendientes. Si una versión exige pasar por otra, el aviso
+  de GDI lo dice.
 
-**Volver atrás** son **dos** cosas, y las dos hacen falta: el instalador y la versión anteriores
-(los mismos pasos 2 y 3 con la versión vieja) **y restaurar el dump** (paso 13). Hacer solo lo
-primero deja la base migrada contra código viejo: no es volver atrás, es otro sistema roto.
+**CHECK:** el mismo del paso 7, y además `curl -s https://panel.<BASE>/api/version | jq -r .paquete`
+→ el número de `NUEVA`. Entrá al portal, abrí un expediente y firmá un documento de prueba: si algo
+quedó mal, es ahora cuando querés enterarte, con el backup fresco.
+
+### 12.1. Volver atrás
+
+Volver atrás **es restaurar el backup del punto 1** con la versión anterior. Se pierde **todo** lo
+que se cargó después de ese backup, y los números de documento emitidos en el medio **se vuelven a
+usar**. Por eso:
+
+> ⛔ **Solo dentro de la ventana de la actualización**, antes de que los empleados trabajen con la
+> versión nueva. Si ya firmaron documentos con ella, **no vuelvas atrás**: avisale a GDI, que
+> corrige hacia adelante.
+
+```bash
+cd /opt/gdi
+# 1. El instalador de la versión del backup (la que se guardó en el punto 2 de arriba).
+ANTERIOR=$(cut -d= -f2 backups/version-anterior.txt) && echo $ANTERIOR
+docker run --rm <IMAGEN_INSTALADOR>:$ANTERIOR | tar x -C /opt/gdi
+# 2. Restaurar: borra base y documentos de este servidor y los reemplaza por los del backup,
+#    junto con el .env (que vuelve a tener la versión anterior). Pide escribir RESTAURAR.
+sudo ./scripts/restaurar.sh AAAA-MM-DD          # la fecha de los archivos del backup
+# 3. El proxy de esa versión.
+set -a; . ./npm-admin.txt; set +a
+./scripts/configurar-proxy.sh
+```
+
+**CHECK:** el del paso 7, y `grep ^IMAGE_VERSION= .env` → la versión anterior. Firmá un documento
+de prueba: tiene que salir con el número siguiente al último del backup.
+
+> Si la versión anterior es **anterior a 2026.09.16**, su instalador no trae `restaurar.sh`.
+> Antes del punto 1 copialo de la versión actual: `cp scripts/restaurar.sh backups/`, y en el
+> punto 2 corré `sudo ./backups/restaurar.sh AAAA-MM-DD`.
+
+**No alcanza con volver a las imágenes viejas ni con un `pg_restore` encima** (probado el
+07/10/2026): las tablas que agregó la versión nueva quedan en la base, y los PDF firmados después
+del backup quedan en el almacenamiento. El primer documento que se firma choca contra uno de esos
+PDF (`r2_worm_locked_numero_contaminado`) y **la firma de ese tipo queda trabada**. `restaurar.sh`
+borra la base y los documentos antes de restaurar justamente por eso.
 
 ---
 
@@ -712,7 +765,7 @@ Un servidor perdido se recupera con **cinco** cosas:
 cd /opt/gdi && mkdir -p backups && FECHA=$(date +%F)
 gdi exec -T postgres pg_dump -U postgres railway -Fc > backups/gdi-$FECHA.dump
 gdi stop storage     # unos segundos: que no entre un documento a medio guardar
-docker run --rm -v gdi_storage_data:/srv -v /opt/gdi/backups:/backup alpine tar czf /backup/documentos-$FECHA.tar.gz -C /srv .
+docker run --rm -v gdi_storage_data:/srv:ro -v /opt/gdi/backups:/backup redis:7-alpine tar czf /backup/documentos-$FECHA.tar.gz -C /srv .
 gdi start storage
 tar czf backups/config-$FECHA.tar.gz .env license/ $( [ -f npm-admin.txt ] && echo npm-admin.txt )
 # Solo al actualizar (una vez por versión):
@@ -739,18 +792,42 @@ municipio): ver la [guía de copias de seguridad](backups.md). Si se arma con `c
 **Reglas:** siempre **fuera** del servidor, y al menos una restauración de prueba en otra máquina.
 El `.env` y el `.lic` son secretos: guardalos como contraseñas.
 
-**Restaurar:**
+### 13.1. Restaurar en un servidor nuevo
 
-```bash
-cd /opt/gdi
-gunzip -c backups/imagenes-AAAA-MM-DD.tar.gz | docker load        # si no hay acceso al registro
-tar xzf backups/config-AAAA-MM-DD.tar.gz
-gdi up -d postgres
-gdi exec -T postgres pg_restore -U postgres -d railway --clean --if-exists < backups/gdi-AAAA-MM-DD.dump
-docker run --rm -v gdi_storage_data:/srv -v /opt/gdi/backups:/backup alpine tar xzf /backup/documentos-AAAA-MM-DD.tar.gz -C /srv
-sudo chown -R 999:999 license && sudo chmod 644 license/*.lic
-gdi up -d
-```
+Para volver atrás una actualización en el mismo servidor, ver el paso 12.1 (*Volver atrás*). Acá:
+el servidor se perdió y hay que levantar GDI en otro, con el backup.
+
+> ⛔ **En el servidor nuevo NO hagas los pasos 4 a 7.** `generar-claves.sh` inventa una contraseña
+> de base nueva y `gdi up` crea la base con ella; después el `.env` restaurado trae la vieja y
+> **no levanta ningún servicio** (`password authentication failed`, probado el 07/10/2026). Auth0
+> ya existe (paso 4) y el `.env` viene en el backup.
+
+1. **DNS** (sección 1.4): si el servidor nuevo tiene otra IP, cambiá los 7 registros y esperá
+   a que resuelvan. Los dominios tienen que ser **los mismos**: si cambian, avisale a GDI.
+2. **Pasos 2 y 3** del manual, con el instalador de **la versión del backup** (no la última).
+   Si no sabés cuál es, está en el `.env` del backup:
+   `tar xzf config-AAAA-MM-DD.tar.gz -O .env | grep ^IMAGE_VERSION=`.
+3. **Los archivos del backup** (`gdi-…dump`, `documentos-…tar.gz` y `config-…tar.gz`) en
+   `/opt/gdi/backups/`. Sin acceso al registro, también `imagenes-…tar.gz`, y antes de seguir:
+   `gunzip -c backups/imagenes-AAAA-MM-DD.tar.gz | docker load`.
+4. **Restaurar.** Pide escribir RESTAURAR. Baja las imágenes, crea la base con la contraseña del
+   `.env` del backup y deja base, documentos, `.env`, licencia y `npm-admin.txt` como estaban:
+
+    ```bash
+    cd /opt/gdi
+    sudo ./scripts/restaurar.sh AAAA-MM-DD       # con R2: sudo SIN_STORAGE=1 ./scripts/restaurar.sh …
+    ```
+
+5. **La función `gdi`** del paso 7 (en `~/.bashrc`) y su **CHECK**, sin el `gdi up -d`: ya lo
+   hizo el script.
+6. **Paso 8 completo.** El proxy no viaja en el backup: hay que crear su administrador y correr
+   `configurar-proxy.sh`, que pide los certificados de nuevo.
+
+**CHECK:** el del paso 8, y en el portal: los documentos firmados antes del backup se abren, y un
+documento nuevo se firma con el número siguiente al último del backup.
+
+> `restaurar.sh` sirve también para el ensayo que piden las reglas de arriba: una máquina virtual,
+> los pasos 2 y 3, el backup y el script. Unos 2 minutos más el paso 8.
 
 ---
 
@@ -767,6 +844,8 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 | `manifest unknown` al bajar el instalador o las imágenes | esa versión no está publicada, o `IMAGE_VERSION` está mal escrita | revisar el formato `AAAA.MM.N`. **No bajar otra versión**: avisar a GDI |
 | `denied` / `unauthorized` en un `pull` | el token no tiene acceso, o se perdió el `docker login` | rehacer 3.1; si sigue, avisar a GDI |
 | `migrator` en `Exited (1)` y el backend no arranca | falló una migración | `gdi logs migrator` y escribirle a GDI con ese log. **No forzar** el arranque |
+| `migrator` en `Exited (1)` con `password authentication failed` después de restaurar | se instaló con los pasos 5 a 7 y después se restauró el `.env` del backup: la base tiene otra contraseña | `sudo ./scripts/restaurar.sh AAAA-MM-DD` (13.1): borra esa base y la crea con la del backup |
+| Después de volver atrás, ningún documento de un tipo se firma: `r2_worm_locked_numero_contaminado` | se restauró la base pero no se vació el almacenamiento: un PDF firmado después del backup tiene el número que la base vuelve a ofrecer | `sudo ./scripts/restaurar.sh AAAA-MM-DD` con el mismo backup (12.1) |
 | Un contenedor en `Restarting` | falta una variable del `.env` | `gdi logs <servicio>` dice cuál; completarla y `gdi up -d` |
 | Fallan cosas sueltas (base, login) después de editar el `.env` desde Windows | fines de línea de Windows | `sed -i 's/\r$//' .env` y `gdi up -d` |
 
