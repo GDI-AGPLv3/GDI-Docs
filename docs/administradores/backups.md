@@ -108,7 +108,7 @@ Opcionalmente podes cambiar donde se guarda la copia:
     python sync.py
     ```
 
-    Descarga **solo lo que cambio** desde la ultima vez. Es lo que vas a usar el 99% de las veces. Rapido, aunque tengas miles de documentos.
+    Descarga **solo lo que cambio** desde la ultima vez: los datos y los **PDF de los documentos firmados**. Es lo que vas a usar el 99% de las veces. Rapido, aunque tengas miles de documentos.
 
 === "Descarga completa"
 
@@ -116,23 +116,20 @@ Opcionalmente podes cambiar donde se guarda la copia:
     python sync.py --full
     ```
 
-    Vuelve a descargar **todo desde cero**, ignorando lo que ya tenias. Util la primera vez, o si queres regenerar la copia.
+    Vuelve a descargar **todo desde cero**, ignorando lo que ya tenias: datos y PDF. Util si queres regenerar la copia. Los PDF que ya tenes en la carpeta no se vuelven a bajar.
 
-=== "Incluir los PDF firmados"
-
-    ```bash
-    python sync.py --pdfs
-    ```
-
-    Ademas de los datos, descarga los **PDF de los documentos firmados** a la carpeta `pdfs/`. Los archivos que ya tenes no se vuelven a bajar.
-
-=== "Todo desde cero + PDF"
+=== "Solo datos, sin PDF"
 
     ```bash
-    python sync.py --full --pdfs
+    python sync.py --sin-pdfs
     ```
 
-    Combinacion completa: regenera la base y baja todos los PDF.
+    Copia los datos y **no** baja los PDF. Util si en ese momento no tenes espacio en disco o queres una corrida rapida.
+
+!!! info "Los PDF se bajan siempre desde la version 3.4.0"
+    Hasta la version 3.3.1 los PDF solo se bajaban con la opcion `--pdfs`: sin ella, la copia tenia todos los datos pero ningun documento. Desde la 3.4.0 se bajan en cada corrida. La opcion `--pdfs` se sigue aceptando, asi que no hace falta cambiar scripts ni tareas programadas.
+
+    La **primera corrida despues de actualizar** baja todos los PDF firmados de la historia del municipio y tarda bastante mas que de costumbre. Las siguientes solo bajan los nuevos.
 
 ### Que vas a ver
 
@@ -151,6 +148,9 @@ GDI Sync System
   ...
 
   Total: 59 filas nuevas/actualizadas.
+
+  Sincronizando PDFs en 'pdfs'...
+  OK   documentos (PDFs)                          +8 descargados
 ```
 
 La **primera corrida** descarga todo (puede tardar varios minutos segun el volumen). Las **siguientes** son casi instantaneas porque solo traen lo nuevo.
@@ -162,7 +162,14 @@ La **primera corrida** descarga todo (puede tardar varios minutos segun el volum
 | Resultado | Descripcion |
 |-----------|-------------|
 | **`backup.db`** | Base de datos SQLite con todas las tablas de tu municipio (usuarios, expedientes, documentos, notas, legajos, etc). |
-| **`pdfs/`** | Carpeta con los PDF de los documentos firmados (solo si usaste `--pdfs`). El nombre de cada archivo es su numero oficial. |
+| **`pdfs/`** | Carpeta con los PDF de los documentos firmados (salvo que uses `--sin-pdfs`). El nombre de cada archivo es su numero oficial. |
+
+!!! tip "Si un PDF no se pudo bajar"
+    La copia no se corta: el PDF queda anotado en la tabla `_pdfs_pendientes` de `backup.db` y se reintenta en las corridas siguientes. Si falla 5 veces seguidas queda como `no_disponible` y se deja de reintentar (`python sync.py --full` los vuelve a intentar). Para ver cuales faltan, abri `backup.db` y consulta:
+
+    ```sql
+    SELECT * FROM _pdfs_pendientes;
+    ```
 
 Para abrir `backup.db` podes usar herramientas gratuitas:
 
