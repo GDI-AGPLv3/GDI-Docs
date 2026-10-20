@@ -392,11 +392,17 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 
 - Maximo **20 MB**; el contenido debe ser un PDF real (se validan los magic bytes, no solo el nombre).
 - GDI agrega la hoja de firma al final del PDF importado.
-- `embedded_files` **no esta soportado** en Importado (el PDF no se regenera).
+- Si el tipo tiene "Admite archivos embebidos", el Importado acepta [`embedded_files`](#adjuntos-embebidos-embedded_files): GDI los incrusta dentro del PDF importado antes de firmarlo. El PDF importado mas sus adjuntos no puede pasar de **25 MB en total**.
+
+!!! info "PDF importado que ya viene firmado"
+    Si el PDF que manda el portal ya trae firmas digitales (por ejemplo, de un escribano), GDI agrega la hoja de firma y los adjuntos **sin tocar esas firmas**: los suma al final del archivo, sin reescribir lo anterior. Si no puede hacerlo sin invalidarlas, no firma: el documento termina con error en el [estado del documento](#consultar-el-estado-de-un-documento) en vez de `signed`. Un lector de PDF puede indicar que el documento tuvo cambios despues de esas firmas: son la hoja de firma y los adjuntos de GDI.
+
+!!! note "Nombres repetidos"
+    Si el PDF importado ya trae un adjunto con el mismo nombre que uno de `embedded_files` (por ejemplo `factura.txt`), GDI le agrega un numero al del portal (`factura (1).txt`) para que no se confundan al descargarlos.
 
 ### Adjuntos embebidos (`embedded_files`)
 
-Para tipos con "Admite archivos embebidos" habilitado (y que no sean Importado), se pueden adjuntar archivos que viajan **dentro** del PDF final:
+Para tipos con "Admite archivos embebidos" habilitado (HTML, FFCC o Importado), se pueden adjuntar archivos que viajan **dentro** del PDF final:
 
 ```json
 {
@@ -409,7 +415,10 @@ Para tipos con "Admite archivos embebidos" habilitado (y que no sean Importado),
 }
 ```
 
-Limites: maximo **10 archivos** de **50 MB** cada uno. Extensiones permitidas: `csv, doc, docx, dxf, jpeg, jpg, ods, odt, pdf, png, txt, xls, xlsx`. Los PDF se validan por contenido (magic bytes).
+Limites: maximo **10 archivos**, hasta **20 MB** cada uno y **20 MB** entre todos. En un tipo Importado, ademas, el PDF importado mas los adjuntos no puede pasar de **25 MB**. Extensiones permitidas: `csv, doc, docx, dxf, jpeg, jpg, ods, odt, pdf, png, txt, xls, xlsx`. Los PDF se validan por contenido (magic bytes).
+
+!!! tip "Tamano del pedido"
+    `pdf_base64` y `content_base64` viajan en base64, que pesa un tercio mas que el archivo: 25 MB de archivos son unos 34 MB de pedido.
 
 ### Errores frecuentes
 
@@ -418,5 +427,7 @@ Limites: maximo **10 archivos** de **50 MB** cada uno. Extensiones permitidas: `
 | `400` | `Tipo de documento 'X' no habilitado para firma ciudadana (TAD)` | Acronimo inexistente o tipo sin "Firmable por TAD" (mensaje identico en ambos casos, anti-enumeracion) |
 | `400` | `El tipo de documento 'PROV' no es Importado: 'pdf_base64' no esta permitido` | Campo de contenido que no corresponde al tipo |
 | `400` | `'pdf_base64' no decodifica a un PDF valido` | Base64 corrupto o contenido que no es PDF |
+| `400` | `El PDF importado mas sus adjuntos supera el maximo permitido (25MB entre todo)` | Importado: el PDF mas `embedded_files` pasan de 25 MB |
+| `400` | `El tipo de documento 'X' no admite archivos adjuntos embebidos ('accepts_embedded_files' = false)` | Vino `embedded_files` y el tipo no tiene "Admite archivos embebidos" |
 | `403` | `El ciudadano debe estar 'validado' para esta operacion (estado actual: pendiente)` | Ciudadano sin validar |
 | `403` | Ciudadano bloqueado | Estado `bloqueado` |
