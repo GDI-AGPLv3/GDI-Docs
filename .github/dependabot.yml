@@ -1,0 +1,15 @@
+# Dependabot (GDI-773A): solo actualiza las acciones de GitHub Actions (fijadas por SHA).
+# Las librerias de Python NO: requirements.lock lleva hashes y lo regeneramos a mano con uv
+# cuando llega un aviso de seguridad (ver lock-check.yml).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      acciones:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
