@@ -21,7 +21,11 @@ Referencia completa de los codigos HTTP, mensajes de error y guia de troubleshoo
 | 404 | Not Found | Recurso no encontrado |
 | 409 | Conflict | Estado invalido (ej: firmar documento ya firmado) |
 | 422 | Unprocessable Entity | Validacion fallida |
+| 429 | Too Many Requests | Rate limit de la API Key, o cola de firma saturada. Trae `Retry-After` (ver abajo) |
 | 500 | Internal Server Error | Error del servidor |
+| 503 | Service Unavailable | Servidor ocupado o una verificación que no se pudo hacer. Trae `Retry-After` |
+
+Cambios recientes en estos códigos: [Cambios de la API](changelog.md).
 
 ---
 
@@ -45,8 +49,11 @@ Estos errores ocurren cuando las credenciales son invalidas o estan ausentes.
 |---------|-------|
 | `X-API-Key header requerido` | No se incluyo el header `X-API-Key` en la peticion |
 | `X-User-ID header requerido para REST API` | No se incluyo el header `X-User-ID` en la peticion |
-| `API Key invalida o expirada` | La API Key proporcionada no existe o ha expirado |
-| `Usuario no autorizado para esta API Key` | El `X-User-ID` no esta asociado a la API Key utilizada |
+| `API Key inválida` | La API Key no existe. También sale si trae caracteres no ASCII |
+| `API Key inactiva` | El municipio desactivó la API Key |
+| `API Key expirada` | La API Key pasó su fecha de vencimiento |
+| `Municipalidad inactiva` | El municipio de la API Key está inactivo |
+| `Usuario no autorizado para esta API Key` | El `X-User-ID` no está asociado a la API Key, o el municipio dio de baja a ese usuario |
 
 **Ejemplo de respuesta:**
 
@@ -83,6 +90,7 @@ Estos errores ocurren cuando el body o los parametros de la peticion son invalid
 | `reference es requerido` | Falta la referencia al crear un recurso |
 | `reason es requerido y no puede estar vacio` | Falta el motivo en operaciones que lo requieren (ej: transferencia) |
 | `El parametro 'q' es requerido y debe tener al menos 2 caracteres` | La busqueda requiere al menos 2 caracteres |
+| `document_id inválido (se espera UUID)` | Un id del path o del body no es un UUID. El mismo texto sale con `case_id`, `record_id`, `proposed_id`, `document_draft_id`, `relation_id` o `link_id` |
 
 **Ejemplo de respuesta:**
 
@@ -104,7 +112,10 @@ Estos errores ocurren cuando se intenta realizar una operacion incompatible con 
 | `Documento no puede firmarse en su estado actual` | Se intento firmar un documento que no esta en estado `sent_to_sign` |
 | `Documento no puede rechazarse en su estado actual` | Se intento rechazar un documento que no esta en un estado que permita rechazo |
 | `Solo se pueden eliminar documentos en estado draft o rejected` | Se intento eliminar un documento en un estado no permitido |
-| `Solo se puede reemplazar PDF en documentos draft` | Se intento reemplazar el PDF de un documento importado que ya no esta en `draft` |
+| `Solo se puede reemplazar PDF en documentos draft o rejected` | Se intentó reemplazar el PDF de un documento importado que está en firma o ya es oficial |
+| `El documento '<id>' ya fue rechazado y no puede ser modificado` | Se intentó rechazar un documento que ya estaba rechazado |
+| `No se puede rechazar un documento completado` | Se intentó rechazar un documento oficial (ya numerado) |
+| `El documento '<id>' fue firmado y convertido en acto oficial durante el proceso de rechazo...` | El documento se firmó mientras se lo rechazaba. Quedó firmado; el rechazo no se aplicó |
 
 **Ejemplo de respuesta:**
 
@@ -128,6 +139,7 @@ Estos errores ocurren cuando el usuario autenticado no tiene los permisos necesa
 | `Sin permisos para asignar` | El usuario no tiene permiso para asignar el expediente |
 | `Sin permisos para transferir` | El usuario no tiene permiso para transferir el expediente |
 | `Usuario no autorizado para firmar este documento` | El usuario no esta en la lista de firmantes del documento |
+| `Sin permiso de rango para numerar '<tipo>'...` | El numerador no tiene el rango que pide el tipo de documento |
 | `Sin permisos para vincular documento` | El usuario no tiene permiso para vincular documentos al expediente |
 
 **Ejemplo de respuesta:**
@@ -137,6 +149,20 @@ Estos errores ocurren cuando el usuario autenticado no tiene los permisos necesa
   "error": "Usuario no autorizado para firmar este documento"
 }
 ```
+
+---
+
+## Esperas: 429 y 503
+
+Estas respuestas traen la cabecera `Retry-After` con los segundos que hay que esperar.
+
+| Código | Mensaje (ejemplo) | Qué hacer |
+|--------|-------------------|-----------|
+| `429` | Rate limit de la API Key | Esperar `Retry-After` y bajar el ritmo de pedidos |
+| `429` | `El sistema de firma está temporalmente saturado. Reintentá en ~30 segundos.` | Esperar `Retry-After` y reintentar una vez |
+| `429` sin `Retry-After` | `El sistema de firma no puede procesar esta cola en este momento y necesita intervención manual. Contactá a soporte.` | No reintentar: avisar al municipio |
+| `503` | `Servidor ocupado, reintente en unos segundos` | Esperar `Retry-After` y reintentar |
+| `503` | `No pudimos verificar el PDF certificado de origen. Reintentá en unos segundos.` (con `"code": "CERTIFIED_CHECK_RETRY"`) | Esperar `Retry-After` y reintentar la firma |
 
 ---
 
@@ -160,7 +186,8 @@ Estos errores ocurren cuando el usuario autenticado no tiene los permisos necesa
 2. **Parsear el campo `error`** del JSON de respuesta para mostrar mensajes claros al usuario.
 3. **Implementar reintentos** para errores 500 con backoff exponencial (maximo 3 reintentos).
 4. **No reintentar** errores 400, 401, 403, 404 o 409 sin modificar la peticion.
-5. **Loguear el request y response** completos para facilitar el debugging.
+5. **Respetar `Retry-After`** en los `429` y `503`: esperar esos segundos antes del reintento.
+6. **Loguear el request y response** completos para facilitar el debugging.
 
 ```python
 import requests

@@ -47,6 +47,20 @@ Cada expediente tiene:
 
 ---
 
+## Motivo del expediente
+
+Al crear un expediente, el campo **Motivo** explica de qué se trata el trámite. Ese texto queda en la carátula.
+
+| Propiedad | Valor |
+|-----------|-------|
+| **Mínimo** | 5 caracteres |
+| **Máximo** | 100 caracteres, con contador `0/100` |
+| **Obligatorio** | Sí |
+
+Mientras el motivo tiene menos de 5 caracteres, el botón **"Crear"** queda deshabilitado. Debajo del campo aparece cuántos caracteres faltan. Por ejemplo: *"El motivo debe tener al menos 5 caracteres (faltan 2)."* Los espacios al principio y al final no cuentan.
+
+---
+
 ## Iniciador del expediente
 
 Al crear un expediente, ademas del tipo y el motivo, se elige **quien lo inicia** con un selector de dos opciones:

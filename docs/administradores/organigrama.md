@@ -64,6 +64,11 @@ Cada reparticion puede tener un responsable (titular del departamento). El boton
 | **Cambiar responsable** | Si ya hay un responsable asignado, se puede reemplazar. El sistema pide confirmacion antes de hacer el cambio |
 | **Quitar responsable** | Quita al responsable actual. El departamento queda sin titular asignado |
 
+!!! warning "Una persona, una sola reparticion a cargo"
+    Una persona puede ser responsable de **una sola** reparticion. Si ya es responsable de otra, al asignarla aparece el aviso *"La persona ya es responsable de otro sector. Debe quitarlo primero."* y no se hace el cambio.
+
+    Para asignarla: abri la otra reparticion, usa **Quitar responsable** y despues volve a asignarla aca.
+
 ---
 
 ## Estadisticas de la Reparticion

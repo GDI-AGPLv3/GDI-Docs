@@ -57,6 +57,11 @@ demora suele ser lo que depende de terceros: los subdominios y la apertura de pu
   mismo disco no protege de nada. El manual indica qué copiar (la base, los documentos, la
   configuración y la licencia); dónde guardarlo y cada cuánto lo decide el municipio, con
   la [guía de copias de seguridad](backups.md) como ejemplo.
+- **Copia minuto a minuto (opcional):** GDI puede subir cada cambio de la base a un almacenamiento
+  S3 del municipio. Así se pierde como mucho un minuto de trabajo. Viene apagada: ver
+  [Copia de la base minuto a minuto](copia-minuto-a-minuto.md).
+- **Servicios colgados:** si un servicio deja de responder, GDI lo reinicia solo y avisa por mail
+  a quien recibe las alertas. Si se repite, el mail lo marca como urgente.
 - **Licencia:** se renueva sola mientras el contrato esté vigente. Si se amplía el contrato (más
   municipios, módulos nuevos), la instalación lo recibe sin tocar el servidor.
 

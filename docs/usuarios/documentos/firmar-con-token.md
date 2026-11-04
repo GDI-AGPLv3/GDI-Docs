@@ -182,6 +182,26 @@ FirmadorGDI firma el documento localmente y envía el resultado al sistema. El n
 | ✅ Firma realizada con éxito | El documento quedó firmado correctamente |
 | Número oficial (ej: `INF-2026-00000042-TXST-AREA`) | Solo aparece si sos el numerador (último firmante) |
 
+!!! info "Un PDF certificado de origen no usa el token"
+    Si el documento es un [PDF certificado de origen](documento-importado.md#pdf-certificado-de-origen), GDI no abre FirmadorGDI ni pide el PIN. Registra tu **conformidad** y, si sos el numerador, le asigna el número oficial. El PDF queda igual al original.
+
+### Documentos certificados de origen en la firma conjunta
+
+Cuando firmás varios documentos juntos con el token (desde **"Firmar todo junto"**), GDI separa los PDF certificados de origen. Esos documentos no pasan por el token:
+
+- si sos el numerador, GDI los numera sin firma digital;
+- si sos un firmante común, GDI registra tu conformidad.
+
+Al terminar, la pantalla resume lo que pasó. Por ejemplo: *"18 firmados. 2 numerados sin firma digital porque vienen certificados de origen. 1 conformidad registrada. 1 con error."* Debajo aparece la lista de cada grupo:
+
+| Lista | Qué muestra |
+|-------|-------------|
+| **Numerados sin firma digital** | Número oficial y referencia. Si el número todavía no llegó, dice *"El número se asigna en unos segundos"* |
+| **Conformidades registradas** | Cada documento con la etiqueta **"Conformidad"** |
+| **Certificados con error** | Cada documento con el motivo del error. Los demás documentos de la tanda siguen igual |
+
+Si todos los documentos eran certificados de origen, GDI no abre FirmadorGDI. La pantalla final dice *"Tanda terminada sin usar el token"* y *"Todos los documentos venían certificados de origen."*
+
 ---
 
 ## Problemas frecuentes

@@ -51,7 +51,29 @@ Al hacer clic en un tipo se muestra su ficha completa:
 | **Tipo de Firma** | Electronica o Digital |
 | **Estado** | Activo / Inactivo |
 | **Confiable** | Gobierno |
+| **Numeracion Especial** | `Activada` o `Desactivada`. Ver *Numeracion especial vs. secuencial general* mas abajo |
+| **Archivos Embebidos** | `Permite adjuntos` o `Sin adjuntos`. Ver [Archivos embebidos y firma por TAD](#archivos-embebidos-y-firma-por-tad) |
+| **Firmable por ciudadanos (TAD)** | `Firmable TAD` o `No firmable TAD`. Ver [Archivos embebidos y firma por TAD](#archivos-embebidos-y-firma-por-tad) |
+| **Visibilidad** | `Interno`, `Reservado` o `Público`. Se define al crear el tipo y no se puede cambiar. Ver [Reservados](reservados.md) y [Documentos Publicos](documentos-publicos.md) |
 | **Fecha de Creacion** | Fecha en que se agrego a la organizacion |
+
+### Archivos embebidos y firma por TAD
+
+Los dos interruptores se cambian con el lapiz de *Informacion General*.
+
+**Archivos Embebidos** (*Permite adjuntar archivos embebidos*). Habilita el panel para adjuntar archivos que viajan **incrustados dentro del PDF firmado**. Ejemplo: un plano o una planilla que acompana a una resolucion y queda dentro del mismo PDF.
+
+- Se puede activar tambien en tipos **Importado**, firmables por TAD o no.
+- Los tipos NOTA y MEMO **no** soportan archivos embebidos. Si se activa en uno de ellos, la pantalla avisa: *"Los tipos NOTA y MEMO no soportan archivos embebidos en esta version: el backend va a rechazar la subida de adjuntos."*
+
+**Firmable por ciudadanos (TAD)** (*Habilita firma vía API TAD (Trámites a Distancia)*). Permite que un ciudadano (sin usuario GDI) cree y firme este tipo de documento desde el portal TAD del municipio.
+
+- Solo se activa en tipos con firma **Electronica (.p12)**: un ciudadano nunca firma con token.
+- Solo se activa en tipos Importado, HTML o FFCC. NOTA y MEMO no soportan firma TAD.
+- Con el tipo ya guardado como firmable TAD, aparece el boton **Descargar esquema para API**. Es el archivo que necesita quien conecta el portal TAD con GDI.
+
+!!! tip "Importado + TAD + embebidos"
+    Un tipo **Importado** firmable por TAD **tambien puede aceptar archivos embebidos**. Antes eran excluyentes y la pantalla no dejaba activar los dos. Ahora GDI incrusta los adjuntos dentro del PDF importado cuando empieza la firma, y el esquema para API los incluye.
 
 ### Origen Global
 

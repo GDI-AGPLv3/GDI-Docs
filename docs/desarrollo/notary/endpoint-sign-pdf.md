@@ -15,7 +15,7 @@ X-API-Key: {api_key}
 
 | Parametro | Tipo | Requerido | Descripcion |
 |-----------|------|-----------|-------------|
-| `pdf_file` | File | Si | PDF formato A4, max 10 MB |
+| `pdf_file` | File | Si | PDF formato A4, max 64 MB |
 | `name` | string | Si | Nombre del firmante (1-100 chars) |
 | `seal` | string | Si | Cargo del firmante (1-50 chars) |
 | `department` | string | Si | Departamento (1-100 chars) |
@@ -33,6 +33,31 @@ X-API-Key: {api_key}
     - `city` es **obligatorio** cuando se envia `document_number`
     - Para firma PAdES, el Backend debe enviar `cert_file` + `cert_password` (el certificado viene desde R2, no se busca localmente)
     - Si `expected_sha256` no coincide con el hash real del PDF recibido, se rechaza con `400 PDF_INTEGRITY_FAILED`
+    - Si el PDF trae una firma de certificación (DocMDP), se rechaza con `422 PDF_CERTIFIED` antes de estampar o firmar. Ver [Validaciones](validaciones.md#control-de-certificacion-docmdp)
+
+### Header X-Internal-Sign
+
+Además de la API Key, el Backend firma cada pedido con el header `X-Internal-Sign`. Es un
+HMAC-SHA256 con un secreto compartido (`NOTARY_INTERNAL_HMAC_SECRET`):
+
+```
+X-Internal-Sign: t=<unix_ts>,n=<nonce>,v2=<base64(HMAC_SHA256)>
+```
+
+El texto firmado es `{ts}|{nonce}|{METHOD}|{path}|{sha256_hex(pdf)}`. El hash es del contenido
+del PDF, no del body HTTP crudo.
+
+Notary rechaza con `401` un header que falta, que no coincide o que tiene **más de 60 segundos**.
+
+!!! tip "Reintentos: el header se arma de nuevo en cada intento"
+    El header lleva la hora. Si el cliente reintenta (por ejemplo, porque Notary estaba
+    arrancando), tiene que armar un `X-Internal-Sign` nuevo en **cada** intento. Si reusa el del
+    primer intento y los reintentos tardan más de un minuto, el último llega vencido:
+    `401 X-Internal-Sign timestamp expired or out of range`.
+
+    El Backend lo hace así en `/sign-pdf`, `/stamp-number`, `/sign-pdf/prepare` y
+    `/sign-pdf/finish`: `post_micro_with_coldstart_retry` recibe un `headers_factory` y lo llama
+    antes de cada intento.
 
 ## Response
 
@@ -98,8 +123,10 @@ flowchart TD
     SHA -->|Si| SHAV[Calcular SHA-256 del PDF recibido]
     SHAV --> SHAC{Hash coincide?}
     SHAC -->|No| SHAERR[Error 400 PDF_INTEGRITY_FAILED]
-    SHAC -->|Si| D
-    SHA -->|No| D[Validar parametros firma]
+    SHAC -->|Si| CERT
+    SHA -->|No| CERT{PDF certificado, ilegible o con contraseña?}
+    CERT -->|Si| CERTERR[Error 422 PDF_CERTIFIED y otros]
+    CERT -->|No| D[Validar parametros firma]
     D --> E{document_number?}
     E -->|Si| F[Validar stamp params]
     E -->|No| G[Determinar modo firma]
@@ -128,7 +155,7 @@ flowchart TD
 
 | Codigo | Error Code | Causa |
 |--------|------------|-------|
-| 400 | `FILE_TOO_LARGE` | PDF excede 10 MB |
+| 400 | `FILE_TOO_LARGE` | PDF excede 64 MB |
 | 400 | `INVALID_PDF_FILE` | No se puede leer el archivo |
 | 400 | `INVALID_PDF_FORMAT` | No comienza con `%PDF` |
 | 400 | `PDF_INTEGRITY_FAILED` | Hash SHA-256 del PDF no coincide con `expected_sha256` |
@@ -140,6 +167,12 @@ flowchart TD
 | 400 | `CERTIFICATE_LOAD_ERROR` | Error al cargar certificado desde `cert_file` |
 | 400 | `LayoutError` | No se encontro `end-text` o pagina llena (`FULLPAGE`) |
 | 401 | `INVALID_API_KEY` | API Key invalida o faltante |
+| 401 | - | `X-Internal-Sign` faltante, inválido o con más de 60 s |
+| 413 | `REQUEST_BODY_TOO_LARGE` | El pedido entero pasa `MAX_REQUEST_BODY_SIZE_MB` (68 MB por defecto) |
+| 422 | `PDF_CERTIFIED` | El PDF trae firma de certificación (DocMDP) |
+| 422 | `PDF_CERTIFICATION_INCONSISTENT` | `/Perms/DocMDP` sin firma real que lo respalde |
+| 422 | `PDF_SIGNATURES_UNREADABLE` | Las firmas del PDF no se pueden leer |
+| 422 | `PDF_ENCRYPTED_PASSWORD` | El PDF pide contraseña para abrirse |
 | 500 | `PADES_ERROR` | Error en firma PAdES |
 | 503 | `TSA_UNAVAILABLE` | Circuit breaker abierto: TSA no disponible |
 | 500 | - | Error interno del servidor |
@@ -190,6 +223,9 @@ Si no hay firmas:
 Estampa numero/fecha en el PDF y devuelve el PDF estampado en base64 mas las
 coordenadas donde el cliente de firma (FirmadorGDI) debe insertar la firma criptografica.
 Requiere API Key.
+
+Lleva el mismo control de certificación que `/sign-pdf`: un PDF certificado, ilegible o con
+contraseña de apertura recibe `422` y no se estampa.
 
 **Parametros (Form Data):**
 

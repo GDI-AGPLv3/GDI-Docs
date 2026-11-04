@@ -181,9 +181,32 @@ Cuenta las firmas PAdES existentes en un PDF:
 
 ```python
 def count_pades_signatures(pdf_content: bytes) -> int:
-    reader = PdfFileReader(io.BytesIO(pdf_content))
-    return len(list(reader.embedded_signatures))
+    try:
+        reader = open_reader(pdf_content)  # desencripta con "" si hace falta
+        return len(list(reader.embedded_signatures))
+    except Exception:
+        # Se loguea (notary.count_pades_signatures_parse_failed) y se asume 0
+        return 0
 ```
+
+## PDF con firmas previas o encriptado
+
+Antes de firmar, Notary revisa si el PDF trae una firma de certificación (DocMDP). Si la trae,
+no lo firma: responde `422 PDF_CERTIFIED`. La regla completa está en
+[Validaciones](validaciones.md#control-de-certificacion-docmdp).
+
+Un PDF con firmas comunes (de aprobación) sí se firma. La firma de GDI va como **revisión
+incremental**: se agregan bytes al final y el original queda igual, byte a byte. Así las
+firmas previas siguen válidas.
+
+Un PDF encriptado con contraseña de dueño también se firma:
+
+- se lee con `open_reader`, que hace `decrypt("")`;
+- se escribe con `open_incremental_writer`, que vuelve a encriptar la revisión nueva igual que
+  el original (`encrypt("")`).
+
+Las dos funciones están en `app/pdf_encryption.py`. Un PDF que pide contraseña para abrirse
+recibe `422 PDF_ENCRYPTED_PASSWORD`.
 
 ### verify_pades_signature
 

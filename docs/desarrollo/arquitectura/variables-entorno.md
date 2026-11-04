@@ -20,6 +20,16 @@ Tabla consolidada de todas las variables de entorno del ecosistema GDI, agrupada
 | `FRONTEND_URL` | URL del frontend (CORS) | No | `https://tu-frontend.tu-dominio.com` |
 | `TESTING_MODE` | Modo testing (sin Auth0) | No | `true` / `false` |
 | `PORT` | Puerto del servicio | No | `8000` (Docker lo inyecta) |
+| `BACKEND_ROLE` | Qué corre el proceso: `all` = API + trabajos de fondo; `web` = solo API; `worker` = solo trabajos de fondo (`python -m workers.run_all`). Un valor inválido frena el arranque | No | `all` (default) |
+| `ALERT_AMBIENTE` | Nombre del ambiente en `/api/v1/system/health` y en los mails de alerta. Si falta, se usa `SENTRY_ENV` | No | `prd` |
+| `SENTRY_ENV` | Marca de ambiente cuando falta `ALERT_AMBIENTE`. Sin ninguna de las dos, en una instalación propia la marca es `local` | No | `prd` |
+| `BOOT_DB_WAIT_SECONDS` | Segundos que el arranque espera a que la base responda | No | `90` (default) |
+| `DB_WATCHDOG_ESCALATE_AFTER_SECONDS` | Segundos sin llegar a Postgres antes de que el proceso salga (código `3`) para que el orquestador lo reinicie | No | `180` (default) |
+| `DB_WATCHDOG_ESCALATE_MIN_GAP_SECONDS` | Tiempo mínimo entre dos salidas de ese tipo | No | `300` (default) |
+
+!!! info "Procesos y chequeos de salud"
+    Cómo separar la API de los trabajos de fondo, qué devuelve cada chequeo de salud y por qué
+    `/health/db` responde `404` detrás de un proxy: ver [Backend › Procesos](../backend/index.md#procesos-backend_role).
 
 ## GDI-MCP Server (:8005)
 

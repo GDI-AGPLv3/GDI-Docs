@@ -75,6 +75,7 @@ La seccion de firmantes muestra a cada firmante con su estado actual y los badge
 |--------|-------|-------|-------------|
 | **Pendiente** | `Pendiente` | Amarillo | El firmante aun no ha firmado. Puede ser que no sea su turno todavia |
 | **Firmado** | `Firmado` | Verde | El firmante ya firmo el documento |
+| **Conformidad** | `Conformidad` | Azul claro | Solo en un [PDF certificado de origen](documento-importado.md#pdf-certificado-de-origen). El firmante dio su conformidad en GDI, sin firmar digitalmente el PDF. Al pasar el mouse: *"Dio conformidad en GDI; no firmó digitalmente el PDF porque viene certificado de origen."* |
 
 #### Badges especiales
 
@@ -87,6 +88,18 @@ Ejemplo de como se muestra un firmante numerador pendiente:
 ```
 Juan Perez  [NUM]  [Pendiente]
 ```
+
+### Aviso de certificado de origen
+
+Si el documento es un [PDF certificado de origen](documento-importado.md#pdf-certificado-de-origen), el panel lateral muestra un aviso azul con un escudo:
+
+```
+Número oficial: CONT-2026-00000012-MUNDEV-LEGAL
+Documento certificado de origen: GDI no lo modifica ni le agrega su firma.
+El número oficial figura acá, no dentro del PDF.
+```
+
+La línea del número oficial aparece recién cuando el documento ya está numerado.
 
 ### Expedientes propuestos
 
@@ -147,6 +160,9 @@ Al firmar correctamente, se muestra un dialogo modal de confirmacion.
 !!! note "Numero oficial"
     El numero oficial solo se asigna cuando firma el **numerador** (ultimo firmante). Si un firmante regular firma, el dialogo de exito no muestra numero oficial porque el documento aun no esta completamente firmado.
 
+!!! info "Con un PDF certificado de origen"
+    El diálogo suma este texto: *"El documento viene certificado de origen: no se usó el token ni se firmó el PDF. Quedó registrada tu conformidad en GDI. El número oficial figura en GDI, no dentro del PDF."*
+
 ### Documento finalizado
 
 Una vez completada la firma, el documento muestra el estado "Documento finalizado" junto con el resumen generado por IA, la informacion de firmantes y el PDF oficial.
@@ -162,6 +178,23 @@ El numero oficial se genera con el formato:
 ```
 
 Para una descripcion detallada del formato, consultar [Crear y Editar Documento - Formato del numero oficial](crear-editar-documento.md#formato-del-numero-oficial).
+
+---
+
+## Avisos cuando el PDF no se puede firmar
+
+Algunos documentos importados traen un PDF que GDI no puede firmar. En ese caso la firma se frena y el panel lateral muestra el motivo:
+
+| Aviso | Qué hacer |
+|-------|-----------|
+| *"Este PDF viene certificado de origen y no se puede firmar. Rechazá el documento, borralo e importalo de nuevo: GDI lo va a numerar sin firmarlo encima."* | Rechazar el documento, borrarlo e importar el PDF de nuevo |
+| *"Este PDF declara una certificación que ninguna firma respalda y no se puede firmar. Rechazá el documento, borralo, volvé a generar el PDF desde su origen e importalo de nuevo."* | Pedir el PDF de nuevo al organismo emisor e importarlo en un documento nuevo |
+| *"No se pudieron leer las firmas que trae este PDF (firma incompleta o archivo dañado). Rechazá el documento, borralo, volvé a generar el PDF desde su origen e importalo de nuevo."* | Igual que el anterior |
+| *"Este PDF está protegido con contraseña de apertura y no se puede firmar. Rechazá el documento, borralo e importá una copia sin contraseña."* | Importar una copia sin contraseña de apertura |
+| *"No pudimos verificar el PDF certificado de origen. Reintentá en unos segundos."* | Esperar unos segundos y firmar de nuevo |
+| *"El PDF cambió desde que se verificó como certificado de origen, así que no se numeró. Reintentá la firma; si se repite, rechazá el documento, borralo e importalo de nuevo."* | Firmar de nuevo. Si se repite, rechazar, borrar e importar de nuevo |
+
+Para rechazar, ver [Rechazar y Subsanar](rechazar-y-subsanar.md).
 
 ---
 

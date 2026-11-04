@@ -184,6 +184,7 @@ nav:
           - administradores/onpremise/index.md
           - Manual de instalación: administradores/onpremise/manual.md
           - Copias de seguridad: administradores/onpremise/backups.md
+          - Copia minuto a minuto: administradores/onpremise/copia-minuto-a-minuto.md
       - Implementación GDI:
           - administradores/implementacion/index.md
           - Marco Normativo: administradores/implementacion/marco-normativo.md
@@ -283,6 +284,7 @@ nav:
               - Estampado: desarrollo/notary/estampado.md
               - Certificados: desarrollo/notary/certificados.md
               - Validaciones: desarrollo/notary/validaciones.md
+          - PDFComposer: desarrollo/pdfcomposer/index.md
           - Database:
               - desarrollo/database/index.md
               - Schema Public: desarrollo/database/schema-public.md
