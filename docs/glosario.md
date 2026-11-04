@@ -24,8 +24,14 @@ Terminos y conceptos utilizados en el sistema GDI, organizados por audiencia.
 **Caratula (CAEX)**
 :   Documento autogenerado por el sistema al crear un expediente. Contiene los datos principales del tramite. No se crea manualmente.
 
+**Certificado de origen**
+:   PDF importado que ya trae la firma de certificación de otro organismo (por ejemplo, un escribano o una universidad). GDI lo guarda sin modificarlo: no le agrega la hoja de firma ni su firma digital. El número oficial figura en GDI, no dentro del PDF. Sus firmantes dan **Conformidad**.
+
 **Chips rapidos**
 :   Botones de acceso rapido en el Asistente AI del expediente (ej: "Quienes participaron", "Paso a Paso", "Que falta?").
+
+**Conformidad**
+:   Lo que registra un firmante en un PDF **certificado de origen**. El firmante aprueba el documento en GDI, pero no firma digitalmente el PDF ni usa el token. En la lista de firmantes aparece la insignia "Conformidad".
 
 **Copiar instrucciones**
 :   Funcion de la pantalla Home que copia al portapapeles las instrucciones para conectar un asistente AI externo (ChatGPT, Claude, etc.) con GDI.

@@ -1,6 +1,6 @@
 # Schema Audit
 
-Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schema_name}_audit` (ejemplo: `200_muni_audit`). Registra automaticamente cambios en 6 tablas criticas mediante triggers.
+Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schema_name}_audit` (ejemplo: `100_test_audit`). Registra automaticamente cambios en 9 tablas criticas mediante triggers.
 
 ## Arquitectura
 
@@ -8,7 +8,7 @@ Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schem
 {schema_name}_audit/
 +-- audit_log             # Tabla unica de auditoria
 +-- fn_log_change()       # Funcion que registra los cambios
-+-- 6 triggers            # Uno por tabla auditada
++-- 9 triggers            # Uno por tabla auditada (trg_audit_*)
 ```
 
 ## Tabla: audit_log
@@ -34,6 +34,7 @@ Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schem
 | `idx_{schema}_audit_audit_log_event_time` | `event_time` | Busqueda por fecha |
 | `idx_{schema}_audit_audit_log_table` | `table_name` | Filtrar por tabla |
 | `idx_{schema}_audit_audit_log_user` | `user_id` | Buscar por usuario |
+| `idx_{schema}_audit_audit_log_table_event` | `(table_name, event_time DESC)` | Pantalla de auditoría: una tabla, lo más nuevo primero (migración 137) |
 
 ## Valores de auth_source
 
@@ -47,11 +48,49 @@ Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schem
 
 ## Funcion: fn_log_change
 
-La funcion `fn_log_change()` se ejecuta como trigger AFTER en cada operacion. Captura:
+La funcion `fn_log_change()` se ejecuta como trigger AFTER en cada operacion. Desde la
+migración 137 recibe 2 argumentos por trigger (`TG_ARGV`):
 
-- **INSERT**: Registra `new_row` con la fila insertada
-- **UPDATE**: Registra `old_row`, `new_row` y calcula `changed_fields` comparando campo por campo
-- **DELETE**: Registra `old_row` con la fila eliminada
+| Argumento | Valores | Qué hace |
+|-----------|---------|----------|
+| `TG_ARGV[0]` modo | `full` o `diff` (sin argumento: `full`) | Cuánto de la fila se guarda |
+| `TG_ARGV[1]` columnas ruido | Lista separada por comas (puede ir vacía) | Columnas que solas no generan registro |
+
+Qué registra en cada operación:
+
+- **INSERT**: `new_row` con la fila insertada.
+- **UPDATE**: `old_row`, `new_row` y `changed_fields`. Antes calcula qué columnas cambiaron.
+- **DELETE**: `old_row` con la fila eliminada.
+
+### Cuándo no escribe nada
+
+En un UPDATE, la función descarta `updated_at` y las columnas ruido. Si no queda ningún cambio,
+**no escribe** la fila de auditoría. Ejemplos:
+
+- un usuario entra al sistema y solo cambia `users.last_access`;
+- el agente IA indexa un documento y solo cambia `official_documents.indexed_at`;
+- un UPDATE que no cambia ningún valor.
+
+### Modo full y modo diff
+
+| Modo | INSERT y DELETE | UPDATE |
+|------|-----------------|--------|
+| `full` | La fila entera | `old_row` y `new_row` con la fila entera |
+| `diff` | La fila sin las columnas pesadas | `old_row` y `new_row` con `id` y solo las columnas que cambiaron |
+
+Las columnas pesadas son `content`, `resume`, `short_resume`, `ai_summary` y `short_ai_summary`.
+En modo `diff` no se copia su valor. En un UPDATE queda la clave con el texto `"(cambió)"`.
+
+`changed_fields` queda **completo** en los dos modos: incluye `updated_at` y las columnas ruido.
+El BackOffice lo lee igual que antes.
+
+Ejemplo: un UPDATE de `cases` que cambia `status` guarda en modo `diff`:
+
+```json
+{ "old_row": { "id": "…", "status": "active" },
+  "new_row": { "id": "…", "status": "archived" },
+  "changed_fields": ["status", "updated_at"] }
+```
 
 ### Contexto de Auditoria (GUC)
 
@@ -78,6 +117,8 @@ La funcion usa `current_setting('app.user_id', true)` con el segundo parametro `
 
 ### Codigo SQL
 
+Fragmento de la versión de la migración 137 (la completa está en `sql/03-create-municipio.sql`):
+
 ```sql
 CREATE OR REPLACE FUNCTION "{SCHEMA_NAME}_audit"."fn_log_change"()
 RETURNS TRIGGER AS $$
@@ -85,93 +126,107 @@ DECLARE
     v_old_row JSONB := NULL;
     v_new_row JSONB := NULL;
     v_changed_fields TEXT[] := '{}';
-    v_key TEXT;
+    v_useful TEXT[];
     v_user_id UUID := NULL;
     v_auth_source VARCHAR(20) := NULL;
+    -- TG_ARGV[0] = 'full' | 'diff' (sin argumento = 'full')
+    -- TG_ARGV[1] = columnas ruido separadas por coma
+    v_mode TEXT := COALESCE(NULLIF(btrim(TG_ARGV[0]), ''), 'full');
+    v_noise TEXT[] := ARRAY(
+        SELECT btrim(x) FROM unnest(string_to_array(COALESCE(TG_ARGV[1], ''), ',')) AS x
+        WHERE btrim(x) <> ''
+    );
+    -- Columnas pesadas: en modo 'diff' no se copia su valor
+    v_heavy TEXT[] := ARRAY['content', 'resume', 'short_resume', 'ai_summary', 'short_ai_summary'];
 BEGIN
-    -- Leer contexto de aplicacion (inyectado via GUC)
-    BEGIN
-        v_user_id := NULLIF(current_setting('app.user_id', true), '')::UUID;
-    EXCEPTION WHEN OTHERS THEN
-        v_user_id := NULL;
-    END;
+    -- (lectura de app.user_id y app.auth_source, igual que antes)
 
-    BEGIN
-        v_auth_source := NULLIF(current_setting('app.auth_source', true), '');
-    EXCEPTION WHEN OTHERS THEN
-        v_auth_source := NULL;
-    END;
-
-    IF TG_OP = 'INSERT' THEN
-        v_new_row := to_jsonb(NEW);
-        INSERT INTO "{SCHEMA_NAME}_audit".audit_log(
-            schema_name, table_name, operation, user_name,
-            user_id, auth_source, new_row
-        ) VALUES (
-            TG_TABLE_SCHEMA, TG_TABLE_NAME, TG_OP, current_user,
-            v_user_id, v_auth_source, v_new_row
-        );
-        RETURN NEW;
-
-    ELSIF TG_OP = 'UPDATE' THEN
+    IF TG_OP = 'UPDATE' THEN
         v_old_row := to_jsonb(OLD);
         v_new_row := to_jsonb(NEW);
-        -- Detectar campos cambiados
-        FOR v_key IN SELECT jsonb_object_keys(v_new_row) LOOP
-            IF v_old_row->v_key IS DISTINCT FROM v_new_row->v_key THEN
-                v_changed_fields := array_append(v_changed_fields, v_key);
-            END IF;
-        END LOOP;
+
+        SELECT COALESCE(array_agg(n.key), '{}') INTO v_changed_fields
+        FROM jsonb_each(v_new_row) AS n
+        WHERE v_old_row -> n.key IS DISTINCT FROM n.value;
+
+        -- Cambios que cuentan: sin updated_at ni columnas ruido
+        SELECT COALESCE(array_agg(k), '{}') INTO v_useful
+        FROM unnest(v_changed_fields) AS k
+        WHERE k <> 'updated_at' AND NOT (k = ANY (v_noise));
+
+        IF cardinality(v_useful) = 0 THEN
+            RETURN NEW;  -- no escribe nada
+        END IF;
+
+        IF v_mode = 'diff' THEN
+            -- id + solo las claves utiles; las pesadas llevan '"(cambió)"'
+            ...
+        END IF;
+
         INSERT INTO "{SCHEMA_NAME}_audit".audit_log(
-            schema_name, table_name, operation, user_name,
-            user_id, auth_source, old_row, new_row, changed_fields
+            schema_name, table_name, operation, user_name, user_id, auth_source,
+            old_row, new_row, changed_fields
         ) VALUES (
-            TG_TABLE_SCHEMA, TG_TABLE_NAME, TG_OP, current_user,
-            v_user_id, v_auth_source, v_old_row, v_new_row, v_changed_fields
+            TG_TABLE_SCHEMA, TG_TABLE_NAME, TG_OP, current_user, v_user_id, v_auth_source,
+            v_old_row, v_new_row, v_changed_fields
         );
         RETURN NEW;
-
-    ELSIF TG_OP = 'DELETE' THEN
-        v_old_row := to_jsonb(OLD);
-        INSERT INTO "{SCHEMA_NAME}_audit".audit_log(
-            schema_name, table_name, operation, user_name,
-            user_id, auth_source, old_row
-        ) VALUES (
-            TG_TABLE_SCHEMA, TG_TABLE_NAME, TG_OP, current_user,
-            v_user_id, v_auth_source, v_old_row
-        );
-        RETURN OLD;
     END IF;
-
-    RETURN NULL;
+    -- INSERT y DELETE: en modo 'diff' se guarda la fila sin las columnas pesadas
+    ...
 END;
 $$ LANGUAGE plpgsql;
 ```
 
-## Tablas Auditadas (6)
+## Tablas Auditadas (9)
 
-| Tabla | Grupo | Que se registra |
-|-------|-------|-----------------|
-| `departments` | Estructura | Creacion, renombramiento, cambio de jerarquia |
-| `sectors` | Estructura | Creacion, activacion/desactivacion |
-| `official_documents` | Documentos | Numeracion de documentos oficiales |
-| `cases` | Expedientes | Creacion, cambio de estado, archivado |
-| `case_movements` | Expedientes | Transferencias, asignaciones, subsanaciones |
-| `case_official_documents` | Expedientes | Vinculacion/desvinculacion de docs a expedientes |
+| Tabla | Grupo | Modo | Columnas ruido | Que se registra |
+|-------|-------|------|----------------|-----------------|
+| `users` | Usuarios | `full` | `last_access` | Alta, cambios y baja de usuarios |
+| `departments` | Estructura | `full` | - | Creacion, renombramiento, cambio de jerarquia |
+| `sectors` | Estructura | `full` | - | Creacion, activacion/desactivacion |
+| `citizens` | Ciudadanos | `full` | - | Alta y cambios de ciudadanos |
+| `official_documents` | Documentos | `diff` | `indexed_at` | Numeracion de documentos oficiales |
+| `cases` | Expedientes | `diff` | `last_modified_at` | Creacion, cambio de estado, archivado |
+| `case_movements` | Expedientes | `diff` | - | Transferencias, asignaciones, subsanaciones |
+| `case_assignment_tasks` | Expedientes | `diff` | - | Tareas de asignacion |
+| `case_official_documents` | Expedientes | `diff` | - | Vinculacion/desvinculacion de docs a expedientes |
+
+Conteo por schema de municipio: 9 triggers `trg_audit_*` más 1 de sincronización
+(`trg_sync_user_registry`, en `users`), 10 en total. Aparte están los triggers de `updated_at`.
 
 ### Triggers
 
-Cada trigger es de tipo `AFTER INSERT OR UPDATE OR DELETE ... FOR EACH ROW`:
+Cada trigger es de tipo `AFTER INSERT OR UPDATE OR DELETE ... FOR EACH ROW` y pasa el modo y las
+columnas ruido:
 
 ```sql
--- Ejemplo: trigger en departments
-CREATE TRIGGER "trg_audit_departments"
-    AFTER INSERT OR UPDATE OR DELETE ON "{SCHEMA_NAME}"."departments"
-    FOR EACH ROW EXECUTE FUNCTION "{SCHEMA_NAME}_audit"."fn_log_change"();
+-- Ejemplo: trigger en cases
+CREATE TRIGGER "trg_audit_cases"
+    AFTER INSERT OR UPDATE OR DELETE ON "{SCHEMA_NAME}"."cases"
+    FOR EACH ROW EXECUTE FUNCTION "{SCHEMA_NAME}_audit"."fn_log_change"('diff', 'last_modified_at');
 ```
+
+### updated_at que ignora el ruido
+
+La migración 137 también creó `public.fn_set_updated_at_skip_noise()`. Es como
+`public.fn_set_updated_at()`, pero no mueve `updated_at` cuando lo único que cambió son las
+columnas ruido. Se usa solo en 2 tablas:
+
+| Tabla | Trigger | Columna ruido |
+|-------|---------|---------------|
+| `users` | `trg_users_updated_at` | `last_access` |
+| `official_documents` | `trg_official_documents_updated_at` | `indexed_at` |
+
+Un UPDATE que cambia otra columna, que pone `updated_at` a mano o que no cambia nada sigue
+moviendo `updated_at` como siempre. Las demás tablas siguen con `public.fn_set_updated_at()`.
 
 !!! note "Tablas NO auditadas"
     Tablas de alta frecuencia como `document_draft`, `document_signers`, `user_roles` y `notes_recipients` no tienen triggers de auditoria para evitar impacto en rendimiento. Solo se auditan las tablas donde los cambios tienen impacto legal o administrativo.
+
+!!! info "Lo ya escrito no cambia"
+    La migración 137 no borra ni achica los registros que ya estaban en `audit_log`. Rige para
+    los cambios nuevos.
 
 ## Consultas Utiles
 
@@ -179,7 +234,7 @@ CREATE TRIGGER "trg_audit_departments"
 
 ```sql
 SELECT event_time, table_name, operation, user_id, changed_fields
-FROM "200_muni_audit".audit_log
+FROM "100_test_audit".audit_log
 ORDER BY event_time DESC
 LIMIT 20;
 ```
@@ -190,7 +245,7 @@ LIMIT 20;
 SELECT event_time, operation, user_id, auth_source,
        new_row->>'case_number' as case_number,
        new_row->>'status' as status
-FROM "200_muni_audit".audit_log
+FROM "100_test_audit".audit_log
 WHERE table_name = 'cases'
   AND operation = 'UPDATE'
 ORDER BY event_time DESC;
@@ -200,7 +255,7 @@ ORDER BY event_time DESC;
 
 ```sql
 SELECT event_time, table_name, operation, changed_fields
-FROM "200_muni_audit".audit_log
+FROM "100_test_audit".audit_log
 WHERE user_id = 'uuid-del-usuario'
 ORDER BY event_time DESC;
 ```
@@ -213,7 +268,7 @@ SELECT event_time,
        new_row->>'type' as movement_type,
        new_row->>'reason' as reason,
        auth_source
-FROM "200_muni_audit".audit_log
+FROM "100_test_audit".audit_log
 WHERE table_name = 'case_movements'
   AND operation = 'INSERT'
 ORDER BY event_time DESC;

@@ -11,6 +11,7 @@ signing/
 ├── signing.py          # start_signing + sign_document (comun)
 ├── numerator.py        # sign_document_as_numerator (numerador)
 ├── unified_signing.py  # super_sign_document (detecta rol automaticamente)
+├── certified_bypass.py # Certificado de origen: conformidad y numeracion sin Notary
 └── details_builder.py  # Construye pantalla de firma
 ```
 
@@ -209,7 +210,7 @@ signed_pdf_bytes = await call_notary_sign_pdf(
     signer_department="Administracion General",
     signer_municipality="Municipalidad del Futuro",
     official_number="IF-2025-0000157-SMG-ADGEN",  # Vacio para comun
-    city="San Martin de los Andes",                 # Vacio para comun
+    city="Ciudad del Futuro",                       # Vacio para comun
     stamp_position="last",  # Solo para importados
     tenant_id=schema_name   # Para firma PAdES
 )
@@ -217,3 +218,57 @@ signed_pdf_bytes = await call_notary_sign_pdf(
 
 !!! warning "FULLPAGE"
     Si Notary responde con error FULLPAGE (sin espacio para firma), se agrega automaticamente una pagina con marcador `end-text` y se reintenta.
+
+    La pagina se agrega como **revision incremental** (`PdfWriter(..., incremental=True)`):
+    los bytes anteriores del PDF quedan intactos. Asi se conservan las firmas de los
+    firmantes anteriores y los adjuntos embebidos. Si la cantidad de adjuntos cambia al
+    agregar la pagina, la firma se corta antes de llamar a Notary.
+
+---
+
+## Certificado de origen (`certified_bypass.py`)
+
+Un **certificado de origen** es un PDF importado que ya trae una firma de certificacion
+(`/DocMDP`), por ejemplo de un escribano. Una firma nueva rompe esa certificacion. Por eso
+GDI no lo firma: lo numera sin pasar por Notary.
+
+**Como se marca:**
+
+1. Al importar, PDFComposer `/import/` devuelve el PDF byte a byte con el header `X-GDI-Certified: true`.
+2. El Backend guarda el SHA-256 de esos bytes en `document_draft.certified_pdf_sha256`. `NULL` = no certificado.
+3. La marca se pone en `NULL` **antes** de tocar R2, y el hash **despues** de que la subida salio bien. Una marca en `NULL` con un PDF certificado es segura: Notary lo frena con `422`.
+
+**Cuando se saltea Notary:** solo si `debe_saltear_notary` da `True`. Exige dos cosas:
+
+- la columna `certified_pdf_sha256` tiene un hash;
+- ese hash es igual al SHA-256 de los bytes que el llamador acaba de bajar de R2.
+
+La columna sola no alcanza. Con hash distinto, el documento va por el camino normal (Notary).
+
+**Que hace cada rol:**
+
+| Rol | Con certificado de origen |
+|-----|---------------------------|
+| Firmante comun | Deja **conformidad**: fila en `document_signers` con `signed_with_provider = 'conformidad'`. No toca el PDF |
+| Numerador | Asigna el numero en la base y copia el PDF tal cual al bucket `oficial` (nunca a `preoficial`: el sellado diferido reescribiria el PDF). El numero **no** se imprime en el PDF |
+
+No se valida el marcador `end-text`: el PDF no lleva la hoja de GDI.
+
+**Modo `solo_sin_notary`:** las puertas que ya decidieron "es certificado" y mandan un tipo
+que exige firma digital por la via electronica (super-sign, Gateway REST, tanda con token)
+prenden este modo. Si la segunda verificacion da distinto, no caen a Notary con firma
+electronica:
+
+| Situacion | Error | HTTP |
+|-----------|-------|------|
+| El hash ya no coincide | `CertifiedHashMismatchError` (`CERTIFIED_HASH_MISMATCH`) | `409` en el Gateway |
+| No se pudo bajar el PDF para comparar | `CertifiedCheckRetryError` (`CERTIFIED_CHECK_RETRY`) | `503` + `Retry-After: 5` |
+
+**Adjuntos:** un certificado de origen no admite adjuntos de GDI.
+
+- El alta de un adjunto responde `400` con `error_code` `CERTIFIED_NO_ATTACHMENTS`.
+- Reemplazar el PDF por uno certificado, con adjuntos ya cargados, responde `400` con `CERTIFIED_PDF_WITH_ATTACHMENTS`.
+- Por TAD, el alta termina en `failed` con `failure_reason: certified_pdf_with_attachments`.
+
+**Donde se ve:** `certified_origin` en `GET /documents/{id}/details`, en la lista de documentos
+oficiales del expediente y en el Gateway. Ver [Endpoints de documentos](../endpoints/documentos.md#detalles-unificados).

@@ -23,6 +23,23 @@ Podes asociar documentos oficiales del sistema a un legajo para respaldar la inf
 
 Los documentos vinculados quedan listados en el legajo con su numero oficial, tipo y fecha.
 
+### Buscar entre los documentos vinculados
+
+![Documentos vinculados del legajo con el buscador y el total](../capturas/legajo-documentos-vinculados.png)
+
+La tabla de **Documentos vinculados** muestra 20 documentos por página. Debajo de la tabla figura el total, por ejemplo: *"45 documentos vinculados · página 1 de 3"*. Con las flechas pasás a la página anterior o a la siguiente.
+
+Para encontrar un documento puntual:
+
+1. Escribí en el buscador *"Buscar por número o referencia..."*. Sirve una parte del número o de la referencia, por ejemplo `00000150` o `habilitación`.
+2. La tabla muestra solo los documentos que coinciden, de todas las páginas.
+3. Para volver a la lista completa, tocá la **X** del buscador.
+
+Si ningún documento coincide, la tabla dice *"No hay documentos que coincidan con la búsqueda"*.
+
+!!! example "Ejemplo"
+    El legajo de un comercio de la Municipalidad del Futuro tiene 45 documentos vinculados. Para encontrar la resolución de habilitación, Martín Ruiz escribe `RESOL` en el buscador y ve solo las resoluciones.
+
 ---
 
 ## Vincular expedientes a un legajo

@@ -203,6 +203,13 @@ NO se acepta el audience del Management API (`https://<tenant>.auth0.com/api/v2/
 
 Del JWT se extrae el **email** del usuario. Los clientes MCP son *third-party* (DCR) y su token sale con scope `offline_access` solo (sin `openid`), por lo que **no** trae el claim `email` estandar ni sirve para `/userinfo` (devuelve 401). El email viaja en el claim **con namespace** `https://gdilatam.com/email` que agrega un Action de Auth0; el gateway lo lee con `_email_from_payload`. Con el email se busca al usuario en la base de datos y se construye el contexto de operacion.
 
+!!! info "El email solo no alcanza: manda el `sub`"
+    Desde el 26/10/2026 (versión 5.8.0), cada usuario de GDI queda atado al `sub` de su cuenta de Auth0 la
+    primera vez que entra. Si el email del token coincide con un usuario que ya está atado a
+    **otro** `sub`, el Gateway no lo toma: ese municipio no aparece para esa cuenta. Pasa, por
+    ejemplo, si alguien crea una cuenta nueva de Auth0 con el mismo email. Un usuario que
+    todavía no entró nunca se ata en su primer ingreso.
+
 !!! warning "Requisitos Auth0 para MCP"
     Para que un cliente MCP obtenga un JWT valido (y no un token opaco), el tenant necesita: **DCR habilitado**, la **conexion de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server registrado con la barra final** (`https://<gateway>/`). Ver [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
 

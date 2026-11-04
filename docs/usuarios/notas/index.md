@@ -78,6 +78,8 @@ Remitente puede ver tracking de aperturas
 
 Para crear una nota, se utiliza el flujo de creacion de documentos seleccionando el tipo **NOTA**. Consultar la guia completa en [Crear y Editar Documento](../documentos/crear-editar-documento.md), prestando especial atencion a la seccion **Destinatarios (solo para tipo NOTA)**.
 
+El cuerpo de la nota admite imágenes. Se insertan con el botón de imagen de la barra del editor. Ver [Insertar una imagen](../documentos/crear-editar-documento.md#insertar-una-imagen).
+
 ---
 
 ## Secciones de esta guia

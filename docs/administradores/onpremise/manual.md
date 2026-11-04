@@ -72,7 +72,7 @@ Sin **todo** lo de la tabla 1.1 la instalación no termina. Juntalo antes de toc
 
 GDI no tiene login propio: **todas** las personas (empleados, administradores, el Panel) entran
 por Auth0, y las altas de usuarios las hace GDI contra Auth0. No hay modo "sin Auth0" ni otro
-proveedor soportado hoy (Keycloak dentro del compose está planificado: card GDI-432).
+proveedor soportado hoy (Keycloak dentro del compose está planificado).
 
 - El plan gratuito de Auth0 alcanza (cubre hasta 25.000 usuarios activos por mes).
 - El tenant es **del municipio**, no de GDI: lo crea y lo administra el municipio.
@@ -337,6 +337,16 @@ verifica funcionando: login y alta de usuarios en el paso 9, MCP en el paso 11.
 
 ## 5. Configurar el `.env`
 
+> **Un `$` sin comillas** en un valor (`AUTH0_SECRET=abc$def`) lo interpreta Docker Compose como una
+> variable, pero el instalador lo lee tal cual: el instalador **avisa** el nombre de la variable. Ponelo
+> entre comillas dobles con el `$` escapado.
+>
+> **Formato de los valores.** El `.env` lo leen Docker Compose y los scripts de `scripts/` con las
+> **mismas reglas**: un valor con `#` precedido de espacio, con `$`, con comillas, con una barra `\` o con
+> espacios al borde va entre **comillas dobles** y escapa `\`, `"` y `$` con una barra (`"clave #1 \$x"`).
+> Entre comillas simples (`'...'`) el valor es literal. Sin comillas, el valor termina en el primer ` #`.
+> Los valores simples (letras, números, `@`, `.`, `-`) van sin comillas.
+
 ```bash
 cd /opt/gdi
 cp .env.example .env
@@ -410,6 +420,10 @@ sin eso, con muchos routers el sistema no puede guardar ni un PDF. **No borres
   `SMTP_USER`, `SMTP_PASSWORD` 🔐 y `FROM_EMAIL=Municipio <noreply@<BASE>>`.
 - Resend: `RESEND_API_KEY` 🔐 y `FROM_EMAIL`. Si están las dos, manda por Resend.
 
+El remitente es **obligatorio** si configurás correo (no hay uno por defecto: el de GDI no te sirve, tu dominio no
+lo autoriza). Con Resend va `FROM_EMAIL`; con SMTP, `SMTP_FROM` o, si no, `FROM_EMAIL`. Si falta, el instalador
+corta con un mensaje que lo nombra.
+
 **Cloudflare R2 en lugar del almacenamiento local:** usá el bloque "Opción B" del `.env.example`,
 sin `STORAGE_DOMAIN` ni `S3_REGION`, y en los pasos 7 y 8 sacá `docker-compose.storage.yml` y el
 host `storage.`.
@@ -470,7 +484,7 @@ gdi ps -a --format '{{.Service}}\t{{.Status}}'
 ```
 
 - `migrator`, `storage-users` y `storage-init` → **Exited (0)**. Cualquier otro código → [14](#14-problemas).
-- `postgres`, `redis`, `storage`, `backend`, `gateway` y `panel-front` → `healthy`.
+- Todos los servicios de larga vida (`postgres`, `redis`, `storage`, `backend`, `backend-worker`, `gateway`, `frontend`, `pdfcomposer`, `notary`, `npm` y los del premium) → `healthy` (desde esta versión todos traen healthcheck; antes faltaban varios). `autoheal` y `autoheal-proxy` → `Up`; se explican en [7.1](#71-reinicio-automatico-de-servicios-colgados-autoheal).
 
 ```bash
 gdi logs storage-init | tail -1
@@ -487,6 +501,280 @@ gdi logs backoffice-back | grep -E '\[OK\]|\[FALTA\]|Licencia ACTIVADA'
 - Tiene que aparecer `[OK] Alta de usuarios: credenciales de Auth0 presentes`.
 - `[FALTA] Correo NO CONFIGURADO` es esperable si no configuraste correo.
 - Si dice `No se pudo escribir la licencia … Permission denied` → [14](#14-problemas).
+
+### 7.1. Reinicio automático de servicios colgados (autoheal)
+
+Docker reinicia un contenedor solo si el **proceso muere**. Si queda vivo pero sin responder (por
+ejemplo, el worker de firma trabado), lo marca `unhealthy` y no hace nada: sin nadie mirando, la
+firma queda frenada hasta que alguien entra por SSH. El servicio **`autoheal`** cierra ese hueco:
+cada 10 segundos reinicia los contenedores que están `unhealthy` y que tienen la etiqueta
+`autoheal=true`. Viene incluido y encendido; no hay que instalar nada.
+
+**Qué se vigila.** Cada servicio tiene su `healthcheck`. El tiempo es el peor caso hasta que Docker
+lo marca `unhealthy` (más ~10 s de autoheal y lo que tarda en volver a levantar):
+
+| Servicio | Qué comprueba | Hasta `unhealthy` | Se reinicia solo |
+|---|---|---|---|
+| `backend` | responde `/health` (el event loop atiende) | 60 s | sí |
+| `backend-worker` | `/health` del worker: 503 si la cola de firma, el webhook de TAD o el scheduler están caídos; sin respuesta si el proceso está trabado | 100 s | sí |
+| `gateway` | responde el manifiesto MCP | 60 s | sí |
+| `pdfcomposer` | responde `/health` (el proceso atiende). A propósito **no** usa `/health/details` (que genera un PDF de prueba): ese espera turno detrás de los PDF reales y, con muchas firmas a la vez, haría reiniciar un servicio sano. Para ver si el motor genera PDF: `/health/details` a mano | 60 s | sí |
+| `notary` | `/health`: el pipeline de firma puede firmar (503 si no) | 69 s | sí |
+| `frontend`, `backoffice-front`, `panel-front` | responde la API de estado de Next.js | 60 s | sí |
+| `backoffice-back`, `panel-back` | responde `/health` | 60 s | sí |
+| `agentelang` | `/health` con consulta real a la base + estado de su worker de IA (`stale`/`dead`) | 84 s | sí |
+| `npm` (proxy) | la API de administración **y** nginx contestando en el puerto 80 | 90 s | sí |
+| `storage` | `/health` del almacenamiento local | 60 s | sí |
+| `postgres`, `redis` | `pg_isready` / `PING` | — | **no** |
+
+**Qué NO se reinicia solo, y por qué.** `postgres` y `redis` tienen estado propio: reiniciar una base
+en caliente obliga a recuperarla y, si el chequeo falló por *carga* y no por cuelgue, la deja peor;
+esa decisión es de una persona. Los pasos que corren una vez y terminan (`migrator`, `storage-users`,
+`storage-init`) no se vigilan. Tampoco se reinicia un servicio que **está parado a mano**
+(`gdi stop …`) ni uno que ya está en `Restarting`.
+
+**Si la base no está, no se reinicia nada por eso.** `backend-worker` y `agentelang` dependen de
+Postgres: si no responden *y además* Postgres no acepta conexiones (se cayó, o se cortó el enlace
+al servidor de datos), reiniciarlos no arregla nada y solo mete ruido. En ese caso el chequeo
+**pasa** y deja escrito el motivo (`docker inspect --format '{{json .State.Health}}' <contenedor>`).
+Con la base arriba y el servicio trabado, sí se reinicia.
+
+**Cómo ver qué reinició.**
+
+```bash
+gdi logs --since 24h autoheal                          # una línea por reinicio (y por aviso enviado)
+docker events --since 24h --filter event=restart       # historial del daemon, con la hora
+gdi ps --format '{{.Service}}\t{{.Status}}'            # "Up 5 minutes (healthy)"; "(unhealthy)" = hoy está mal
+docker inspect --format '{{json .State.Health}}' <contenedor>   # los últimos chequeos y su salida
+```
+
+Cada reinicio manda además **un mail a `ALERT_TO_EMAIL`**, por el mismo proveedor que las demás
+alertas (Resend o SMTP, sección 5). Para no llenar la casilla: un mail por servicio cada 15 minutos;
+y si el mismo servicio se reinicia **3 veces en 30 minutos**, llega un mail aparte, **«URGENTE»**,
+porque ahí reiniciar no lo está arreglando y tiene que mirarlo una persona (`gdi logs --tail=200
+<servicio>`). Si después sigue reiniciándose (nunca pasa media hora sin un reinicio), no llegan
+más mails comunes de ese servicio: llega **«SIGUE EN BUCLE: <servicio> lleva N reinicios desde
+<fecha>»** como máximo **una vez por hora** (`AUTOHEAL_LOOP_REMIND`, en segundos), hasta que se
+arregle. Así un servicio que se cuelga toda la noche no queda en silencio después del primer
+aviso. Sin `ALERT_TO_EMAIL`, o sin correo configurado, queda solo el log. Opcionalmente, un
+webhook JSON (Slack, Mattermost, ntfy): `AUTOHEAL_WEBHOOK_URL` en el `.env`.
+
+**Cómo desactivarlo.** Sin tocar el compose: en el `.env`, `AUTOHEAL_LABEL=autoheal-apagado`, y
+`gdi up -d autoheal`. Sigue corriendo pero no coincide con ningún servicio, así que no reinicia
+nada. Para volver: borrar esa línea y repetir. Para frenarlo del todo hasta el próximo `gdi up -d`:
+`gdi stop autoheal autoheal-proxy`. Los demás valores (intervalo, esperas, avisos) están
+comentados en `.env.example`, sección «Reinicio automático».
+
+**Seguridad.** Reiniciar contenedores exige hablar con el daemon de Docker, y eso es poder de root
+sobre el servidor. Por eso `autoheal` **no** monta `docker.sock`: lo monta `autoheal-proxy`
+(Tecnativa/docker-socket-proxy), en una red interna sin salida a internet que solo ve `autoheal`, y
+el proxy deja pasar únicamente *listar contenedores* y *stop/restart/kill* (nada de crear
+contenedores, `exec`, volúmenes ni imágenes). Aun así puede detener cualquier contenedor del
+servidor, y `autoheal` recibe las credenciales de correo para avisar. Ambas imágenes están
+fijadas por *digest*; no las cambies a un tag.
+
+**Prueba (después de instalar y antes de dar por terminado el paso 7).** Congela el worker de firma
+y mirá que el sistema lo recupera solo en menos de 2 minutos:
+
+```bash
+C=$(gdi ps -q backend-worker)
+docker pause "$C"                       # simula un cuelgue: el proceso sigue vivo pero no responde
+watch -n 5 "docker inspect --format '{{.State.Health.Status}} reinicios-de-docker={{.RestartCount}}' $C; docker events --since 3m --until 1s --filter event=restart"
+```
+
+**CHECK:** a los ~100 s pasa a `unhealthy`, en los 10 s siguientes `gdi logs --tail=5 autoheal` dice
+`found to be unhealthy - Restarting container`, y a los pocos segundos vuelve a `healthy` y a
+contestar. Si en 3 minutos no se reinició, ver [14](#14-problemas) («autoheal no reinicia»). No hace
+falta `docker unpause`; si el contenedor quedara en pausa después del reinicio, `docker unpause "$C"`.
+
+### 7.2. Recursos por contenedor (CPU y memoria)
+
+Cada servicio tiene un **tope de CPU** y se le puede poner uno de **memoria**. Sin topes, una
+tanda de firmas (PDFComposer y Notary son CPU pura) le saca la CPU al backend —todos los clics se
+ponen lentos— y a la base; y un servicio con una pérdida de memoria puede hacer que el kernel mate a
+**Postgres**. Con un tope de memoria, el que se pasa muere **solo él** y Docker lo vuelve a levantar.
+
+- **No hay que tocar nada para instalar.**
+  - **CPU:** los defaults andan en el servidor mínimo de la [sección 1.3](#13-el-servidor) y ninguno
+    pasa de 2 núcleos. Un tope de CPU **frena, no mata**: el servicio va más lento cuando se pasa, no
+    se cae.
+  - **Memoria: por defecto SIN TOPE** (`0`), como en las versiones anteriores. Un tope de memoria sí mata:
+    si es más bajo de lo que el servicio necesita en un pico (una importación grande de PDF, la IA),
+    el kernel lo corta aunque al servidor le sobre RAM. Con un solo municipio GDI usa ~2,1 GB en
+    total, así que no hace falta ponerlos para que ande.
+- **Cuándo conviene ponerlos de memoria:** si el servidor lo comparten varios servicios o varios
+  municipios, o si tiene poca RAM. Ahí usá la tabla de abajo como punto de partida.
+- La **base no tiene tope de memoria** a propósito (matarla tira todo GDI). Tiene una **reserva**
+  (ante falta de RAM, el kernel recorta primero a los demás) y **prioridad de CPU**, igual que el
+  backend y el gateway (`*_CPU_SHARES=2048`; lo normal es 1024).
+- **Postgres también se dimensiona** (`POSTGRES_PERFIL`, opcional): Postgres de fábrica trae
+  `shared_buffers` de 128 MB aunque el servidor tenga 32 GB. Con `POSTGRES_PERFIL=1gb`, `2gb`, `4gb`
+  u `8gb` (según la memoria que le das a la base; los archivos están en `postgres/`) el instalador
+  desatendido aplica `max_connections`, `shared_buffers`, `effective_cache_size`, `work_mem` y
+  `maintenance_work_mem` con `ALTER SYSTEM` y reinicia la base solo si algún parámetro lo pide. Queda
+  guardado dentro del volumen (sobrevive a reinicios y a `gdi up -d`) y correrlo de nuevo no cambia
+  nada. Sin la variable, la base queda con los valores de fábrica, como hasta ahora. El perfil `8gb`
+  sale de la misma receta que los otros (25 % y 75 %) y no está medido.
+  La base además tiene `stop_grace_period: 60s` (un apagado con `shared_buffers` grande hace un
+  checkpoint que tarda más que los 10 s de fábrica: cortado, la próxima vez arranca con recuperación de
+  crash) y `shm_size: 256m` (`POSTGRES_SHM_SIZE`; el `/dev/shm` de Docker es de 64 MB y las consultas
+  paralelas usan memoria compartida dinámica).
+- Se cambian en el `.env` (bloque «Recursos por contenedor» de `.env.example`) y se aplican con
+  `gdi up -d`, que recrea solo los servicios que cambiaron. `0` = sin tope.
+- ⚠️ Un tope de CPU **mayor que los núcleos del servidor** no deja arrancar ese servicio
+  (`range of CPUs is from 0.01 to N`). Por eso ningún default pasa de 2.
+- **Aviso cuando un servicio muere por memoria.** El servicio `autoheal-oom` (viene en todas las
+  instalaciones) escucha los eventos `oom` de Docker y deja una línea en `gdi logs autoheal-oom` y,
+  si hay correo configurado, manda el mismo mail que los reinicios de autoheal («murió por falta de
+  memoria (OOMKilled)»), con el mismo anti-ruido. Docker levanta solo al servicio muerto; sin este
+  aviso nadie se enteraba. Escucha por el proxy de autoheal (`EVENTS` en solo lectura); al terminar, el
+  instalador verifica que no esté reconectando en bucle (`RestartCount` en 0 y sin «reconecto» en el log) y
+  si lo está avisa que **el aviso de OOM no está funcionando**.
+
+**Valores de memoria por tamaño de servidor.** La memoria por defecto es `0` (sin tope); esta tabla
+es lo que se puede poner. Los de CPU son los defaults. Vacío = dejar el default.
+
+| Variable | Default (4 vCPU / 8 GB) | Chica: 4 vCPU / 16 GB (sin almacenamiento local ni Panel) | Mediana: 8 vCPU / 32 GB (varios municipios) |
+|---|---|---|---|
+| `POSTGRES_MEM_RESERVA` | 512m | 2g | 8g |
+| `POSTGRES_CPUSET` / `APP_CPUSET` | — (todos comparten) | — | `0,1` / `2-7` (2 núcleos solo para la base) |
+| `BACKEND_CPUS` / `BACKEND_MEM` | 2 / sin tope | 2 / 2g | 2 / 3g |
+| `BACKEND_WORKER_CPUS` / `_MEM` | 2 / sin tope | 1 / 1g | 1.5 / 2g |
+| `GATEWAY_CPUS` / `GATEWAY_MEM` | 2 / sin tope | 2 / 1g | 2 / 1536m |
+| `PDFCOMPOSER_CPUS` / `_MEM` | 2 / sin tope | 1.5 / 1536m | 1.5 / 2g |
+| `NOTARY_CPUS` / `NOTARY_MEM` | 2 / sin tope | 1.5 / 1536m | 1.5 / 2g |
+| `AGENTELANG_CPUS` / `_MEM` | 2 / sin tope | 1 / 1536m | 1 / 2560m |
+| `FRONTEND_CPUS` / `_MEM` | 1 / sin tope | 1 / 768m | 1 / 1536m |
+| `BACKOFFICE_BACK_CPUS` / `_MEM` | 1 / sin tope | 1 / 1g | 1 / 1g |
+| `BACKOFFICE_FRONT_CPUS` / `_MEM` | 1 / sin tope | 0.5 / 512m | 0.5 / 768m |
+| `REDIS_CPUS` / `REDIS_MEM` / `REDIS_MEM_RESERVA` | 1 / sin tope / 128m | 0.5 / 256m / 64m | 0.5 / 1g / 256m |
+| `NPM_CPUS` / `NPM_MEM` | 1 / sin tope | 0.5 / 384m | 0.5 / 512m |
+| `STORAGE_CPUS` / `STORAGE_MEM` | 1 / sin tope | (sin almacenamiento local) | (sin almacenamiento local) |
+| `PANEL_BACK_*` / `PANEL_FRONT_*` | 0.5 / sin tope | (sin Panel) | (sin Panel) |
+
+Los topes de CPU **suman más que los núcleos** a propósito: son un techo por servicio, no un
+reparto. Lo que reparte cuando todos piden a la vez es la prioridad (`*_CPU_SHARES`) y, en la
+mediana, los núcleos propios de la base. **`POSTGRES_CPUSET` sin `APP_CPUSET` no reserva nada**:
+la base queda en esos núcleos pero las aplicaciones también los usan.
+
+⚠️ **Si ponés topes de memoria, la suma puede pasar la RAM**, y ahí el sobrecompromiso tiene un
+límite. Medido con `docker compose config` (en GiB, con la reserva de la base y los dos `autoheal`;
+los servicios sin tope **no suman**, así que sin topes la suma da poco y eso no la hace segura):
+
+| Combinación de archivos | Suma de topes |
+|---|---|
+| `premium` + `storage`, defaults (memoria sin tope) | ≈0,9 (la base reserva 0,5; los demás no suman) |
+| `premium` + `storage`, con los valores que tenía el compose antes (2g, 3g...) | ≈20,2 |
+
+En el uso normal no importa (medido: ~2,1 GB en uso), pero el tope protege a cada servicio de **sí
+mismo**, no al servidor: si varios se acercan a su tope a la vez (tanda de firmas + IA), la
+**máquina** se queda sin RAM y el kernel elige a quién matar, y puede ser **Postgres** (la reserva
+le da prioridad, no inmunidad).
+
+- **Un servidor de 8 GB (o de 4, el mínimo de la [sección 1.3](#13-el-servidor)) arranca con los
+  defaults**: Docker no compara la suma de topes con la RAM, y un tope es un techo que no consume
+  nada hasta que el servicio lo usa. Si ponés topes, pueden sumar más que la RAM sin problema en el
+  uso normal.
+- **El instalador desatendido compara solo** (`scripts/memoria-compose.py`): suma los topes del
+  compose ya fundido (el tope de cada servicio o, si no tiene, su reserva: la base) y los compara con
+  `MemTotal` de `/proc/meminfo` menos **1 GiB** para el sistema (kernel, sshd, el demonio de Docker
+  y la caché de archivos). En **modo onpremise** solo **avisa** y sigue; corta únicamente si el
+  exceso es grosero: la suma supera **10 veces** la RAM disponible, o sea un servidor de menos de
+  ~3 GB, que no alcanza ni para el uso normal.
+- A mano, en cualquier modo: `gdi config --format json | python3 scripts/memoria-compose.py
+  --compose-json - --ram-kib "$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)"`. O sumá los `*_MEM`
+  efectivos más `POSTGRES_MEM_RESERVA` y comparalo con `free -g`.
+- Ninguno de los valores de la tabla se midió bajo carga: son un punto de partida. Si un servicio
+  muere por memoria, subile el tope a ese y bajá otro.
+- Señal de que pasó: `journalctl -k | grep -i 'out of memory'` muestra al kernel matando un proceso
+  que no estaba en su tope (OOM del servidor, no del contenedor); `gdi logs autoheal-oom` muestra los
+  que mató por superar su propio tope.
+
+**CHECK:**
+
+```bash
+gdi config | grep -E '^  [a-z-]+:$|cpus:|memory:|cpuset:' | head -60   # cada servicio con su tope
+docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}'
+gdi ps --format '{{.Service}} {{.State}}' | grep autoheal-oom            # el aviso de OOM está corriendo
+```
+
+En `docker stats`, la columna de memoria muestra `uso / tope`; sin tope muestra la RAM entera del
+servidor. Para saber si un servicio murió por memoria:
+`docker inspect -f '{{.State.OOMKilled}}' $(gdi ps -q <servicio>)` → `true`. Si se repite, ponele
+un `*_MEM` más alto a ese servicio.
+
+#### Firmas en paralelo
+
+La firma rinde según **cuántas firmas van a Notary a la vez**, no según la CPU: cada firma pasa
+~2,5 s en Notary y casi todo es espera de red. Con 1 a la vez salen ~20 firmas por minuto; con 16,
+~180 (medido por GDI Latam en un ambiente de prueba). Tres perillas, que van juntas:
+
+| Variable | Servicio | Default | Chica | Mediana |
+|---|---|---|---|---|
+| `ESCRI_CONCURRENCY` | `backend-worker`: firmas que procesa la cola a la vez | 4 | 4 | 8 |
+| `NOTARY_SIGN_MAX_CONCURRENT` | `backend-worker`: firmas que deja ir a Notary a la vez | = `ESCRI_CONCURRENCY` | 4 | 8 |
+| `NOTARY_BACKGROUND_MAX_CONCURRENT` | `notary`: firmas por worker de Notary | 2 | 2 | 4 |
+
+- **Regla:** `NOTARY_SIGN_MAX_CONCURRENT` ≤ `NOTARY_WORKERS` × `NOTARY_BACKGROUND_MAX_CONCURRENT`.
+  Si no, Notary contesta 503 (BACKGROUND_BUSY) y las firmas se reintentan.
+- **Notary necesita memoria:** con 512 MB se queda sin memoria con 16 firmas a la vez. Con 8, darle 1 GB o más.
+- Más firmas a la vez no ahorran nada si el servidor no las pide: solo suben el techo en un pico.
+
+```bash
+gdi exec backend-worker env | grep -E 'ESCRI_CONCURRENCY|NOTARY_SIGN_MAX'   # lo que tomó el worker
+```
+
+#### Procesos del Gateway y reciclado
+
+Backend y Gateway corren con gunicorn: varios procesos de Python y uno que los vigila. Cada proceso se
+**recicla** (se apaga y arranca uno nuevo) después de atender una cantidad de pedidos, para devolver la
+memoria que Python no suelta solo. Mientras uno se recicla, queda un proceso menos atendiendo.
+
+| Variable | Servicio | Default |
+|---|---|---|
+| `GATEWAY_WORKERS` | `gateway`: procesos | 2 |
+| `GATEWAY_MAX_REQUESTS` / `GATEWAY_MAX_REQUESTS_JITTER` | `gateway`: pedidos por proceso antes de reciclar (+ un azar de 0 a jitter) | 50000 / 50000 |
+| `BACKEND_MAX_REQUESTS` / `BACKEND_MAX_REQUESTS_JITTER` | `backend`: lo mismo | 50000 / 50000 |
+
+- Vacío = el default de la imagen. En versiones anteriores era 2000 + 2000: con mucha carga el Gateway
+  se reciclaba cada 30-50 s y daba errores 502 sueltos.
+- **Regla del jitter:** jitter ≥ 1,5 × pedidos por segundo × segundos de separación que querés entre dos
+  reciclados. Con jitter chico los dos procesos se reciclan juntos y el servicio se queda sin nadie.
+
+```bash
+gdi logs --since 30m gateway | grep -c 'Booting worker'   # reciclados en la última media hora
+```
+
+#### Pool de conexiones a la base: pgbouncer (opcional, apagado de fábrica)
+
+pgbouncer es un portero entre la aplicación y la base: ordena las conexiones para que la base no se sature.
+Sirve cuando hay mucho uso o varias copias del backend. Con el uso de un municipio normal no hace falta.
+
+Para prenderlo:
+1. Poné `PGBOUNCER_ACTIVO=true` en el `.env`.
+2. Corré de nuevo el instalador (Anexo B). El instalador suma `docker-compose.pgbouncer.yml` y apaga el `jit` de la base.
+
+Qué cambia:
+- `backend` y `gateway` van a la base por `pgbouncer:6432`. `backend-worker`, BackOffice y AgenteLANG siguen directo.
+- pgbouncer usa a lo sumo `PGBOUNCER_POOL_SIZE` + 5 conexiones reales de Postgres (default 30 + 5).
+- Si operás a mano, sumá `-f docker-compose.pgbouncer.yml` al final de tu función `gdi()`. Si no, el próximo
+  `gdi up -d` vuelve a conectar backend y gateway directo.
+
+```bash
+gdi exec gateway printenv DB_HOST DB_PORT    # con pgbouncer: pgbouncer 6432
+```
+
+Para apagarlo: `PGBOUNCER_ACTIVO=false` y correr de nuevo el instalador.
+
+### 7.3. Rotación de logs
+
+Docker guarda la salida de cada contenedor en un archivo (`json-file`) que **no rota por defecto**:
+un servicio hablador, o uno que se reinicia en bucle, llena el disco del servidor y se lleva puesta a
+la base. Todos los servicios de GDI limitan su log a **5 archivos de 10 MB (50 MB por contenedor)**.
+`docker logs` y `gdi logs` andan igual; lo más viejo se descarta. Se cambia con `LOG_MAX_SIZE` y
+`LOG_MAX_FILE` en el `.env` y se aplica con `gdi up -d`.
+
+**CHECK:** `gdi config | grep -A3 'logging:' | head -20` muestra `max-size: 10m` y `max-file: "5"`.
 
 ---
 
@@ -689,6 +977,9 @@ set -a; . ./npm-admin.txt; set +a
 ./scripts/configurar-proxy.sh                   # con R2: SIN_STORAGE=1 ./scripts/configurar-proxy.sh
 ```
 
+- **Una etiqueta por servicio en el `.env`** (`BACKEND_TAG=`, `FRONTEND_TAG=`, etc.) manda sobre
+  `IMAGE_VERSION`: ese servicio **no** toma la versión nueva. El instalador desatendido lo avisa con
+  `AVISO: el .env fija etiqueta propia para …`. Si no la pusiste a pedido de GDI, borrá esa línea.
 - **El `comm` del punto 3 lista algo** → el aviso de la versión dice qué valor lleva cada
   variable nueva. Agregala al `.env` con `nano .env` antes del punto 5. Si no lista nada, no hay
   variables nuevas.
@@ -750,6 +1041,10 @@ borra la base y los documentos antes de restaurar justamente por eso.
 > almacenamiento en la nube) y la frecuencia los decide el municipio con su herramienta.
 > La guía [Copias de seguridad del servidor propio](backups.md) trae un ejemplo completo,
 > incremental y cifrado, con su restauración.
+>
+> Además, GDI puede subir **cada cambio de la base** a un almacenamiento S3, para perder como mucho
+> un minuto y volver a cualquier minuto de los últimos días. Viene **apagado**: ver
+> [Copia de la base minuto a minuto](copia-minuto-a-minuto.md). No reemplaza a este backup.
 
 Un servidor perdido se recupera con **cinco** cosas:
 
@@ -846,6 +1141,9 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 | `migrator` en `Exited (1)` y el backend no arranca | falló una migración | `gdi logs migrator` y escribirle a GDI con ese log. **No forzar** el arranque |
 | `migrator` en `Exited (1)` con `password authentication failed` después de restaurar | se instaló con los pasos 5 a 7 y después se restauró el `.env` del backup: la base tiene otra contraseña | `sudo ./scripts/restaurar.sh AAAA-MM-DD` (13.1): borra esa base y la crea con la del backup |
 | Después de volver atrás, ningún documento de un tipo se firma: `r2_worm_locked_numero_contaminado` | se restauró la base pero no se vació el almacenamiento: un PDF firmado después del backup tiene el número que la base vuelve a ofrecer | `sudo ./scripts/restaurar.sh AAAA-MM-DD` con el mismo backup (12.1) |
+| Los documentos quedan en «firmando» y no avanzan, pero la web anda | `backend-worker` está parado, o `unhealthy` y `autoheal` no lo reinició (es el que procesa la cola de firma, el webhook de TAD y los jobs nocturnos; si queda colgado, `autoheal` lo reinicia solo en ~2 min, [7.1](#71-reinicio-automatico-de-servicios-colgados-autoheal)) | `gdi ps backend-worker`; `gdi logs backend-worker \| tail -50`; `gdi up -d backend-worker`. Si se lo frenó con `gdi stop backend-worker`, al arrancarlo de nuevo las firmas vencidas se destraban solas en unos minutos. **No escalarlo a más de 1 réplica** |
+| Un servicio está `unhealthy` y no se reinicia solo (autoheal no reinicia) | `autoheal` apagado (`AUTOHEAL_LABEL` cambiada, o parado), o el servicio está parado a mano, o Postgres no responde (en ese caso reiniciar no ayuda) | `gdi ps autoheal autoheal-proxy` (los dos `Up`); `gdi logs --tail=30 autoheal`; `grep AUTOHEAL .env`. Si el log dice `unix socket` o `Could not resolve` → `gdi up -d autoheal-proxy autoheal`. Con la base caída, primero levantar la base |
+| Llega el mail «URGENTE: … se reinició 3 veces» (o, cada hora, «SIGUE EN BUCLE: … lleva N reinicios») | el servicio vuelve a colgarse después de cada reinicio: la causa no es un cuelgue pasajero | `gdi logs --tail=200 <servicio>` y `docker inspect --format '{{json .State.Health}}' <contenedor>`; si no se entiende, escribirle a GDI con ese log. No apagar `autoheal` para «callar» el aviso |
 | Un contenedor en `Restarting` | falta una variable del `.env` | `gdi logs <servicio>` dice cuál; completarla y `gdi up -d` |
 | Fallan cosas sueltas (base, login) después de editar el `.env` desde Windows | fines de línea de Windows | `sed -i 's/\r$//' .env` y `gdi up -d` |
 
@@ -864,7 +1162,7 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 |---|---|---|
 | `Let's Encrypt no emitio` y el motivo habla de DNS o de un desafío | el dominio no resuelve a `<IP>` o el puerto 80 está cerrado | `dig +short <dominio>`; abrir el 80; volver a correr el script (no repide lo ya emitido) |
 | `Let's Encrypt no emitio` con `too many certificates already issued` | se agotó el cupo semanal (5) | esperar a que se libere (7 días desde la emisión más vieja). No reintentar |
-| `Let's Encrypt no emitio` con `data/meta must NOT have additional properties` | el proxy no es la versión que fija el compose | volver `jc21/nginx-proxy-manager` a la versión del compose y `gdi up -d` |
+| `Let's Encrypt no emitio` con `data/meta must NOT have additional properties` | el proxy no es la versión que fija el compose | volver la imagen del proxy a la versión que fija el compose y `gdi up -d` |
 | Primer login: el sitio carga, Auth0 pide la clave y vuelve con **502** | faltan los buffers del proxy | volver a correr `configurar-proxy.sh` |
 | `Invalid email or password` al correr el script | no son las credenciales del administrador del proxy | usar las de `npm-admin.txt` |
 | Después de actualizar o de un `gdi up -d`, **todos** los documentos y logos dan **502** (`storage.<BASE>`) y el log del proxy dice `connect() failed (111: Connection refused)` | el proxy quedó apuntando a la dirección vieja del almacenamiento: pasa en instalaciones configuradas con un `configurar-proxy.sh` anterior a la versión `2026.09.15` | ya mismo: `gdi restart npm`. Para que no vuelva a pasar: volver a correr `configurar-proxy.sh` una vez (no pide certificados nuevos) |
@@ -913,3 +1211,73 @@ Cuando la solución dice `gdi up -d`, es ese comando: un `restart` **no** relee 
 
 ¿Trabado en algo que no está acá? Escribile a soporte de GDI Latam con la salida de `gdi ps` y
 `gdi logs --tail=200 <servicio>`.
+
+---
+
+## Anexo B. Instalación desatendida (sin preguntas)
+
+Para automatizar la instalación (un `cloud-init`, un script del municipio): con el instalador
+desplegado (paso 3) y un `.env` **completo**, `scripts/instalar-desatendido.sh` hace los pasos 7
+y, opcionalmente, 8 y 13.1 sin intervención. **No arma el `.env`**: no inventa claves ni pide
+datos; lo valida y corta si falta algo.
+
+```bash
+cd /opt/gdi
+GHCR_TOKEN_FILE=/root/ghcr.token ./scripts/instalar-desatendido.sh --modo onpremise --env /root/gdi.env --proxy
+```
+
+| Opción | Qué hace |
+|---|---|
+| `--modo onpremise` | **obligatoria** |
+| `--env <archivo>` | **obligatoria**. Se copia a `/opt/gdi/.env` con permisos 600 |
+| `--sin-storage` | municipio con Cloudflare R2 (sin almacenamiento local) |
+| `--restaurar-dump <archivo>` | carga un `pg_dump -Fc` en una base **nueva** antes de levantar (ver abajo «Restaurar un dump»). Si ya hay un volumen de postgres, corta salvo `--pisar-base` (lo borra). Errores de `pg_restore` cortan salvo `--restore-tolerante` |
+| `--sin-comparar-migraciones` | con `--restaurar-dump`: **salida de emergencia**. No compara las migraciones del dump con las de las imágenes (por ejemplo, un ambiente anterior al runner). Deja un `AVISO` grande en el log y la última línea sale con `migraciones=SIN-COMPARAR` |
+| `--restaurar-backup AAAA-MM-DD` | solo `onpremise`: el backup del paso 13 con `restaurar.sh` (el `.env` del backup reemplaza al de `--env`) |
+| `--proxy` | configura el proxy (paso 8). Si no tiene administrador lo crea con `NPM_EMAIL` del `.env` y deja las credenciales en `npm-admin.txt` |
+| `--espera <s>` | cuánto esperar a que todo quede sano (default 900) |
+
+El token de `ghcr.io` va por entorno (`GHCR_TOKEN` o `GHCR_TOKEN_FILE`), **nunca** como argumento.
+Sin ninguno de los dos, usa el login que ya tenga el usuario.
+
+Qué hace, en orden: verifica Docker y Compose → valida el `.env` (sin valores de ejemplo —`CAMBIAR…`,
+`sk-or-xxx`—, con `LICENSE_MODE=onpremise` explícito, misma versión que el instalador, `docker compose config`
+sin errores, el compose ya fundido verificado con `scripts/verificar-env.py` —un hallazgo es un aviso— y los topes
+de memoria contra la RAM del servidor, [7.2](#72-recursos-por-contenedor-cpu-y-memoria)) → login a `ghcr.io`
+(y `docker logout` al terminar si el login lo hizo el instalador con `GHCR_TOKEN`) → baja las imágenes (3 intentos)
+→ aplica `POSTGRES_PERFIL` si lo pusiste → restaura si se pidió → `up -d` → espera a que los de una sola corrida
+terminen en `Exited (0)` y el resto quede `healthy` → proxy si se pidió.
+
+**Resultado.** La última línea es `GDI_INSTALACION=OK modo=<modo> version=<versión>` o
+`GDI_INSTALACION=FALLA paso=<paso> codigo=<n>`. Códigos: `0` ok · `2` uso · `3` `.env` · `4`
+Docker/Compose · `5` login o imágenes · `6` restauración · `7` no quedó sano · `8` proxy. Correrlo
+de nuevo con el mismo `.env` no rompe nada (solo recrea lo que cambió); `--restaurar-dump` no se
+repite sin `--pisar-base`.
+
+**Restaurar un dump (`--restaurar-dump`).** La imagen de postgres **siembra** la base de la aplicación
+al primer arranque (tablas, extensiones, catálogo). Por eso el instalador **no** restaura encima con
+`pg_restore --clean`: tira esa base sembrada, crea una **vacía** (a partir de `template0`) y carga el
+dump ahí con `--no-owner --no-acl`. El clúster y su tuning no se tocan. Antes de levantar nada compara
+`public.schema_migrations` del dump con las migraciones de las imágenes (las que siembra la imagen de
+postgres más las del `migrator`):
+
+| Situación | Qué hace |
+|---|---|
+| El dump está al día, o le faltan solo las **últimas** | sigue; el `migrator` aplica las pendientes sobre los datos |
+| Le falta una migración **de las imágenes** (`/migrations`) anterior a la más nueva que sí tiene | **corta** (código 6) y la nombra: el `migrator` aplica todo archivo cuya versión no esté registrada, o sea que la aplicaría fuera de orden sobre datos reales |
+| Le falta una versión que solo figura en la base **semilla** de la imagen de postgres (baseline o archivo) | **avisa y sigue**: el `migrator` no la mira (no es un archivo de `/migrations`); es normal en un ambiente que nació antes del runner |
+| Trae migraciones que las imágenes no conocen (el dump es más nuevo que el software) | **corta** y las nombra: usá imágenes de esa versión o posterior |
+| No trae `public.schema_migrations` | **corta**: no parece una base de GDI |
+
+La base nueva sale de `template0`, que ya trae el esquema `public`: si el dump lo incluye en su tabla de
+contenidos (`SCHEMA - public`), el instalador lo saca de la lista con `pg_restore -l` y `-L`, y lo demás
+entra igual. Con `--restaurar-dump`, `DB_NAME` no puede ser `postgres`, `template0` ni `template1` (se la
+tiraría) y tiene que ser solo letras, números y `_`.
+
+Si falla a mitad (`pg_restore` con errores, corte de luz, disco lleno) queda un volumen **a medias** y
+no se levanta ninguna aplicación. Para reintentar, corré el **mismo comando con `--pisar-base`**: baja
+todo, borra el volumen y arranca de cero; el archivo del dump no se toca. El detalle de los errores
+queda en `restaurar-dump-<fecha>.log` en la carpeta del instalador.
+
+> El proxy en modo `onpremise` pide certificados a Let's Encrypt: los DNS tienen que resolver
+> **antes** de correr con `--proxy` (sección 1.4), y vale el cupo de 5 por semana.

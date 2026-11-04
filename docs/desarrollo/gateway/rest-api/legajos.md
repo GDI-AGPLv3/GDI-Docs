@@ -4,6 +4,8 @@
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
+En todas las rutas `/records/{record_id}/...`, los ids del path (`record_id`, `relation_id`, `link_id`) tienen que ser UUID. Si no lo son, la API responde `400` (por ejemplo, `record_id inválido (se espera UUID)`) sin consultar la base.
+
 ---
 
 ## Lectura
@@ -160,6 +162,8 @@ GET /api/v1/records/{record_id}/history
 
 Devuelve el historial de cambios del legajo con paginacion.
 
+Vincular y desvincular quedan en el historial. El campo `action` vale `document_linked`, `document_unlinked`, `case_linked` o `case_unlinked`.
+
 **Parametros path:**
 
 | Parametro | Tipo | Descripcion |
@@ -267,6 +271,7 @@ Devuelve los documentos vinculados al legajo con paginacion.
 |-----------|------|---------|-------------|
 | `page` | int | `1` | Numero de pagina |
 | `page_size` | int | `20` | Resultados por pagina |
+| `search` | string | - | Filtra por numero oficial o referencia. Busca por "contiene" y no distingue mayusculas |
 
 **Errores:**
 
@@ -752,6 +757,7 @@ Lista las familias de registros disponibles. Equivalente al endpoint REST `GET /
 | Codigo | Situacion | Solucion |
 |--------|-----------|----------|
 | `400` | Campos requeridos faltantes | Verificar que `registry_code`, `display_name`, etc. esten presentes |
+| `400` | Un id del path no es UUID | Verificar `record_id`, `relation_id` o `link_id` |
 | `401` | API Key invalida o `X-User-ID` faltante | Verificar headers de autenticacion |
 | `403` | Sin permisos sobre el legajo | El usuario no tiene acceso al sector del legajo |
 | `404` | Legajo, registro o recurso no encontrado | Verificar UUID |

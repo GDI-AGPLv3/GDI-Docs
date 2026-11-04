@@ -8,6 +8,11 @@ municipio usa GDI en la nube, la copia propia se hace con [GDI Sync](../backups.
     volumen o se pierde la máquina, la copia se pierde con ella. Por eso GDI **no trae** un
     backup automático al mismo servidor: el destino y la frecuencia los decide el municipio.
 
+!!! tip "Para perder como mucho un minuto"
+    Esta copia es diaria: si algo se rompe a las 18:00, se pierde el trabajo del día. Para perder
+    como mucho un minuto, sumá la [copia de la base minuto a minuto](copia-minuto-a-minuto.md).
+    Viene apagada y no reemplaza a esta copia.
+
 ---
 
 ## Qué hay que respaldar
