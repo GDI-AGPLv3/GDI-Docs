@@ -1,27 +1,27 @@
-# Relaciones y vinculos
+# Relaciones y vínculos
 
-Un legajo no existe aislado. Puede vincularse a **documentos oficiales**, **expedientes** y **otros legajos** para construir una red de informacion conectada.
+Un legajo no existe aislado. Puede vincularse a **documentos oficiales**, **expedientes** y **otros legajos** para construir una red de información conectada.
 
 ---
 
 ## Vincular documentos a un legajo
 
-Podes asociar documentos oficiales del sistema a un legajo para respaldar la informacion registrada o agregar antecedentes.
+Podés asociar documentos oficiales del sistema a un legajo para respaldar la información registrada o agregar antecedentes.
 
-### Como vincular un documento
+### Cómo vincular un documento
 
-1. Abri el legajo
-2. Busca la seccion **Documentos vinculados**
+1. Abrí el legajo
+2. Busca la sección **Documentos vinculados**
 3. Hace click en **"+ Vincular documento"**
-4. Busca el documento por numero o referencia
-5. Confirma la vinculacion
+4. Busca el documento por número o referencia
+5. Confirma la vinculación
 
 !!! example "Ejemplos de documentos vinculados"
-    - Resolucion de habilitacion vinculada al legajo del comercio
+    - Resolución de habilitación vinculada al legajo del comercio
     - Plano aprobado vinculado al legajo de la obra
-    - Acta de inspeccion vinculada al legajo de una luminaria
+    - Acta de inspección vinculada al legajo de una luminaria
 
-Los documentos vinculados quedan listados en el legajo con su numero oficial, tipo y fecha.
+Los documentos vinculados quedan listados en el legajo con su número oficial, tipo y fecha.
 
 ### Buscar entre los documentos vinculados
 
@@ -44,47 +44,47 @@ Si ningún documento coincide, la tabla dice *"No hay documentos que coincidan c
 
 ## Vincular expedientes a un legajo
 
-De la misma manera, podes asociar expedientes electronicos al legajo.
+De la misma manera, podés asociar expedientes electrónicos al legajo.
 
-### Como vincular un expediente
+### Cómo vincular un expediente
 
-1. Abri el legajo
-2. Busca la seccion **Expedientes vinculados**
+1. Abrí el legajo
+2. Busca la sección **Expedientes vinculados**
 3. Hace click en **"+ Vincular expediente"**
-4. Busca el expediente por numero o referencia
-5. Confirma la vinculacion
+4. Busca el expediente por número o referencia
+5. Confirma la vinculación
 
-!!! tip "Vinculacion bidireccional"
-    Al vincular un expediente a un legajo, la relacion queda visible tanto desde el legajo como desde el expediente. No es necesario vincular desde ambos lados.
+!!! tip "Vinculación bidireccional"
+    Al vincular un expediente a un legajo, la relación queda visible tanto desde el legajo como desde el expediente. No es necesario vincular desde ambos lados.
 
 ---
 
 ## Relaciones entre legajos
 
-Podes crear relaciones entre legajos para representar conexiones logicas. Esto es util cuando multiples legajos estan relacionados entre si.
+Podés crear relaciones entre legajos para representar conexiones lógicas. Esto es útil cuando múltiples legajos están relacionados entre sí.
 
-### Tipos de relacion
+### Tipos de relación
 
-| Tipo | Codigo | Significado | Ejemplo |
+| Tipo | Código | Significado | Ejemplo |
 |------|--------|-------------|---------|
 | **Padre** | `parent` | El legajo actual es parte de otro legajo mayor | Una luminaria es parte de un circuito de alumbrado |
 | **Hijo** | `child` | Otro legajo es parte del legajo actual | El circuito de alumbrado contiene varias luminarias |
-| **Relacionado** | `related` | Los legajos tienen vinculacion tematica | Dos comercios en el mismo edificio |
-| **Reemplaza** | `replaces` | El legajo actual sustituye a otro anterior | Nueva habilitacion que reemplaza a la vencida |
-| **Hermano** | `sibling` | Los legajos estan al mismo nivel dentro de un grupo | Dos locales del mismo centro comercial |
-| **Primo** | `cousin` | Los legajos tienen una relacion indirecta | Obras en la misma manzana de distintos titulares |
+| **Relacionado** | `related` | Los legajos tienen vinculación temática | Dos comercios en el mismo edificio |
+| **Reemplaza** | `replaces` | El legajo actual sustituye a otro anterior | Nueva habilitación que reemplaza a la vencida |
+| **Hermano** | `sibling` | Los legajos están al mismo nivel dentro de un grupo | Dos locales del mismo centro comercial |
+| **Primo** | `cousin` | Los legajos tienen una relación indirecta | Obras en la misma manzana de distintos titulares |
 
-### Como crear una relacion
+### Cómo crear una relación
 
-1. Abri el legajo desde el que queres crear la relacion
-2. Busca la seccion **Legajos relacionados**
-3. Hace click en **"+ Agregar relacion"**
-4. Selecciona el **tipo de relacion**
-5. Busca el legajo destino por numero o nombre
-6. Confirma la relacion
+1. Abrí el legajo desde el que querés crear la relación
+2. Busca la sección **Legajos relacionados**
+3. Hace click en **"+ Agregar relación"**
+4. Selecciona el **tipo de relación**
+5. Busca el legajo destino por número o nombre
+6. Confirma la relación
 
 !!! info "Relaciones unidireccionales"
-    Las relaciones se crean en una sola direccion: desde el legajo actual hacia el legajo destino. Si necesitas que la relacion sea visible desde ambos lados, crea una relacion en cada legajo.
+    Las relaciones se crean en una sola dirección: desde el legajo actual hacia el legajo destino. Si necesitás que la relación sea visible desde ambos lados, crea una relación en cada legajo.
 
 !!! example "Ejemplo: Red de relaciones de un circuito de alumbrado"
     ```
@@ -104,18 +104,18 @@ Cada legajo mantiene un **historial completo** de todas las acciones realizadas 
 
 | Evento | Que se registra |
 |--------|----------------|
-| Creacion | Fecha, usuario que creo el legajo |
-| Edicion de campo | Campo modificado, valor anterior, valor nuevo, usuario, fecha |
-| Verificacion | Campo verificado, documento de respaldo, verificador, fecha |
+| Creación | Fecha, usuario que creó el legajo |
+| Edición de campo | Campo modificado, valor anterior, valor nuevo, usuario, fecha |
+| Verificación | Campo verificado, documento de respaldo, verificador, fecha |
 | Cambio de estado | Estado anterior, estado nuevo, usuario, fecha |
-| Vinculacion | Tipo de vinculo (documento, expediente o legajo), elemento vinculado, usuario, fecha |
-| Generacion de IFRLM | Numero del informe generado, usuario, fecha |
+| Vinculación | Tipo de vínculo (documento, expediente o legajo), elemento vinculado, usuario, fecha |
+| Generación de IFRLM | Número del informe generado, usuario, fecha |
 
-### Como consultar el historial
+### Cómo consultar el historial
 
-1. Abri el legajo
-2. Busca la pestana o seccion **Historial**
-3. Se muestra una lista cronologica de todos los eventos
+1. Abrí el legajo
+2. Busca la pestaña o sección **Historial**
+3. Se muestra una lista cronológica de todos los eventos
 
-!!! tip "Auditoria completa"
-    El historial no se puede editar ni eliminar. Cada accion queda registrada de forma inmutable, lo que garantiza la trazabilidad completa del legajo para fines de auditoria.
+!!! tip "Auditoría completa"
+    El historial no se puede editar ni eliminar. Cada acción queda registrada de forma inmutable, lo que garantiza la trazabilidad completa del legajo para fines de auditoría.

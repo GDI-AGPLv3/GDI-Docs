@@ -1,8 +1,8 @@
-# Autenticacion
+# Autenticación
 
-El backend usa **Auth0** con tokens **JWT RS256** para autenticacion. Definido en `auth.py`.
+El backend usa **Auth0** con tokens **JWT RS256** para autenticación. Definido en `auth.py`.
 
-## Configuracion Auth0
+## Configuración Auth0
 
 | Variable | Valor Default |
 |----------|--------------|
@@ -10,9 +10,9 @@ El backend usa **Auth0** con tokens **JWT RS256** para autenticacion. Definido e
 | `AUTH0_AUDIENCE` | Configurado en `.env` |
 | `AUTH0_ALGORITHMS` | `["RS256"]` |
 
-## Flujo de Autenticacion
+## Flujo de Autenticación
 
-### Modo Produccion
+### Modo Producción
 
 ```
 1. Frontend obtiene JWT de Auth0 (login)
@@ -26,17 +26,17 @@ El backend usa **Auth0** con tokens **JWT RS256** para autenticacion. Definido e
 
 ### Modo Testing
 
-Si `TESTING_MODE=true` en `.env`, el backend acepta autenticacion simplificada:
+Si `TESTING_MODE=true` en `.env`, el backend acepta autenticación simplificada:
 
-| Metodo | Header | Descripcion |
+| Método | Header | Descripción |
 |--------|--------|-------------|
 | API Key fija | `X-API-Key: <TESTING_API_KEY>` | Usa primer usuario activo |
 | UUID directo | `X-User-ID: <uuid>` | UUID del usuario |
 | Bearer UUID | `Authorization: Bearer <uuid>` | UUID en lugar de JWT |
-| JWT normal | `Authorization: Bearer <jwt>` | Funciona igual que produccion |
+| JWT normal | `Authorization: Bearer <jwt>` | Funciona igual que producción |
 
 !!! warning "Seguridad"
-    `TESTING_MODE` se desactiva automaticamente si se detecta entorno de produccion.
+    `TESTING_MODE` se desactiva automáticamente si se detecta entorno de producción.
 
 ## Funciones Principales
 
@@ -83,7 +83,7 @@ def verify_token(token: str) -> Dict[str, Any]:
 
 Proceso:
 
-1. Obtiene la clave RSA publica de Auth0 (JWKS) con cache de 30 minutos
+1. Obtiene la clave RSA pública de Auth0 (JWKS) con cache de 30 minutos
 2. Busca la clave correspondiente al `kid` del token
 3. Decodifica y verifica el JWT con audience e issuer
 
@@ -93,12 +93,12 @@ Proceso:
 |------|---------|
 | 401 | Token expirado |
 | 401 | Claims incorrectos (audience/issuer) |
-| 401 | Token invalido |
+| 401 | Token inválido |
 | 503 | No se pudo obtener claves de Auth0 |
 
 ### verify_auth0_token
 
-Valida JWT sin requerir que el usuario exista en BD. Util para onboarding.
+Valida JWT sin requerir que el usuario exista en BD. Útil para onboarding.
 
 ```python
 def verify_auth0_token(
@@ -114,7 +114,7 @@ Carga permisos de sectores del usuario desde la BD.
 def load_user_permissions(user_id: str, *, schema_name: str) -> list:
 ```
 
-Retorna lista de `SectorPermission` con informacion de cada sector donde el usuario tiene acceso.
+Retorna lista de `SectorPermission` con información de cada sector donde el usuario tiene acceso.
 
 ### decode_jwt_from_request
 
@@ -126,7 +126,7 @@ def decode_jwt_from_request(request) -> Dict[str, Any]:
 
 ## Cache de JWKS
 
-Las claves publicas de Auth0 se cachean por **30 minutos** para evitar consultas frecuentes:
+Las claves públicas de Auth0 se cachean por **30 minutos** para evitar consultas frecuentes:
 
 ```python
 _jwks_cache = None
@@ -135,9 +135,9 @@ _jwks_cache_expiry = None  # datetime.now() + timedelta(minutes=30)
 
 ## Permisos de Sectores
 
-El sistema de permisos se basa en sectores. Cada usuario puede tener acceso a multiples sectores con diferentes niveles:
+El sistema de permisos se basa en sectores. Cada usuario puede tener acceso a múltiples sectores con diferentes niveles:
 
-| Permiso | Descripcion |
+| Permiso | Descripción |
 |---------|-------------|
 | `can_view` | Ver documentos y expedientes del sector |
 | `can_edit` | Crear y editar documentos en el sector |
@@ -163,28 +163,28 @@ def get_auth_source(request: Request) -> str:
 
 ## Auth0 Database Connection
 
-El BackOffice soporta **dual auth**: usuarios pueden autenticarse via proveedores sociales (Google, Microsoft) o via Database Connection (email + password). La gestion de Database Connection se implementa en `services/auth0_service.py` del BackOffice-Back.
+El BackOffice soporta **dual auth**: usuarios pueden autenticarse vía proveedores sociales (Google, Microsoft) o vía Database Connection (email + password). La gestión de Database Connection se implementa en `services/auth0_service.py` del BackOffice-Back.
 
-### Tipos de Autenticacion
+### Tipos de Autenticación
 
-| Tipo | Connection | Uso tipico |
+| Tipo | Connection | Uso típico |
 |------|-----------|------------|
 | **Social** | `google-oauth2`, `windowslive` | Usuarios con cuenta Google/Microsoft institucional |
 | **Database** | `Username-Password-Authentication` | Usuarios sin cuenta social (email + password manual) |
 
 ### Variables de Entorno
 
-| Variable | Descripcion | Default |
+| Variable | Descripción | Default |
 |----------|-------------|---------|
-| `AUTH0_M2M_CLIENT_ID` | Client ID de la aplicacion M2M (Management API) | *requerida* |
-| `AUTH0_M2M_CLIENT_SECRET` | Client Secret de la aplicacion M2M | *requerida* |
+| `AUTH0_M2M_CLIENT_ID` | Client ID de la aplicación M2M (Management API) | *requerida* |
+| `AUTH0_M2M_CLIENT_SECRET` | Client Secret de la aplicación M2M | *requerida* |
 | `AUTH0_M2M_AUDIENCE` | Audience de la Management API | `https://{AUTH0_DOMAIN}/api/v2/` |
 | `AUTH0_DB_CONNECTION` | Nombre de la Database Connection | `Username-Password-Authentication` |
 | `AUTH0_FRONTEND_CLIENT_ID` | Client ID de la app frontend (para redirect en password tickets) | `AUTH0_CLIENT_ID` (fallback) |
 
 ### Token M2M (Management API)
 
-Para interactuar con la Management API de Auth0, el servicio obtiene un token via **Client Credentials** grant. El token se cachea por **23 horas** (el token dura 24h, se renueva 1 hora antes de expirar).
+Para interactuar con la Management API de Auth0, el servicio obtiene un token vía **Client Credentials** grant. El token se cachea por **23 horas** (el token dura 24h, se renueva 1 hora antes de expirar).
 
 ```python
 # Cache del token M2M
@@ -215,7 +215,7 @@ users = check_user_exists_in_auth0("juan@municipio.gob.ar")
 
 Verifica si el email ya tiene una cuenta Social (Google/Microsoft). Retorna `True`/`False`.
 
-Util para decidir si hay que crear una Database Connection o si el usuario ya puede hacer login social.
+Útil para decidir si hay que crear una Database Connection o si el usuario ya puede hacer login social.
 
 #### `create_database_user(email, full_name)`
 
@@ -226,16 +226,16 @@ result = create_database_user("juan@municipio.gob.ar", "Juan Perez")
 # Retorna: {"user_id": "auth0|abc123", ...}
 ```
 
-Detalles de implementacion:
+Detalles de implementación:
 
 - Password aleatorio: `secrets.token_urlsafe(32) + "!A1"` (cumple Good policy)
-- `email_verified: True` (evita mail de verificacion)
+- `email_verified: True` (evita mail de verificación)
 - `verify_email: False`
 - `app_metadata: {"gdi_invitation": True}` (marca como invitado)
 
 #### `create_password_change_ticket(auth0_user_id, client_id)`
 
-Genera un link de activacion (password change ticket) para que el usuario establezca su password.
+Genera un link de activación (password change ticket) para que el usuario establezca su password.
 
 ```python
 ticket_url = create_password_change_ticket("auth0|abc123", FRONTEND_CLIENT_ID)
@@ -244,9 +244,9 @@ ticket_url = create_password_change_ticket("auth0|abc123", FRONTEND_CLIENT_ID)
 
 Detalles:
 
-- TTL: **5 dias** (432000 segundos)
+- TTL: **5 días** (432000 segundos)
 - Usa `client_id` (no `result_url`) porque New Universal Login ignora `result_url`
-- Auth0 usa el Application Login URI configurado en la app del `client_id` para el boton de redirect post-cambio
+- Auth0 usa el Application Login URI configurado en la app del `client_id` para el botón de redirect post-cambio
 
 ### Flujo Completo: Crear Usuario con Database Connection
 
@@ -266,4 +266,4 @@ Detalles:
 ```
 
 !!! info "Onboarding: auth_id"
-    La columna `auth_id` en la tabla `users` se completa en el primer login del usuario. Hasta entonces, el usuario existe en la BD pero sin `auth_id`. La funcion `verify_auth0_token` permite validar el JWT sin requerir que el usuario exista previamente en la BD, facilitando este flujo de onboarding.
+    La columna `auth_id` en la tabla `users` se completa en el primer login del usuario. Hasta entonces, el usuario existe en la BD pero sin `auth_id`. La función `verify_auth0_token` permite validar el JWT sin requerir que el usuario exista previamente en la BD, facilitando este flujo de onboarding.

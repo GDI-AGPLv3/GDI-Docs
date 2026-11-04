@@ -7,7 +7,7 @@ encriptado en **PostgreSQL**, y viajan a Notary por multipart en cada firma.
 !!! info "Estado: implementado"
     El esquema de certificados en R2 dejo de ser roadmap. El almacenamiento local
     (`certs/{tenant_id}.p12` + `passwords.json`) quedo como modo legacy de desarrollo:
-    el codigo sigue existiendo en `certificate_loader.py`, pero **Notary ya no lo usa
+    el código sigue existiendo en `certificate_loader.py`, pero **Notary ya no lo usa
     para resolver certificados** (ver "Modo legacy" al final).
 
 !!! note "Certificado del municipio no es lo mismo que firma de certificación"
@@ -35,7 +35,7 @@ BackOffice-Back            R2                     Backend                Notary
 | Componente | Repo / archivo | Responsabilidad |
 |---|---|---|
 | Carga y armado del `.p12` | `GDI-BackOffice-Back/services/certificate_service.py` | Valida, encripta password, sube a R2, upsert en BD |
-| Resolucion en firma | `GDI-Backend/services/shared/certificate_resolver.py` | Lee BD, desencripta password, descarga de R2, cachea |
+| Resolución en firma | `GDI-Backend/services/shared/certificate_resolver.py` | Lee BD, desencripta password, descarga de R2, cachea |
 | Carga en memoria | `GDI-Notary/app/certificate_loader.py` | `load_certificate_from_bytes()` + tempfile seguro |
 | Firma | `GDI-Notary/app/pades_signer.py` | pyHanko PAdES-B-T |
 
@@ -55,12 +55,12 @@ cualquier `search_path`), un registro por tenant (`ON CONFLICT (tenant_id) DO UP
 | Columna | Contenido |
 |---|---|
 | `tenant_id` | Schema del tenant. Es la clave: 1 certificado por municipio |
-| `r2_bucket` / `r2_key` | Ubicacion del `.p12` |
+| `r2_bucket` / `r2_key` | Ubicación del `.p12` |
 | `encrypted_password` | Password del `.p12` encriptada con **Fernet** (`CERT_MASTER_KEY`) |
 | `subject_cn`, `subject_org`, `issuer_cn`, `serial_number` | Metadata extraida del certificado |
 | `not_valid_before`, `not_valid_after` | Vigencia |
 | `fingerprint_sha256` | Huella SHA-256 (se muestra en el BackOffice) |
-| `file_size_bytes`, `is_active`, `uploaded_by`, `created_at`, `updated_at` | Auditoria |
+| `file_size_bytes`, `is_active`, `uploaded_by`, `created_at`, `updated_at` | Auditoría |
 
 !!! warning "El password nunca se guarda en claro"
     Se encripta con Fernet usando `CERT_MASTER_KEY`. Si se rota esa key, **todos** los
@@ -68,7 +68,7 @@ cualquier `search_path`), un registro por tenant (`ON CONFLICT (tenant_id) DO UP
 
 ## Variables de entorno
 
-| Variable | Donde | Descripcion |
+| Variable | Donde | Descripción |
 |---|---|---|
 | `CERT_MASTER_KEY` | BackOffice-Back + Backend | Clave Fernet para encriptar/desencriptar el password del `.p12`. Debe ser **la misma** en ambos |
 | `CERT_R2_BUCKET` | BackOffice-Back + Backend | Bucket de certificados (default `gdi-certificates`) |
@@ -77,12 +77,12 @@ cualquier `search_path`), un registro por tenant (`ON CONFLICT (tenant_id) DO UP
 | `S3_FORCE_PATH_STYLE` | Backend | `true` para el almacenamiento local (on-premise). R2 usa virtual-hosted |
 | `FALLBACK_TO_VISUAL` | Notary | `false` en PRD: sin certificado, la firma falla en vez de degradar a visual |
 
-## Endpoints de administracion (BackOffice-Back)
+## Endpoints de administración (BackOffice-Back)
 
 Todos bajo `/admin/certificates`, requieren rol Administrador. El `tenant_id` se
 **bindea al schema del admin** (GDI-143): mandar otro devuelve `403`.
 
-| Metodo | Endpoint | Proposito |
+| Método | Endpoint | Propósito |
 |---|---|---|
 | POST | `/admin/certificates` | Sube un `.p12` + password (max 5MB) |
 | POST | `/admin/certificates/generate-csr` | Genera key RSA 2048 + CSR para AC ONTI (no persiste nada) |
@@ -102,7 +102,7 @@ Todos bajo `/admin/certificates`, requieren rol Administrador. El `tenant_id` se
 3. `finalize` recibe `.cer` + `.key` + password y:
     - carga el `.cer` soportando **PEM, DER y PKCS#7** (`.p7b`/`.p7c`), con o sin cadena;
     - valida vigencia (no vencido, no futuro);
-    - verifica que la clave publica del `.key` coincida con la del `.cer` (bloqueante:
+    - verifica que la clave pública del `.key` coincida con la del `.cer` (bloqueante:
       evita generar un `.p12` roto);
     - serializa el `.p12` con `BestAvailableEncryption` incluyendo la cadena;
     - delega en `upload_certificate()` (misma ruta que la subida directa).
@@ -111,14 +111,14 @@ Todos bajo `/admin/certificates`, requieren rol Administrador. El `tenant_id` se
 
 | Regla | Valor |
 |---|---|
-| Extension | `.p12` (subida directa) · `.cer/.crt/.pem/.p7b/.p7c/.der` (finalize) |
-| Tamano `.p12` | 5 MB |
-| Tamano `.cer` | 1 MB |
-| Tamano `.key` | 512 KB |
-| Password (finalize) | Minimo 8 caracteres |
+| Extensión | `.p12` (subida directa) · `.cer/.crt/.pem/.p7b/.p7c/.der` (finalize) |
+| Tamaño `.p12` | 5 MB |
+| Tamaño `.cer` | 1 MB |
+| Tamaño `.key` | 512 KB |
+| Password (finalize) | Mínimo 8 caracteres |
 | Contenido | El `.p12` debe traer clave privada **y** certificado, y abrir con el password |
 
-## Resolucion en tiempo de firma (Backend)
+## Resolución en tiempo de firma (Backend)
 
 `resolve_certificate(tenant_id, *, schema_name)` devuelve `(p12_bytes, password)`:
 
@@ -151,12 +151,12 @@ aparezcan en logs.
 
 ### Modos de firma en `/sign-pdf`
 
-| Modo | Condicion | Resultado |
+| Modo | Condición | Resultado |
 |---|---|---|
-| **1 — multipart** | Llegan `cert_file` + `cert_password` y `use_pades=true` | Firma PAdES. **Unico modo activo** |
+| **1 — multipart** | Llegan `cert_file` + `cert_password` y `use_pades=true` | Firma PAdES. **Único modo activo** |
 | **2 — local** | Solo llega `tenant_id` | Deshabilitado: loguea warning. Con `FALLBACK_TO_VISUAL=false` devuelve `400 CERTIFICATE_NOT_PROVIDED` |
 
-## Validacion del certificado
+## Validación del certificado
 
 `validate_certificate()` verifica vigencia y `key_usage.digital_signature`:
 
@@ -173,7 +173,7 @@ def validate_certificate(cert: LoadedCertificate) -> Tuple[bool, str]:
 
 ## Seguridad: path traversal (modo legacy)
 
-`get_certificate_path()` verifica contencion de path, y `validators.py` valida el
+`get_certificate_path()` verifica contención de path, y `validators.py` valida el
 formato del `tenant_id` con `^[a-zA-Z0-9_-]+$`:
 
 ```python
@@ -185,12 +185,12 @@ if not cert_path.is_relative_to(certs_dir):
 
 ## Excepciones
 
-| Excepcion | Causa |
+| Excepción | Causa |
 |---|---|
 | `CertificateNotFoundError` | No existe `.p12` para el tenant (modo legacy) |
 | `PasswordNotFoundError` | No hay password en `passwords.json` (modo legacy) |
-| `CertificateLoadError` | Password incorrecto, formato invalido, o `.p12` sin key/cert |
-| `CertificateError` | Error generico de certificado |
+| `CertificateLoadError` | Password incorrecto, formato inválido, o `.p12` sin key/cert |
+| `CertificateError` | Error genérico de certificado |
 
 ## Modo legacy: certificados locales (solo desarrollo)
 
@@ -206,20 +206,20 @@ python scripts/generate_test_cert.py \
   --password test123
 ```
 
-| Opcion | Default | Descripcion |
+| Opción | Default | Descripción |
 |---|---|---|
 | `--tenant` / `-t` | (requerido) | ID del tenant |
 | `--password` / `-p` | `test123` | Password del `.p12` |
 | `--output` / `-o` | `../certs` | Directorio de salida |
-| `--days` / `-d` | `365` | Dias de validez |
+| `--days` / `-d` | `365` | Días de validez |
 | `--cn` | Auto-generado | Common Name |
 | `--org` | Auto-generado | Organization |
 | `--no-passwords-file` | - | No actualizar `passwords.json` |
 
 El certificado generado es RSA 2048 / SHA-256, con Key Usage *Digital Signature +
-Content Commitment*, pais AR.
+Content Commitment*, país AR.
 
 !!! danger "Solo para pruebas"
-    Son certificados **auto-firmados**: no sirven para produccion. En PRD el
+    Son certificados **auto-firmados**: no sirven para producción. En PRD el
     certificado lo carga el municipio desde el BackOffice
     (ver [Certificados — Administradores](../../administradores/certificados.md)).

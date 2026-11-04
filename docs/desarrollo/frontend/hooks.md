@@ -1,12 +1,12 @@
 # Hooks
 
-Todos los custom hooks estan en `src/hooks/`. Encapsulan logica de fetching, estado y side effects para mantener los componentes limpios.
+Todos los custom hooks están en `src/hooks/`. Encapsulan lógica de fetching, estado y side effects para mantener los componentes limpios.
 
-## Autenticacion y Tenant
+## Autenticación y Tenant
 
 ### useAuth
 
-Hook unificado de autenticacion. Soporta modo Auth0 (produccion) y modo testing (desarrollo).
+Hook unificado de autenticación. Soporta modo Auth0 (producción) y modo testing (desarrollo).
 
 **Archivo**: `src/hooks/useAuth.ts`
 
@@ -64,7 +64,7 @@ const {
 } = useOnboarding(skip?: boolean);
 ```
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `skip` | `boolean` | `false` | Si `true`, no ejecuta la llamada al montar |
 
@@ -103,7 +103,7 @@ const {
 } = useCreateDocument();
 ```
 
-La funcion `createDocument` recibe:
+La función `createDocument` recibe:
 
 ```typescript
 interface CreateDocumentData {
@@ -137,7 +137,7 @@ const {
 } = useDocumentDetails(documentId?: string);
 ```
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `documentId` | `string \| undefined` | UUID del documento. No fetcha si es `undefined` |
 
@@ -165,13 +165,13 @@ const {
 } = useDocumentTypes();
 ```
 
-Incluye fallback automatico con tipos basicos si la API falla.
+Incluye fallback automático con tipos básicos si la API falla.
 
 ---
 
 ### useDocumentSearch
 
-Busqueda de documentos con filtros.
+Búsqueda de documentos con filtros.
 
 **Archivo**: `src/hooks/useDocumentSearch.ts`
 
@@ -209,7 +209,7 @@ const {
 } = useSignDocument();
 ```
 
-Retorna `{ success: true, data: { official_number, is_numerator, document_status } }` en caso de exito.
+Retorna `{ success: true, data: { official_number, is_numerator, document_status } }` en caso de éxito.
 
 ---
 
@@ -248,7 +248,7 @@ const {
 
 ### useBatchSign
 
-Firma multiples documentos en lote.
+Firma múltiples documentos en lote.
 
 **Archivo**: `src/hooks/useBatchSign.ts`
 
@@ -277,7 +277,7 @@ Soporta respuestas con PDF directo (blob) o JSON con URL.
 
 ### usePreviewDocumentInfo
 
-Obtiene informacion de previsualizacion del documento.
+Obtiene información de previsualización del documento.
 
 **Archivo**: `src/hooks/usePreviewDocumentInfo.ts`
 
@@ -285,7 +285,7 @@ Obtiene informacion de previsualizacion del documento.
 
 ### usePreviewInfo
 
-Informacion de preview incluyendo firmantes y estado.
+Información de preview incluyendo firmantes y estado.
 
 **Archivo**: `src/hooks/usePreviewInfo.ts`
 
@@ -295,7 +295,7 @@ Informacion de preview incluyendo firmantes y estado.
 
 ### useExpedienteData
 
-Obtiene datos basicos de un expediente.
+Obtiene datos básicos de un expediente.
 
 **Archivo**: `src/hooks/useExpedienteData.ts`
 
@@ -307,7 +307,7 @@ const {
 } = useExpedienteData(expedienteId, user_id, isRouterReady);
 ```
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `expedienteId` | `string \| undefined` | UUID del expediente |
 | `user_id` | `string \| undefined` | UUID del usuario |
@@ -325,7 +325,7 @@ Obtiene documentos vinculados a un expediente.
 
 ### useExpedienteModals
 
-Gestiona el estado de multiples modales del detalle de expediente.
+Gestiona el estado de múltiples modales del detalle de expediente.
 
 **Archivo**: `src/hooks/useExpedienteModals.ts`
 
@@ -349,7 +349,7 @@ Obtiene los movimientos recientes de un expediente.
 
 ### useCaseSearch
 
-Busca expedientes por numero oficial.
+Busca expedientes por número oficial.
 
 **Archivo**: `src/hooks/useCaseSearch.ts`
 
@@ -357,7 +357,7 @@ Busca expedientes por numero oficial.
 
 ### useAssignmentForm
 
-Logica del formulario de asignacion de expediente.
+Lógica del formulario de asignación de expediente.
 
 **Archivo**: `src/hooks/useAssignmentForm.ts`
 
@@ -365,7 +365,7 @@ Logica del formulario de asignacion de expediente.
 
 ### useTransferForm
 
-Logica del formulario de transferencia de expediente.
+Lógica del formulario de transferencia de expediente.
 
 **Archivo**: `src/hooks/useTransferForm.ts`
 
@@ -373,7 +373,7 @@ Logica del formulario de transferencia de expediente.
 
 ### useSubsanarWorkflow
 
-Workflow de subsanacion de documentos en expediente.
+Workflow de subsanación de documentos en expediente.
 
 **Archivo**: `src/hooks/useSubsanarWorkflow.ts`
 
@@ -391,7 +391,7 @@ Workflow para vincular documentos a expedientes.
 
 ### useNotesReceived
 
-Obtiene notas recibidas con paginacion y filtros.
+Obtiene notas recibidas con paginación y filtros.
 
 **Archivo**: `src/hooks/useNotesReceived.ts`
 
@@ -414,7 +414,7 @@ const {
 });
 ```
 
-Soporta cancelacion de requests anteriores via `AbortController`.
+Soporta cancelación de requests anteriores vía `AbortController`.
 
 ---
 
@@ -450,11 +450,11 @@ Archiva o desarchiva una nota.
 
 ---
 
-## Busqueda
+## Búsqueda
 
 ### useUnifiedSearch
 
-Busqueda unificada de documentos y expedientes con deteccion automatica de tipo.
+Búsqueda unificada de documentos y expedientes con detección automática de tipo.
 
 **Archivo**: `src/hooks/useUnifiedSearch.ts`
 
@@ -488,7 +488,7 @@ const {
 
 ### useDebounce
 
-Debounce de valores. Util para busquedas que disparan requests.
+Debounce de valores. Útil para búsquedas que disparan requests.
 
 **Archivo**: `src/hooks/useDebounce.ts`
 
@@ -496,7 +496,7 @@ Debounce de valores. Util para busquedas que disparan requests.
 const debouncedValue = useDebounce<T>(value: T, delay?: number);
 ```
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `value` | `T` | - | Valor a debounce |
 | `delay` | `number` | `300` | Milisegundos de espera |
@@ -522,7 +522,7 @@ const {
 
 ### useUserSearch
 
-Busqueda de usuarios por nombre o email.
+Búsqueda de usuarios por nombre o email.
 
 **Archivo**: `src/hooks/useUserSearch.ts`
 
@@ -530,7 +530,7 @@ Busqueda de usuarios por nombre o email.
 
 ### useUserInfo / useUserProfile
 
-Informacion y perfil del usuario actual.
+Información y perfil del usuario actual.
 
 **Archivos**: `src/hooks/useUserInfo.ts`, `src/hooks/useUserProfile.ts`
 
@@ -555,4 +555,4 @@ const {
 });
 ```
 
-Genera mensaje de bienvenida automaticamente al montar. Si `caseId` esta definido, obtiene bienvenida contextual del backend.
+Genera mensaje de bienvenida automáticamente al montar. Si `caseId` está definido, obtiene bienvenida contextual del backend.

@@ -1,19 +1,19 @@
 # Endpoints de Dashboard
 
-Endpoints para estadisticas y feed de actividad. Prefijo: `/api/v1/dashboard`.
+Endpoints para estadísticas y feed de actividad. Prefijo: `/api/v1/dashboard`.
 
 ## Feed de Actividad
 
 ### `GET /api/v1/dashboard/feed`
 
-Feed cronologico de actividad reciente relevante al usuario.
+Feed cronológico de actividad reciente relevante al usuario.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `page` | int | Pagina |
-| `page_size` | int | Resultados por pagina |
+| `page` | int | Página |
+| `page_size` | int | Resultados por página |
 
 **Tipos de eventos en el feed:**
 
@@ -28,18 +28,18 @@ Feed cronologico de actividad reciente relevante al usuario.
 
 ---
 
-## Estadisticas
+## Estadísticas
 
 ### `GET /api/v1/dashboard/stats`
 
-Obtiene estadisticas del usuario y su sector.
+Obtiene estadísticas del usuario y su sector.
 
 **Response incluye:**
 
 - Total de documentos por estado (draft, sent_to_sign, signed, rejected)
 - Documentos pendientes de firma del usuario
 - Expedientes activos del sector
-- Actividad reciente (ultimos 7 y 30 dias)
+- Actividad reciente (últimos 7 y 30 días)
 
 **Archivo:** `endpoints/dashboard/stats.py`
 
@@ -47,7 +47,7 @@ Obtiene estadisticas del usuario y su sector.
 
 ## Schemas
 
-Los schemas de dashboard estan definidos en `schemas/dashboard_schemas.py`:
+Los schemas de dashboard están definidos en `schemas/dashboard_schemas.py`:
 
 ```python
 class DashboardStatsResponse(BaseModel):

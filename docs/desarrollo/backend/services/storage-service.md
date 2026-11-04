@@ -2,7 +2,7 @@
 
 Cliente de Cloudflare R2 para almacenamiento de PDFs con soporte multi-tenant.
 
-**Ubicacion:** `services/storage/cloudflare.py`
+**Ubicación:** `services/storage/cloudflare.py`
 
 ## Arquitectura
 
@@ -20,7 +20,7 @@ Cada tenant tiene sus **propios buckets** configurados en `{schema}.settings`.
 
 ## CloudflareR2Client
 
-Clase principal que interactua con R2 via boto3 (S3-compatible).
+Clase principal que interactua con R2 vía boto3 (S3-compatible).
 
 ```python
 class CloudflareR2Client:
@@ -35,9 +35,9 @@ class CloudflareR2Client:
         """
 ```
 
-### Metodos
+### Métodos
 
-| Metodo | Bucket | Descripcion |
+| Método | Bucket | Descripción |
 |--------|--------|-------------|
 | `get_oficial_url(official_number)` | oficial | URL firmada para documento oficial |
 | `get_tosign_url(filename)` | tosign | URL firmada para documento en firma |
@@ -48,7 +48,7 @@ class CloudflareR2Client:
 
 ### URLs Firmadas
 
-Todas las URLs generadas son **temporales** con expiracion configurable:
+Todas las URLs generadas son **temporales** con expiración configurable:
 
 ```python
 url = self._client.generate_presigned_url(
@@ -65,8 +65,8 @@ url = self._client.generate_presigned_url(
 | tosign | `{uuid_sin_guiones}.pdf` | `214c5d1695ea4865876de8e826ef3ece.pdf` |
 | oficial | `{official_number}.pdf` | `IF-2025-000000157-MT-DGOBR.pdf` |
 
-!!! note "Normalizacion"
-    Los metodos agregan `.pdf` automaticamente si no esta presente.
+!!! note "Normalización"
+    Los métodos agregan `.pdf` automáticamente si no está presente.
 
 ### Upload
 
@@ -113,7 +113,7 @@ def get_tenant_r2_client(*, schema_name: str) -> CloudflareR2Client:
 **Flujo:**
 
 1. Verificar cache (thread-safe con `Lock`)
-2. Si cache valido (< 1 hora): retornar cliente existente
+2. Si cache válido (< 1 hora): retornar cliente existente
 3. Si no: query a `{schema}.settings` para obtener `bucket_oficial` y `bucket_tosign`
 4. Crear nuevo `CloudflareR2Client` con buckets del tenant
 5. Guardar en cache
@@ -136,14 +136,14 @@ def invalidate_tenant_r2_cache(*, schema_name: str):
 
 ## Variables de Entorno
 
-| Variable | Descripcion | Default |
+| Variable | Descripción | Default |
 |----------|-------------|---------|
 | `CF_R2_ENDPOINT` | URL del endpoint R2 | Requerido |
 | `CF_R2_ACCESS_KEY_ID` | Access key | Requerido |
 | `CF_R2_SECRET_ACCESS_KEY` | Secret key | Requerido |
 
 
-| `CF_R2_SIGN_EXPIRATION` | Expiracion URLs (segundos) | `600` |
+| `CF_R2_SIGN_EXPIRATION` | Expiración URLs (segundos) | `600` |
 
 ---
 

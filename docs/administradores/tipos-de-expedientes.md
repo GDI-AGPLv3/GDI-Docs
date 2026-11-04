@@ -1,6 +1,6 @@
 # Tipos de Expedientes
 
-Configura los tipos de expedientes disponibles en el sistema. Cada organizacion selecciona del catalogo global los tipos de expediente que necesita.
+Configura los tipos de expedientes disponibles en el sistema. Cada organización selecciona del catálogo global los tipos de expediente que necesita.
 
 ![Tipos de Expedientes](capturas/tipos-de-expedientes.png)
 
@@ -15,14 +15,14 @@ Configura los tipos de expedientes disponibles en el sistema. Cada organizacion 
 
 ## Listado de Tipos
 
-La tabla muestra todos los tipos de expediente habilitados para la organizacion.
+La tabla muestra todos los tipos de expediente habilitados para la organización.
 
-| Columna | Descripcion |
+| Columna | Descripción |
 |---------|-------------|
-| **Codigo** | Acronimo unico del tipo (ej: *COMP*, *DEM*, *HABI*) |
-| **Nombre** | Nombre completo y descripcion |
-| **Canal** | Canal de creacion: `Web` (desde la aplicacion) |
-| **Depto. Radicacion** | Departamento responsable de radicar expedientes de este tipo |
+| **Código** | Acrónimo único del tipo (ej: *COMP*, *DEM*, *HABI*) |
+| **Nombre** | Nombre completo y descripción |
+| **Canal** | Canal de creación: `Web` (desde la aplicación) |
+| **Depto. Radicación** | Departamento responsable de radicar expedientes de este tipo |
 | **Estado** | `Activo` o `Inactivo` |
 
 ---
@@ -33,42 +33,42 @@ Al hacer clic en un tipo se muestra su ficha completa:
 
 ![Detalle Tipo de Expediente](capturas/tipo-expediente-detalle.png)
 
-### Informacion General
+### Información General
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
 | **Nombre** | Nombre del tipo de expediente |
-| **Acronimo** | Codigo unico |
-| **Descripcion** | Descripcion del proposito |
-| **Canal de Creacion** | Web |
-| **Depto. Radicacion** | Departamento donde se radican los expedientes |
+| **Acrónimo** | Código único |
+| **Descripción** | Descripción del propósito |
+| **Canal de Creación** | Web |
+| **Depto. Radicación** | Departamento donde se radican los expedientes |
 | **Estado** | Activo / Inactivo |
-| **Fecha de Creacion** | Fecha en que se agrego a la organizacion |
+| **Fecha de Creación** | Fecha en que se agregó a la organización |
 
 ### Origen Global
 
-Muestra los datos del tipo en el catalogo global (nombre, acronimo y descripcion global).
+Muestra los datos del tipo en el catálogo global (nombre, acrónimo y descripción global).
 
 ### Departamentos Permitidos
 
-Define que departamentos pueden crear expedientes de este tipo.
+Define qué departamentos pueden crear expedientes de este tipo.
 
 - **Todos los departamentos**: Cualquier departamento puede crear expedientes de este tipo
-- **Departamentos especificos**: Solo los departamentos listados
+- **Departamentos específicos**: Solo los departamentos listados
 
 ---
 
-## Catalogo Global
+## Catálogo Global
 
-Boton **+ Catalogo Global** muestra todos los tipos de expediente disponibles para agregar.
+Botón **+ Catálogo Global** muestra todos los tipos de expediente disponibles para agregar.
 
 ![Catalogo Global de Expedientes](capturas/tipos-expedientes-catalogo-global.png)
 
-| Columna | Descripcion |
+| Columna | Descripción |
 |---------|-------------|
-| **Codigo** | Acronimo del tipo en el catalogo global |
-| **Nombre** | Nombre y descripcion |
-| **Agregar** | Boton para habilitar el tipo en la organizacion |
+| **Código** | Acrónimo del tipo en el catálogo global |
+| **Nombre** | Nombre y descripción |
+| **Agregar** | Botón para habilitar el tipo en la organización |
 
-!!! info "Departamento de Radicacion"
-    Al agregar un tipo de expediente desde el catalogo global, el sistema solicita seleccionar el **Departamento de Radicacion** antes de confirmar. Este departamento sera donde se radiquen los expedientes de este tipo.
+!!! info "Departamento de Radicación"
+    Al agregar un tipo de expediente desde el catálogo global, el sistema solicita seleccionar el **Departamento de Radicación** antes de confirmar. Este departamento será donde se radiquen los expedientes de este tipo.

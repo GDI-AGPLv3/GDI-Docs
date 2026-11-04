@@ -1,10 +1,10 @@
 # Documents Retrieval
 
-Servicios de consulta, busqueda y obtencion de detalles de documentos.
+Servicios de consulta, búsqueda y obtención de detalles de documentos.
 
-**Ubicacion:** `services/documents/retrieval/`
+**Ubicación:** `services/documents/retrieval/`
 
-## Modulos
+## Módulos
 
 ```
 retrieval/
@@ -20,7 +20,7 @@ retrieval/
 
 ### `get_unified_document_details()`
 
-Punto de entrada unico que delega al servicio apropiado segun el estado del documento.
+Punto de entrada único que delega al servicio apropiado según el estado del documento.
 
 ```python
 async def get_unified_document_details(
@@ -31,9 +31,9 @@ async def get_unified_document_details(
 ) -> Dict[str, Any]:
 ```
 
-**Categorias de estado:**
+**Categorías de estado:**
 
-| Estado | Categoria | Servicio delegado |
+| Estado | Categoría | Servicio delegado |
 |--------|-----------|-------------------|
 | `draft` | `editing` | `get_document_details_for_editing()` |
 | `rejected` | `editing` | `get_document_details_for_editing()` |
@@ -62,7 +62,7 @@ else:
 
 Para documentos en estado `signing`, se verifica que el usuario tenga permiso:
 
-| Condicion | Acceso |
+| Condición | Acceso |
 |-----------|--------|
 | Es creador (`created_by`) | Permitido |
 | Es firmante (`document_signers`) | Permitido |
@@ -89,11 +89,11 @@ Para documentos en estado `signing`, se verifica que el usuario tenga permiso:
 
 ---
 
-## Busqueda Oficial (`retrieval/official_search.py`)
+## Búsqueda Oficial (`retrieval/official_search.py`)
 
 ### `search_official_document_by_number()`
 
-Busca un documento oficial por su numero exacto en `official_documents`.
+Busca un documento oficial por su número exacto en `official_documents`.
 
 ```python
 def search_official_document_by_number(
@@ -104,7 +104,7 @@ def search_official_document_by_number(
 ) -> Dict[str, Any]:
 ```
 
-**Modos de busqueda:**
+**Modos de búsqueda:**
 
 | Modo | `user_id` | Comportamiento |
 |------|-----------|----------------|
@@ -142,7 +142,7 @@ def search_official_document_by_number(
 
 Genera URLs firmadas temporales para descargar PDFs oficiales desde R2.
 
-| Bucket | Filename | Expiracion |
+| Bucket | Filename | Expiración |
 |--------|----------|------------|
 | `oficial` | `{official_number}.pdf` | 600s (configurable) |
 | `tosign` | `{uuid_sin_guiones}.pdf` | 600s (configurable) |
@@ -151,13 +151,13 @@ Genera URLs firmadas temporales para descargar PDFs oficiales desde R2.
 
 ## Contenido (`retrieval/content.py`)
 
-Obtiene el contenido HTML completo de un documento, soportando multiples formatos de almacenamiento.
+Obtiene el contenido HTML completo de un documento, soportando múltiples formatos de almacenamiento.
 
 **Formatos soportados:**
 
-| Formato | JSON | Extraccion |
+| Formato | JSON | Extracción |
 |---------|------|------------|
-| Estandar | `{"html": "..."}` | `content['html']` |
+| Estándar | `{"html": "..."}` | `content['html']` |
 | Legacy | `{"detalle": "..."}` | `content['detalle']` |
 | Body | `{"body": "..."}` | `content['body']` |
 | TipTap | `{"type": "doc", ...}` | `json.dumps(content)` |

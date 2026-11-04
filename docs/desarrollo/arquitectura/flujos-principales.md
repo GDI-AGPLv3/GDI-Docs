@@ -2,7 +2,7 @@
 
 ## 1. Crear Documento y Firmar
 
-El flujo completo de un documento desde su creacion como borrador hasta su firma oficial y almacenamiento.
+El flujo completo de un documento desde su creación como borrador hasta su firma oficial y almacenamiento.
 
 ```mermaid
 sequenceDiagram
@@ -55,20 +55,20 @@ sequenceDiagram
     FE-->>U: Muestra PDF firmado
 ```
 
-**Formato de numero oficial:**
+**Formato de número oficial:**
 
 ```
 {TIPO}-{ANO}-{SECUENCIA:08d}-{CIUDAD}-{DEPT}
 Ejemplo: IF-2025-00000034-SMG-ADGEN
 ```
 
-**Manejo FULLPAGE:** Si Notary responde `400 FULLPAGE` (pagina llena), el Backend agrega una pagina en blanco y reintenta automaticamente.
+**Manejo FULLPAGE:** Si Notary responde `400 FULLPAGE` (página llena), el Backend agrega una página en blanco y reintenta automáticamente.
 
 ---
 
-## 2. Crear Expediente con Caratula CAEX
+## 2. Crear Expediente con Carátula CAEX
 
-La creacion de un expediente genera automaticamente una caratula oficial (documento CAEX) firmada.
+La creación de un expediente genera automáticamente una carátula oficial (documento CAEX) firmada.
 
 ```mermaid
 sequenceDiagram
@@ -103,20 +103,20 @@ sequenceDiagram
     FE-->>U: Expediente con caratula firmada
 ```
 
-La caratula CAEX siempre es el **primer documento** del expediente (`order_number = 1`). Contiene:
+La carátula CAEX siempre es el **primer documento** del expediente (`order_number = 1`). Contiene:
 
-- Numero de expediente
+- Número de expediente
 - Tipo y motivo
-- Area iniciadora
+- Área iniciadora
 - Creador
 - Fecha y hora (UTC)
 - Logo municipal
 
 ---
 
-## 3. Asignar Expediente con PV Automatica
+## 3. Asignar Expediente con PV Automática
 
-Al asignar un expediente a otro sector, opcionalmente se genera un documento PV (Pase/Vista) automatico.
+Al asignar un expediente a otro sector, opcionalmente se genera un documento PV (Pase/Vista) automático.
 
 ```mermaid
 sequenceDiagram
@@ -154,17 +154,17 @@ sequenceDiagram
 
 El documento PV contiene:
 
-- Numero de expediente
-- Tipo de movimiento (Asignacion)
-- Area requiriente (DE)
-- Area receptora (A)
+- Número de expediente
+- Tipo de movimiento (Asignación)
+- Área requiriente (DE)
+- Área receptora (A)
 - Motivo del movimiento
 
 ---
 
 ## 4. Chat con Agente IA
 
-El agente IA utiliza LangGraph con un Router que clasifica la intencion del usuario y deriva al nodo especializado.
+El agente IA utiliza LangGraph con un Router que clasifica la intención del usuario y deriva al nodo especializado.
 
 ```mermaid
 sequenceDiagram
@@ -225,7 +225,7 @@ sequenceDiagram
 
 ## 5. MCP Server (IA Externa)
 
-Flujo de conexion de un cliente MCP externo (Claude Code, ChatGPT, Gemini) al servidor MCP de GDI.
+Flujo de conexión de un cliente MCP externo (Claude Code, ChatGPT, Gemini) al servidor MCP de GDI.
 
 ```mermaid
 sequenceDiagram
@@ -266,26 +266,26 @@ sequenceDiagram
     M-->>C: Historial con resumen IA
 ```
 
-**42 Tools MCP disponibles** (lectura y escritura). Resumen por categoria (lista completa en [MCP Server](../gateway/mcp-server.md)):
+**42 Tools MCP disponibles** (lectura y escritura). Resumen por categoría (lista completa en [MCP Server](../gateway/mcp-server.md)):
 
-| Categoria | Tools | Descripcion |
+| Categoría | Tools | Descripción |
 |-----------|-------|-------------|
-| Expedientes (lectura) | `search_cases`, `get_case`, `get_case_by_number`, `get_case_history`, `get_case_documents`, `get_case_permissions`, `get_case_templates`, `get_case_responsibles` | Busqueda y consulta de expedientes |
-| Expedientes (gestion) | `prepare_assignment`, `assign_case`, `add_case_responsible`, `remove_case_responsible`, `propose_document`, `reject_proposal` | Asignacion, responsables y propuestas |
-| Documentos (lectura) | `search_documents`, `search_document_by_number`, `get_document`, `get_document_content`, `get_document_types`, `get_document_states`, `get_pending_signatures`, `get_signature_details` | Busqueda y consulta de documentos |
-| Documentos (escritura) | `create_document`, `save_document`, `start_signing`, `reject_document` | Creacion, edicion y firma |
+| Expedientes (lectura) | `search_cases`, `get_case`, `get_case_by_number`, `get_case_history`, `get_case_documents`, `get_case_permissions`, `get_case_templates`, `get_case_responsibles` | Búsqueda y consulta de expedientes |
+| Expedientes (gestión) | `prepare_assignment`, `assign_case`, `add_case_responsible`, `remove_case_responsible`, `propose_document`, `reject_proposal` | Asignación, responsables y propuestas |
+| Documentos (lectura) | `search_documents`, `search_document_by_number`, `get_document`, `get_document_content`, `get_document_types`, `get_document_states`, `get_pending_signatures`, `get_signature_details` | Búsqueda y consulta de documentos |
+| Documentos (escritura) | `create_document`, `save_document`, `start_signing`, `reject_document` | Creación, edición y firma |
 | Notas | `get_notes`, `get_note_detail`, `get_sent_notes`, `get_archived_notes` | Notas recibidas, enviadas y archivadas |
 | Memos | `get_memos`, `get_memo_detail`, `get_sent_memos`, `get_archived_memos` | Memos recibidos, enviados y archivados |
 | Legajos / RLM | `get_record`, `search_records`, `get_registry_families` | Registros y familias de registro |
-| Busqueda semantica | `semantic_search` | Busqueda por significado (pgvector) |
+| Búsqueda semántica | `semantic_search` | Búsqueda por significado (pgvector) |
 | Usuarios / Sistema | `search_users`, `get_user_info`, `list_my_tenants` | Usuarios y multi-tenant |
-| Utilidades | `get_agent_guide` | Guia completa para el agente |
+| Utilidades | `get_agent_guide` | Guía completa para el agente |
 
 ---
 
-## 6. Indexacion RAG (AIWorker Background)
+## 6. Indexación RAG (AIWorker Background)
 
-El AIWorker de GDI-AgenteLANG procesa documentos en background para habilitar busqueda semantica.
+El AIWorker de GDI-AgenteLANG procesa documentos en background para habilitar búsqueda semántica.
 
 ```mermaid
 sequenceDiagram
@@ -336,4 +336,4 @@ sequenceDiagram
     end
 ```
 
-**Control de costos:** El AIWorker incluye tracking de costos por schema con limites diarios y mensuales configurables en la tabla `ai_usage_limits`.
+**Control de costos:** El AIWorker incluye tracking de costos por schema con límites diarios y mensuales configurables en la tabla `ai_usage_limits`.

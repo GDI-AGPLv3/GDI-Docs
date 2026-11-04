@@ -1,6 +1,6 @@
 # Memo Enviado
 
-Cuando abris un memo que vos enviaste, ves la vista de remitente con informacion adicional que los destinatarios no pueden ver.
+Cuando abrís un memo que vos enviaste, ves la vista de remitente con información adicional que los destinatarios no pueden ver.
 
 !!! video "Video tutorial"
     **GDI — Crear y firmar un Memo: paso a paso**
@@ -17,8 +17,8 @@ La pantalla de detalle del memo enviado muestra:
 
 ### Contenido
 
-- **PDF del memo** firmado, con el encabezado de destinatarios inyectado automaticamente
-- **Numero oficial** con formato `MEMO-{ANO}-{SECUENCIAL}-{TENANT}-{DEPTO}`
+- **PDF del memo** firmado, con el encabezado de destinatarios inyectado automáticamente
+- **Número oficial** con formato `MEMO-{ANO}-{SECUENCIAL}-{TENANT}-{DEPTO}`
 
 ### Panel de destinatarios
 
@@ -31,23 +31,23 @@ Muestra todos los destinatarios organizados por tipo:
 | **CCO (BCC)** | Nombre completo y sector de cada destinatario |
 
 !!! info "Solo vos ves los CCO"
-    Los destinatarios en copia oculta solo son visibles en tu vista de remitente. Los demas destinatarios no pueden verlos.
+    Los destinatarios en copia oculta solo son visibles en tu vista de remitente. Los demás destinatarios no pueden verlos.
 
 ### Panel de aperturas
 
-Como remitente, podes ver un registro detallado de quien abrio el memo:
+Como remitente, podés ver un registro detallado de quien abrió el memo:
 
-| Dato | Descripcion |
+| Dato | Descripción |
 |------|-------------|
-| **Usuario** | Nombre del destinatario que abrio |
-| **Fecha y hora** | Cuando abrio el memo por primera vez |
+| **Usuario** | Nombre del destinatario que abrió |
+| **Fecha y hora** | Cuando abrió el memo por primera vez |
 
-Este panel solo es visible para el remitente. Los destinatarios no pueden ver quien mas abrio el memo.
+Este panel solo es visible para el remitente. Los destinatarios no pueden ver quién más abrió el memo.
 
 ### Resumen IA
 
-Si el sistema genero un resumen automatico del contenido, se muestra en un panel aparte.
+Si el sistema generó un resumen automático del contenido, se muestra en un panel aparte.
 
 ### Expedientes vinculados
 
-Si el memo esta vinculado a expedientes, se muestran en la parte inferior.
+Si el memo está vinculado a expedientes, se muestran en la parte inferior.

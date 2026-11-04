@@ -33,7 +33,7 @@ GDI-BD/
 
 ## Flujos de Deploy
 
-=== "Produccion (organizacion nueva)"
+=== "Producción (organización nueva)"
 
     Se ejecutan 3 scripts en orden. Los dos primeros solo se ejecutan una vez al crear la BD.
 
@@ -51,7 +51,7 @@ GDI-BD/
 
 === "Dev/Test (100_test)"
 
-    Se ejecutan 3 scripts. El tercero (`04-seed-demo.sql`) es autonomo y contiene toda la estructura y datos hardcoded.
+    Se ejecutan 3 scripts. El tercero (`04-seed-demo.sql`) es autónomo y contiene toda la estructura y datos hardcoded.
 
     ```
     01-install.sql           -- Extensiones + ENUMs + 9 tablas public
@@ -128,27 +128,27 @@ CREATE TABLE "public"."global_document_types" (...);
 
 Inserta datos iniciales en las tablas globales.
 
-| Tabla | Cantidad | Descripcion |
+| Tabla | Cantidad | Descripción |
 |-------|----------|-------------|
 | `roles` | 3 | Usuario General, Funcionario, Administrador |
-| `global_document_types` | 61 | 58 publicos + PV + CAEX (internos) |
+| `global_document_types` | 61 | 58 públicos + PV + CAEX (internos) |
 | `global_case_templates` | 30 | EEVAR, LICPUB, HABI, COMP, DEM, RRHH, etc. |
 | `document_display_states` | 6 | DRAFT, PENDING_SIGN, SIGNED, REJECTED, CANCELLED, NUMBERED |
 | `global_registry_families` | 3 | ARQ, LUM, ORD |
 
 ### 03-create-municipio.sql
 
-Template para crear una organizacion nueva. Contiene **9 placeholders** que deben reemplazarse antes de ejecutar.
+Template para crear una organización nueva. Contiene **9 placeholders** que deben reemplazarse antes de ejecutar.
 
 **Placeholders:**
 
-| Placeholder | Ejemplo | Descripcion |
+| Placeholder | Ejemplo | Descripción |
 |-------------|---------|-------------|
 | `{SCHEMA_NAME}` | `201_otra` | Nombre del schema |
-| `{MUNICIPALITY_NAME}` | `Municipalidad del Futuro` | Nombre completo de la organizacion |
-| `{ACRONYM}` | `BSAS` | Acronimo (2-4 letras) |
-| `{COUNTRY}` | `AR` | Codigo de pais |
-| `{SCHEMA_NUMBER}` | `101` | Numero auto-incremental |
+| `{MUNICIPALITY_NAME}` | `Municipalidad del Futuro` | Nombre completo de la organización |
+| `{ACRONYM}` | `BSAS` | Acrónimo (2-4 letras) |
+| `{COUNTRY}` | `AR` | Código de país |
+| `{SCHEMA_NUMBER}` | `101` | Número auto-incremental |
 | `{BUCKET_OFICIAL}` | `gdi-bsas-oficial` | Bucket R2 para docs oficiales |
 | `{BUCKET_TOSIGN}` | `gdi-bsas-tosign` | Bucket R2 para docs a firmar |
 | `{CITY}` | `Buenos Aires` | Ciudad (aparece en sellos) |
@@ -156,7 +156,7 @@ Template para crear una organizacion nueva. Contiene **9 placeholders** que debe
 
 **Secciones del script:**
 
-1. **Schema municipio** - 33 tablas (Grupos A-I) + ~47 indices + trigger sync
+1. **Schema municipio** - 33 tablas (Grupos A-I) + ~47 índices + trigger sync
 2. **Schema audit** - `audit_log` + `fn_log_change` + 6 triggers
 3. **Datos iniciales** - settings + estado_users
 4. **Registro del tenant** - INSERT en `public.municipalities` + departamento ROOT + 2 case_templates base (EEVAR, ECAPA)
@@ -166,26 +166,26 @@ Template para crear una organizacion nueva. Contiene **9 placeholders** que debe
 
 ### 04-seed-demo.sql
 
-Script autonomo que crea el tenant `100_test` completo. No necesita `03-create-municipio.sql` porque contiene toda la estructura embebida.
+Script autónomo que crea el tenant `100_test` completo. No necesita `03-create-municipio.sql` porque contiene toda la estructura embebida.
 
 **Secciones:**
 
-| Seccion | Contenido |
+| Sección | Contenido |
 |---------|-----------|
-| 1 | Schema `100_test`: 33 tablas + indices + trigger sync |
+| 1 | Schema `100_test`: 33 tablas + índices + trigger sync |
 | 2 | Schema `100_test_audit`: audit_log + fn_log_change + 6 triggers |
-| 3 | Datos iniciales: settings + estado_users + organizacion en public |
+| 3 | Datos iniciales: settings + estado_users + organización en public |
 | 4 | Datos demo: departamentos, sectores, ranks, usuarios, doc types, case templates, registry families |
 | 5 | Drafts de bienvenida: 5 documentos borrador tipo IF |
 
 **Datos demo incluidos:**
 
-| Dato | Cantidad | Descripcion |
+| Dato | Cantidad | Descripción |
 |------|----------|-------------|
 | Departamentos | 10 | INTE, LEGAL, INNO, SAL, HAC, TESO, CONT, SEG, OOPU, OOPA |
 | Sectores | 14 | 10 PRIV + 4 MESA/ADMIN |
 | Ranks | 3 | Intendente (1), Secretario (2), Director (3) |
-| City Seals | 4 | Innovador (generico), Intendente, Secretario, Director |
+| City Seals | 4 | Innovador (genérico), Intendente, Secretario, Director |
 | Usuarios | 15 | Ficticios @munitest.com |
 | User Seals | 15 | Uno por usuario |
 | Document Types | 20 | IF, NOTA, PROV, ACT, RESOL, DICTA, PERMI, etc. |
@@ -213,7 +213,7 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 
 ### install.py
 
-Instalacion limpia del tenant `100_test`. Elimina y recrea todo.
+Instalación limpia del tenant `100_test`. Elimina y recrea todo.
 
 ```bash
 cd GDI-BD/tools
@@ -222,7 +222,7 @@ python install.py
 
 **Flujo:**
 
-1. Pide confirmacion (elimina datos existentes)
+1. Pide confirmación (elimina datos existentes)
 2. DROP schemas `100_test` y `100_test_audit`
 3. Ejecuta `01-install.sql`
 4. Ejecuta `02-seed-global.sql`
@@ -231,7 +231,7 @@ python install.py
 
 ### create_municipio.py
 
-Crea una organizacion nueva de forma interactiva.
+Crea una organización nueva de forma interactiva.
 
 ```bash
 cd GDI-BD/tools
@@ -240,18 +240,18 @@ python create_municipio.py
 
 **Flujo:**
 
-1. Pide datos: nombre, acronimo, pais, ciudad, color, buckets
+1. Pide datos: nombre, acrónimo, país, ciudad, color, buckets
 2. Auto-calcula `schema_number` (MAX + 1 de municipalities)
 3. Auto-genera `schema_name` como `{number}_{acronym_lower}`
-4. Muestra resumen y pide confirmacion
+4. Muestra resumen y pide confirmación
 5. Reemplaza los 9 placeholders en `03-create-municipio.sql`
 6. Ejecuta el SQL
-7. Verifica la creacion (tablas, settings, departamento ROOT)
+7. Verifica la creación (tablas, settings, departamento ROOT)
 8. Muestra pasos manuales pendientes (buckets R2, Auth0, etc.)
 
 ### run_single_script.py
 
-Ejecuta un archivo SQL individual. Util para migraciones o scripts ad-hoc.
+Ejecuta un archivo SQL individual. Útil para migraciones o scripts ad-hoc.
 
 ```bash
 cd GDI-BD/tools
@@ -350,7 +350,7 @@ La `139` va **antes** que el Backend que la usa, en cada ambiente. Sola no cambi
 
 ---
 
-## pgBackRest en la imagen de produccion
+## pgBackRest en la imagen de producción
 
 `Dockerfile.prd` instala **pgBackRest** sobre `pgvector/pgvector:pg17`. Sirve para la copia
 continua de la base (WAL minuto a minuto más una copia completa diaria).

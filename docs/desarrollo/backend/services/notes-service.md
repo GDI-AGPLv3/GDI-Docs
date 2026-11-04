@@ -2,9 +2,9 @@
 
 Servicios para el sistema de notas internas entre sectores con destinatarios TO, CC, BCC.
 
-**Ubicacion:** `services/notes/`
+**Ubicación:** `services/notes/`
 
-## Modulos
+## Módulos
 
 ```
 notes/
@@ -36,8 +36,8 @@ def get_visible_recipients(
 
 | Rol del solicitante | Ve TO | Ve CC | Ve BCC |
 |---------------------|-------|-------|--------|
-| Sender | Si | Si | Si |
-| Destinatario TO/CC | Si | Si | No |
+| Sender | Sí | Sí | Sí |
+| Destinatario TO/CC | Sí | Sí | No |
 | No relacionado | Error 403 | Error 403 | Error 403 |
 
 **Respuesta:**
@@ -75,7 +75,7 @@ def format_recipients_for_pdf(
 
 ---
 
-## Validacion (`validation.py`)
+## Validación (`validation.py`)
 
 ### Funciones Principales
 
@@ -103,14 +103,14 @@ def validate_nota_recipients_for_signing(
     """Valida que una NOTA tenga al menos un destinatario TO antes de firmar."""
 ```
 
-### Reglas de Validacion
+### Reglas de Validación
 
-| Regla | Descripcion |
+| Regla | Descripción |
 |-------|-------------|
 | Formato | `to`, `cc`, `bcc` deben ser listas de UUIDs |
-| Deduplicacion | Sector duplicado en misma categoria se elimina |
+| Deduplicación | Sector duplicado en misma categoría se elimina |
 | Auto-envio | Sender no puede estar en TO/CC/BCC |
-| Minimo para firma | Al menos 1 destinatario TO para iniciar firma |
+| Mínimo para firma | Al menos 1 destinatario TO para iniciar firma |
 | Existencia | Todos los sector_id deben existir en `sectors` |
 
 ---
@@ -133,7 +133,7 @@ def delete_recipients(cursor, document_id: str) -> int:
 
 **Tabla `note_recipients`:**
 
-| Columna | Tipo | Descripcion |
+| Columna | Tipo | Descripción |
 |---------|------|-------------|
 | `id` | UUID | PK |
 | `document_id` | UUID | FK a document_draft |

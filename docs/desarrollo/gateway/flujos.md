@@ -5,9 +5,9 @@ description: Workflows end-to-end con secuencia de llamadas API al Gateway GDI.
 
 # Flujos Completos
 
-Esta pagina documenta los flujos de trabajo mas comunes del Gateway, mostrando la secuencia completa de llamadas API necesarias para cada operacion.
+Esta página documenta los flujos de trabajo más comunes del Gateway, mostrando la secuencia completa de llamadas API necesarias para cada operación.
 
-## Configuracion base
+## Configuración base
 
 **Base URL:**
 
@@ -17,16 +17,16 @@ https://gateway.your-domain.com
 
 **Headers requeridos en todas las llamadas:**
 
-| Header | Descripcion |
+| Header | Descripción |
 |--------|------------|
 | `X-API-Key` | Clave de API proporcionada por el administrador |
-| `X-User-ID` | UUID del usuario que realiza la operacion |
+| `X-User-ID` | UUID del usuario que realiza la operación |
 
 ---
 
 ## Flujo 1: Crear expediente con documento y firma
 
-Flujo completo desde la creacion de un expediente hasta la firma del documento vinculado.
+Flujo completo desde la creación de un expediente hasta la firma del documento vinculado.
 
 ```mermaid
 sequenceDiagram
@@ -295,7 +295,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cd
 
 ## Flujo 3: Buscar y consultar
 
-Buscar expedientes y consultar su informacion completa.
+Buscar expedientes y consultar su información completa.
 
 ```mermaid
 sequenceDiagram
@@ -492,7 +492,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
 
 ### Paso 2: Reemplazar PDF (opcional)
 
-Solo es posible mientras el documento esta en estado `draft`.
+Solo es posible mientras el documento está en estado `draft`.
 
 ```bash
 curl -X PUT "https://gateway.your-domain.com/api/v1/documents/e5f6a7b8-c9d0-1234-efab-345678901234/imported-pdf" \
@@ -624,4 +624,4 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/c3d4e5f6-a7b8-9012-cd
 ```
 
 !!! info "Rechazo de propuesta"
-    Si el responsable no esta de acuerdo, puede rechazar la propuesta. El documento borrador permanece sin vincular y el autor puede modificarlo o proponerlo a otro expediente.
+    Si el responsable no está de acuerdo, puede rechazar la propuesta. El documento borrador permanece sin vincular y el autor puede modificarlo o proponerlo a otro expediente.

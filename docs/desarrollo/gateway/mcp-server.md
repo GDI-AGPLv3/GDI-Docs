@@ -6,7 +6,7 @@ Server MCP (Model Context Protocol) con **42 tools** (lectura y escritura) para 
 
 ---
 
-## Configuracion por Cliente
+## Configuración por Cliente
 
 ### Claude Code
 
@@ -25,11 +25,11 @@ Archivo `~/.claude/mcp.json`:
 
 ### ChatGPT
 
-Utiliza la especificacion OpenAPI disponible en `/.well-known/openapi.json` junto con el descubrimiento OAuth automatico.
+Utiliza la especificación OpenAPI disponible en `/.well-known/openapi.json` junto con el descubrimiento OAuth automático.
 
 ### Claude Desktop
 
-Configuracion similar a Claude Code. Agregar el servidor MCP desde la interfaz de configuracion apuntando a la misma URL:
+Configuración similar a Claude Code. Agregar el servidor MCP desde la interfaz de configuración apuntando a la misma URL:
 
 ```
 https://gateway.your-domain.com/mcp
@@ -45,14 +45,14 @@ https://gateway.your-domain.com/mcp
 
 Busca expedientes por texto en contenido completo.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `search` | string | - | Texto de busqueda |
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina (max 100) |
+| `search` | string | - | Texto de búsqueda |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página (max 100) |
 | `status` | string | null | `active`, `inactive`, `archived` |
 | `date_filter` | string | null | `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
-| `sector_filter` | string | null | UN sector: acronimo exacto, `DEPT#SECTOR` o UUID. Si no resuelve, la tool devuelve error (no la lista completa). Ver [Cambios de la API](changelog.md) |
+| `sector_filter` | string | null | UN sector: acrónimo exacto, `DEPT#SECTOR` o UUID. Si no resuelve, la tool devuelve error (no la lista completa). Ver [Cambios de la API](changelog.md) |
 
 **Respuesta:**
 
@@ -70,18 +70,18 @@ Busca expedientes por texto en contenido completo.
 
 Obtiene el detalle completo de un expediente.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `include_documents` | bool | false | Incluir documentos vinculados |
 
-**Respuesta:** Expediente completo con `reference`, `case_number`, `status`, `sector`, fechas de creacion y modificacion.
+**Respuesta:** Expediente completo con `reference`, `case_number`, `status`, `sector`, fechas de creación y modificación.
 
 #### 3. `get_case_history`
 
 Historial de movimientos del expediente con resumen generado por IA.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 
@@ -96,14 +96,14 @@ Historial de movimientos del expediente con resumen generado por IA.
 }
 ```
 
-!!! note "Recomendacion"
-    Esta es la primera tool a usar cuando se investiga un expediente. El `ai_summary` proporciona un resumen narrativo que facilita la comprension rapida del estado y recorrido del expediente.
+!!! note "Recomendación"
+    Esta es la primera tool a usar cuando se investiga un expediente. El `ai_summary` proporciona un resumen narrativo que facilita la comprensión rápida del estado y recorrido del expediente.
 
 #### 4. `get_case_documents`
 
 Lista los documentos vinculados a un expediente, separados entre oficiales y propuestos.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 
@@ -122,9 +122,9 @@ Cada documento de `official` trae `certified_origin`: `true` si es un PDF import
 
 #### 5. `get_case_permissions`
 
-Consulta los permisos del usuario autenticado sobre un expediente especifico.
+Consulta los permisos del usuario autenticado sobre un expediente específico.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 
@@ -147,14 +147,14 @@ Consulta los permisos del usuario autenticado sobre un expediente especifico.
 
 Busca en el contenido completo de documentos.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `search` | string | - | Texto de busqueda |
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina |
+| `search` | string | - | Texto de búsqueda |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página |
 | `status` | string | null | `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
-| `document_type` | string | null | Acronimo del tipo: `INF`, `DICT`, `RES`, etc. |
-| `case_id` | string | null | Filtrar por expediente especifico |
+| `document_type` | string | null | Acrónimo del tipo: `INF`, `DICT`, `RES`, etc. |
+| `case_id` | string | null | Filtrar por expediente específico |
 
 **Respuesta:**
 
@@ -171,7 +171,7 @@ Busca en el contenido completo de documentos.
 
 Obtiene el detalle de un documento con resumen generado por IA.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 
@@ -181,7 +181,7 @@ Obtiene el detalle de un documento con resumen generado por IA.
 
 Obtiene el contenido HTML completo de un documento. Solo disponible para documentos oficiales firmados.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 
@@ -197,7 +197,7 @@ Obtiene el contenido HTML completo de un documento. Solo disponible para documen
 
 Lista los documentos que esperan la firma del usuario autenticado.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | Usa el contexto OAuth del usuario |
 
@@ -215,9 +215,9 @@ Lista los documentos que esperan la firma del usuario autenticado.
 
 #### 10. `get_document_types`
 
-Catalogo de tipos de documentos activos en la organizacion.
+Catálogo de tipos de documentos activos en la organización.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
@@ -234,17 +234,17 @@ Catalogo de tipos de documentos activos en la organizacion.
 
 #### 11. `get_document_states`
 
-Estados visuales de documentos disponibles en la organizacion.
+Estados visuales de documentos disponibles en la organización.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
 #### 12. `get_user_info`
 
-Informacion del usuario autenticado. No recibe parametros, utiliza el contexto OAuth.
+Información del usuario autenticado. No recibe parámetros, utiliza el contexto OAuth.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | Usa contexto OAuth |
 
@@ -264,7 +264,7 @@ Informacion del usuario autenticado. No recibe parametros, utiliza el contexto O
 
 Plantillas de expedientes disponibles para crear nuevos expedientes.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
@@ -282,17 +282,17 @@ Plantillas de expedientes disponibles para crear nuevos expedientes.
 
 Busca usuarios activos del tenant por nombre o email.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `query` | string | *requerido* | Texto de busqueda |
+| `query` | string | *requerido* | Texto de búsqueda |
 
 #### 15. `get_case_by_number`
 
-Obtiene un expediente por su numero oficial (ej: `EE-2026-00001234-SMG-ADGEN`).
+Obtiene un expediente por su número oficial (ej: `EE-2026-00001234-SMG-ADGEN`).
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `case_number` | string | *requerido* | Numero oficial del expediente |
+| `case_number` | string | *requerido* | Número oficial del expediente |
 
 ---
 
@@ -302,19 +302,19 @@ Obtiene un expediente por su numero oficial (ej: `EE-2026-00001234-SMG-ADGEN`).
 
 Busca legajos con filtros por familia de registro, texto y estado.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `family_code` | string | null | Codigo de registro (`ARQ`, `LUM`, `ORD`) |
-| `search` | string | null | Texto de busqueda |
+| `family_code` | string | null | Código de registro (`ARQ`, `LUM`, `ORD`) |
+| `search` | string | null | Texto de búsqueda |
 | `state` | string | null | Filtro por estado |
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina (max 100) |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página (max 100) |
 
 #### 16. `get_record`
 
 Obtiene el detalle completo de un legajo con datos enriquecidos, permisos y resumen IA.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `record_id` | string | *requerido* | UUID del legajo |
 
@@ -322,24 +322,24 @@ Obtiene el detalle completo de un legajo con datos enriquecidos, permisos y resu
 
 #### 17. `get_registry_families`
 
-Lista las familias de registros disponibles en la organizacion.
+Lista las familias de registros disponibles en la organización.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
 ---
 
-### Busqueda Semantica (1 tool)
+### Búsqueda Semántica (1 tool)
 
 #### 18. `semantic_search`
 
-Busqueda semantica vectorial sobre documentos del tenant.
+Búsqueda semántica vectorial sobre documentos del tenant.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `query` | string | *requerido* | Texto de busqueda (min 3 caracteres) |
-| `limit` | int | 20 | Maximo de resultados (max 50) |
+| `query` | string | *requerido* | Texto de búsqueda (min 3 caracteres) |
+| `limit` | int | 20 | Máximo de resultados (max 50) |
 
 ---
 
@@ -349,7 +349,7 @@ Busqueda semantica vectorial sobre documentos del tenant.
 
 Lista las municipalidades a las que tiene acceso el usuario autenticado. Usar cuando se recibe error `multi_tenant_selection_required`.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
@@ -361,38 +361,38 @@ Lista las municipalidades a las que tiene acceso el usuario autenticado. Usar cu
 
 Notas recibidas en los sectores del usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina |
-| `unread_only` | bool | false | Solo no leidas |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página |
+| `unread_only` | bool | false | Solo no leídas |
 | `search` | string | null | Buscar en contenido |
 
 #### 21. `get_sent_notes`
 
 Notas enviadas por el usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página |
 | `search` | string | null | Buscar en contenido |
 
 #### 22. `get_archived_notes`
 
 Notas archivadas del usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página |
 | `search` | string | null | Buscar en contenido |
 
 #### 23. `get_note_detail`
 
 Detalle completo de una nota.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `note_id` | string | *requerido* | UUID de la nota |
 
@@ -404,37 +404,37 @@ Detalle completo de una nota.
 
 Memos recibidos del usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina (max 100) |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página (max 100) |
 | `search` | string | null | Buscar en contenido |
 
 #### 25. `get_sent_memos`
 
 Memos enviados por el usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina (max 100) |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página (max 100) |
 | `search` | string | null | Buscar en contenido |
 
 #### 26. `get_archived_memos`
 
 Memos archivados del usuario.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Resultados por pagina (max 100) |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Resultados por página (max 100) |
 | `search` | string | null | Buscar en contenido |
 
 #### 27. `get_memo_detail`
 
 Detalle completo de un memo.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `memo_id` | string | *requerido* | UUID del memo |
 
@@ -446,9 +446,9 @@ Detalle completo de un memo.
 
 Crea un documento nuevo en estado `draft`.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `document_type_acronym` | string | *requerido* | Acronimo del tipo (ej: `INF`, `DICT`) |
+| `document_type_acronym` | string | *requerido* | Acrónimo del tipo (ej: `INF`, `DICT`) |
 | `reference` | string | *requerido* | Asunto del documento |
 | `recipients` | object | null | Solo para tipo NOTA: `{to, cc, bcc}` con UUIDs de sectores |
 
@@ -456,7 +456,7 @@ Crea un documento nuevo en estado `draft`.
 
 Guarda cambios en un documento editable (draft o rejected).
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 | `reference` | string | null | Nuevo asunto |
@@ -465,9 +465,9 @@ Guarda cambios en un documento editable (draft o rejected).
 
 #### 30. `start_signing`
 
-Inicia el proceso de firma de un documento (draft → sent_to_sign). Solo el creador puede ejecutar esta accion.
+Inicia el proceso de firma de un documento (draft → sent_to_sign). Solo el creador puede ejecutar esta acción.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 
@@ -475,24 +475,24 @@ Inicia el proceso de firma de un documento (draft → sent_to_sign). Solo el cre
 
 Rechaza un documento en proceso de firma. Disponible para cualquier firmante asignado.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 | `reason` | string | *requerido* | Motivo del rechazo |
 
 #### 33. `search_document_by_number`
 
-Busca un documento oficial por su numero exacto (ej: `INF-2026-00001234-MUNI-LEGAL`).
+Busca un documento oficial por su número exacto (ej: `INF-2026-00001234-MUNI-LEGAL`).
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `doc_number` | string | *requerido* | Numero oficial del documento |
+| `doc_number` | string | *requerido* | Número oficial del documento |
 
 #### 34. `get_signature_details`
 
 Detalles de firma de un documento (firmantes, estado, fechas de firma).
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 
@@ -502,9 +502,9 @@ Detalles de firma de un documento (firmantes, estado, fechas de firma).
 
 #### 35. `prepare_assignment`
 
-Prepara la asignacion de un expediente: obtiene sectores disponibles y usuarios del sector destino.
+Prepara la asignación de un expediente: obtiene sectores disponibles y usuarios del sector destino.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 
@@ -512,29 +512,29 @@ Prepara la asignacion de un expediente: obtiene sectores disponibles y usuarios 
 
 Asigna o transfiere un expediente a otro sector.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `target_sector_id` | string | *requerido* | UUID del sector destino |
 | `reason` | string | *requerido* | Motivo |
 | `transfer_ownership` | bool | false | `true` = transferir propiedad, `false` = asignar tarea |
-| `assigned_user_id` | string | null | UUID del usuario especifico (opcional) |
-| `create_official_doc` | bool | false | Generar PV automatico |
+| `assigned_user_id` | string | null | UUID del usuario específico (opcional) |
+| `create_official_doc` | bool | false | Generar PV automático |
 
 #### 37. `propose_document`
 
 Propone un documento oficial para vincularlo a un expediente.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `document_id` | string | *requerido* | UUID del documento oficial |
 
 #### 38. `reject_proposal`
 
-Rechaza la propuesta de vinculacion de un documento a un expediente.
+Rechaza la propuesta de vinculación de un documento a un expediente.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `document_id` | string | *requerido* | UUID del documento propuesto |
@@ -547,7 +547,7 @@ Rechaza la propuesta de vinculacion de un documento a un expediente.
 
 Lista responsables activos de un expediente.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 
@@ -555,23 +555,23 @@ Lista responsables activos de un expediente.
 
 Agrega un responsable a un expediente.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `user_id` | string | *requerido* | UUID del usuario a agregar |
 | `type` | string | *requerido* | `ADMIN` o `ADDITIONAL` |
 | `sector_id` | string | *requerido* | UUID del sector del usuario |
-| `reason` | string | opcional | Motivo (default: "Asignacion de responsable") |
+| `reason` | string | opcional | Motivo (default: "Asignación de responsable") |
 
 #### 41. `remove_case_responsible`
 
 Quita un responsable de un expediente (soft delete).
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `case_id` | string | *requerido* | UUID del expediente |
 | `responsible_id` | string | *requerido* | UUID del registro en case_responsibles |
-| `reason` | string | opcional | Motivo de remocion |
+| `reason` | string | opcional | Motivo de remoción |
 
 ---
 
@@ -579,20 +579,20 @@ Quita un responsable de un expediente (soft delete).
 
 #### 42. `get_agent_guide`
 
-Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomendados y tips para el agente. No requiere autenticacion.
+Guía completa del sistema GDI. Retorna un texto con guía de uso, flujos recomendados y tips para el agente. No requiere autenticación.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
-!!! note "Recomendacion"
+!!! note "Recomendación"
     Llamar esta tool al conectarse por primera vez para que el agente entienda el contexto del sistema GDI antes de responder consultas del usuario.
 
 ---
 
 ### Resumen de los 42 tools
 
-| # | Tool | Categoria |
+| # | Tool | Categoría |
 |---|------|-----------|
 | 1 | `add_case_responsible` | Expedientes escritura |
 | 2 | `assign_case` | Expedientes escritura |
@@ -634,21 +634,21 @@ Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomend
 | 38 | `search_documents` | Documentos lectura |
 | 39 | `search_records` | Legajos (RLM) |
 | 40 | `search_users` | Sistema |
-| 41 | `semantic_search` | Busqueda semantica |
+| 41 | `semantic_search` | Búsqueda semántica |
 | 42 | `start_signing` | Documentos escritura |
 
 ---
 
 ## Flujos Recomendados para Agentes
 
-### "Que tengo para firmar?"
+### "Qué tengo para firmar?"
 
 ```
 1. get_pending_signatures
 2. Responder con la lista de documentos pendientes de firma
 ```
 
-### "Contame sobre el expediente de la panaderia"
+### "Contame sobre el expediente de la panadería"
 
 ```
 1. search_cases(search="panaderia")
@@ -656,7 +656,7 @@ Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomend
 3. Responder con RESUMEN NARRATIVO (no lista de pasos)
 ```
 
-### "Busca documentos de Juan Perez"
+### "Busca documentos de Juan Pérez"
 
 ```
 1. search_documents(search="Juan Perez")
@@ -672,11 +672,11 @@ Guia completa del sistema GDI. Retorna un texto con guia de uso, flujos recomend
 
 ---
 
-## Autenticacion
+## Autenticación
 
-OAuth 2.0 automatico via Auth0. Los clientes MCP compatibles manejan el flujo de autenticacion de forma transparente.
+OAuth 2.0 automático vía Auth0. Los clientes MCP compatibles manejan el flujo de autenticación de forma transparente.
 
 !!! warning "Requisitos Auth0 (si el MCP no conecta)"
-    El tenant necesita 4 cosas o el cliente termina con un token opaco: **DCR habilitado**, **conexion de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server con la barra final** (`https://<gateway>/`). Ver [Autenticacion > Validacion del JWT](autenticacion.md#validacion-del-jwt) y [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
+    El tenant necesita 4 cosas o el cliente termina con un token opaco: **DCR habilitado**, **conexión de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server con la barra final** (`https://<gateway>/`). Ver [Autenticación > Validación del JWT](autenticacion.md#validacion-del-jwt) y [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
 
-Para mas detalle sobre el flujo OAuth, descubrimiento de endpoints y configuracion de Auth0, ver [Autenticacion](autenticacion.md).
+Para más detalle sobre el flujo OAuth, descubrimiento de endpoints y configuración de Auth0, ver [Autenticación](autenticacion.md).

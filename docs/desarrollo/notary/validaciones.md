@@ -1,9 +1,9 @@
 # Validaciones
 
-El modulo `app/validators.py` centraliza todas las validaciones de entrada del servicio Notary.
-Cada validacion lanza `HTTPException` con codigo de error especifico.
+El módulo `app/validators.py` centraliza todas las validaciones de entrada del servicio Notary.
+Cada validación lanza `HTTPException` con código de error específico.
 
-## Validacion de PDF
+## Validación de PDF
 
 ### validate_pdf_format
 
@@ -161,11 +161,11 @@ de certificación con `422 PDF_ENCRYPTED_PASSWORD`.
 
 ---
 
-## Validacion de parametros de firma
+## Validación de parámetros de firma
 
 ### validate_signature_params
 
-Valida los 4 parametros obligatorios de la firma.
+Valida los 4 parámetros obligatorios de la firma.
 
 ```python
 def validate_signature_params(
@@ -176,23 +176,23 @@ def validate_signature_params(
 ) -> dict:
 ```
 
-| Parametro | Limite | Validaciones |
+| Parámetro | Límite | Validaciones |
 |-----------|--------|-------------|
-| `name` | 1-100 chars | No vacio, no excede 100 |
-| `seal` | 1-50 chars | No vacio, no excede 50 |
-| `department` | 1-100 chars | No vacio, no excede 100 |
-| `entity` | 1-100 chars | No vacio, no excede 100 |
+| `name` | 1-100 chars | No vacío, no excede 100 |
+| `seal` | 1-50 chars | No vacío, no excede 50 |
+| `department` | 1-100 chars | No vacío, no excede 100 |
+| `entity` | 1-100 chars | No vacío, no excede 100 |
 
-Retorna los parametros con `strip()` aplicado. Si falla, lanza `400 INVALID_PARAMETERS`
+Retorna los parámetros con `strip()` aplicado. Si falla, lanza `400 INVALID_PARAMETERS`
 con la lista de errores.
 
 ---
 
-## Validacion de estampado
+## Validación de estampado
 
 ### validate_stamp_params
 
-Valida los parametros opcionales de estampado.
+Valida los parámetros opcionales de estampado.
 
 ```python
 def validate_stamp_params(
@@ -201,9 +201,9 @@ def validate_stamp_params(
 ) -> Optional[dict]:
 ```
 
-| Regla | Descripcion |
+| Regla | Descripción |
 |-------|-------------|
-| `city` es obligatorio | Si se envia `document_number`, `city` es requerido |
+| `city` es obligatorio | Si se envía `document_number`, `city` es requerido |
 | `document_number` max | 40 caracteres |
 | `city` max | 50 caracteres |
 
@@ -211,7 +211,7 @@ Error: `400 INVALID_STAMP_PARAMETERS`
 
 ### validate_stamp_position
 
-Valida que `stamp_position` sea un valor valido.
+Valida que `stamp_position` sea un valor válido.
 
 ```python
 def validate_stamp_position(stamp_position: Optional[str]) -> None:
@@ -227,7 +227,7 @@ Error: `400 INVALID_STAMP_POSITION`
 
 ---
 
-## Validacion de tenant_id
+## Validación de tenant_id
 
 ### validate_tenant_id
 
@@ -247,17 +247,17 @@ def validate_tenant_id(tenant_id: str) -> str:
 
 **Caracteres permitidos:** `a-z`, `A-Z`, `0-9`, `-`, `_`
 
-!!! danger "Prevencion de path traversal"
-    Sin esta validacion, un `tenant_id` como `../../etc/passwd` podria
+!!! danger "Prevención de path traversal"
+    Sin esta validación, un `tenant_id` como `../../etc/passwd` podría
     hacer que el sistema intente cargar un archivo fuera del directorio
-    de certificados. Esta validacion trabaja en conjunto con la verificacion
-    de contencion en `certificate_loader.get_certificate_path()`.
+    de certificados. Esta validación trabaja en conjunto con la verificación
+    de contención en `certificate_loader.get_certificate_path()`.
 
 Error: `400 INVALID_TENANT_ID`
 
 ---
 
-## Sanitizacion de nombres de archivo
+## Sanitización de nombres de archivo
 
 ### sanitize_filename
 
@@ -277,9 +277,9 @@ def sanitize_filename(filename: str) -> str:
 
 ---
 
-## Autenticacion (auth.py)
+## Autenticación (auth.py)
 
-El modulo `app/auth.py` implementa la validacion de API Key:
+El módulo `app/auth.py` implementa la validación de API Key:
 
 ```python
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
@@ -304,20 +304,20 @@ Error: `401 INVALID_API_KEY`
 
 ---
 
-## Resumen de codigos de error
+## Resumen de códigos de error
 
-| Codigo | Error Code | Modulo | Descripcion |
+| Código | Error Code | Módulo | Descripción |
 |--------|------------|--------|-------------|
 | 400 | `FILE_TOO_LARGE` | validators | PDF > 64 MB (declarado o leído) |
 | 400 | `INVALID_PDF_FILE` | validators | No se puede leer |
-| 400 | `INVALID_PDF_FORMAT` | validators | No es PDF valido |
-| 400 | `INVALID_PARAMETERS` | validators | Parametros de firma invalidos |
-| 400 | `INVALID_STAMP_PARAMETERS` | validators | Estampado invalido |
+| 400 | `INVALID_PDF_FORMAT` | validators | No es PDF válido |
+| 400 | `INVALID_PARAMETERS` | validators | Parámetros de firma inválidos |
+| 400 | `INVALID_STAMP_PARAMETERS` | validators | Estampado inválido |
 | 400 | `INVALID_STAMP_POSITION` | validators | Position no es first/last |
 | 400 | `INVALID_TENANT_ID` | validators | Caracteres no permitidos |
 | 400 | `CERTIFICATE_NOT_FOUND` | main | Sin cert + FALLBACK=false |
 | 400 | `CERTIFICATE_LOAD_ERROR` | main | Error al cargar cert |
-| 401 | `INVALID_API_KEY` | auth | API Key invalida |
+| 401 | `INVALID_API_KEY` | auth | API Key inválida |
 | 413 | `REQUEST_BODY_TOO_LARGE` | main (middleware) | Pedido entero > `MAX_REQUEST_BODY_SIZE_MB` (68 MB por defecto) |
 | 422 | `PDF_CERTIFIED` | certification | El PDF trae firma de certificación |
 | 422 | `PDF_CERTIFICATION_INCONSISTENT` | certification | `/Perms/DocMDP` sin firma que lo respalde |

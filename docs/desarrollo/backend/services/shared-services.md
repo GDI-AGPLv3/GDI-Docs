@@ -1,10 +1,10 @@
 # Shared Services
 
-Servicios compartidos: clientes de microservicios externos, utilidades de configuracion y datos de usuario.
+Servicios compartidos: clientes de microservicios externos, utilidades de configuración y datos de usuario.
 
-**Ubicacion:** `services/shared/`
+**Ubicación:** `services/shared/`
 
-## Modulos
+## Módulos
 
 ```
 shared/
@@ -29,18 +29,18 @@ Cliente HTTP async para GDI-PDFComposer. Genera PDFs desde templates HTML.
 
 ### Endpoints Disponibles
 
-| Funcion | Endpoint PDFComposer | Uso |
+| Función | Endpoint PDFComposer | Uso |
 |---------|---------------------|-----|
 | `call_pdfcomposer_preview_pdf()` | `/preview-pdf/` | Preview con marca de agua |
 | `call_pdfcomposer_note_preview()` | `/note-preview/` | Preview NOTA con marca de agua |
 | `call_pdfcomposer_note_final()` | `/note/` | NOTA final sin marca de agua |
-| `call_pdfcomposer_create_case()` | `/create-case/` | Caratula CAEX |
+| `call_pdfcomposer_create_case()` | `/create-case/` | Carátula CAEX |
 | `call_pdfcomposer_create_transfer()` | `/move/` | Pase PV |
 | `call_pdfcomposer_import()` | `/import/` | Procesar PDF importado |
 
-### Patron Comun
+### Patrón Común
 
-Todas las funciones siguen el mismo patron:
+Todas las funciones siguen el mismo patrón:
 
 ```python
 async def call_pdfcomposer_preview_pdf(document_data: Dict) -> bytes:
@@ -73,7 +73,7 @@ async def call_pdfcomposer_preview_pdf(document_data: Dict) -> bytes:
 
 ### Campos por Endpoint
 
-=== "Caratula `/create-case/`"
+=== "Carátula `/create-case/`"
 
     ```python
     {
@@ -140,7 +140,7 @@ async def call_notary_sign_pdf(
 ) -> bytes:
 ```
 
-**Manejo automatico de FULLPAGE:**
+**Manejo automático de FULLPAGE:**
 
 ```
 Intento 1: Enviar PDF original
@@ -155,12 +155,12 @@ Intento 1: Enviar PDF original
 
 `SignPage.pdf` contiene un marcador `end-text` que indica a Notary donde colocar la firma.
 
-**Configuracion:**
+**Configuración:**
 
-| Variable | Descripcion |
+| Variable | Descripción |
 |----------|-------------|
 | `NOTARY_URL` | URL del microservicio Notary |
-| `NOTARY_API_KEY` | API Key para autenticacion |
+| `NOTARY_API_KEY` | API Key para autenticación |
 
 **Timeout:** 120 segundos (firmas pueden ser lentas).
 
@@ -222,7 +222,7 @@ def get_signer_data(user_id: str, *, schema_name: str) -> Dict[str, str]:
 
 ### `add_blank_page_to_pdf()`
 
-Agrega una pagina con marcador `end-text` a un PDF cuando Notary responde FULLPAGE.
+Agrega una página con marcador `end-text` a un PDF cuando Notary responde FULLPAGE.
 
 ```python
 def add_blank_page_to_pdf(pdf_bytes: bytes) -> bytes:
@@ -236,7 +236,7 @@ def add_blank_page_to_pdf(pdf_bytes: bytes) -> bytes:
 
 ## Resume Trigger (`resume_trigger.py`)
 
-Encola generacion de resumen IA despues de enviar a firma.
+Encola generación de resumen IA después de enviar a firma.
 
 ```python
 def enqueue_resume_fire_and_forget(document_id: str, schema_name: str):

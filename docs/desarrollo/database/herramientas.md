@@ -1,8 +1,8 @@
 # Herramientas
 
-## Conexion a la Base de Datos
+## Conexión a la Base de Datos
 
-### psql (linea de comandos)
+### psql (línea de comandos)
 
 ```bash
 # Formato generico
@@ -22,21 +22,21 @@ psql "postgresql://USER:PASSWORD@HOST:PORT/DATABASE" -c "SET search_path TO '200
     - **Username**: `postgres`
     - **Password**: password de la base de datos
 3. En el panel izquierdo, expandir: Servers > PostgreSQL > Databases > railway > Schemas
-4. Los schemas de organizacion aparecen como `200_muni`, `201_otra`, etc.
+4. Los schemas de organización aparecen como `200_muni`, `201_otra`, etc.
 
 ### DBeaver
 
-1. Nueva conexion PostgreSQL
+1. Nueva conexión PostgreSQL
 2. Configurar host, puerto, database, usuario, password
-3. En la pestana "PostgreSQL", marcar "Show all databases"
+3. En la pestaña "PostgreSQL", marcar "Show all databases"
 
 ---
 
 ## Scripts Python
 
-Todos los scripts estan en `GDI-BD/tools/` y requieren la variable de entorno `DATABASE_URL`.
+Todos los scripts están en `GDI-BD/tools/` y requieren la variable de entorno `DATABASE_URL`.
 
-### Configuracion
+### Configuración
 
 ```bash
 # Opcion 1: Variable de entorno
@@ -47,7 +47,7 @@ cp .env.example .env
 # Editar .env con los valores reales
 ```
 
-### install.py - Instalacion limpia
+### install.py - Instalación limpia
 
 Elimina y recrea todo el entorno de desarrollo (`200_muni`).
 
@@ -70,12 +70,12 @@ python install.py
   Continuar? (s/N): s
 ```
 
-!!! danger "Operacion destructiva"
+!!! danger "Operación destructiva"
     `install.py` ejecuta `DROP SCHEMA IF EXISTS ... CASCADE` sobre `200_muni` y `200_muni_audit`. Todos los datos se pierden.
 
-### create_municipio.py - Crear organizacion
+### create_municipio.py - Crear organización
 
-Script interactivo para crear una nueva organizacion en produccion.
+Script interactivo para crear una nueva organización en producción.
 
 ```bash
 cd GDI-BD/tools
@@ -118,12 +118,12 @@ python create_municipio.py
   Confirmar creacion? (s/N): s
 ```
 
-Despues de crear la organizacion, el script muestra los pasos manuales pendientes:
+Después de crear la organización, el script muestra los pasos manuales pendientes:
 
 1. Crear buckets en Cloudflare R2
 2. Configurar permisos CORS
 3. Crear usuarios en Auth0
-4. Subir logo via BackOffice
+4. Subir logo vía BackOffice
 
 ### run_single_script.py - Ejecutar script individual
 
@@ -225,7 +225,7 @@ GROUP BY table_schema
 ORDER BY table_schema;
 ```
 
-### Ver usuarios de una organizacion
+### Ver usuarios de una organización
 
 ```sql
 SELECT u.id, u.email, u.full_name, s.acronym as sector,
@@ -258,7 +258,7 @@ ORDER BY od.signed_at DESC
 LIMIT 20;
 ```
 
-### Expedientes activos con ultimo movimiento
+### Expedientes activos con último movimiento
 
 ```sql
 SELECT c.case_number, c.reference, c.status,
@@ -278,7 +278,7 @@ WHERE c.status = 'active'
 ORDER BY cm.created_at DESC;
 ```
 
-### Ver registros de auditoria recientes
+### Ver registros de auditoría recientes
 
 ```sql
 SELECT event_time, table_name, operation,
@@ -288,7 +288,7 @@ ORDER BY event_time DESC
 LIMIT 50;
 ```
 
-### Verificar indices de un schema
+### Verificar índices de un schema
 
 ```sql
 SELECT indexname, tablename, indexdef
@@ -297,7 +297,7 @@ WHERE schemaname = '200_muni'
 ORDER BY tablename, indexname;
 ```
 
-### Tamano de tablas
+### Tamaño de tablas
 
 ```sql
 SELECT
@@ -330,4 +330,4 @@ pip install psycopg2-binary python-dotenv
 ```
 
 - **psycopg2-binary**: Driver PostgreSQL para Python
-- **python-dotenv**: Para cargar `.env` automaticamente (usado por `run_single_script.py`)
+- **python-dotenv**: Para cargar `.env` automáticamente (usado por `run_single_script.py`)

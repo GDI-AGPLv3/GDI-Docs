@@ -1,26 +1,26 @@
 # Lib y Utilidades
 
-Las utilidades compartidas estan en `src/lib/`. Proporcionan funciones de autenticacion, fetching, multi-tenant, tema y validacion usadas en toda la aplicacion.
+Las utilidades compartidas están en `src/lib/`. Proporcionan funciones de autenticación, fetching, multi-tenant, tema y validación usadas en toda la aplicación.
 
 ## Resumen de Archivos
 
-| Archivo | Proposito |
+| Archivo | Propósito |
 |---------|-----------|
 | `auth0.ts` | Instancia del cliente Auth0 |
-| `fetchWithAuth.ts` | Fetch con manejo automatico de 401 |
+| `fetchWithAuth.ts` | Fetch con manejo automático de 401 |
 | `fetchWithTimeout.ts` | Fetch con timeout configurable |
-| `getServerToken.ts` | Obtencion de token y headers en server-side |
+| `getServerToken.ts` | Obtención de token y headers en server-side |
 | `tenant.ts` | Storage y headers multi-tenant |
-| `theme.ts` | Colores dinamicos por tenant (HEX -> HSL -> CSS vars) |
-| `csrf.ts` | Proteccion CSRF con tokens |
+| `theme.ts` | Colores dinámicos por tenant (HEX -> HSL -> CSS vars) |
+| `csrf.ts` | Protección CSRF con tokens |
 | `apiErrorHandler.ts` | Manejo de errores en API routes |
-| `validation.ts` | Validacion de parametros y sanitizacion |
-| `searchUtils.ts` | Deteccion de tipo de busqueda |
-| `documentUtils.ts` | Patrones de numeros oficiales |
-| `caseUtils.ts` | Patrones de numeros de expediente |
+| `validation.ts` | Validación de parámetros y sanitización |
+| `searchUtils.ts` | Detección de tipo de búsqueda |
+| `documentUtils.ts` | Patrones de números oficiales |
+| `caseUtils.ts` | Patrones de números de expediente |
 | `utils.ts` | Utilidad `cn()` de shadcn/ui |
-| `logger.ts` | Sistema de logging por modulo |
-| `urlValidation.ts` | Validacion de URLs de retorno |
+| `logger.ts` | Sistema de logging por módulo |
+| `urlValidation.ts` | Validación de URLs de retorno |
 | `testingMode.ts` | Modo testing para desarrollo |
 
 ---
@@ -29,7 +29,7 @@ Las utilidades compartidas estan en `src/lib/`. Proporcionan funciones de autent
 
 **Archivo**: `src/lib/fetchWithAuth.ts`
 
-Wrapper de `fetch` que intercepta respuestas 401 y redirige automaticamente al login.
+Wrapper de `fetch` que intercepta respuestas 401 y redirige automáticamente al login.
 
 ```typescript
 import { fetchWithAuth } from '@/lib/fetchWithAuth';
@@ -38,7 +38,7 @@ import { fetchWithAuth } from '@/lib/fetchWithAuth';
 const response = await fetchWithAuth('/api/documents', { method: 'GET' });
 ```
 
-**Implementacion**:
+**Implementación**:
 
 ```typescript
 export async function fetchWithAuth(
@@ -59,7 +59,7 @@ export async function fetchWithAuth(
 }
 ```
 
-Tambien exporta `handleAuthError(response)` para manejo manual.
+También exporta `handleAuthError(response)` para manejo manual.
 
 ---
 
@@ -67,7 +67,7 @@ Tambien exporta `handleAuthError(response)` para manejo manual.
 
 **Archivo**: `src/lib/fetchWithTimeout.ts`
 
-Fetch con timeout configurable via `AbortController`.
+Fetch con timeout configurable vía `AbortController`.
 
 ```typescript
 import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
@@ -87,17 +87,17 @@ Lanza `Error('Request timeout after ${timeout}ms')` si se excede el tiempo.
 
 **Archivo**: `src/lib/getServerToken.ts`
 
-Funciones server-side para obtener tokens y construir headers de autenticacion para requests al backend.
+Funciones server-side para obtener tokens y construir headers de autenticación para requests al backend.
 
 ### Funciones Principales
 
-| Funcion | Descripcion |
+| Función | Descripción |
 |---------|-------------|
 | `getServerToken(req)` | Obtiene token (Auth0 o testing fallback) |
 | `getServerTokenWithRefresh(req, res)` | Obtiene token con auto-refresh de Auth0 |
 | `getServerTokenWithEmail(req)` | Obtiene token + email en una llamada |
 | `getServerHeaders(token, req, includeContentType?, email?)` | Construye headers con Authorization, X-Tenant-Schema, X-User-Email |
-| `getServerHeadersAsync(req, includeContentType?)` | Version async que obtiene token + email + headers automaticamente |
+| `getServerHeadersAsync(req, includeContentType?)` | Versión async que obtiene token + email + headers automáticamente |
 
 ### Flujo de Prioridad
 
@@ -185,7 +185,7 @@ Aplica colores del tenant guardado al cargar la app. Se llama en `_app.tsx`.
 
 **Archivo**: `src/lib/theme.ts`
 
-Generacion de colores dinamicos por tenant. Convierte un color HEX a una escala HSL completa (50-900) y la aplica como CSS variables.
+Generación de colores dinámicos por tenant. Convierte un color HEX a una escala HSL completa (50-900) y la aplica como CSS variables.
 
 ### Flujo
 
@@ -195,9 +195,9 @@ HEX (#1E3A8A) -> RGB -> HSL (con rangos validados) -> Escala de 10 niveles -> CS
 
 ### Funciones
 
-| Funcion | Descripcion |
+| Función | Descripción |
 |---------|-------------|
-| `hexToHSL(hex)` | Convierte HEX a HSL con validacion de rangos (S >= 30%, 20% <= L <= 60%) |
+| `hexToHSL(hex)` | Convierte HEX a HSL con validación de rangos (S >= 30%, 20% <= L <= 60%) |
 | `getContrastColor(hex)` | Determina color de contraste (blanco o negro) usando luminance WCAG |
 | `generateColorScale(h, s, l)` | Genera escala 50-900 con ajustes adaptativos por oscuridad |
 | `applyThemeColors(primaryHex)` | Aplica toda la escala como `--color-primary-*` en `:root` |
@@ -227,7 +227,7 @@ Para un color base `#1E3A8A`:
 
 **Archivo**: `src/lib/csrf.ts`
 
-Proteccion CSRF con patron double-submit cookie.
+Protección CSRF con patrón double-submit cookie.
 
 ```typescript
 generateCsrfToken();                    // Genera token de 32 bytes hex
@@ -264,7 +264,7 @@ export default async function handler(req, res) {
 
 **Archivo**: `src/lib/validation.ts`
 
-Utilidades de validacion para API routes.
+Utilidades de validación para API routes.
 
 ```typescript
 validateQueryParam(param);                    // string | null
@@ -279,7 +279,7 @@ sanitizeString(str, maxLength?);              // Limpia < > y trunca
 
 **Archivo**: `src/lib/searchUtils.ts`
 
-Deteccion automatica del tipo de busqueda.
+Detección automática del tipo de búsqueda.
 
 ```typescript
 detectSearchType("INF-2026-00001234-TXST-LEGAL");  // 'document_official'
@@ -296,7 +296,7 @@ detectPartialType("EE-20");   // 'case'
 
 **Archivo**: `src/lib/utils.ts`
 
-La clasica utilidad `cn()` de shadcn/ui para combinar clases Tailwind.
+La clásica utilidad `cn()` de shadcn/ui para combinar clases Tailwind.
 
 ```typescript
 import { cn } from "@/lib/utils";
@@ -304,7 +304,7 @@ import { cn } from "@/lib/utils";
 <div className={cn("p-4 rounded", isActive && "bg-primary-50 border-primary-500")} />
 ```
 
-Usa `clsx` para logica condicional y `tailwind-merge` para resolver conflictos.
+Usa `clsx` para lógica condicional y `tailwind-merge` para resolver conflictos.
 
 ---
 
@@ -312,7 +312,7 @@ Usa `clsx` para logica condicional y `tailwind-merge` para resolver conflictos.
 
 **Archivo**: `src/config/api.config.ts`
 
-Configuracion centralizada de todos los endpoints del backend. Define paths como funciones type-safe.
+Configuración centralizada de todos los endpoints del backend. Define paths como funciones type-safe.
 
 ```typescript
 import { API_CONFIG } from '@/config/api.config';
