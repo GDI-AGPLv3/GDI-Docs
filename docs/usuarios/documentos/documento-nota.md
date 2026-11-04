@@ -28,7 +28,8 @@ La NOTA es el equivalente digital de un memo o comunicacion interna oficial. Se 
 El panel central es identico al de un documento HTML comun. Incluye:
 
 - **Campo Referencia** (texto libre, hasta 100 caracteres)
-- **Editor Quill** con barra de herramientas (Normal, **B**, *I*, U, enlace, listas, Tx)
+- **Editor Quill** con barra de herramientas (estilo, tamaño, fuente, **B**, *I*, U, listas, alineación e imagen)
+- **Imágenes**: se insertan con el botón de imagen de la barra, igual que en un documento común. Ver [Insertar una imagen](crear-editar-documento.md#insertar-una-imagen)
 
 Para una descripcion detallada del editor, consultar [Crear y Editar Documento - Panel central](crear-editar-documento.md#panel-central-contenido-del-documento).
 

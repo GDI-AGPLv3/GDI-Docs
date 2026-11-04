@@ -87,6 +87,8 @@ La seccion colapsable **"DOCUMENTOS OFICIALES (N)"** muestra un contador con la 
 | **Resumen IA** | A veces, un resumen de una linea generado por inteligencia artificial | — |
 | **Clip de embebidos** | Icono de clip con un numero cuando el documento tiene **archivos embebidos** (adjuntos que quedaron dentro del PDF firmado). Tooltip: *"Tiene N archivos embebidos"*. Si el documento no tiene embebidos, no aparece nada | 📎 2 |
 
+| **Escudo de certificado de origen** | Ícono de escudo azul junto al número cuando el documento es un **PDF certificado de origen**. Al pasar el mouse: *"Documento certificado de origen: GDI no lo modifica ni le agrega su firma. El número oficial figura acá, no dentro del PDF."* | — |
+
 Al hacer click en un documento de la lista, se muestra una **vista previa del PDF** en el panel derecho.
 
 !!! info "Primer documento: Caratula (CAEX)"
@@ -116,6 +118,22 @@ En la lista de **DOCUMENTOS OFICIALES**, los documentos que tienen archivos embe
 
 !!! note "Si el documento no tiene embebidos"
     La barra "📎 Archivos embebidos" no aparece. Directamente se muestra el visor del PDF.
+
+### Documentos certificados de origen
+
+![Certificado de origen en Docs Oficiales del expediente, con el escudo y el aviso arriba del visor](../capturas/expediente-certificado-origen.png)
+
+Un **PDF certificado de origen** es un PDF importado que ya traía la firma de certificación de otro organismo (por ejemplo, un escribano). GDI lo guarda sin tocarlo, así que el número oficial **no está impreso en el PDF**.
+
+Por eso, al abrir uno de estos documentos, arriba del visor aparece un aviso azul con el número:
+
+```
+Número oficial: CONT-2026-00000012-MUNDEV-LEGAL
+Documento certificado de origen: GDI no lo modifica ni le agrega su firma.
+El número oficial figura acá, no dentro del PDF.
+```
+
+En el detalle del documento, sus firmantes figuran con **"Conformidad"** en lugar de una firma digital. Ver [PDF certificado de origen](../documentos/documento-importado.md#pdf-certificado-de-origen).
 
 ---
 
@@ -206,6 +224,9 @@ La opcion **"Descargar"** del menu Acciones genera y descarga un archivo `.zip` 
 
 ??? question "Puedo agregar o cambiar los archivos embebidos de un documento oficial?"
     No. Los embebidos son de **solo lectura**: viajan dentro del PDF firmado y se ven y descargan, pero no se editan ni se suman nuevos. Si necesitas incorporar mas informacion, vincula un documento nuevo al expediente.
+
+??? question "Que es el escudo azul al lado de un documento?"
+    Indica un **PDF certificado de origen**: GDI lo guardó tal cual lo emitió otro organismo. El número oficial no está dentro del PDF: figura en el aviso azul arriba del visor. Ver [Documentos certificados de origen](#documentos-certificados-de-origen).
 
 ??? question "El ZIP incluye todos los documentos del expediente?"
     Incluye todos los documentos **oficiales** activos. No incluye documentos en estado de propuesta de vinculacion ni documentos que hayan sido subsanados (reemplazados por otro documento).

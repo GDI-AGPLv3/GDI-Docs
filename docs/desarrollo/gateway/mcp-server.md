@@ -118,6 +118,8 @@ Lista los documentos vinculados a un expediente, separados entre oficiales y pro
 }
 ```
 
+Cada documento de `official` trae `certified_origin`: `true` si es un PDF importado certificado de origen (el número oficial no está impreso en el PDF). Detalle de los campos en [REST: Documentos del expediente](rest-api/expedientes.md#documentos-del-expediente).
+
 #### 5. `get_case_permissions`
 
 Consulta los permisos del usuario autenticado sobre un expediente especifico.
@@ -173,7 +175,7 @@ Obtiene el detalle de un documento con resumen generado por IA.
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
 
-**Respuesta:** Documento completo con estado, firmantes, `linked_case` y `ai_summary`.
+**Respuesta:** Documento completo con estado, firmantes, `linked_case` y `ai_summary`. Trae `certified_origin` en la raíz: `true` si es un PDF importado certificado de origen. Ver [REST: Detalle de documento](rest-api/documentos.md#detalle-de-documento).
 
 #### 8. `get_document_content`
 

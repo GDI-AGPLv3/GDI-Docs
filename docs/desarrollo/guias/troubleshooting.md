@@ -358,6 +358,51 @@ curl http://localhost:8001/health
 
 ---
 
+## `/health/db` responde 404
+
+**Causa**: el pedido pasó por un proxy. Si trae una cabecera de proxy (`X-Forwarded-For`,
+`Forwarded`, `X-Real-IP` y similares), el Backend y el Gateway responden `404` a propósito:
+`/health/db` no se puede usar desde Internet.
+
+**Solución**: hacer el chequeo directo al puerto del contenedor, sin pasar por el proxy:
+
+```bash
+docker compose exec backend python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8080/health/db').read())"
+# b'{"status":"ok"}'
+```
+
+Detalle en [Backend › Chequeos de salud](../backend/index.md#chequeos-de-salud).
+
+---
+
+## El Backend no arranca o se reinicia solo cuando la base se cae
+
+**Qué es normal**:
+
+- Al arrancar sin base, el Backend reintenta durante `BOOT_DB_WAIT_SECONDS` (90 s) antes de fallar.
+- Con el servicio andando, si no llega a Postgres durante 3 minutos, el proceso sale con código `3`.
+
+**Qué revisar**: que el contenedor tenga una política de reinicio (por ejemplo,
+`restart: unless-stopped` en Docker Compose). Con la base de vuelta, el Backend arranca solo.
+Una contraseña mal o una base inexistente fallan en el acto: ahí el problema es la
+configuración, no la red.
+
+---
+
+## No llegan los mails a usuarios de prueba
+
+**Causa**: el Backend **nunca** manda mail a estas direcciones:
+
+- las que empiezan con `k6-` (cuentas de las pruebas de carga);
+- las de dominios reservados que terminan en `.example`, `.invalid`, `.test` o `.localhost`.
+
+El Backend descarta esos envíos antes de llamar al proveedor y deja la línea en el log. Es a
+propósito: esas casillas no existen y cada rebote perjudica la reputación del remitente.
+
+**Solución**: para probar un mail, usar una casilla real tuya.
+
+---
+
 ## Resumen Rapido
 
 | Problema | Primera accion |
@@ -371,3 +416,6 @@ curl http://localhost:8001/health
 | Deploy failed | `docker compose build --no-cache` o `docker compose logs` |
 | Frontend fetch error | Verificar `NEXT_PUBLIC_API_URL` y health del Backend |
 | Firma FULLPAGE | Se resuelve automaticamente (agrega pagina en blanco) |
+| `/health/db` da 404 | Llamarlo directo al contenedor, sin proxy |
+| Backend reiniciado sin base | Revisar la política de reinicio del contenedor |
+| No llega un mail de prueba | Las direcciones `k6-...` y los dominios `.example`/`.invalid`/`.test`/`.localhost` no reciben mail |

@@ -22,7 +22,7 @@ Busca documentos con filtros opcionales. Soporta paginacion.
 |-----------|------|---------|-------------|
 | `page` | int | `1` | Numero de pagina |
 | `page_size` | int | `20` | Resultados por pagina (max `100`) |
-| `search` | string | - | Busca por `document_number` |
+| `search` | string | - | Busca por `document_number`. `%` y `_` cuentan como letras, no como comodines |
 | `status` | string | - | Filtrar por estado visual: `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
 | `document_type` | string | - | Filtrar por acronimo del tipo: `INF`, `DICT`, etc. |
 | `case_id` | string | - | Filtrar por expediente |
@@ -125,35 +125,35 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 
 ```json
 {
+  "state_category": "signing",
   "document_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-  "document_number": "IF-2025-00012-SMG-ADGEN",
-  "document_type": {
-    "acronym": "INF",
-    "name": "Informe"
-  },
-  "reference": "Informe tecnico sobre habilitacion comercial",
   "status": "signed",
-  "content": "<p>Contenido HTML del documento...</p>",
-  "created_by": {
-    "user_id": "550e8400-e29b-41d4-a716-446655440000",
-    "full_name": "Juan Perez"
-  },
-  "signers": [
-    {
-      "user_id": "550e8400-e29b-41d4-a716-446655440000",
-      "full_name": "Juan Perez",
-      "signed_at": "2025-06-17T10:30:00Z"
-    }
-  ],
-  "created_at": "2025-06-16T09:00:00Z",
-  "signed_at": "2025-06-17T10:30:00Z"
+  "details": { "...": "datos del documento segun su estado" },
+  "timestamp": "2026-11-04T10:30:00",
+  "linked_case": null,
+  "certified_origin": false
 }
 ```
+
+| Campo | Descripcion |
+|-------|-------------|
+| `state_category` | `editing` (borrador o rechazado) o `signing` (en firma o firmado) |
+| `details` | Los datos del documento. Cambian segun `state_category` |
+| `linked_case` | Expediente vinculado, o `null` |
+| `certified_origin` | `true` si es un PDF importado **certificado de origen** (ver abajo) |
+
+!!! info "Certificado de origen (`certified_origin`)"
+    Un certificado de origen es un PDF importado que ya trae una firma de certificación
+    (por ejemplo, de un escribano). GDI lo guarda sin tocarlo: no le agrega la hoja de firma
+    ni adjuntos, y **el número oficial no se imprime en el PDF**. El número se lee de la API.
+    En la ficha de firma, cada firmante trae `signed_with_provider`: `"conformidad"` quiere
+    decir que dio su conformidad sin firmar el PDF.
 
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
+| `400` | `document_id inválido (se espera UUID)` |
 | `404` | Documento no encontrado |
 | `403` | Sin permisos para ver el documento |
 
@@ -494,7 +494,19 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
 | Codigo | Descripcion |
 |--------|-------------|
 | `400` | Archivo no es PDF valido o campos requeridos faltantes |
+| `400` | El PDF trae una firma de certificación que GDI no puede conservar (ver abajo) |
 | `422` | Archivo excede el tamano maximo permitido |
+
+!!! info "PDF que ya viene certificado"
+    Si el PDF trae una firma de certificación válida, GDI lo guarda **byte a byte** como
+    certificado de origen: `GET /documents/{id}` lo marca con `certified_origin: true`.
+    Si la certificación no se puede conservar, GDI responde `400` y no crea el documento.
+    Textos de `error` y qué hacer:
+
+    - `La firma de este PDF está rota o el documento fue modificado después de firmarse...`: subir el archivo original, sin comprimirlo ni editarlo.
+    - `El PDF dice venir certificado, pero ninguna de sus firmas respalda esa certificación...`: volver a exportar el PDF desde su origen.
+    - `El PDF está protegido con contraseña para abrirse...`: subir una copia sin contraseña de apertura.
+    - `El PDF trae firmas digitales que no se pudieron leer...`: volver a exportar el PDF desde su origen.
 
 ---
 
@@ -562,7 +574,8 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-23
 PUT /api/v1/documents/{document_id}/imported-pdf
 ```
 
-Reemplaza el archivo PDF de un documento importado.
+Reemplaza el archivo PDF de un documento importado en estado `draft` o `rejected`. Un
+documento `rejected` sigue en ese estado hasta que se lo vuelve a enviar a firma.
 
 **Parametros path:**
 
@@ -591,9 +604,9 @@ curl -X PUT "https://gateway.your-domain.com/api/v1/documents/a7b8c9d0-e1f2-3456
 
 ```json
 {
-  "document_id": "a7b8c9d0-e1f2-3456-ghab-567890123456",
-  "message": "PDF replaced successfully",
-  "updated_at": "2025-07-01T14:00:00Z"
+  "success": true,
+  "pdf_url": "https://...",
+  "message": "PDF reemplazado exitosamente"
 }
 ```
 
@@ -601,8 +614,10 @@ curl -X PUT "https://gateway.your-domain.com/api/v1/documents/a7b8c9d0-e1f2-3456
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | El documento no es importado o no esta en estado borrador |
+| `400` | El documento no es importado |
+| `400` | El PDF nuevo es un certificado de origen y el documento ya tiene adjuntos: `El PDF nuevo viene certificado de origen y no admite adjuntos agregados desde GDI...` |
 | `404` | Documento no encontrado |
+| `409` | `Solo se puede reemplazar PDF en documentos draft o rejected`: el documento está en firma o ya es oficial |
 | `422` | Archivo no es PDF valido |
 
 ---
@@ -733,14 +748,22 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 !!! warning "Firma digital con token fisico"
     Este endpoint solo acepta **firma electronica**. Si el documento requiere firma con token fisico (`signature_policy=digital_all`, o el usuario es numerador con `digital_num`), la API devuelve `422` con el mensaje _"Este documento requiere firma con token fisico. Firma desde el portal web."_. La firma con token se realiza desde el portal web con FirmadorGDI.
 
+    **Excepción:** un certificado de origen (`certified_origin: true`) se firma por este endpoint
+    aunque el tipo exija firma digital. Nadie firma ese PDF: los firmantes comunes dan
+    conformidad y el numerador lo numera.
+
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | El documento no esta en estado `sent_to_sign` |
+| `400` | El documento no esta en estado `sent_to_sign`, o `document_id inválido (se espera UUID)` |
 | `403` | El usuario no es firmante de este documento |
+| `403` | El numerador no tiene el rango que pide el tipo. El texto dice cuál falta: `Sin permiso de rango para numerar '<tipo>'...` |
 | `404` | Documento no encontrado |
+| `409` | Certificado de origen cuyo PDF cambió desde que se importó: `El PDF cambió desde que se verificó como certificado de origen...` |
 | `422` | El documento requiere firma con token fisico |
+| `429` | La cola de firma está saturada. Con `Retry-After`, reintentar después de esos segundos. Sin `Retry-After`, avisar al municipio: reintentar no sirve |
+| `503` | Espera pasajera (por ejemplo, `"code": "CERTIFIED_CHECK_RETRY"` en un certificado de origen). Reintentar después de `Retry-After` |
 
 ---
 
@@ -780,20 +803,46 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 
 ```json
 {
+  "success": true,
+  "message": "Documento rechazado exitosamente",
   "document_id": "f6a7b8c9-d0e1-2345-fgab-456789012345",
-  "status": "rejected",
-  "rejected_by": "Juan Perez",
-  "reason": "El informe no incluye los datos del relevamiento de campo"
+  "rejected_by": "550e8400-e29b-41d4-a716-446655440000",
+  "rejected_by_name": "Juan Perez",
+  "rejection_id": "d1e2f3a4-b5c6-7890-abcd-ef1234567890",
+  "rejected_at": "2026-11-04T15:00:00Z",
+  "reason": "El informe no incluye los datos del relevamiento de campo",
+  "new_status": "rejected",
+  "display_status": "En edición",
+  "reset_info": {
+    "sent_to_sign_at_cleared": true,
+    "sent_by_cleared": true,
+    "document_generate_id_cleared": true,
+    "all_signers_reset_to_pending": true
+  },
+  "pdf_cleanup": {
+    "attempted": true,
+    "success": true,
+    "error": null,
+    "note": "PDF cleanup is best-effort (soft-fail)"
+  }
 }
 ```
+
+!!! info "Rechazar un documento Importado"
+    Un Importado vuelve a edición **con su PDF**. `pdf_cleanup.imported_pdf` dice qué pasó
+    con el archivo (`restored`, `kept`, `deleted`, `missing` o `error`). Si trae
+    `reupload_required: true`, el documento quedó sin PDF: subirlo con
+    [Reemplazar PDF importado](#reemplazar-pdf-importado) antes de volver a enviarlo a firma.
+    Detalle en [Cambios de la API](../changelog.md).
 
 **Errores:**
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | El documento no esta en estado `sent_to_sign` o motivo vacio |
+| `400` | Motivo vacio, o `document_id inválido (se espera UUID)` |
 | `403` | El usuario no es firmante de este documento |
 | `404` | Documento no encontrado |
+| `409` | El documento ya estaba rechazado, ya es oficial, o se firmó mientras se lo rechazaba. Consultar su estado con `GET /documents/{id}` |
 
 ---
 
@@ -900,7 +949,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | El documento no esta en estado borrador |
+| `400` | El documento no esta en estado borrador, o `case_id` / `document_draft_id` no es un UUID |
 | `403` | Sin permisos para proponer documentos a este expediente |
 | `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
@@ -953,7 +1002,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | La propuesta ya fue procesada |
+| `400` | La propuesta ya fue procesada, o `case_id` / `proposed_id` no es un UUID |
 | `403` | Sin permisos para aceptar propuestas en este expediente |
 | `404` | Expediente o propuesta no encontrada |
 
@@ -1005,6 +1054,6 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 | Codigo | Descripcion |
 |--------|-------------|
-| `400` | La propuesta ya fue procesada |
+| `400` | La propuesta ya fue procesada, o `case_id` / `proposed_id` no es un UUID |
 | `403` | Sin permisos para rechazar propuestas en este expediente |
-| `404` | Expediente o propuesta no encontrada |
+| `404` | `Propuesta no encontrada` |

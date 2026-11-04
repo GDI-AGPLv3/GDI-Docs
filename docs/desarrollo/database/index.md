@@ -41,7 +41,7 @@ PostgreSQL
 +-- {schema_municipio}_audit/       # Ej: 100_test_audit
     +-- audit_log                   # Registro de auditoria
     +-- fn_log_change               # Funcion de auditoria
-    +-- 7 triggers de auditoria
+    +-- 9 triggers de auditoria (modo full/diff)
 ```
 
 ## Ambientes
@@ -93,7 +93,9 @@ Ver: [Schema Municipio](schema-municipio.md)
 
 ### Schema de auditoria (1 tabla)
 
-Cada organizacion tiene un schema `{nombre}_audit` con una tabla `audit_log` y triggers automaticos sobre 7 tablas criticas.
+Cada organizacion tiene un schema `{nombre}_audit` con una tabla `audit_log` y triggers automaticos sobre 9 tablas criticas. Desde la migración 137, cada trigger elige
+cuánto guarda (modo `full` o `diff`) y no escribe nada cuando solo cambia una columna ruido
+(por ejemplo, `users.last_access`).
 
 Ver: [Schema Audit](schema-audit.md)
 
@@ -171,7 +173,7 @@ def get_db_connection(schema_name: str):
 | [Schema Public](schema-public.md) | 11 tablas globales: roles, document types, municipalities, API keys, tenant_certificates, backup_access_log |
 | [Schema Municipio](schema-municipio.md) | 35 tablas por tenant (Grupos A-J) con indices |
 | [Schema Audit](schema-audit.md) | Auditoria automatica con triggers |
-| [Scripts de Deploy](scripts-deploy.md) | 4 archivos SQL, flujo de ejecucion, herramientas Python |
+| [Scripts de Deploy](scripts-deploy.md) | Archivos SQL, flujo de ejecucion, migraciones, herramientas Python |
 | [Numeracion](numeracion.md) | Sistema de numeracion secuencial con advisory lock |
 | [ENUMs y Tipos](enums-y-tipos.md) | 7 ENUMs y tipos custom |
 | [Herramientas](herramientas.md) | psql, pgAdmin, scripts utiles |

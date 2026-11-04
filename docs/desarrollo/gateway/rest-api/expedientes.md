@@ -22,7 +22,7 @@ Busca expedientes con filtros opcionales. Soporta paginacion.
 |-----------|------|---------|-------------|
 | `page` | int | `1` | Numero de pagina |
 | `page_size` | int | `20` | Resultados por pagina (max `100`) |
-| `search` | string | - | Busca por `case_number` o `reference` |
+| `search` | string | - | Busca por `case_number` o `reference`. `%` y `_` cuentan como letras, no como comodines |
 | `status` | string | - | Filtrar por estado: `active`, `inactive`, `archived` |
 | `date_filter` | string | - | Filtrar por fecha: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
 | `sector_filter` | string | - | Filtrar por UN sector: acronimo exacto (ej. `HAC`), `DEPT#SECTOR` (ej. `HAC#PRIV`) o UUID. Si no resuelve a un sector activo, o trae comas, responde **400** (desde el 06/10/2026, ver [Cambios de la API](../changelog.md)) |
@@ -316,26 +316,52 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
 
 ```json
 {
-  "documents": [
+  "official": [
     {
+      "id": "e1f2a3b4-c5d6-7890-abcd-ef1234567890",
       "document_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-      "document_number": "IF-2025-00012-SMG-ADGEN",
-      "document_type": "INF",
+      "order": 2,
+      "official_number": "IF-2026-00000012-MUNDEV-ADGEN",
       "reference": "Informe tecnico sobre habilitacion",
-      "status": "signed",
-      "created_at": "2025-06-16T09:00:00Z"
-    },
+      "linked_date": "2026-11-02T09:00:00",
+      "is_active": true,
+      "pdf_source": "official",
+      "short_resume": "Informe favorable a la habilitacion comercial.",
+      "linked_by": "Juan Perez",
+      "linked_sector": "SECGEN#ADGEN",
+      "is_reserved": false,
+      "is_public": false,
+      "embedded_files_count": 0,
+      "certified_origin": false
+    }
+  ],
+  "proposed": [
     {
-      "document_id": "f6a7b8c9-d0e1-2345-fgab-456789012345",
-      "document_number": null,
-      "document_type": "DICT",
+      "id": "b8c9d0e1-f2a3-4567-abcd-678901234567",
+      "document_draft_id": "f6a7b8c9-d0e1-2345-abcd-456789012345",
       "reference": "Dictamen legal",
       "status": "draft",
-      "created_at": "2025-06-18T11:30:00Z"
+      "document_number": null,
+      "document_type_name": "Dictamen",
+      "document_type_acronym": "DICT",
+      "is_reserved": false,
+      "is_public": false,
+      "can_link": false,
+      "proposed_date": "2026-11-03T11:30:00",
+      "proposed_by": "Maria Garcia",
+      "short_resume": null
     }
-  ]
+  ],
+  "total_official": 1,
+  "total_proposed": 1
 }
 ```
+
+| Campo (en `official`) | Descripcion |
+|-------|-------------|
+| `pdf_source` | De que endpoint pedir el PDF. La lista no trae URLs: se piden al abrir el documento |
+| `embedded_files_count` | Cantidad de archivos adjuntos dentro del PDF oficial |
+| `certified_origin` | `true` si es un PDF importado certificado de origen: GDI no lo modifico y el numero oficial no esta impreso en el PDF |
 
 **Errores:**
 
@@ -619,7 +645,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/" \
 | Codigo | Descripcion |
 |--------|-------------|
 | `400` | Datos invalidos o campos requeridos faltantes |
-| `404` | Plantilla no encontrada |
+| `400` | La plantilla no existe: `Plantilla de expediente no encontrada. Verificá que el ID sea correcto.` |
 
 !!! warning "El expediente nace `creating`: su numero ya es definitivo, su caratula todavia no"
     El `case_number` se reserva dentro del request y **no cambia nunca**. El
@@ -681,7 +707,7 @@ Transfiere un expediente a otro sector.
 |-------|------|-----------|-------------|
 | `target_sector_id` | UUID | Si | Sector destino |
 | `reason` | string | Si | Motivo de la transferencia |
-| `assigned_user_id` | UUID | No | Usuario especifico en el sector destino |
+| `assigned_user_id` | UUID | No | Usuario especifico en el sector destino. Tiene que estar activo y ser del sector destino, o tener permiso adicional de edicion sobre ese sector |
 | `create_official_doc` | bool | No | Crear documento oficial de transferencia (default `false`) |
 
 **Ejemplo:**

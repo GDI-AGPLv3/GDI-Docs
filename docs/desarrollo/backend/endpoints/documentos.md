@@ -224,15 +224,36 @@ Permite a cualquier firmante rechazar un documento con un motivo.
 }
 ```
 
-**Response (200):**
+**Response (200):** `RejectDocumentResponse`
 
 ```json
 {
     "success": true,
     "message": "Documento rechazado exitosamente",
-    "rejection_id": "uuid"
+    "document_id": "uuid",
+    "rejected_by": "uuid",
+    "rejected_by_name": "Juan Perez",
+    "rejection_id": "uuid",
+    "rejected_at": "2026-11-04T15:00:00Z",
+    "reason": "El documento tiene errores en el presupuesto",
+    "new_status": "rejected",
+    "display_status": "En edición",
+    "reset_info": {"...": "..."}
 }
 ```
+
+**Errores:**
+
+| Código | Cuándo |
+|--------|--------|
+| `409` | El documento ya estaba rechazado, o se firmó mientras se lo rechazaba |
+| `422` | El documento ya es oficial: `No se puede rechazar un documento completado` |
+
+!!! info "Importados"
+    Un documento Importado vuelve a edición **con su PDF**: el Backend lo restaura desde la
+    copia que guardó al enviarlo a firma (`{id}_base.pdf`). Desde ahí se puede reemplazar el PDF
+    con el documento en `rejected`. Si no hay copia limpia (documentos enviados a firma antes
+    del 04/11/2026 que alguien ya firmó), el PDF se borra y hay que volver a subirlo.
 
 **Archivo:** `endpoints/documents/reject_document.py`
 
@@ -265,6 +286,16 @@ Soft delete. Solo el creador puede eliminar documentos en estado `draft` o `reje
 Obtiene detalles de un documento en cualquier estado, delegando al servicio apropiado.
 
 **Response:** `UnifiedDocumentDetailsResponse` con `state_category` ("editing" o "signing") y detalles especificos.
+
+Campos de certificado de origen:
+
+| Campo | Dónde | Qué es |
+|-------|-------|--------|
+| `certified_origin` | `details` (editing); `details.document` y raíz de `details` (signing) | `true` si es un PDF importado con firma de certificación de origen. GDI no lo modifica y el número oficial no va impreso en el PDF |
+| `signed_with_provider` | Cada firmante de `signature_progress.signatures` (signing) | Con qué firmó. `"conformidad"` = dio su conformidad sin firmar el PDF (certificado de origen). `null` si todavía no firmó |
+
+`certified_origin` sale de `document_draft.certified_pdf_sha256 IS NOT NULL`. Un documento
+oficial comparte el id con su borrador, así que el campo vale también para documentos firmados.
 
 **Archivo:** `endpoints/documents/unified_details.py`
 

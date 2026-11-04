@@ -1,25 +1,33 @@
 # Scripts de Deploy
 
-El repositorio **GDI-BD** contiene 4 archivos SQL y 4 herramientas Python para administrar la base de datos.
+El repositorio **GDI-BD** contiene los scripts SQL que crean la base, las migraciones posteriores
+y herramientas Python para administrarla.
 
 ## Estructura del Repositorio
 
 ```
 GDI-BD/
-+-- sql/                          # Scripts SQL (4 archivos)
-|   +-- 01-install.sql            # Extensiones + ENUMs + 9 tablas public
++-- Dockerfile.prd                # PostgreSQL 17 + pgvector + pgBackRest (imagen de produccion)
++-- sql/
+|   +-- 00-tuning.sql             # Configuracion del cluster (ALTER SYSTEM)
+|   +-- 01-install.sql            # Extensiones + ENUMs + tablas public + baseline de migraciones
 |   +-- 02-seed-global.sql        # Datos globales: roles, doc types, case templates
+|   +-- 02b-seed-agente.sql       # Tablas de GDI-AgenteLANG en public
 |   +-- 03-create-municipio.sql   # Template para crear municipio (con placeholders)
-|   +-- 04-seed-demo.sql          # Crear 200_muni + datos demo (autonomo)
+|   +-- 04-seed-demo.sql          # Crear 100_test + datos demo (autonomo)
+|   +-- migrations/               # Migraciones posteriores al corte 122 (123 en adelante)
+|       +-- archive/              # 000-122: ya plegadas al template, no se aplican mas
 |
 +-- tools/                        # Scripts Python
 |   +-- create_municipio.py       # Crear municipio nuevo (interactivo)
-|   +-- install.py                # Instalacion limpia de 200_muni
+|   +-- install.py                # Instalacion limpia de 100_test
+|   +-- run_migrations.py         # Aplica todas las migraciones pendientes, en orden
+|   +-- check_migrations.py       # Compara archivos contra public.schema_migrations
+|   +-- migrate.py                # Aplica una migracion
 |   +-- run_single_script.py      # Ejecutar script SQL individual
 |   +-- verify_db.py              # Verificar integridad de BD
 |
 +-- .env.example                  # Template de credenciales
-+-- .gitignore
 +-- README.md
 ```
 
@@ -41,7 +49,7 @@ GDI-BD/
 
     El script `03` requiere reemplazo de 9 placeholders antes de ejecutar.
 
-=== "Dev/Test (200_muni)"
+=== "Dev/Test (100_test)"
 
     Se ejecutan 3 scripts. El tercero (`04-seed-demo.sql`) es autonomo y contiene toda la estructura y datos hardcoded.
 
@@ -52,7 +60,7 @@ GDI-BD/
     02-seed-global.sql       -- Datos globales
          |
          v
-    04-seed-demo.sql         -- 200_muni completo (schemas + datos demo)
+    04-seed-demo.sql         -- 100_test completo (schemas + datos demo)
     ```
 
 ---
@@ -68,6 +76,36 @@ Crea la infraestructura base en el schema `public`. Solo se ejecuta una vez por 
 - 3 extensiones: `vector`, `unaccent`, `pg_trgm`
 - 7 tipos enumerados (ver [ENUMs y Tipos](enums-y-tipos.md))
 - 9 tablas globales (ver [Schema Public](schema-public.md))
+- la zona horaria de la base (`America/Argentina/Buenos_Aires`)
+- `jit = off` a nivel base
+- el baseline de `public.schema_migrations` (migraciones `000`-`122`, ver [Migraciones](#migraciones))
+
+**Nombre de la base.** Los ajustes de base (`ALTER DATABASE`) usan `current_database()`. Así el
+script anda con cualquier nombre de base (el `DB_NAME` de la instalación). Antes el nombre iba
+fijo y una base con otro nombre quedaba a medio crear.
+
+```sql
+DO $$
+BEGIN
+    EXECUTE format('ALTER DATABASE %I SET timezone = %L',
+                   current_database(), 'America/Argentina/Buenos_Aires');
+END
+$$;
+```
+
+**JIT apagado.** El `01` corre el mismo bloque que la migración `113` (`jit_off_a_nivel_base`).
+La `113` figura en el baseline como aplicada, pero es un ajuste de la base, no del esquema: sin
+este bloque, una instalación de cero quedaba con JIT prendido. El Backend apaga JIT en cada
+conexión, pero detrás de PgBouncer en modo `transaction` ese `SET` se pierde.
+
+```sql
+DO $$
+BEGIN
+    EXECUTE format('ALTER DATABASE %I SET jit = off', current_database());
+END $$;
+```
+
+Los dos ajustes rigen para las conexiones **nuevas**.
 
 ```sql
 -- Extensiones
@@ -128,14 +166,14 @@ Template para crear una organizacion nueva. Contiene **9 placeholders** que debe
 
 ### 04-seed-demo.sql
 
-Script autonomo que crea el tenant `200_muni` completo. No necesita `03-create-municipio.sql` porque contiene toda la estructura embebida.
+Script autonomo que crea el tenant `100_test` completo. No necesita `03-create-municipio.sql` porque contiene toda la estructura embebida.
 
 **Secciones:**
 
 | Seccion | Contenido |
 |---------|-----------|
-| 1 | Schema `200_muni`: 33 tablas + indices + trigger sync |
-| 2 | Schema `200_muni_audit`: audit_log + fn_log_change + 6 triggers |
+| 1 | Schema `100_test`: 33 tablas + indices + trigger sync |
+| 2 | Schema `100_test_audit`: audit_log + fn_log_change + 6 triggers |
 | 3 | Datos iniciales: settings + estado_users + organizacion en public |
 | 4 | Datos demo: departamentos, sectores, ranks, usuarios, doc types, case templates, registry families |
 | 5 | Drafts de bienvenida: 5 documentos borrador tipo IF |
@@ -175,7 +213,7 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 
 ### install.py
 
-Instalacion limpia del tenant `200_muni`. Elimina y recrea todo.
+Instalacion limpia del tenant `100_test`. Elimina y recrea todo.
 
 ```bash
 cd GDI-BD/tools
@@ -185,7 +223,7 @@ python install.py
 **Flujo:**
 
 1. Pide confirmacion (elimina datos existentes)
-2. DROP schemas `200_muni` y `200_muni_audit`
+2. DROP schemas `100_test` y `100_test_audit`
 3. Ejecuta `01-install.sql`
 4. Ejecuta `02-seed-global.sql`
 5. Ejecuta `04-seed-demo.sql`
@@ -232,31 +270,99 @@ python verify_db.py
 **Verifica:**
 
 - Schema `public`: tablas y datos (roles, document types, case templates, municipalities, display states)
-- Schema `200_muni`: tablas y datos (settings, estado_users, city_seals, document_types, case_templates)
-- Schema `200_muni_audit`: tabla audit_log y conteo
+- Schema `100_test`: tablas y datos (settings, estado_users, city_seals, document_types, case_templates)
+- Schema `100_test_audit`: tabla audit_log y conteo
 
 ---
 
 ## Migraciones
 
-Las migraciones historicas se encuentran en `sql/migrations/`. Cada migracion tiene un numero secuencial y una descripcion.
+Las migraciones se aplican **después** del baseline de `01-install.sql`. Viven en
+`sql/migrations/`.
 
-!!! note "Migraciones integradas"
-    Las migraciones antiguas (001-013) fueron integradas en los templates base y eliminadas. Solo se conservan las migraciones recientes (014+) para actualizar BDs existentes.
+### Cómo se aplican
 
-Ejemplos de migraciones activas:
-
-| Archivo | Descripcion |
-|---------|-------------|
-| `014_add_notes_tables.sql` | Tablas de notas (Grupo H) |
-| `015_add_auth_source_to_audit.sql` | Trazabilidad en auditoria |
-| `016_add_api_key_users.sql` | Usuarios autorizados por API Key |
-| `022_add_assignment_close_movement_type.sql` | Nuevo tipo de movimiento |
-| `023_add_primary_color_departments_sectors.sql` | Color en departamentos/sectores |
-
-Para ejecutar una migracion:
+`tools/run_migrations.py` toma `sql/migrations/*.sql` (sin entrar a `archive/`), las ordena por
+nombre y corre las que no figuran en `public.schema_migrations`. Si una falla, corta ahí y no
+sigue con las siguientes.
 
 ```bash
-cd GDI-BD/tools
-python run_single_script.py migrations/023_add_primary_color_departments_sectors.sql
+DATABASE_URL='postgresql://USER:PASSWORD@HOST:PORT/DATABASE' python tools/run_migrations.py
 ```
+
+`tools/check_migrations.py` compara los archivos contra esa tabla. Muestra las pendientes y las
+que cambiaron después de aplicarse (compara el `checksum`).
+
+### Corte 122
+
+Las migraciones `000`-`122` se archivaron en `sql/migrations/archive/`: es el "corte 122". El
+template ya crea el esquema completo hasta la `122` y `01-install.sql` registra esas versiones
+como aplicadas. Una base nueva nace en la `122` y solo corre de la `123` en adelante.
+
+!!! warning "Regla del template"
+    Una migración que crea o cambia estructura se pliega a `01-install.sql` /
+    `03-create-municipio.sql` **en el mismo commit**. Si no, al archivarla, una instalación
+    nueva nace sin ese cambio.
+
+### Huecos en la numeración
+
+Los números faltantes no son un error ni un archivo perdido. El runner no exige números
+consecutivos: aplica lo que hay, en orden de nombre.
+
+| Número | Por qué falta |
+|--------|---------------|
+| `130` | Se escribió un índice y se revirtió (el planner no lo usaba). El número queda sin usar |
+| `136` | Reservado por una rama en curso que todavía no llegó a la rama principal |
+
+### Migraciones recientes
+
+| Archivo | Qué hace |
+|---------|----------|
+| `137_audit_log_adelgazar.sql` | `fn_log_change` nueva con modo `full`/`diff` y columnas ruido, 9 triggers de auditoría con argumentos, `public.fn_set_updated_at_skip_noise()` en `users` y `official_documents`, índice `(table_name, event_time DESC)` en cada `audit_log`. Ver [Schema Audit](schema-audit.md) |
+| `138_drop_idx_dss_session_duplicado.sql` | Borra `public.idx_dss_session`: duplicaba el índice único de `digital_signature_sessions.session_id`. Solo lo borra si la constraint única existe |
+| `139_document_draft_certified_pdf_sha256.sql` | Agrega `document_draft.certified_pdf_sha256` con su `CHECK` en cada municipio. Ver [Schema Municipio](schema-municipio.md) |
+
+Notas de operación de la `137`:
+
+- Pide `lock_timeout = 2s`: recrear triggers bloquea tablas con mucho uso. Es mejor que falle y
+  se reintente a que trabe la aplicación.
+- Recorre todos los municipios. Si uno falla, deshace ese municipio, deja un `WARNING` con su
+  nombre y sigue. Al final, si hubo alguno, aborta todo y la migración no se registra. Es
+  idempotente: se arregla y se vuelve a correr.
+- El `CREATE INDEX` (sin `CONCURRENTLY`) bloquea las escrituras al `audit_log` de ese municipio
+  mientras se construye. Conviene aplicarla en horario tranquilo.
+
+La `139` va **antes** que el Backend que la usa, en cada ambiente. Sola no cambia nada visible
+(una columna en `NULL`). Un Backend nuevo sobre una base sin la `139` falla con
+`column does not exist`.
+
+### Reglas para una migración nueva
+
+1. Usá el siguiente número libre. Revisá que ninguna rama abierta lo haya tomado.
+2. Hacela idempotente **statement por statement** (`IF EXISTS`, `IF NOT EXISTS`, `ON CONFLICT`).
+   El runner no envuelve cada archivo en una transacción.
+3. Registrala en `public.schema_migrations`, como las existentes.
+4. Si crea o cambia estructura, plegá el cambio a `01-install.sql` / `03-create-municipio.sql`
+   en el mismo commit.
+5. Si una aplicación la necesita (Backend, BackOffice-Back o AgenteLANG), subí su archivo
+   `MIGRACION_MINIMA` a este número en el cambio de esa aplicación. Así el despliegue no instala
+   la aplicación sobre una base que todavía no tiene la migración.
+
+---
+
+## pgBackRest en la imagen de produccion
+
+`Dockerfile.prd` instala **pgBackRest** sobre `pgvector/pgvector:pg17`. Sirve para la copia
+continua de la base (WAL minuto a minuto más una copia completa diaria).
+
+Instalarlo no prende nada:
+
+- pgBackRest corre recién cuando la base tiene `archive_mode=on`;
+- eso lo prende el instalador OnPremise con `BACKUP_PITR=on`;
+- las claves llegan como variables `PGBACKREST_*` del contenedor, nunca en un archivo.
+
+Cómo se prende y se usa en una instalación: [Copia minuto a minuto](../../administradores/onpremise/copia-minuto-a-minuto.md).
+
+La imagen no trae archivo de configuración (`/etc/pgbackrest.conf`). Las carpetas de log, lock y
+cola (`/var/log/pgbackrest`, `/var/lib/pgbackrest`, `/var/spool/pgbackrest`) son del usuario
+`postgres`.

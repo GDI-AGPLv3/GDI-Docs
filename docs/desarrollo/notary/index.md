@@ -68,6 +68,9 @@ GDI-Notary/
 │   ├── document_stamper.py    # Estampado primera/ultima pagina
 │   ├── validators.py          # Validaciones de entrada
 │   ├── certificate_loader.py  # Carga certificados .p12 por tenant
+│   ├── certification.py       # Detecta firma de certificacion (DocMDP) -> 422
+│   ├── pdf_encryption.py      # Lee y escribe PDF encriptados con contraseña de dueño
+│   ├── internal_hmac.py       # Valida el header X-Internal-Sign
 │   └── pades_signer.py        # Firma PAdES con pyHanko
 ├── certs/
 │   ├── {tenant_id}.p12        # Certificados por tenant
@@ -88,7 +91,15 @@ GDI-Notary/
 | `/sign-pdf` | POST | Si | Firma PDF (PAdES o visual) |
 | `/sign-pdf/verify` | POST | Si | Verifica firmas PAdES de un PDF |
 | `/stamp-number` | POST | Si | Estampa numero/fecha y devuelve coordenadas para FirmadorGDI |
+| `/sign-pdf/prepare` | POST | Si | Firma con token, fase A: estampa y devuelve el digest que firma el token |
+| `/sign-pdf/finish` | POST | Si | Firma con token, fase B: completa la firma con la del token y sube el PDF |
+| `/timestamp-pdf` | POST | Si | Agrega un sello de tiempo (DocTimeStamp) a un PDF ya firmado |
 | `/health` | GET | No | Health check (HTTP, sin auth) |
+
+!!! warning "PDF con firma de certificación"
+    `/sign-pdf`, `/stamp-number`, `/sign-pdf/prepare` y `/sign-pdf/finish` no tocan un PDF con
+    firma de certificación (DocMDP): responden `422 PDF_CERTIFIED`. Ver
+    [Validaciones](validaciones.md#control-de-certificacion-docmdp).
 | `/certificate/{tenant_id}` | GET | Si | Info de certificado |
 | `/certificates` | GET | Si | Lista certificados |
 

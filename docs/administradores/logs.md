@@ -60,6 +60,15 @@ Numero oficial, tipo de documento, referencia, reparticion y sector (`DPTO#SECTO
 
 Es la forma mas rapida de confirmar que la firma esta funcionando en produccion y de ver que areas estan emitiendo documentos oficiales.
 
+Al lado de quien lo numero pueden aparecer dos marcas:
+
+| Marca | Que significa |
+|-------|---------------|
+| **ciudadano** | Lo numero un ciudadano desde TAD (Tramites a Distancia), no un empleado del municipio |
+| **(conformidad)** | Es un documento **certificado de origen**: un PDF importado que ya venia certificado. Firmarlo de nuevo romperia esa certificacion. Por eso quien lo numero dio conformidad en GDI y no firmo digitalmente el PDF. Al pasar el mouse sobre la marca se ve esa explicacion |
+
+El CSV lleva las mismas marcas al lado del nombre: `(ciudadano)` y `(conformidad)`.
+
 ### Ultimos expedientes
 
 Numero, caratula, estado, tipo de expediente, sector y quien lo creo.
