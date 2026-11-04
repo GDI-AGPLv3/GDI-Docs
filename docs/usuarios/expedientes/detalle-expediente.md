@@ -121,6 +121,8 @@ En la lista de **DOCUMENTOS OFICIALES**, los documentos que tienen archivos embe
 
 ### Documentos certificados de origen
 
+![Certificado de origen en Docs Oficiales del expediente, con el escudo y el aviso arriba del visor](../capturas/expediente-certificado-origen.png)
+
 Un **PDF certificado de origen** es un PDF importado que ya traía la firma de certificación de otro organismo (por ejemplo, un escribano). GDI lo guarda sin tocarlo, así que el número oficial **no está impreso en el PDF**.
 
 Por eso, al abrir uno de estos documentos, arriba del visor aparece un aviso azul con el número:

@@ -67,6 +67,8 @@ Muestra el nombre y avatar del usuario que inicio el proceso de firma (el creado
 
 ### Firmantes y estados
 
+![Firmante con la insignia Conformidad en un certificado de origen](../capturas/documento-certificado-conformidad.png)
+
 La seccion de firmantes muestra a cada firmante con su estado actual y los badges correspondientes.
 
 #### Estados de un firmante
@@ -90,6 +92,8 @@ Juan Perez  [NUM]  [Pendiente]
 ```
 
 ### Aviso de certificado de origen
+
+![Documento certificado de origen en proceso de firma](../capturas/documento-certificado-en-firma.png)
 
 Si el documento es un [PDF certificado de origen](documento-importado.md#pdf-certificado-de-origen), el panel lateral muestra un aviso azul con un escudo:
 
@@ -161,7 +165,7 @@ Al firmar correctamente, se muestra un dialogo modal de confirmacion.
     El numero oficial solo se asigna cuando firma el **numerador** (ultimo firmante). Si un firmante regular firma, el dialogo de exito no muestra numero oficial porque el documento aun no esta completamente firmado.
 
 !!! info "Con un PDF certificado de origen"
-    El diálogo suma este texto: *"El documento viene certificado de origen: no se usó el token ni se firmó el PDF. Quedó registrada tu conformidad en GDI. El número oficial figura en GDI, no dentro del PDF."*
+    Si el tipo de documento pide firma con token, el diálogo suma este texto: *"El documento viene certificado de origen: no se usó el token ni se firmó el PDF. Quedó registrada tu conformidad en GDI. El número oficial figura en GDI, no dentro del PDF."*
 
 ### Documento finalizado
 

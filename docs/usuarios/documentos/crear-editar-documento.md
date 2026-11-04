@@ -107,6 +107,8 @@ El editor soporta copiar y pegar texto desde procesadores de texto (Word, Google
 
 #### Insertar una imagen
 
+![Diálogo Insertar imagen](../capturas/insertar-imagen.png)
+
 El botón de imagen de la barra está en los documentos redactados en el editor, incluidos NOTA y MEMO. No está en los documentos importados ni en los formularios (FFCC).
 
 1. Ubicar el cursor donde va la imagen.

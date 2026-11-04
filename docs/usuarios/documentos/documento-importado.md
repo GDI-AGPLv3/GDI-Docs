@@ -136,6 +136,8 @@ El diálogo de firma exitosa lo explica: *"El documento viene certificado de ori
 
 ### Dónde se ve que un documento es certificado de origen
 
+![Certificado de origen firmado, con el aviso azul y la insignia Conformidad](../capturas/documento-certificado-conformidad.png)
+
 | Lugar | Qué muestra |
 |-------|-------------|
 | Previsualización, firma y detalle del documento | Un aviso azul con un escudo. Dice **"Número oficial: ..."** (cuando ya lo tiene) y *"Documento certificado de origen: GDI no lo modifica ni le agrega su firma. El número oficial figura acá, no dentro del PDF."* |

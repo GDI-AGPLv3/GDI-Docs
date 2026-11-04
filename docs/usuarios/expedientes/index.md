@@ -49,6 +49,8 @@ Cada expediente tiene:
 
 ## Motivo del expediente
 
+![Crear expediente con el aviso de caracteres que faltan en el motivo](../capturas/expediente-motivo-faltan.png)
+
 Al crear un expediente, el campo **Motivo** explica de qué se trata el trámite. Ese texto queda en la carátula.
 
 | Propiedad | Valor |

@@ -25,6 +25,8 @@ Los documentos vinculados quedan listados en el legajo con su numero oficial, ti
 
 ### Buscar entre los documentos vinculados
 
+![Documentos vinculados del legajo con el buscador y el total](../capturas/legajo-documentos-vinculados.png)
+
 La tabla de **Documentos vinculados** muestra 20 documentos por página. Debajo de la tabla figura el total, por ejemplo: *"45 documentos vinculados · página 1 de 3"*. Con las flechas pasás a la página anterior o a la siguiente.
 
 Para encontrar un documento puntual:
