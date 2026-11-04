@@ -10,6 +10,12 @@ encriptado en **PostgreSQL**, y viajan a Notary por multipart en cada firma.
     el codigo sigue existiendo en `certificate_loader.py`, pero **Notary ya no lo usa
     para resolver certificados** (ver "Modo legacy" al final).
 
+!!! note "Certificado del municipio no es lo mismo que firma de certificación"
+    Esta página trata del **certificado** `.p12` con el que GDI firma. Otra cosa es la
+    **firma de certificación** (DocMDP) que puede traer un PDF externo. Notary no firma ni
+    estampa un PDF con firma de certificación: responde `422 PDF_CERTIFIED`. Ver
+    [Validaciones](validaciones.md#control-de-certificacion-docmdp).
+
 ## Arquitectura
 
 ```

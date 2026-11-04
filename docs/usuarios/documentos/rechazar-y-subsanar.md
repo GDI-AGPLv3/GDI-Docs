@@ -100,6 +100,22 @@ Comenzar proceso de firma (nuevo ciclo)
 
 ---
 
+## Rechazar un documento importado
+
+Un [documento importado](documento-importado.md) no tiene texto: su contenido es el PDF. Al rechazarlo, **el PDF queda cargado**. GDI borra las firmas, pero no el archivo. El PDF vuelve a como estaba antes de la primera firma.
+
+Para corregir un documento importado rechazado:
+
+1. Abrir el documento rechazado. El panel central muestra el PDF.
+2. Si el error está en el PDF, hacer click en **"Reemplazar PDF"** y subir el archivo corregido.
+3. Si el PDF está bien (por ejemplo, el error estaba en los firmantes), dejarlo como está.
+4. Hacer click en **"Previsualizar"** y comenzar el proceso de firma de nuevo.
+
+!!! note "Caso poco común: el documento vuelve sin PDF"
+    Si GDI no encuentra una copia del PDF sin firmas, el documento rechazado vuelve sin PDF. En ese caso, hay que importar el archivo de nuevo.
+
+---
+
 ## Quien puede rechazar un documento
 
 | Rol | Puede rechazar |

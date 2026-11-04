@@ -289,6 +289,14 @@ escalarlo con el `session_id`.
 | `pdf_integrity_failed` | El PDF firmado no coincide con el que se envio | **No reintentar en loop**: escalar con el `session_id` |
 | `preoficial_not_provisioned` | Al municipio le falta provisionar almacenamiento | No es un problema del portal: avisar al equipo GDI |
 | `document_rejected_while_in_queue` | El documento fue rechazado mientras esperaba en la cola | No reintentar: es una decision, no una falla |
+| `certified_pdf_with_attachments` · `embed_certified_pdf` | Importado **certificado de origen** con `embedded_files`. Un certificado de origen no admite adjuntos | Rehacer el alta sin `embedded_files`. Los archivos van como documento aparte |
+| `import_certification_broken` | La firma de certificación del PDF está rota, o el PDF se modificó después de firmarse | Pedirle al vecino el archivo original, sin comprimir ni editar |
+| `import_certification_inconsistent` · `pdf_certification_inconsistent` | El PDF dice venir certificado, pero ninguna firma respalda esa certificación | Volver a exportar el PDF desde su origen |
+| `import_pdf_encrypted_password` · `pdf_encrypted_password` | El PDF tiene contraseña de apertura | Mandar una copia sin contraseña |
+| `import_signatures_unreadable` · `pdf_signatures_unreadable` | El PDF trae firmas digitales que no se pudieron leer | Volver a exportar el PDF desde su origen |
+| `pdf_certified` | El servicio de firma recibió un PDF certificado que no se podía firmar | **No reintentar igual**: escalar con el `session_id` |
+| `certified_hash_mismatch` | El PDF certificado cambió entre la verificación y la numeración | Rehacer el alta; si se repite, escalar |
+| `certified_check_retry` | GDI no pudo comprobar el PDF certificado en ese momento | Reintentar |
 | cualquier otro | — | Reintentar una vez; escalar si se repite |
 
 !!! warning "Un `failed` no siempre es culpa del contenido"
@@ -391,11 +399,22 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
 ```
 
 - Maximo **20 MB**; el contenido debe ser un PDF real (se validan los magic bytes, no solo el nombre).
-- GDI agrega la hoja de firma al final del PDF importado.
+- GDI agrega la hoja de firma al final del PDF importado. Excepción: un **certificado de origen** (ver abajo).
 - Si el tipo tiene "Admite archivos embebidos", el Importado acepta [`embedded_files`](#adjuntos-embebidos-embedded_files): GDI los incrusta dentro del PDF importado antes de firmarlo. El PDF importado mas sus adjuntos no puede pasar de **25 MB en total**.
 
 !!! info "PDF importado que ya viene firmado"
     Si el PDF que manda el portal ya trae firmas digitales (por ejemplo, de un escribano), GDI agrega la hoja de firma y los adjuntos **sin tocar esas firmas**: los suma al final del archivo, sin reescribir lo anterior. Si no puede hacerlo sin invalidarlas, no firma: el documento termina con error en el [estado del documento](#consultar-el-estado-de-un-documento) en vez de `signed`. Un lector de PDF puede indicar que el documento tuvo cambios despues de esas firmas: son la hoja de firma y los adjuntos de GDI.
+
+!!! info "PDF certificado de origen"
+    Si el PDF trae una **firma de certificación** (por ejemplo, de un escribano), GDI lo guarda
+    byte a byte, sin hoja de firma: cualquier agregado rompería esa certificación. El
+    ciudadano da su conformidad sin firmar el PDF, y GDI numera el documento sin imprimir el
+    número en el archivo. El número llega igual por webhook y por el
+    [estado del documento](#consultar-el-estado-de-un-documento).
+
+    Un certificado de origen **no admite `embedded_files`**: el alta termina en `failed` con
+    `failure_reason: "certified_pdf_with_attachments"`. Los archivos tienen que ir como
+    documento aparte.
 
 !!! note "Nombres repetidos"
     Si el PDF importado ya trae un adjunto con el mismo nombre que uno de `embedded_files` (por ejemplo `factura.txt`), GDI le agrega un numero al del portal (`factura (1).txt`) para que no se confundan al descargarlos.

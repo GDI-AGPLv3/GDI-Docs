@@ -74,7 +74,7 @@ Podes buscar memos por numero oficial, asunto o contenido. Tambien filtrar por f
 
 1. Desde la bandeja de memos, presiona **"Nuevo Memo"**
 2. Se abre el editor de documentos con el tipo **MEMO** preseleccionado
-3. Redacta el contenido del memo
+3. Redacta el contenido del memo. Si necesitas una imagen, usa el boton de imagen de la barra del editor (ver [Insertar una imagen](../documentos/crear-editar-documento.md#insertar-una-imagen))
 4. Agrega los destinatarios:
     - Selecciona usuarios para **Para** (minimo 1)
     - Opcionalmente agrega usuarios en **CC** y **CCO**

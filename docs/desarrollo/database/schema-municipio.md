@@ -289,6 +289,24 @@ Borradores de documentos. Tabla principal del flujo documental.
 | `resume` | TEXT | SI | - | Resumen del documento (texto libre) |
 | `last_modified_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `certified_pdf_sha256` | TEXT | SI | - | SHA-256 del PDF importado con firma de certificación (DocMDP). `NULL` = no certificado (migración 139) |
+
+**Constraint:** `document_draft_certified_pdf_sha256_chk`: `certified_pdf_sha256` es `NULL` o
+64 caracteres hexadecimales en minúscula (`^[0-9a-f]{64}$`).
+
+!!! info "certified_pdf_sha256: documento importado con certificación"
+    Un PDF importado que trae firma de certificación no se firma con la firma de GDI: se guarda
+    tal cual en el almacenamiento y se numera igual. Esta columna es la marca que lo indica.
+
+    - **No es un booleano.** Guarda el SHA-256 de los bytes exactos del PDF guardado.
+    - Al numerar, el Backend saltea Notary **solo** si el SHA-256 de los bytes que baja del
+      almacenamiento coincide con esta columna. Si no coincide (o es `NULL`), sigue el camino
+      normal y Notary frena con `422` si hace falta.
+    - Orden de escritura: la columna pasa a `NULL` **antes** de tocar el archivo y recibe el hash
+      **después** de subirlo bien. En el alta va en el mismo `INSERT`.
+
+    Así una marca desfasada nunca deja salir sin firma un PDF que no está certificado.
+    Ver [PDFComposer](../pdfcomposer/index.md#header-x-gdi-certified).
 
 **Indices:**
 

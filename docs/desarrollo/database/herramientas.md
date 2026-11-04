@@ -130,8 +130,34 @@ Despues de crear la organizacion, el script muestra los pasos manuales pendiente
 ```bash
 cd GDI-BD/tools
 python run_single_script.py 02-seed-global.sql
-python run_single_script.py migrations/023_add_primary_color_departments_sectors.sql
 ```
+
+Para migraciones no uses este script: usá `run_migrations.py`, que registra cada una.
+
+### run_migrations.py - Aplicar migraciones pendientes
+
+Aplica, en orden de nombre, todas las migraciones de `sql/migrations/` que no figuran en
+`public.schema_migrations`. No entra a `archive/`. Si una falla, corta ahí.
+
+```bash
+cd GDI-BD
+DATABASE_URL='postgresql://USER:PASSWORD@HOST:PORT/DATABASE' python tools/run_migrations.py
+```
+
+Re-correrlo no hace nada si ya está todo aplicado. Al aplicar cada migración guarda el
+SHA-256 del archivo en `schema_migrations.checksum`.
+
+### check_migrations.py - Comparar migraciones contra la base
+
+Muestra las migraciones pendientes y las que cambiaron después de aplicarse en esa base.
+
+```bash
+cd GDI-BD
+DATABASE_URL='postgresql://USER:PASSWORD@HOST:PORT/DATABASE' python tools/check_migrations.py
+```
+
+Más detalle (corte 122, huecos en la numeración, reglas para una migración nueva):
+[Scripts de Deploy](scripts-deploy.md#migraciones).
 
 ### verify_db.py - Verificar integridad
 

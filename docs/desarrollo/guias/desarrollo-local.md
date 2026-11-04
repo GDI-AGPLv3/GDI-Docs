@@ -239,11 +239,13 @@ curl http://localhost:8002/health   # PDFComposer
 curl http://localhost:8001/health   # Notary
 ```
 
-Respuesta esperada del Backend:
+Respuesta esperada del Backend (`/health` no mira la base):
 
 ```json
-{"status": "healthy", "database": "connected"}
+{"status": "ok", "version": "5.9.2", "commit": "...", "backend_role": "all", "escri_worker": {"...": "..."}}
 ```
+
+Para saber si el Backend llega a la base, usar `curl http://localhost:8000/health/db`: responde `{"status": "ok"}`. Ver [Chequeos de salud](../backend/index.md#chequeos-de-salud).
 
 ## Tips de Debug
 

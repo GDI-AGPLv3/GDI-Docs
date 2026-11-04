@@ -89,6 +89,17 @@ Dependiendo del metodo elegido, el sistema dispara un flujo diferente:
 !!! warning "El link de activacion vence en 5 dias"
     Si el usuario no completa la activacion dentro de los 5 dias, el link expira. En ese caso, el admin puede reenviar la invitacion desde el detalle del usuario (ver seccion [Activacion pendiente y reinvitacion](#activacion-pendiente-y-reinvitacion)).
 
+#### Cuando GDI no manda el email de activacion
+
+A veces el usuario se crea pero GDI no le manda el email. En ese caso el modal no se cierra: muestra **Usuario creado**, un cartel amarillo con el motivo y el enlace de activacion con el boton **Copiar enlace**. Copialo y entregaselo al usuario por otro medio. El enlace sirve una sola vez y vence a los 5 dias: tratalo como una contrasena.
+
+| Motivo | Que dice el cartel |
+|--------|--------------------|
+| La instalacion no tiene servidor de correo (lo comun en un servidor propio sin correo) | *"No hay servidor de correo configurado, asi que la invitacion no se envio. Entregale el enlace de activacion al usuario por otro medio."* |
+| El email es de **prueba** | Empieza con *"Cuenta de prueba: GDI no le manda mails"* |
+
+GDI nunca manda emails a las cuentas de prueba: las casillas que empiezan con `k6-` y los dominios reservados para pruebas, que no tienen casillas reales. Son los terminados en `.example`, `.test`, `.invalid` o `.localhost` (ej: `ana.perez@municipio.test`).
+
 ---
 
 ## Creacion Masiva (CSV)

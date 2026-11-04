@@ -92,16 +92,44 @@ Se carga con el valor ingresado en el dialogo de creacion. Se puede modificar li
 
 | Herramienta | Funcion |
 |-------------|---------|
-| **Normal** | Selector de estilo de parrafo (Normal, Titulo 1, Titulo 2, Titulo 3) |
+| **Normal** | Selector de estilo de parrafo (texto normal o titulo de nivel 1, 2 o 3) |
+| Tamaño | Selector del tamaño de letra |
+| Fuente | Selector del tipo de letra |
 | **B** | Negrita |
 | **I** | Cursiva |
 | **U** | Subrayado |
-| Icono enlace | Insertar hipervinculos |
 | Lista numerada | Lista con numeros (1, 2, 3...) |
 | Lista con puntos | Lista con puntos |
-| **Tx** | Limpiar formato (elimina estilos del texto seleccionado) |
+| Alineación | Alinear el parrafo a la izquierda, al centro, a la derecha o justificado |
+| Ícono de imagen | Insertar una imagen. Ver [Insertar una imagen](#insertar-una-imagen) |
 
 El editor soporta copiar y pegar texto desde procesadores de texto (Word, Google Docs) manteniendo formato basico.
+
+#### Insertar una imagen
+
+![Diálogo Insertar imagen](../capturas/insertar-imagen.png)
+
+El botón de imagen de la barra está en los documentos redactados en el editor, incluidos NOTA y MEMO. No está en los documentos importados ni en los formularios (FFCC).
+
+1. Ubicar el cursor donde va la imagen.
+2. Hacer click en el ícono de imagen de la barra. Se abre el diálogo **"Insertar imagen"**.
+3. Hacer click en *"Click para elegir una imagen"* y elegir el archivo.
+4. Completar el **"Texto alternativo (alt)"**: una descripción breve de la imagen.
+5. Elegir la **"Alineación"**: **Izquierda**, **Centro** o **Derecha**.
+6. Elegir el **"Ancho"**: **200px**, **400px** o **600px**.
+7. Hacer click en **"Insertar"**.
+
+| Propiedad | Valor |
+|-----------|-------|
+| **Formatos** | PNG, JPEG o WEBP |
+| **Tamaño máximo** | 4 MB |
+| **Texto alternativo** | Opcional, hasta 255 caracteres |
+| **Valores iniciales** | Centro y 400px |
+
+Para cambiar la imagen antes de insertarla, hacer click en *"Elegir otra imagen"*.
+
+!!! warning "Las imágenes no se pegan"
+    Si se pega o se arrastra una imagen dentro del texto, el editor no la inserta. Muestra el aviso *"La imagen no se pegó. Para insertar una imagen usá el botón de imagen de la barra."* La imagen se agrega solo con el botón de la barra.
 
 !!! info "Documentos importados (PDF)"
     Para tipos de documento marcados como "Importado" (ej: Informe Grafico Importado, Contrato, Plano), en lugar del editor de texto se muestra una **zona de carga de PDF**. Se puede arrastrar un archivo o hacer click para seleccionarlo.
