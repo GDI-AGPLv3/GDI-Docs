@@ -1,4 +1,4 @@
-# Gestion de Usuarios
+# Gestión de Usuarios
 
 Administra los usuarios del sistema: crear, editar, asignar sectores, roles, sellos y permisos.
 
@@ -15,25 +15,25 @@ Administra los usuarios del sistema: crear, editar, asignar sectores, roles, sel
 
 ## Listado de Usuarios
 
-La tabla muestra todos los usuarios de la organizacion.
+La tabla muestra todos los usuarios de la organización.
 
-| Columna | Descripcion |
+| Columna | Descripción |
 |---------|-------------|
-| **Usuario** | Avatar con inicial (o foto de perfil), nombre completo y email. Si el usuario es titular de una reparticion, se muestra la etiqueta **Titular** |
-| **Reparticion / Sector** | Reparticion y acronimo del sector principal al que pertenece |
+| **Usuario** | Avatar con inicial (o foto de perfil), nombre completo y email. Si el usuario es titular de una repartición, se muestra la etiqueta **Titular** |
+| **Repartición / Sector** | Repartición y acrónimo del sector principal al que pertenece |
 | **Rol** | Rol principal asignado (ej: `Funcionario`, `Administrador`) |
 | **Estado** | `Activo`, `Pendiente` (cuenta creada pero no activada) o `Inactivo` |
-| **Ultimo acceso** | Fecha del ultimo login (*nunca* si no ha ingresado) |
+| **Último acceso** | Fecha del último login (*nunca* si no ha ingresado) |
 
 ### Filtros y acciones del listado
 
-| Accion | Descripcion |
+| Acción | Descripción |
 |--------|-------------|
 | **Buscar** | Filtrar por nombre o email |
-| **Filtro por reparticion** | Mostrar solo usuarios de una reparticion especifica |
+| **Filtro por repartición** | Mostrar solo usuarios de una repartición específica |
 | **Filtro por estado** | Mostrar solo Activos, Inactivos o Pendientes |
-| **Creacion masiva** | Crear multiples usuarios a la vez (icono de lista) |
-| **Nuevo usuario** | Crear un usuario individual (boton primario) |
+| **Creación masiva** | Crear múltiples usuarios a la vez (icono de lista) |
+| **Nuevo usuario** | Crear un usuario individual (botón primario) |
 
 ### Detalle del usuario (drawer)
 
@@ -43,83 +43,83 @@ Al hacer clic en cualquier fila de la tabla se abre un **drawer lateral** (panel
 
 ## Crear Usuario
 
-Al presionar **Nuevo usuario** se abre un **modal** con el formulario de creacion.
+Al presionar **Nuevo usuario** se abre un **modal** con el formulario de creación.
 
 ### Campos del formulario
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
-| **Email** | Correo electronico del usuario (ej: `usuario@municipio.gob.ar`) |
+| **Email** | Correo electrónico del usuario (ej: `usuario@municipio.gob.ar`) |
 | **Nombre completo** | Nombre y apellido |
 | **Sello** | Sello de firma a asignar (obligatorio) |
-| **Metodo de acceso** | Como va a iniciar sesion el usuario (ver abajo) |
+| **Método de acceso** | Como va a iniciar sesión el usuario (ver abajo) |
 | **Sector** | Sector principal al que se asigna |
 
-### Metodo de acceso
+### Método de acceso
 
-Al crear un usuario se elige como va a iniciar sesion:
+Al crear un usuario se elige cómo va a iniciar sesión:
 
-| Metodo | Descripcion |
+| Método | Descripción |
 |--------|-------------|
-| **Login Social (Google / Microsoft)** | El usuario ingresa con su cuenta de Google o Microsoft. Ideal para emails institucionales con Google Workspace o Microsoft 365. Es la opcion por defecto |
-| **Email y Contrasena** | El usuario recibe un email con un link de activacion para crear su contrasena. El link vence en 5 dias. Usar para emails que no son Google ni Microsoft |
+| **Login Social (Google / Microsoft)** | El usuario ingresa con su cuenta de Google o Microsoft. Ideal para emails institucionales con Google Workspace o Microsoft 365. Es la opción por defecto |
+| **Email y Contraseña** | El usuario recibe un email con un link de activación para crear su contraseña. El link vence en 5 días. Usar para emails que no son Google ni Microsoft |
 
-!!! tip "Cuando usar cada metodo"
-    - **Login Social**: Para la mayoria de los casos. Si el email es de Google (`@gmail.com`, dominios con Google Workspace) o Microsoft (`@outlook.com`, dominios con Microsoft 365), elegir esta opcion.
-    - **Email y Contrasena**: Para dominios que no usan Google ni Microsoft como proveedor de email (ej: servidores de correo propios del municipio).
+!!! tip "Cuándo usar cada método"
+    - **Login Social**: Para la mayoría de los casos. Si el email es de Google (`@gmail.com`, dominios con Google Workspace) o Microsoft (`@outlook.com`, dominios con Microsoft 365), elegir esta opción.
+    - **Email y Contraseña**: Para dominios que no usan Google ni Microsoft como proveedor de email (ej: servidores de correo propios del municipio).
 
-### Flujo segun metodo de acceso
+### Flujo según método de acceso
 
-Dependiendo del metodo elegido, el sistema dispara un flujo diferente:
+Dependiendo del método elegido, el sistema dispara un flujo diferente:
 
 **Login Social (Google / Microsoft)**
 
 1. El admin crea el usuario y selecciona **Login Social**
-2. El usuario recibe un **email de bienvenida** con un link directo a la aplicacion
-3. El usuario hace clic en el link e inicia sesion con su cuenta de Google o Microsoft
-4. El sistema lo reconoce automaticamente y le da acceso
+2. El usuario recibe un **email de bienvenida** con un link directo a la aplicación
+3. El usuario hace clic en el link e inicia sesión con su cuenta de Google o Microsoft
+4. El sistema lo reconoce automáticamente y le da acceso
 
-**Email y Contrasena**
+**Email y Contraseña**
 
-1. El admin crea el usuario y selecciona **Email y Contrasena**
-2. El usuario recibe un **email de activacion** con un link para crear su contrasena
-3. El usuario hace clic en el link, establece su contrasena y queda activado
-4. A partir de ahi, inicia sesion con su email y la contrasena que creo
+1. El admin crea el usuario y selecciona **Email y Contraseña**
+2. El usuario recibe un **email de activación** con un link para crear su contraseña
+3. El usuario hace clic en el link, establece su contraseña y queda activado
+4. A partir de ahí, inicia sesión con su email y la contraseña que creó
 
-!!! warning "El link de activacion vence en 5 dias"
-    Si el usuario no completa la activacion dentro de los 5 dias, el link expira. En ese caso, el admin puede reenviar la invitacion desde el detalle del usuario (ver seccion [Activacion pendiente y reinvitacion](#activacion-pendiente-y-reinvitacion)).
+!!! warning "El link de activación vence en 5 días"
+    Si el usuario no completa la activación dentro de los 5 días, el link expira. En ese caso, el admin puede reenviar la invitación desde el detalle del usuario (ver sección [Activación pendiente y reinvitación](#activacion-pendiente-y-reinvitacion)).
 
-#### Cuando GDI no manda el email de activacion
+#### Cuando GDI no manda el email de activación
 
-A veces el usuario se crea pero GDI no le manda el email. En ese caso el modal no se cierra: muestra **Usuario creado**, un cartel amarillo con el motivo y el enlace de activacion con el boton **Copiar enlace**. Copialo y entregaselo al usuario por otro medio. El enlace sirve una sola vez y vence a los 5 dias: tratalo como una contrasena.
+A veces el usuario se crea pero GDI no le manda el email. En ese caso el modal no se cierra: muestra **Usuario creado**, un cartel amarillo con el motivo y el enlace de activación con el botón **Copiar enlace**. Copialo y entregaselo al usuario por otro medio. El enlace sirve una sola vez y vence a los 5 días: tratalo como una contraseña.
 
 | Motivo | Que dice el cartel |
 |--------|--------------------|
-| La instalacion no tiene servidor de correo (lo comun en un servidor propio sin correo) | *"No hay servidor de correo configurado, asi que la invitacion no se envio. Entregale el enlace de activacion al usuario por otro medio."* |
+| La instalación no tiene servidor de correo (lo común en un servidor propio sin correo) | *"No hay servidor de correo configurado, así que la invitación no se envió. Entregale el enlace de activación al usuario por otro medio."* |
 | El email es de **prueba** | Empieza con *"Cuenta de prueba: GDI no le manda mails"* |
 
 GDI nunca manda emails a las cuentas de prueba: las casillas que empiezan con `k6-` y los dominios reservados para pruebas, que no tienen casillas reales. Son los terminados en `.example`, `.test`, `.invalid` o `.localhost` (ej: `ana.perez@municipio.test`).
 
 ---
 
-## Creacion Masiva (CSV)
+## Creación Masiva (CSV)
 
-Al presionar el boton de **Creacion masiva** se abre un **modal** que permite crear multiples usuarios a la vez importando un archivo CSV.
+Al presionar el botón de **Creación masiva** se abre un **modal** que permite crear múltiples usuarios a la vez importando un archivo CSV.
 
 ### Formato del CSV
 
 El archivo CSV debe contener las siguientes columnas:
 
-| Columna | Obligatoria | Descripcion |
+| Columna | Obligatoria | Descripción |
 |---------|:-----------:|-------------|
-| **email** | Si | Correo electronico del usuario |
-| **nombre** | Si | Nombre completo |
-| **sello** | Si | Nombre del sello de firma a asignar |
-| **sector** | Si | Codigo o nombre del sector a asignar (formato: `Nombre # CODIGO`) |
-| **busqueda_docs** | No | Busqueda global de documentos: `1` para habilitar, `0` o vacio para no |
-| **busqueda_exps** | No | Busqueda global de expedientes: `1` para habilitar, `0` o vacio para no |
+| **email** | Sí | Correo electrónico del usuario |
+| **nombre** | Sí | Nombre completo |
+| **sello** | Sí | Nombre del sello de firma a asignar |
+| **sector** | Sí | Código o nombre del sector a asignar (formato: `Nombre # CODIGO`) |
+| **busqueda_docs** | No | Búsqueda global de documentos: `1` para habilitar, `0` o vacío para no |
+| **busqueda_exps** | No | Búsqueda global de expedientes: `1` para habilitar, `0` o vacío para no |
 | **sectores_adicionales** | No | Sectores adicionales separados por punto y coma |
-| **auth_method** | No | Metodo de acceso: `social` o `database`. Si no se especifica, se usa `social` por defecto |
+| **auth_method** | No | Método de acceso: `social` o `database`. Si no se especifica, se usa `social` por defecto |
 
 !!! example "Ejemplo de CSV"
     ```csv
@@ -129,15 +129,15 @@ El archivo CSV debe contener las siguientes columnas:
     alopez@correo-propio.gob.ar,Ana Lopez,Director,Obras Privadas # OPR,0,0,,database
     ```
 
-### Comportamiento segun auth_method
+### Comportamiento según auth_method
 
 | Valor | Que pasa al importar |
 |-------|---------------------|
-| `social` (o vacio) | El usuario recibe un email de bienvenida con link a la app. Inicia sesion con Google o Microsoft |
-| `database` | El usuario recibe un email de activacion con link para crear su contrasena. El link vence en 5 dias |
+| `social` (o vacío) | El usuario recibe un email de bienvenida con link a la app. Inicia sesión con Google o Microsoft |
+| `database` | El usuario recibe un email de activación con link para crear su contraseña. El link vence en 5 días |
 
-!!! tip "Mezclar metodos en un mismo CSV"
-    Podes combinar usuarios con `social` y `database` en el mismo archivo. El sistema envia el email correspondiente a cada uno segun su metodo.
+!!! tip "Mezclar métodos en un mismo CSV"
+    Podés combinar usuarios con `social` y `database` en el mismo archivo. El sistema envía el email correspondiente a cada uno según su método.
 
 ---
 
@@ -147,41 +147,41 @@ Al hacer clic en un usuario se muestra su ficha completa:
 
 ![Detalle de Usuario](capturas/detalle-usuario.png)
 
-### Informacion
+### Información
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
 | **Nombre completo** | Nombre y apellido del usuario |
-| **Email** | Correo electronico institucional |
-| **Metodo de acceso** | Como inicia sesion: `Email y Contrasena`, `Google`, `Microsoft` o `Pendiente activacion` si todavia no activo su cuenta |
-| **Sector** | Sector principal asignado (ej: *Tesoreria # PRIV*) |
-| **Numero de Identificacion Nacional (ID)** | Documento de identidad del usuario (si fue cargado) |
+| **Email** | Correo electrónico institucional |
+| **Método de acceso** | Como inicia sesión: `Email y Contrasena`, `Google`, `Microsoft` o `Pendiente activacion` si todavía no activo su cuenta |
+| **Sector** | Sector principal asignado (ej: *Tesorería # PRIV*) |
+| **Número de Identificación Nacional (ID)** | Documento de identidad del usuario (si fue cargado) |
 
 ### Responsable de Departamento
 
-Si el usuario es titular de un departamento, se muestra aqui.
+Si el usuario es titular de un departamento, se muestra aquí.
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
 | **Titular** | Indica que el usuario es responsable del departamento |
-| **Departamento** | Nombre del departamento (ej: *Tesoreria*) |
+| **Departamento** | Nombre del departamento (ej: *Tesorería*) |
 
 ### Sectores Adicionales
 
-Lista de sectores adicionales a los que el usuario tiene acceso, ademas de su sector principal.
+Lista de sectores adicionales a los que el usuario tiene acceso, además de su sector principal.
 
 ### Firma / Sello
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
-| **Sello actual** | Nombre y descripcion del sello de firma asignado (ej: *Director - Sello de Director*) |
+| **Sello actual** | Nombre y descripción del sello de firma asignado (ej: *Director - Sello de Director*) |
 
-### Permisos de Busqueda
+### Permisos de Búsqueda
 
-| Permiso | Descripcion |
+| Permiso | Descripción |
 |---------|-------------|
-| **Busqueda Global por Numero Documento** | Puede buscar documentos oficiales de cualquier sector |
-| **Busqueda Global por Numero Expediente** | Puede buscar expedientes de cualquier sector |
+| **Búsqueda Global por Número Documento** | Puede buscar documentos oficiales de cualquier sector |
+| **Búsqueda Global por Número Expediente** | Puede buscar expedientes de cualquier sector |
 
 ### Roles
 
@@ -191,35 +191,35 @@ Roles asignados al usuario: `Funcionario`, `Administrador`.
 
 Estado actual del usuario: `Activo` o `Inactivo`.
 
-### Activacion pendiente y reinvitacion
+### Activación pendiente y reinvitación
 
-Si el usuario todavia no activo su cuenta o necesita recibir nuevamente el email de acceso, se muestra esta seccion con la opcion de reenviar la invitacion.
+Si el usuario todavía no activo su cuenta o necesita recibir nuevamente el email de acceso, se muestra esta sección con la opción de reenviar la invitación.
 
-- **Email y Contrasena**: Genera un nuevo link de activacion y envia email para crear contrasena. El link anterior queda invalidado.
-- **Login Social**: Reenvia el email de bienvenida con el link directo a la aplicacion.
+- **Email y Contraseña**: Genera un nuevo link de activación y envía email para crear contraseña. El link anterior queda invalidado.
+- **Login Social**: Reenvía el email de bienvenida con el link directo a la aplicación.
 
-| Accion | Descripcion |
+| Acción | Descripción |
 |--------|-------------|
-| **Reenviar invitacion** | Genera un nuevo link de activacion y envia un email al usuario para que cree su contrasena. El link anterior queda invalidado |
+| **Reenviar invitación** | Genera un nuevo link de activación y envía un email al usuario para que cree su contraseña. El link anterior queda invalidado |
 
-!!! info "Cuando usar reinvitar"
-    Usa esta opcion cuando:
+!!! info "Cuándo usar reinvitar"
+    Usa esta opción cuando:
 
-    - El link de activacion original ya vencio (pasaron mas de 5 dias)
+    - El link de activación original ya venció (pasaron más de 5 días)
     - El usuario perdio o no encontro el email original
-    - Necesitas reenviar la invitacion por cualquier motivo
+    - Necesitás reenviar la invitación por cualquier motivo
 
-    El nuevo link tambien tiene una validez de **5 dias**. Podes reenviar la invitacion todas las veces que sea necesario.
+    El nuevo link también tiene una validez de **5 días**. Podés reenviar la invitación todas las veces que sea necesario.
 
 ### Zona de Peligro
 
-| Accion | Descripcion |
+| Acción | Descripción |
 |--------|-------------|
-| **Desactivar usuario** | Desactiva el acceso del usuario al sistema. El usuario no podra iniciar sesion |
+| **Desactivar usuario** | Desactiva el acceso del usuario al sistema. El usuario no podrá iniciar sesión |
 
 ### Actividad
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
-| **Ultimo acceso** | Fecha y hora del ultimo login |
-| **Fecha de creacion** | Fecha en que se creo el usuario en el sistema |
+| **Último acceso** | Fecha y hora del último login |
+| **Fecha de creación** | Fecha en que se creó el usuario en el sistema |

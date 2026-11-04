@@ -1,24 +1,24 @@
 # Webhook de notificaciones
 
-GDI envia un `POST` a la URL de callback configurada en la API Key TAD
-(BackOffice → `/api-key`) cuando hay una novedad para el portal. Asi el portal se
+GDI envía un `POST` a la URL de callback configurada en la API Key TAD
+(BackOffice → `/api-key`) cuando hay una novedad para el portal. Así el portal se
 entera sin hacer polling.
 
 | Evento | Cuando llega |
 |---|---|
-| [`documents.signed`](#evento-documentssigned) | Termino de firmarse un documento que el portal dio de alta. **Trae el ID y el numero oficial.** |
+| [`documents.signed`](#evento-documentssigned) | Terminó de firmarse un documento que el portal dio de alta. **Trae el ID y el número oficial.** |
 | [`documents.signature_failed`](#evento-documentssignature_failed) | Esa firma fallo definitivamente. |
-| [`documents.notified`](#evento-documentsnotified) | Un agente municipal notifico documentos de un expediente al ciudadano. |
+| [`documents.notified`](#evento-documentsnotified) | Un agente municipal notificó documentos de un expediente al ciudadano. |
 
 !!! info "Disponibilidad por ambiente"
     El campo `event` viene en todos los eventos y en todos los ambientes.
 
     **Webhooks sin links**: desde el 22/09/2026 los avisos no traen `pdf_url` ni
-    `documents[].url` en **ningun ambiente** (DEV, HML y produccion). La URL se pide con el ID,
+    `documents[].url` en **ningún ambiente** (DEV, HML y producción). La URL se pide con el ID,
     como se explica abajo.
 
 !!! info "El webhook trae IDs, no links"
-    Ningun evento trae la URL del PDF. Trae el **ID** del documento (y su numero oficial), y
+    Ningún evento trae la URL del PDF. Trae el **ID** del documento (y su número oficial), y
     el portal pide el link cuando lo va a usar:
 
     | Evento | Con que pedir la URL |
@@ -27,19 +27,19 @@ entera sin hacer polling.
     | `documents.notified` | [`GET /tad/cases/{case_id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento) |
 
     Los links presignados duran **3 minutos** y el webhook se reintenta con backoff de
-    minutos: un link adentro del aviso llegaba vencido. Hasta la version 4.2.1 del backend
-    `documents.signed` traia `pdf_url` y cada documento de `documents.notified` traia `url`;
-    si tu handler los leia, cambialo a pedir la URL con el ID.
+    minutos: un link adentro del aviso llegaba vencido. Hasta la versión 4.2.1 del backend
+    `documents.signed` traía `pdf_url` y cada documento de `documents.notified` traía `url`;
+    si tu handler los leía, cambialo a pedir la URL con el ID.
 
-!!! tip "Como rutear los eventos en tu handler"
+!!! tip "Cómo rutear los eventos en tu handler"
     Todos llegan a la **misma** URL de callback y todos traen el campo **`event`**:
     ruteá por ahí. Y **descartá en silencio** los `event` que no conozcas — es lo que hace
-    que un evento nuevo en una version futura de GDI no te tire el handler.
+    que un evento nuevo en una versión futura de GDI no te tire el handler.
 
 ## Evento `documents.signed`
 
 El cierre del alta de documento: `POST /tad/documents` devolvio `202` y **esto es lo
-que avisa que la firma termino**, con el numero oficial del documento.
+que avisa que la firma terminó**, con el número oficial del documento.
 
 ```json
 {
@@ -51,12 +51,12 @@ que avisa que la firma termino**, con el numero oficial del documento.
 }
 ```
 
-`sent_at` es el momento del envio y se refresca en cada reintento.
+`sent_at` es el momento del envío y se refresca en cada reintento.
 
-Para obtener el PDF, pedi el link con el `document_id` a
+Para obtener el PDF, pedí el link con el `document_id` a
 [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento): la respuesta
-trae un `pdf_url` recien firmado, valido por **3 minutos** (180 s). Si el portal quiere guardar
-el PDF, conviene descargarlo apenas pide el link. Si el link vence, se pide otro: no hay limite.
+trae un `pdf_url` recién firmado, válido por **3 minutos** (180 s). Si el portal quiere guardar
+el PDF, conviene descargarlo apenas pide el link. Si el link vence, se pide otro: no hay límite.
 
 ## Evento `documents.signature_failed`
 
@@ -73,17 +73,17 @@ en el sistema sin numerar.
 }
 ```
 
-`failure_reason` es un codigo para soporte, no un texto para mostrarle al ciudadano. Que
-significa cada valor y cuando conviene escalar en vez de reintentar esta en
+`failure_reason` es un código para soporte, no un texto para mostrarle al ciudadano. Que
+significa cada valor y cuando conviene escalar en vez de reintentar está en
 [Documentos](documentos.md#que-hacer-con-cada-failure_reason).
 
 Ante este evento, el portal puede volver a dar de alta el documento.
 
 !!! danger "El re-alta va con una `Idempotency-Key` NUEVA"
-    La clave del alta original ya quedo consumida: ese pedido **si** fue aceptado, lo que
-    fallo fue la firma posterior. Si reintentas con la misma clave recibis el `202` viejo
+    La clave del alta original ya quedó consumida: ese pedido **sí** fue aceptado, lo que
+    fallo fue la firma posterior. Si reintentás con la misma clave recibis el `202` viejo
     con `Idempotent-Replay: true` y el `document_id` de siempre — **no se crea nada** y el
-    tramite queda esperando para siempre un aviso que ya llego y fracaso.
+    trámite queda esperando para siempre un aviso que ya llegó y fracasó.
 
 ## Evento `documents.notified`
 
@@ -112,11 +112,11 @@ Ante este evento, el portal puede volver a dar de alta el documento.
 }
 ```
 
-Los documentos llegan con su `id`, sin link. Para descargar cada uno, pedi la URL con
+Los documentos llegan con su `id`, sin link. Para descargar cada uno, pedí la URL con
 [`GET /tad/cases/{case_id}/documents/{document_id}/url`](expedientes.md#obtener-la-url-de-un-documento):
 devuelve un link presignado de **3 minutos** (180 s), y se puede pedir de nuevo cuando venza.
 
-## Verificacion de firma HMAC
+## Verificación de firma HMAC
 
 Cada request lleva el header:
 
@@ -124,7 +124,7 @@ Cada request lleva el header:
 X-GDI-Signature: t=<unix_timestamp>,v1=<firma_base64>
 ```
 
-La firma es `HMAC-SHA256` con el **webhook secret** de la API Key (se muestra una unica vez al configurarlo en BackOffice), sobre el payload:
+La firma es `HMAC-SHA256` con el **webhook secret** de la API Key (se muestra una única vez al configurarlo en BackOffice), sobre el payload:
 
 ```
 {t}|POST|{path_del_callback}|{sha256_hex(body)}
@@ -132,7 +132,7 @@ La firma es `HMAC-SHA256` con el **webhook secret** de la API Key (se muestra un
 
 donde `path_del_callback` es el path de la URL configurada (sin query string) y `sha256_hex(body)` es el hash SHA-256 en hexadecimal del cuerpo crudo del request.
 
-**Verificacion en Python:**
+**Verificación en Python:**
 
 ```python
 import base64, hashlib, hmac, time
@@ -151,13 +151,13 @@ def verify_gdi_signature(header: str, secret: str, path: str, body: bytes) -> bo
 ```
 
 !!! danger "Verificar siempre la firma"
-    Sin verificacion, cualquiera que conozca la URL del callback puede inyectar notificaciones falsas. Rechazar requests con firma invalida o timestamp fuera de la ventana de 5 minutos.
+    Sin verificación, cualquiera que conozca la URL del callback puede inyectar notificaciones falsas. Rechazar requests con firma inválida o timestamp fuera de la ventana de 5 minutos.
 
 ## Entrega y reintentos
 
-- El portal debe responder `2xx` rapido (idealmente encolar y procesar despues).
-- Si el envio falla, GDI reintenta con **backoff exponencial** durante varias horas.
-- La entrega es **al menos una vez**: ante reintentos el portal puede recibir el mismo evento repetido. Para deduplicar: en los eventos de firma, por `document_id` (si ese documento ya tiene numero guardado, descartar); en `documents.notified`, por el par (`case.id`, `documents[].id`). **`sent_at` no sirve para deduplicar**: se refresca en cada reintento.
+- El portal debe responder `2xx` rápido (idealmente encolar y procesar después).
+- Si el envío falla, GDI reintenta con **backoff exponencial** durante varias horas.
+- La entrega es **al menos una vez**: ante reintentos el portal puede recibir el mismo evento repetido. Para deduplicar: en los eventos de firma, por `document_id` (si ese documento ya tiene número guardado, descartar); en `documents.notified`, por el par (`case.id`, `documents[].id`). **`sent_at` no sirve para deduplicar**: se refresca en cada reintento.
 
 ## Probar el webhook (sandbox)
 
@@ -165,16 +165,16 @@ def verify_gdi_signature(header: str, secret: str, path: str, body: bytes) -> bo
 POST /api/v1/tad/webhook/test
 ```
 
-Dispara un webhook de **prueba** al `webhook_url` configurado en tu API Key TAD, firmado con el **mismo HMAC** que un webhook real. Sirve para verificar que tu receptor recibe el `POST` y valida bien la firma, **sin depender de un tramite real ni tocar produccion**. No lleva `X-Citizen-ID` ni body.
+Dispara un webhook de **prueba** al `webhook_url` configurado en tu API Key TAD, firmado con el **mismo HMAC** que un webhook real. Sirve para verificar que tu receptor recibe el `POST` y valida bien la firma, **sin depender de un trámite real ni tocar producción**. No lleva `X-Citizen-ID` ni body.
 
-El evento es `webhook.test` (no `documents.notified`) y trae datos ficticios: tu receptor debe reconocerlo y **no** procesarlo como una notificacion real.
+El evento es `webhook.test` (no `documents.notified`) y trae datos ficticios: tu receptor debe reconocerlo y **no** procesarlo como una notificación real.
 
 ```bash
 curl -X POST "https://gateway.your-domain.com/api/v1/tad/webhook/test" \
   -H "X-API-Key: tu-api-key-tad"
 ```
 
-La respuesta te dice **que respondio tu propio servidor** (la llamada es sincrona):
+La respuesta te dice **que respondió tu propio servidor** (la llamada es sincrona):
 
 ```json
 {
@@ -187,11 +187,11 @@ La respuesta te dice **que respondio tu propio servidor** (la llamada es sincron
 }
 ```
 
-- `delivered: true` → tu servidor respondio `2xx`: recibe y (si tu codigo valida la firma) el circuito funciona.
+- `delivered: true` → tu servidor respondio `2xx`: recibe y (si tu código valida la firma) el circuito funciona.
 - `delivered: false` con `status_code` → tu servidor respondio pero con error (revisar tu handler); con `status_code: null` y `error` → GDI no pudo ni conectar (URL mal, DNS, TLS, timeout, firewall).
-- `422` → tu municipio todavia no tiene una API Key TAD con `webhook_url` y secret configurados en BackOffice.
+- `422` → tu municipio todavía no tiene una API Key TAD con `webhook_url` y secret configurados en BackOffice.
 
-El cuerpo del `webhook.test` que recibe tu servidor tiene la misma forma que `documents.notified`, mas un campo `note` que aclara que es una prueba:
+El cuerpo del `webhook.test` que recibe tu servidor tiene la misma forma que `documents.notified`, más un campo `note` que aclara que es una prueba:
 
 ```json
 {

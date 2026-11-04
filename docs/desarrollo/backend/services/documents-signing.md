@@ -1,8 +1,8 @@
 # Documents Signing
 
-Servicios de firma digital: inicio de proceso, firma comun, firma numerador y firma unificada.
+Servicios de firma digital: inicio de proceso, firma común, firma numerador y firma unificada.
 
-**Ubicacion:** `services/documents/signing/`
+**Ubicación:** `services/documents/signing/`
 
 ## Arquitectura de Firma
 
@@ -60,19 +60,19 @@ async def start_document_signing_process(
 
 **Pasos:**
 
-1. Verificar que el documento existe y esta en estado editable (`draft` o `rejected`)
+1. Verificar que el documento existe y está en estado editable (`draft` o `rejected`)
 2. Verificar que `user_id == created_by`
-3. Obtener logo de la organizacion desde `settings`
+3. Obtener logo de la organización desde `settings`
 4. Si es NOTA: validar que tenga recipients configurados
 5. Obtener lista de firmantes
 6. Generar PDF con PDFComposer (async)
 7. Actualizar estado a `sent_to_sign` y registrar `sent_by`
 8. Enviar invitaciones a usuarios inactivos (best-effort)
-9. Encolar generacion de resumen IA (fire-and-forget)
+9. Encolar generación de resumen IA (fire-and-forget)
 
 **Integraciones:**
 
-| Servicio | Funcion |
+| Servicio | Función |
 |----------|---------|
 | PDFComposer | Genera PDF final sin marca de agua |
 | R2 tosign | Almacena PDF para proceso de firma |
@@ -81,7 +81,7 @@ async def start_document_signing_process(
 
 ---
 
-## Firma Comun (`signing.py`)
+## Firma Común (`signing.py`)
 
 ### `sign_document()`
 
@@ -97,13 +97,13 @@ async def sign_document(
 
 1. Verificar que el usuario es firmante y no ha firmado
 2. Descargar PDF desde R2 bucket `tosign`
-3. Obtener datos del firmante (nombre, sello, departamento, organizacion)
+3. Obtener datos del firmante (nombre, sello, departamento, organización)
 4. Firmar con Notary API (`official_number=""`, `city=""`)
 5. Sobrescribir PDF en R2 `tosign`
 6. Actualizar `document_signers.status = 'signed'`
 
-!!! note "Firmante comun vs numerador"
-    El firmante comun firma con `official_number` y `city` **vacios**. Solo el numerador agrega el numero oficial y la ciudad al sello.
+!!! note "Firmante común vs numerador"
+    El firmante común firma con `official_number` y `city` **vacíos**. Solo el numerador agrega el número oficial y la ciudad al sello.
 
 ---
 
@@ -123,16 +123,16 @@ async def sign_document_as_numerator(
 
 1. **Validaciones previas**: Es numerador, documento en `sent_to_sign`, todos los comunes firmaron
 2. **Validar rank y departamento**: El numerador necesita rank suficiente para el tipo de documento
-3. **Verificar numero existente**: Si ya existe (caso reintento), reutilizar
-4. **Generar numero oficial**: Con advisory lock ultra corto (10-20ms)
+3. **Verificar número existente**: Si ya existe (caso reintento), reutilizar
+4. **Generar número oficial**: Con advisory lock ultra corto (10-20ms)
 5. **Insertar en `official_documents`**: Con contenido, firmantes, sector_ids, resume
 6. **Firmar con Notary**: Con `official_number` y `city` reales
 7. **Subir a R2 bucket `oficial`**: Filename = `{official_number}.pdf`
 8. **Eliminar de R2 `tosign`**: Soft-fail
 9. **Actualizar tablas**: `document_signers`, `document_draft.status = 'signed'`
-10. **Commit o rollback automatico**
+10. **Commit o rollback automático**
 
-**Validacion de Rank:**
+**Validación de Rank:**
 
 ```sql
 -- Verifica que el rank del usuario sea suficiente
@@ -151,7 +151,7 @@ END as has_rank_permission
 
 ### `super_sign_document()`
 
-Punto de entrada unico que detecta automaticamente si el usuario es firmante comun o numerador.
+Punto de entrada único que detecta automáticamente si el usuario es firmante común o numerador.
 
 ```python
 async def super_sign_document(
@@ -159,7 +159,7 @@ async def super_sign_document(
 ) -> Dict[str, Any]:
 ```
 
-**Flujo de decision:**
+**Flujo de decisión:**
 
 ```python
 # Query inicial obtiene todo lo necesario
@@ -198,7 +198,7 @@ else:
 
 ---
 
-## Interaccion con Notary
+## Interacción con Notary
 
 Todas las firmas pasan por `services/shared/notary_api.py`:
 
@@ -217,49 +217,49 @@ signed_pdf_bytes = await call_notary_sign_pdf(
 ```
 
 !!! warning "FULLPAGE"
-    Si Notary responde con error FULLPAGE (sin espacio para firma), se agrega automaticamente una pagina con marcador `end-text` y se reintenta.
+    Si Notary responde con error FULLPAGE (sin espacio para firma), se agrega automáticamente una página con marcador `end-text` y se reintenta.
 
-    La pagina se agrega como **revision incremental** (`PdfWriter(..., incremental=True)`):
-    los bytes anteriores del PDF quedan intactos. Asi se conservan las firmas de los
+    La página se agrega como **revisión incremental** (`PdfWriter(..., incremental=True)`):
+    los bytes anteriores del PDF quedan intactos. Así se conservan las firmas de los
     firmantes anteriores y los adjuntos embebidos. Si la cantidad de adjuntos cambia al
-    agregar la pagina, la firma se corta antes de llamar a Notary.
+    agregar la página, la firma se corta antes de llamar a Notary.
 
 ---
 
 ## Certificado de origen (`certified_bypass.py`)
 
-Un **certificado de origen** es un PDF importado que ya trae una firma de certificacion
-(`/DocMDP`), por ejemplo de un escribano. Una firma nueva rompe esa certificacion. Por eso
+Un **certificado de origen** es un PDF importado que ya trae una firma de certificación
+(`/DocMDP`), por ejemplo de un escribano. Una firma nueva rompe esa certificación. Por eso
 GDI no lo firma: lo numera sin pasar por Notary.
 
-**Como se marca:**
+**Cómo se marca:**
 
 1. Al importar, PDFComposer `/import/` devuelve el PDF byte a byte con el header `X-GDI-Certified: true`.
 2. El Backend guarda el SHA-256 de esos bytes en `document_draft.certified_pdf_sha256`. `NULL` = no certificado.
-3. La marca se pone en `NULL` **antes** de tocar R2, y el hash **despues** de que la subida salio bien. Una marca en `NULL` con un PDF certificado es segura: Notary lo frena con `422`.
+3. La marca se pone en `NULL` **antes** de tocar R2, y el hash **después** de que la subida salio bien. Una marca en `NULL` con un PDF certificado es segura: Notary lo frena con `422`.
 
-**Cuando se saltea Notary:** solo si `debe_saltear_notary` da `True`. Exige dos cosas:
+**Cuándo se saltea Notary:** solo si `debe_saltear_notary` da `True`. Exige dos cosas:
 
 - la columna `certified_pdf_sha256` tiene un hash;
 - ese hash es igual al SHA-256 de los bytes que el llamador acaba de bajar de R2.
 
 La columna sola no alcanza. Con hash distinto, el documento va por el camino normal (Notary).
 
-**Que hace cada rol:**
+**Qué hace cada rol:**
 
 | Rol | Con certificado de origen |
 |-----|---------------------------|
-| Firmante comun | Deja **conformidad**: fila en `document_signers` con `signed_with_provider = 'conformidad'`. No toca el PDF |
-| Numerador | Asigna el numero en la base y copia el PDF tal cual al bucket `oficial` (nunca a `preoficial`: el sellado diferido reescribiria el PDF). El numero **no** se imprime en el PDF |
+| Firmante común | Deja **conformidad**: fila en `document_signers` con `signed_with_provider = 'conformidad'`. No toca el PDF |
+| Numerador | Asigna el número en la base y copia el PDF tal cual al bucket `oficial` (nunca a `preoficial`: el sellado diferido reescribiría el PDF). El número **no** se imprime en el PDF |
 
 No se valida el marcador `end-text`: el PDF no lleva la hoja de GDI.
 
 **Modo `solo_sin_notary`:** las puertas que ya decidieron "es certificado" y mandan un tipo
-que exige firma digital por la via electronica (super-sign, Gateway REST, tanda con token)
-prenden este modo. Si la segunda verificacion da distinto, no caen a Notary con firma
-electronica:
+que exige firma digital por la vía electrónica (super-sign, Gateway REST, tanda con token)
+prenden este modo. Si la segunda verificación da distinto, no caen a Notary con firma
+electrónica:
 
-| Situacion | Error | HTTP |
+| Situación | Error | HTTP |
 |-----------|-------|------|
 | El hash ya no coincide | `CertifiedHashMismatchError` (`CERTIFIED_HASH_MISMATCH`) | `409` en el Gateway |
 | No se pudo bajar el PDF para comparar | `CertifiedCheckRetryError` (`CERTIFIED_CHECK_RETRY`) | `503` + `Retry-After: 5` |
@@ -270,5 +270,5 @@ electronica:
 - Reemplazar el PDF por uno certificado, con adjuntos ya cargados, responde `400` con `CERTIFIED_PDF_WITH_ATTACHMENTS`.
 - Por TAD, el alta termina en `failed` con `failure_reason: certified_pdf_with_attachments`.
 
-**Donde se ve:** `certified_origin` en `GET /documents/{id}/details`, en la lista de documentos
+**Dónde se ve:** `certified_origin` en `GET /documents/{id}/details`, en la lista de documentos
 oficiales del expediente y en el Gateway. Ver [Endpoints de documentos](../endpoints/documentos.md#detalles-unificados).

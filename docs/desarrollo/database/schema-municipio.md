@@ -1,17 +1,17 @@
 # Schema Municipio
 
-Cada organizacion tiene su propio schema PostgreSQL con **35 tablas** organizadas en 10 grupos funcionales. El nombre del schema sigue la convencion `{numero}_{acronimo}`, por ejemplo: `100_test`, `101_ejemplo`.
+Cada organización tiene su propio schema PostgreSQL con **35 tablas** organizadas en 10 grupos funcionales. El nombre del schema sigue la convención `{numero}_{acronimo}`, por ejemplo: `100_test`, `101_ejemplo`.
 
 ## Resumen por Grupo
 
-| Grupo | Tablas | Descripcion |
+| Grupo | Tablas | Descripción |
 |-------|--------|-------------|
 | A - Estructura Organizacional | 2 | departments, sectors |
 | B - Usuarios | 5 | users, user_roles, user_seals, user_sector_permissions, estado_users |
 | C - Rangos y Sellos | 2 | ranks, city_seals |
 | D - Documentos | 9 | document_types, document_types_allowed_by_rank, enabled_document_types_by_sector, document_draft, document_signers, document_rejections, official_documents, document_number_counters, case_proposed_documents |
 | E - Expedientes | 6 | case_templates, case_template_allowed_departments, cases, case_movements, case_official_documents, case_proposed_documents |
-| F - Configuracion | 1 | settings |
+| F - Configuración | 1 | settings |
 | G - Agente IA | 1 | document_chunks |
 | H - Notas | 3 | notes_recipients, notes_openings, memo_recipients |
 | I - Registros | 7 | registry_families, registry_family_permissions, records, record_history, record_relations, record_case_links, record_document_links |
@@ -55,42 +55,42 @@ erDiagram
 
 ### TABLA 1: departments
 
-Departamentos de la organizacion. Soporta jerarquia via `parent_id` (self-referencing).
+Departamentos de la organización. Soporta jerarquía vía `parent_id` (self-referencing).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `name` | VARCHAR(100) | NO | - | Nombre del departamento |
-| `acronym` | VARCHAR(20) | SI | - | Acronimo (ej: INTE, LEGAL) |
-| `parent_id` | UUID | SI | - | FK self-ref para jerarquia |
-| `rank_id` | UUID | SI | - | FK a `ranks` (rango jerarquico del depto) |
+| `acronym` | VARCHAR(20) | SI | - | Acrónimo (ej: INTE, LEGAL) |
+| `parent_id` | UUID | SI | - | FK self-ref para jerarquía |
+| `rank_id` | UUID | SI | - | FK a `ranks` (rango jerárquico del depto) |
 | `head_user_id` | UUID | SI | - | Jefe del departamento |
 | `primary_color` | VARCHAR(7) | SI | - | Color hex (ej: #2C3E50) |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
 | `start_date` | TIMESTAMPTZ | NO | `NOW()` | Inicio de vigencia |
 | `end_date` | TIMESTAMPTZ | SI | - | Fin de vigencia |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, FK `parent_id` -> self, FK `rank_id` -> `ranks(id)` (diferida)
 
-**Indices:** `idx_{schema}_departments_head_user_id` en `head_user_id` (mig 060)
+**Índices:** `idx_{schema}_departments_head_user_id` en `head_user_id` (mig 060)
 
 ### TABLA 2: sectors
 
 Sectores dentro de cada departamento. Cada departamento tiene al menos un sector `PRIV` (privado).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `department_id` | UUID | NO | - | FK a `departments` |
 | `acronym` | VARCHAR(10) | NO | - | Tipo: PRIV, MESA, ADMIN |
 | `primary_color` | VARCHAR(7) | SI | - | Color hex |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
 | `start_date` | TIMESTAMPTZ | NO | `NOW()` | Inicio de vigencia |
 | `end_date` | TIMESTAMPTZ | SI | - | Fin de vigencia |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, FK `department_id` -> `departments(id)`, UNIQUE (`department_id`, `acronym`)
 
@@ -100,57 +100,57 @@ Sectores dentro de cada departamento. Cada departamento tiene al menos un sector
 
 ### TABLA 3: users
 
-Usuarios de la organizacion. Cada usuario pertenece a un sector.
+Usuarios de la organización. Cada usuario pertenece a un sector.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `auth_id` | TEXT | SI | - | ID de Auth0 |
-| `auth_method` | VARCHAR(20) | NO | `'social'` | Metodo de autenticacion: `social` o `database` |
+| `auth_method` | VARCHAR(20) | NO | `'social'` | Método de autenticación: `social` o `database` |
 | `email` | TEXT | NO | - | Email (unique) |
 | `full_name` | VARCHAR(150) | NO | - | Nombre completo |
 | `profile_picture_url` | TEXT | SI | - | URL foto de perfil (Auth0) |
 | `CountryID` | VARCHAR(20) | SI | - | Documento de identidad |
 | `sector_id` | UUID | SI | - | FK a `sectors` |
-| `estado` | INT | NO | `1` | Estado del usuario (FK implicita a estado_users) |
-| `last_access` | TIMESTAMPTZ | SI | - | Ultimo acceso |
-| `can_global_search_documents` | BOOLEAN | NO | `true` | Permiso de busqueda global de docs |
-| `can_global_search_cases` | BOOLEAN | NO | `true` | Permiso de busqueda global de expedientes |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `estado` | INT | NO | `1` | Estado del usuario (FK implícita a estado_users) |
+| `last_access` | TIMESTAMPTZ | SI | - | Último acceso |
+| `can_global_search_documents` | BOOLEAN | NO | `true` | Permiso de búsqueda global de docs |
+| `can_global_search_cases` | BOOLEAN | NO | `true` | Permiso de búsqueda global de expedientes |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, UNIQUE `email`, FK `sector_id` -> `sectors(id)`
 
-**Indices:** `idx_{schema}_users_email`, `idx_{schema}_users_sector`
+**Índices:** `idx_{schema}_users_email`, `idx_{schema}_users_sector`
 
-!!! info "Trigger de sincronizacion"
-    Al insertar, actualizar o eliminar un usuario, el trigger `trg_sync_user_registry` sincroniza automaticamente `public.user_registry`.
+!!! info "Trigger de sincronización"
+    Al insertar, actualizar o eliminar un usuario, el trigger `trg_sync_user_registry` sincroniza automáticamente `public.user_registry`.
 
 ### TABLA 4: user_roles
 
-Asignacion de roles a usuarios. Un usuario puede tener un rol (tipicamente Funcionario o Administrador).
+Asignación de roles a usuarios. Un usuario puede tener un rol (típicamente Funcionario o Administrador).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `user_id` | UUID | NO | - | FK a `users` |
 | `role_id` | UUID | NO | - | FK a `public.roles` |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, UNIQUE (`user_id`, `role_id`), FK a `users` y `public.roles`
 
 ### TABLA 5: user_seals
 
-Asigna exactamente un sello de firma por usuario. Relacion 1:1 (UNIQUE en `user_id`).
+Asigna exactamente un sello de firma por usuario. Relación 1:1 (UNIQUE en `user_id`).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `user_id` | UUID | NO | - | FK a `users` (UNIQUE) |
 | `city_seal_id` | INT | NO | - | FK a `city_seals` (diferida) |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, UNIQUE `user_id`, FK a `users`, FK `city_seal_id` -> `city_seals(id)` (diferida)
 
@@ -158,15 +158,15 @@ Asigna exactamente un sello de firma por usuario. Relacion 1:1 (UNIQUE en `user_
 
 Permisos adicionales de un usuario sobre sectores que no son el suyo.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `user_id` | UUID | NO | - | FK a `users` |
 | `sector_id` | UUID | NO | - | FK a `sectors` |
 | `can_view` | BOOLEAN | NO | `true` | Permiso de lectura |
 | `can_edit` | BOOLEAN | NO | `false` | Permiso de escritura |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, UNIQUE (`user_id`, `sector_id`)
 
@@ -174,7 +174,7 @@ Permisos adicionales de un usuario sobre sectores que no son el suyo.
 
 Tabla lookup para estados de usuario.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | SERIAL | NO | auto | PK |
 | `estado` | VARCHAR(50) | NO | - | Nombre del estado |
@@ -186,20 +186,20 @@ Tabla lookup para estados de usuario.
 ## Grupo C: Rangos y Sellos
 
 !!! note "Per-tenant"
-    Desde v4.0.0, rangos y sellos son per-tenant. Cada organizacion define sus propias jerarquias y sellos.
+    Desde v4.0.0, rangos y sellos son per-tenant. Cada organización define sus propias jerarquías y sellos.
 
 ### TABLA 8: ranks
 
-Jerarquias de la organizacion. El campo `level` determina el orden (1 = mas alto).
+Jerarquías de la organización. El campo `level` determina el orden (1 = más alto).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `name` | VARCHAR(50) | NO | - | Nombre del rango (unique) |
-| `level` | INT | NO | - | Nivel jerarquico (1 = mas alto, unique) |
+| `level` | INT | NO | - | Nivel jerárquico (1 = más alto, unique) |
 | `head_signature` | VARCHAR(100) | SI | - | Texto en firma de documentos |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 **Constraints:** PK `id`, UNIQUE `name`, UNIQUE `level`
 
@@ -207,19 +207,19 @@ Jerarquias de la organizacion. El campo `level` determina el orden (1 = mas alto
 
 ### TABLA 9: city_seals
 
-Sellos de firma de la organizacion. Pueden estar vinculados a un rango o ser genericos.
+Sellos de firma de la organización. Pueden estar vinculados a un rango o ser genéricos.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | SERIAL | NO | auto | PK |
 | `name` | TEXT | NO | - | Nombre del sello (unique) |
-| `description` | TEXT | SI | - | Descripcion |
-| `rank_id` | UUID | SI | - | FK a `ranks`. NULL = sello generico |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `description` | TEXT | SI | - | Descripción |
+| `rank_id` | UUID | SI | - | FK a `ranks`. NULL = sello genérico |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 **Constraints:** PK `id`, UNIQUE `name`, FK `rank_id` -> `ranks(id)`
 
-**Ejemplo (200_muni):** Innovador (generico, rank_id=NULL), Intendente Municipal (rank_id=Intendente), Secretario, Director
+**Ejemplo (200_muni):** Innovador (genérico, rank_id=NULL), Intendente Municipal (rank_id=Intendente), Secretario, Director
 
 ---
 
@@ -227,31 +227,31 @@ Sellos de firma de la organizacion. Pueden estar vinculados a un rango o ser gen
 
 ### TABLA 10: document_types
 
-Tipos de documento habilitados en la organizacion. Copiados del catalogo global.
+Tipos de documento habilitados en la organización. Copiados del catálogo global.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | SERIAL | NO | auto | PK |
 | `global_document_type_id` | UUID | NO | - | FK a `public.global_document_types` |
 | `name` | VARCHAR(100) | NO | - | Nombre local |
-| `acronym` | VARCHAR(6) | NO | - | Acronimo (unique en el schema) |
-| `description` | TEXT | SI | - | Descripcion |
+| `acronym` | VARCHAR(6) | NO | - | Acrónimo (unique en el schema) |
+| `description` | TEXT | SI | - | Descripción |
 | `required_signature` | VARCHAR(50) | SI | - | Tipo de firma requerida |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
 | `type` | `document_type_source` | NO | `'HTML'` | Fuente: HTML, Importado, NOTA |
 | `trust` | BOOLEAN | NO | `true` | Documento confiable (gobierno) vs externo |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 ### TABLA 11: document_types_allowed_by_rank
 
-Define que rango minimo se necesita para numerar un tipo de documento.
+Define qué rango mínimo se necesita para numerar un tipo de documento.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | SERIAL | NO | auto | PK |
 | `document_type_id` | INT | NO | - | FK a `document_types` |
 | `rank_id` | UUID | NO | - | FK a `ranks` |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 **Constraints:** UNIQUE (`document_type_id`, `rank_id`)
 
@@ -259,12 +259,12 @@ Define que rango minimo se necesita para numerar un tipo de documento.
 
 Tipos de documento habilitados por sector. Controla que tipos puede crear cada sector.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | SERIAL | NO | auto | PK |
 | `document_type_id` | INT | NO | - | FK a `document_types` |
 | `sector_id` | UUID | NO | - | FK a `sectors` |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 **Constraints:** UNIQUE (`document_type_id`, `sector_id`)
 
@@ -272,7 +272,7 @@ Tipos de documento habilitados por sector. Controla que tipos puede crear cada s
 
 Borradores de documentos. Tabla principal del flujo documental.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `created_by` | UUID | NO | - | FK a `users` |
@@ -280,15 +280,15 @@ Borradores de documentos. Tabla principal del flujo documental.
 | `reference` | VARCHAR(100) | NO | - | Asunto/referencia del documento |
 | `content` | JSONB | SI | - | Contenido HTML como JSON |
 | `status` | `document_status` | NO | `'draft'` | Estado del ciclo de vida |
-| `sent_to_sign_at` | TIMESTAMPTZ | SI | - | Cuando se envio a firmar |
-| `sent_by` | UUID | SI | - | Quien lo envio a firmar |
-| `document_number` | TEXT | SI | - | Numero oficial (al firmar) |
+| `sent_to_sign_at` | TIMESTAMPTZ | SI | - | Cuando se envió a firmar |
+| `sent_by` | UUID | SI | - | Quien lo envió a firmar |
+| `document_number` | TEXT | SI | - | Número oficial (al firmar) |
 | `numbered_at` | TIMESTAMPTZ | SI | - | Cuando fue numerado |
-| `numbered_by` | UUID | SI | - | Quien lo numero |
+| `numbered_by` | UUID | SI | - | Quien lo numeró |
 | `is_deleted` | BOOLEAN | NO | `false` | Soft delete |
 | `resume` | TEXT | SI | - | Resumen del documento (texto libre) |
-| `last_modified_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `last_modified_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 | `certified_pdf_sha256` | TEXT | SI | - | SHA-256 del PDF importado con firma de certificación (DocMDP). `NULL` = no certificado (migración 139) |
 
 **Constraint:** `document_draft_certified_pdf_sha256_chk`: `certified_pdf_sha256` es `NULL` o
@@ -308,21 +308,21 @@ Borradores de documentos. Tabla principal del flujo documental.
     Así una marca desfasada nunca deja salir sin firma un PDF que no está certificado.
     Ver [PDFComposer](../pdfcomposer/index.md#header-x-gdi-certified).
 
-**Indices:**
+**Índices:**
 
-| Indice | Columnas | Proposito |
+| Índice | Columnas | Propósito |
 |--------|----------|-----------|
 | `idx_document_draft_status` | `status` | Filtrar por estado |
 | `idx_document_draft_created_by` | `created_by` | "Mis documentos" |
 | `idx_document_draft_type` | `document_type_id` | Filtrar por tipo |
 | `idx_document_draft_created_by_date` | `(created_by, created_at DESC)` | "Mis documentos" ordenados |
-| `idx_doc_draft_last_modified` | `last_modified_at DESC` | Listado ordenado por modificacion |
+| `idx_doc_draft_last_modified` | `last_modified_at DESC` | Listado ordenado por modificación |
 
 ### TABLA 14: document_signers
 
 Firmantes asignados a un documento borrador.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `document_id` | UUID | NO | - | FK a `document_draft` |
@@ -331,15 +331,15 @@ Firmantes asignados a un documento borrador.
 | `signing_order` | INT | SI | - | Orden de firma |
 | `status` | `document_signer_status` | NO | `'pending'` | Estado de firma |
 | `signed_at` | TIMESTAMPTZ | SI | - | Cuando firmo |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
-**Indices:** `document_id`, `user_id`, `status`, `(document_id, user_id)` compuesto
+**Índices:** `document_id`, `user_id`, `status`, `(document_id, user_id)` compuesto
 
 ### TABLA 15: document_rejections
 
 Registro de rechazos de documentos con motivo.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `document_id` | UUID | NO | - | FK a `document_draft` |
@@ -349,32 +349,32 @@ Registro de rechazos de documentos con motivo.
 
 ### TABLA 16: official_documents
 
-Documentos oficiales firmados y numerados. Inmutables despues de la firma.
+Documentos oficiales firmados y numerados. Inmutables después de la firma.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `document_type_id` | INT | NO | - | FK a `document_types` |
 | `reference` | VARCHAR(100) | NO | - | Asunto/referencia |
 | `content` | JSONB | NO | - | Contenido HTML completo |
-| `official_number` | VARCHAR(50) | NO | - | Numero oficial unico |
-| `year` | SMALLINT | NO | - | Anio de emision |
+| `official_number` | VARCHAR(50) | NO | - | Número oficial único |
+| `year` | SMALLINT | NO | - | Año de emisión |
 | `department_id` | UUID | NO | - | FK a `departments` (del numerador) |
-| `numerator_id` | UUID | NO | - | FK a `users` (quien numero) |
+| `numerator_id` | UUID | NO | - | FK a `users` (quien numeró) |
 | `signed_at` | TIMESTAMPTZ | NO | - | Cuando fue firmado |
 | `signers` | JSONB | SI | - | Datos de firmantes snapshot |
-| `global_sequence` | INT | SI | - | Secuencia global del anio |
+| `global_sequence` | INT | SI | - | Secuencia global del año |
 | `signer_sector_ids` | UUID[] | SI | - | Array pre-calculado de sector_ids |
 | `resume` | TEXT | SI | - | Resumen (copiado del draft) |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
-**Indices:**
+**Índices:**
 
-| Indice | Columnas | Tipo | Proposito |
+| Índice | Columnas | Tipo | Propósito |
 |--------|----------|------|-----------|
-| `idx_official_docs_signer_sectors` | `signer_sector_ids` | GIN | Busqueda por sector firmante |
-| `idx_official_docs_number` | `official_number` | B-tree | Busqueda por numero |
-| `idx_official_docs_signed_at` | `signed_at DESC` | B-tree | Listado cronologico |
+| `idx_official_docs_signer_sectors` | `signer_sector_ids` | GIN | Búsqueda por sector firmante |
+| `idx_official_docs_number` | `official_number` | B-tree | Búsqueda por número |
+| `idx_official_docs_signed_at` | `signed_at DESC` | B-tree | Listado cronológico |
 | `idx_official_docs_department` | `department_id` | B-tree | Filtro por departamento |
 
 ---
@@ -383,74 +383,74 @@ Documentos oficiales firmados y numerados. Inmutables despues de la firma.
 
 ### TABLA 17: case_templates
 
-Plantillas de expediente habilitadas en la organizacion. Copiadas del catalogo global.
+Plantillas de expediente habilitadas en la organización. Copiadas del catálogo global.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `global_case_template_id` | UUID | NO | - | FK a `public.global_case_templates` |
 | `type_name` | VARCHAR(100) | NO | - | Nombre local |
-| `acronym` | VARCHAR(6) | NO | - | Acronimo (unique) |
-| `description` | TEXT | SI | - | Descripcion |
-| `creation_channel` | `case_creation_channel` | NO | `'web'` | Canal de creacion |
-| `filing_department_id` | UUID | NO | - | Departamento que caratula |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `acronym` | VARCHAR(6) | NO | - | Acrónimo (unique) |
+| `description` | TEXT | SI | - | Descripción |
+| `creation_channel` | `case_creation_channel` | NO | `'web'` | Canal de creación |
+| `filing_department_id` | UUID | NO | - | Departamento que carátula |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 ### TABLA 18: case_template_allowed_departments
 
 Departamentos autorizados para crear expedientes de cada tipo.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `case_template_id` | UUID | NO | - | FK a `case_templates` (PK compuesta) |
 | `department_id` | UUID | NO | - | FK a `departments` (PK compuesta) |
 
 ### TABLA 19: cases
 
-Expedientes de la organizacion.
+Expedientes de la organización.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `case_number` | VARCHAR(50) | NO | - | Numero unico (formato: EE-YYYY-NNNNNN-MUNI-DEPT) |
+| `case_number` | VARCHAR(50) | NO | - | Número único (formato: EE-YYYY-NNNNNN-MUNI-DEPT) |
 | `reference` | VARCHAR(250) | NO | - | Asunto del expediente |
 | `status` | `status_case` | NO | `'inactive'` | Estado del ciclo de vida |
 | `case_template_id` | UUID | NO | - | FK a `case_templates` |
 | `created_by_user_id` | UUID | NO | - | FK a `users` |
 | `owner_department_id` | UUID | NO | - | Departamento actual propietario |
 | `owner_sector_id` | UUID | SI | - | Sector actual propietario |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 | `ai_summary` | TEXT | SI | - | Resumen generado por IA |
 | `ai_summary_updated_at` | TIMESTAMPTZ | SI | - | Fecha del resumen IA |
 
-**Indices:** `status`, `owner_department_id`, `created_at DESC`, parcial en activos
+**Índices:** `status`, `owner_department_id`, `created_at DESC`, parcial en activos
 
 ### TABLA 20: case_movements
 
-Historial de movimientos del expediente. Cada transferencia, asignacion o cambio queda registrado.
+Historial de movimientos del expediente. Cada transferencia, asignación o cambio queda registrado.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `case_id` | UUID | NO | - | FK a `cases` |
 | `type` | `movement_type` | NO | - | Tipo de movimiento |
-| `user_id` | UUID | SI | - | Usuario que ejecuto |
-| `creator_sector_id` | UUID | NO | - | Sector que creo el movimiento |
+| `user_id` | UUID | SI | - | Usuario que ejecutó |
+| `creator_sector_id` | UUID | NO | - | Sector que creó el movimiento |
 | `admin_sector_id` | UUID | NO | - | Sector administrador |
 | `assigned_sector_id` | UUID | SI | - | Sector asignado (para assignments) |
 | `assigned_user_id` | UUID | SI | - | Usuario asignado (para assignments) |
 | `reason` | VARCHAR(200) | NO | - | Motivo del movimiento |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
-| `closed_at` | TIMESTAMPTZ | SI | - | Cuando se cerro |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
+| `closed_at` | TIMESTAMPTZ | SI | - | Cuando se cerró |
 | `closing_reason` | VARCHAR(200) | SI | - | Motivo de cierre |
-| `closed_by` | UUID | SI | - | Quien cerro |
+| `closed_by` | UUID | SI | - | Quien cerró |
 | `supporting_document_id` | UUID | SI | - | Documento de soporte (ej: PV) |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
-**Indices especiales de performance:**
+**Índices especiales de performance:**
 
-| Indice | Tipo | Proposito |
+| Índice | Tipo | Propósito |
 |--------|------|-----------|
 | `idx_case_mov_admin_lookup` | Compuesto parcial (creation/transfer) | Lookup de admin_sector |
 | `idx_case_mov_transfers` | Parcial WHERE type='transfer' | Verificar si tiene transfers |
@@ -458,49 +458,49 @@ Historial de movimientos del expediente. Cada transferencia, asignacion o cambio
 
 ### TABLA 21: case_official_documents
 
-Vinculacion de documentos oficiales a expedientes.
+Vinculación de documentos oficiales a expedientes.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `case_id` | UUID | NO | - | FK a `cases` |
 | `official_document_id` | UUID | NO | - | FK a `official_documents` |
 | `linking_user_id` | UUID | NO | - | FK a `users` |
 | `order_number` | INT | NO | - | Orden de foliatura |
-| `linking_date` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculacion |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activo |
-| `deactivated_at` | TIMESTAMPTZ | SI | - | Fecha de desvinculacion |
-| `deactivated_by_user_id` | UUID | SI | - | Quien desvinculo |
+| `linking_date` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculación |
+| `is_active` | BOOLEAN | NO | `true` | Si está activo |
+| `deactivated_at` | TIMESTAMPTZ | SI | - | Fecha de desvinculación |
+| `deactivated_by_user_id` | UUID | SI | - | Quien desvinculó |
 
 ### TABLA 22: case_proposed_documents
 
-Propuestas de vinculacion de borradores a expedientes (pendientes de aprobacion).
+Propuestas de vinculación de borradores a expedientes (pendientes de aprobación).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `case_id` | UUID | NO | - | FK a `cases` |
 | `document_draft_id` | UUID | NO | - | FK a `document_draft` |
 | `proposing_user_id` | UUID | NO | - | FK a `users` |
 | `proposing_date` | TIMESTAMPTZ | NO | `NOW()` | Fecha de propuesta |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activa |
+| `is_active` | BOOLEAN | NO | `true` | Si está activa |
 
 ---
 
-## Grupo F: Configuracion
+## Grupo F: Configuración
 
 ### TABLA 23: settings
 
-Configuracion de la organizacion. Una unica fila por organizacion.
+Configuración de la organización. Una única fila por organización.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `timezone` | TEXT | NO | `'America/Argentina/Buenos_Aires'` | Zona horaria |
 | `bucket_oficial` | TEXT | NO | - | Nombre del bucket R2 para docs oficiales |
 | `bucket_tosign` | TEXT | NO | - | Nombre del bucket R2 para docs a firmar |
 | `city` | VARCHAR(100) | SI | `'LATAM'` | Ciudad (aparece en sellos de firma) |
-| `address` | VARCHAR(150) | SI | - | Direccion de la organizacion |
+| `address` | VARCHAR(150) | SI | - | Dirección de la organización |
 | `contact_email` | VARCHAR(100) | SI | - | Email de contacto |
 | `website_url` | VARCHAR(150) | SI | - | Sitio web |
 | `annual_slogan` | VARCHAR(255) | SI | - | Slogan anual |
@@ -508,8 +508,8 @@ Configuracion de la organizacion. Una unica fila por organizacion.
 | `isologo_url` | TEXT | SI | - | URL del isologo |
 | `cover_url` | TEXT | SI | - | URL de la imagen de portada |
 | `primary_color` | VARCHAR(6) | SI | `'16158C'` | Color primario hex sin # |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 ---
 
@@ -517,26 +517,26 @@ Configuracion de la organizacion. Una unica fila por organizacion.
 
 ### TABLA 24: document_chunks
 
-Chunks de documentos oficiales con embeddings para busqueda semantica (RAG). Usado por GDI-AgenteLANG.
+Chunks de documentos oficiales con embeddings para búsqueda semántica (RAG). Usado por GDI-AgenteLANG.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `official_document_id` | UUID | NO | - | FK a `official_documents` |
-| `chunk_index` | INTEGER | NO | - | Indice del chunk dentro del documento |
+| `chunk_index` | INTEGER | NO | - | Índice del chunk dentro del documento |
 | `chunk_text` | TEXT | NO | - | Texto del chunk |
 | `embedding` | vector(1536) | SI | - | Embedding del modelo text-embedding-3-small |
 | `embedding_model` | VARCHAR(100) | NO | `'text-embedding-3-small'` | Modelo usado |
-| `indexed_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de indexacion |
+| `indexed_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de indexación |
 
 **Constraints:** UNIQUE (`official_document_id`, `chunk_index`)
 
-**Indices:**
+**Índices:**
 
-| Indice | Tipo | Proposito |
+| Índice | Tipo | Propósito |
 |--------|------|-----------|
 | `idx_chunks_doc` | B-tree | Buscar chunks por documento |
-| `idx_chunks_embedding` | HNSW (vector_cosine_ops) | Busqueda semantica por similitud |
+| `idx_chunks_embedding` | HNSW (vector_cosine_ops) | Búsqueda semántica por similitud |
 
 ---
 
@@ -546,7 +546,7 @@ Chunks de documentos oficiales con embeddings para busqueda semantica (RAG). Usa
 
 Destinatarios de notas oficiales con soporte TO, CC, BCC y archivado.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `document_id` | UUID | NO | - | FK a `document_draft` |
@@ -558,16 +558,16 @@ Destinatarios de notas oficiales con soporte TO, CC, BCC y archivado.
 
 **Constraints:** UNIQUE (`document_id`, `sector_id`), CHECK `recipient_type` IN ('TO','CC','BCC')
 
-**Indices parciales:**
+**Índices parciales:**
 
 - `idx_notes_recipients_not_archived`: `sector_id` WHERE `is_archived = false` (bandeja de entrada)
 - `idx_notes_recipients_archived`: `sector_id` WHERE `is_archived = true` (archivadas)
 
 ### TABLA 26: notes_openings
 
-Tracking de apertura de notas. Registra si un usuario leyo la nota.
+Tracking de apertura de notas. Registra si un usuario leyó la nota.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `document_id` | UUID | NO | - | FK a `document_draft` |
@@ -583,26 +583,26 @@ Tracking de apertura de notas. Registra si un usuario leyo la nota.
 
 ### TABLA 27: registry_families
 
-Familias de registros de la organizacion. Copiadas y personalizadas desde `public.global_registry_families`.
+Familias de registros de la organización. Copiadas y personalizadas desde `public.global_registry_families`.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `global_family_id` | UUID | SI | - | FK a `public.global_registry_families` |
-| `code` | VARCHAR(10) | NO | - | Codigo unico (ej: ARQ, LUM) |
+| `code` | VARCHAR(10) | NO | - | Código único (ej: ARQ, LUM) |
 | `name` | VARCHAR(200) | NO | - | Nombre |
-| `description` | TEXT | SI | - | Descripcion |
+| `description` | TEXT | SI | - | Descripción |
 | `data_schema` | JSONB | SI | `'{}'` | Schema de campos del registro |
 | `states` | JSONB | SI | `'["Activo","Inactivo","Suspendido","Archivado"]'` | Estados posibles |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activa |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `is_active` | BOOLEAN | NO | `true` | Si está activa |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
 ### TABLA 28: registry_family_permissions
 
 Permisos de sectores sobre familias de registros.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `registry_family_id` | UUID | NO | - | FK a `registry_families` |
@@ -611,38 +611,38 @@ Permisos de sectores sobre familias de registros.
 | `can_edit` | BOOLEAN | NO | `false` | Puede editar registros |
 | `can_view` | BOOLEAN | NO | `true` | Puede ver registros |
 | `can_verify` | BOOLEAN | NO | `false` | Puede verificar/validar campos |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 
 **Constraints:** UNIQUE (`registry_family_id`, `sector_id`)
 
 ### TABLA 29: records
 
-Registros individuales con datos JSONB segun el schema de la familia.
+Registros individuales con datos JSONB según el schema de la familia.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `record_number` | VARCHAR(50) | NO | - | Numero unico del registro |
+| `record_number` | VARCHAR(50) | NO | - | Número único del registro |
 | `registry_family_id` | UUID | NO | - | FK a `registry_families` |
-| `data` | JSONB | SI | `'{}'` | Datos del registro (segun data_schema) |
+| `data` | JSONB | SI | `'{}'` | Datos del registro (según data_schema) |
 | `state` | VARCHAR(50) | SI | `'Activo'` | Estado actual |
-| `next_expiration` | DATE | SI | - | Proxima fecha de vencimiento |
+| `next_expiration` | DATE | SI | - | Próxima fecha de vencimiento |
 | `created_by_user_id` | UUID | NO | - | FK a `users` |
 | `created_by_sector_id` | UUID | NO | - | FK a `sectors` |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Ultima modificacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Última modificación |
 
-**Indices:** `registry_family_id`, `state`, `created_by_user_id`, GIN en `data`, parcial en `next_expiration` (NOT NULL)
+**Índices:** `registry_family_id`, `state`, `created_by_user_id`, GIN en `data`, parcial en `next_expiration` (NOT NULL)
 
 ### TABLA 30: record_history
 
 Historial de cambios en registros.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
-| `action` | VARCHAR(50) | NO | - | Tipo de accion |
+| `action` | VARCHAR(50) | NO | - | Tipo de acción |
 | `field_name` | VARCHAR(100) | SI | - | Campo modificado |
 | `before_value` | JSONB | SI | - | Valor anterior |
 | `after_value` | JSONB | SI | - | Valor nuevo |
@@ -654,12 +654,12 @@ Historial de cambios en registros.
 
 Relaciones entre registros (ej: obra relacionada con luminaria).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `source_record_id` | UUID | NO | - | FK a `records` |
 | `target_record_id` | UUID | NO | - | FK a `records` |
-| `relation_type` | VARCHAR(50) | SI | `'related'` | Tipo de relacion |
+| `relation_type` | VARCHAR(50) | SI | `'related'` | Tipo de relación |
 | `notes` | TEXT | SI | - | Notas |
 | `created_by_user_id` | UUID | NO | - | FK a `users` |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha |
@@ -668,9 +668,9 @@ Relaciones entre registros (ej: obra relacionada con luminaria).
 
 ### TABLA 32: record_case_links
 
-Vinculos entre registros y expedientes.
+Vínculos entre registros y expedientes.
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
@@ -683,9 +683,9 @@ Vinculos entre registros y expedientes.
 
 ### TABLA 33: record_document_links
 
-Vinculos entre registros y documentos (draft u oficial).
+Vínculos entre registros y documentos (draft u oficial).
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
@@ -701,7 +701,7 @@ Vinculos entre registros y documentos (draft u oficial).
 
 ## Trigger: fn_sync_user_registry
 
-Sincroniza automaticamente `public.user_registry` cuando se crea, actualiza o elimina un usuario.
+Sincroniza automáticamente `public.user_registry` cuando se crea, actualiza o elimina un usuario.
 
 ```sql
 CREATE OR REPLACE FUNCTION "{SCHEMA_NAME}"."fn_sync_user_registry"()

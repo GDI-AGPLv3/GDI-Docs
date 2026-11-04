@@ -1,9 +1,9 @@
 # Notas
 
-Las **Notas** son un tipo especial de documento que funciona como memorandos o comunicaciones internas oficiales entre sectores del organismo. A diferencia de otros documentos, las notas incluyen **destinatarios** (sectores) y un sistema de **tracking de aperturas** que permite al remitente saber quien leyo la comunicacion.
+Las **Notas** son un tipo especial de documento que funciona como memorandos o comunicaciones internas oficiales entre sectores del organismo. A diferencia de otros documentos, las notas incluyen **destinatarios** (sectores) y un sistema de **tracking de aperturas** que permite al remitente saber quién leyó la comunicación.
 
 !!! video "Video tutorial"
-    **GDI — Panel CCOO: gestion de Notas y Memos**
+    **GDI — Panel CCOO: gestión de Notas y Memos**
 
     <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/lWYjNqkUO78?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Panel CCOO: gestion de Notas y Memos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
@@ -11,17 +11,17 @@ Las **Notas** son un tipo especial de documento que funciona como memorandos o c
 
 ---
 
-## Que es una Nota
+## Qué es una Nota
 
 Una nota es un documento oficial con las siguientes particularidades:
 
-| Caracteristica | Descripcion |
+| Característica | Descripción |
 |----------------|-------------|
-| **Destinatarios** | Sectores del organismo a los que se dirige la comunicacion, en modalidades Para, CC y CCO |
+| **Destinatarios** | Sectores del organismo a los que se dirige la comunicación, en modalidades Para, CC y CCO |
 | **Proceso de firma** | Pasa por el mismo proceso de firma que cualquier otro documento |
-| **Envio automatico** | Al completarse la firma, el sistema envia la nota automaticamente a los sectores destinatarios |
-| **Tracking de aperturas** | El remitente puede ver quien abrio la nota y cuando |
-| **Numero oficial** | Recibe un numero con formato `NOTA-{ANO}-{SECUENCIAL}-{TENANT}-{DEPTO}` |
+| **Envío automático** | Al completarse la firma, el sistema envía la nota automáticamente a los sectores destinatarios |
+| **Tracking de aperturas** | El remitente puede ver quién abrió la nota y cuando |
+| **Número oficial** | Recibe un número con formato `NOTA-{ANO}-{SECUENCIAL}-{TENANT}-{DEPTO}` |
 
 ---
 
@@ -29,11 +29,11 @@ Una nota es un documento oficial con las siguientes particularidades:
 
 Al crear una nota se asignan destinatarios en tres modalidades:
 
-| Modalidad | Descripcion | Obligatorio |
+| Modalidad | Descripción | Obligatorio |
 |-----------|-------------|:-----------:|
-| **Para (TO)** | Sectores destinatarios principales de la comunicacion | Si (minimo 1) |
+| **Para (TO)** | Sectores destinatarios principales de la comunicación | Sí (mínimo 1) |
 | **CC** | Sectores en copia. Reciben la nota para su conocimiento | No |
-| **CCO (BCC)** | Sectores en copia oculta. Reciben la nota pero los demas destinatarios no pueden ver que la recibieron | No |
+| **CCO (BCC)** | Sectores en copia oculta. Reciben la nota pero los demás destinatarios no pueden ver que la recibieron | No |
 
 ---
 
@@ -41,9 +41,9 @@ Al crear una nota se asignan destinatarios en tres modalidades:
 
 ![Comunicaciones Oficiales - Recibidos](../capturas/ccoo-recibidos.png)
 
-La bandeja de notas organiza las comunicaciones en tres pestanas:
+La bandeja de notas organiza las comunicaciones en tres pestañas:
 
-| Pestana | Contenido |
+| Pestaña | Contenido |
 |---------|-----------|
 | **Recibidas** | Notas dirigidas al sector del usuario (como Para o CC/CCO) |
 | **Enviadas** | Notas creadas y firmadas por el sector del usuario |
@@ -76,15 +76,15 @@ Remitente puede ver tracking de aperturas
 
 ## Crear una Nota
 
-Para crear una nota, se utiliza el flujo de creacion de documentos seleccionando el tipo **NOTA**. Consultar la guia completa en [Crear y Editar Documento](../documentos/crear-editar-documento.md), prestando especial atencion a la seccion **Destinatarios (solo para tipo NOTA)**.
+Para crear una nota, se utiliza el flujo de creación de documentos seleccionando el tipo **NOTA**. Consultar la guía completa en [Crear y Editar Documento](../documentos/crear-editar-documento.md), prestando especial atención a la sección **Destinatarios (solo para tipo NOTA)**.
 
 El cuerpo de la nota admite imágenes. Se insertan con el botón de imagen de la barra del editor. Ver [Insertar una imagen](../documentos/crear-editar-documento.md#insertar-una-imagen).
 
 ---
 
-## Secciones de esta guia
+## Secciones de esta guía
 
-| Pagina | Descripcion |
+| Página | Descripción |
 |--------|-------------|
 | [Nota Enviada](nota-enviada.md) | Vista de una nota desde la perspectiva del remitente: PDF, destinatarios y tracking de aperturas |
-| [Nota Recibida](nota-recibida.md) | Vista de una nota desde la perspectiva del receptor: PDF, destinatarios, resumen IA y boton archivar |
+| [Nota Recibida](nota-recibida.md) | Vista de una nota desde la perspectiva del receptor: PDF, destinatarios, resumen IA y botón archivar |

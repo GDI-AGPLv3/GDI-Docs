@@ -4,9 +4,9 @@ Problemas comunes y soluciones al desarrollar con el ecosistema GDI Latam.
 
 ## TypeError: takes N positional arguments but M were given
 
-**Causa**: El parametro `schema_name` se paso como argumento posicional en lugar de keyword argument.
+**Causa**: El parámetro `schema_name` se pasó como argumento posicional en lugar de keyword argument.
 
-**Contexto**: Todas las funciones de base de datos usan `schema_name` como parametro **keyword-only** (despues de `*` en la firma). Este es el error mas comun en el proyecto.
+**Contexto**: Todas las funciones de base de datos usan `schema_name` como parámetro **keyword-only** (después de `*` en la firma). Este es el error más común en el proyecto.
 
 **Ejemplo del error**:
 
@@ -18,7 +18,7 @@ result = execute_query("SELECT * FROM users", (user_id,), schema_name)
 result = execute_query("SELECT * FROM users", (user_id,), schema_name=schema_name)
 ```
 
-**Solucion**: Buscar todas las llamadas a funciones de BD y asegurar que `schema_name` se pasa con `=`:
+**Solución**: Buscar todas las llamadas a funciones de BD y asegurar que `schema_name` se pasa con `=`:
 
 ```python
 # Funciones principales que requieren keyword-only
@@ -30,21 +30,21 @@ check_user_exists(user_id, *, schema_name=schema_name)
 get_authenticated_user(user_id, *, schema_name=schema_name)
 ```
 
-Ver [Regla keyword-only](../arquitectura/multi-tenant.md#regla-keyword-only-schema_name) para mas detalles.
+Ver [Regla keyword-only](../arquitectura/multi-tenant.md#regla-keyword-only-schema_name) para más detalles.
 
 ---
 
 ## Error de CORS
 
-**Sintomas**: El navegador muestra `Access to fetch at 'http://localhost:8000/...' from origin 'http://localhost:3003' has been blocked by CORS policy`.
+**Síntomas**: El navegador muestra `Access to fetch at 'http://localhost:8000/...' from origin 'http://localhost:3003' has been blocked by CORS policy`.
 
-**Causa**: El origen del frontend no esta en la lista de origenes permitidos del Backend.
+**Causa**: El origen del frontend no está en la lista de orígenes permitidos del Backend.
 
-**Solucion**:
+**Solución**:
 
 ### Desarrollo local
 
-El Backend ya permite puertos 3000-3050 y 8000-8050 en localhost por defecto. Si usas un puerto fuera de ese rango, el CORS fallara.
+El Backend ya permite puertos 3000-3050 y 8000-8050 en localhost por defecto. Si usás un puerto fuera de ese rango, el CORS fallará.
 
 ```python
 # main.py - origenes permitidos automaticamente
@@ -56,7 +56,7 @@ allowed_origins = (
 )
 ```
 
-### Produccion (Docker)
+### Producción (Docker)
 
 Configurar la variable de entorno `FRONTEND_URL` con la URL del frontend:
 
@@ -68,13 +68,13 @@ FRONTEND_URL=https://tu-frontend.tu-dominio.com
 docker compose restart backend
 ```
 
-Ver [Middleware](../backend/middleware.md) para la configuracion completa de CORS.
+Ver [Middleware](../backend/middleware.md) para la configuración completa de CORS.
 
 ---
 
 ## JWT Expired / Invalid Token
 
-**Sintomas**: Error 401 `{"detail": "Token expired"}` o `{"detail": "Invalid token"}`.
+**Síntomas**: Error 401 `{"detail": "Token expired"}` o `{"detail": "Invalid token"}`.
 
 **Causas posibles**:
 
@@ -82,7 +82,7 @@ Ver [Middleware](../backend/middleware.md) para la configuracion completa de COR
 2. **Audience incorrecto**: El token fue emitido para un audience diferente
 3. **Domain incorrecto**: `AUTH0_DOMAIN` no coincide con el emisor del token
 
-**Solucion**:
+**Solución**:
 
 ### En desarrollo (evitar Auth0)
 
@@ -100,7 +100,7 @@ curl -H "X-User-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
      http://localhost:8000/users
 ```
 
-### En produccion
+### En producción
 
 ```bash
 # Verificar variables Auth0 en Docker
@@ -111,30 +111,30 @@ docker compose exec backend env | grep AUTH0
 # AUTH0_AUDIENCE=https://api.tu-dominio.com
 ```
 
-Si el token expira rapidamente, verificar la configuracion de token lifetime en Auth0 Dashboard > APIs > Settings.
+Si el token expira rápidamente, verificar la configuración de token lifetime en Auth0 Dashboard > APIs > Settings.
 
-Ver [Autenticacion](../backend/auth.md) para el flujo completo de Auth0.
+Ver [Autenticación](../backend/auth.md) para el flujo completo de Auth0.
 
 ---
 
 ## Cloudflare R2 Access Denied
 
-**Sintomas**: Error 403 `Access Denied` o 404 `NoSuchBucket` al subir o descargar PDFs.
+**Síntomas**: Error 403 `Access Denied` o 404 `NoSuchBucket` al subir o descargar PDFs.
 
 **Causas posibles**:
 
 1. Credenciales R2 incorrectas
 2. Bucket no existe
-3. El nombre del bucket no coincide con `settings` de la organizacion
+3. El nombre del bucket no coincide con `settings` de la organización
 
-**Diagnostico**:
+**Diagnóstico**:
 
 ```sql
 -- Verificar buckets configurados para el municipio
 SELECT bucket_oficial, bucket_tosign FROM "200_muni".settings;
 ```
 
-**Solucion**:
+**Solución**:
 
 ```bash
 # Verificar variables R2 en el Backend
@@ -150,7 +150,7 @@ docker compose exec backend env | grep CF_R2
 # CF_R2_SECRET_ACCESS_KEY=...
 ```
 
-Si el bucket no existe, crearlo en Cloudflare Dashboard. Los nombres de bucket estan en la tabla `settings` del schema.
+Si el bucket no existe, crearlo en Cloudflare Dashboard. Los nombres de bucket están en la tabla `settings` del schema.
 
 Ver [Cloudflare R2](../deploy/cloudflare-r2.md) y [Storage Service](../backend/services/storage-service.md).
 
@@ -158,11 +158,11 @@ Ver [Cloudflare R2](../deploy/cloudflare-r2.md) y [Storage Service](../backend/s
 
 ## Advisory Lock Timeout
 
-**Sintomas**: El proceso de firma se cuelga o tarda mucho. Posible deadlock en la numeracion de documentos.
+**Síntomas**: El proceso de firma se cuelga o tarda mucho. Posible deadlock en la numeración de documentos.
 
-**Causa**: El advisory lock `888888` esta bloqueado por otra transaccion que no libero el lock.
+**Causa**: El advisory lock `888888` está bloqueado por otra transacción que no libero el lock.
 
-**Diagnostico**:
+**Diagnóstico**:
 
 ```sql
 -- Ver locks activos
@@ -177,7 +177,7 @@ WHERE state != 'idle'
 ORDER BY query_start;
 ```
 
-**Solucion**:
+**Solución**:
 
 ```sql
 -- Opcion 1: Esperar a que la transaccion termine (recomendado)
@@ -191,23 +191,23 @@ SELECT pg_terminate_backend(PID_DE_LA_QUERY);
 ```
 
 !!! danger "No eliminar el advisory lock"
-    El advisory lock `888888` previene numeros oficiales duplicados. Nunca deshabilitar la logica de locking en `shared/numbering.py`.
+    El advisory lock `888888` previene números oficiales duplicados. Nunca deshabilitar la lógica de locking en `shared/numbering.py`.
 
-Ver [Numeracion](../database/numeracion.md) para entender el sistema de numeracion secuencial.
+Ver [Numeración](../database/numeracion.md) para entender el sistema de numeración secuencial.
 
 ---
 
 ## Schema Not Found
 
-**Sintomas**: Error `Schema "nombre_schema" does not exist` o `relation "tabla" does not exist`.
+**Síntomas**: Error `Schema "nombre_schema" does not exist` o `relation "tabla" does not exist`.
 
 **Causas posibles**:
 
 1. El schema no fue creado en la BD
-2. El `search_path` no se configuro correctamente
+2. El `search_path` no se configuró correctamente
 3. El nombre del schema tiene caracteres especiales sin comillas
 
-**Diagnostico**:
+**Diagnóstico**:
 
 ```sql
 -- Listar schemas existentes
@@ -223,9 +223,9 @@ WHERE table_schema = '200_muni';
 -- Debe retornar 33
 ```
 
-**Solucion**:
+**Solución**:
 
-Si el schema no existe, ejecutar el script de creacion:
+Si el schema no existe, ejecutar el script de creación:
 
 ```bash
 cd GDI-BD
@@ -233,7 +233,7 @@ python tools/create_municipio.py
 # O ejecutar 03-create-municipio.sql manualmente
 ```
 
-Si el schema existe pero las queries fallan, verificar que el `search_path` se esta configurando:
+Si el schema existe pero las queries fallan, verificar que el `search_path` se está configurando:
 
 ```python
 # El Backend hace esto automaticamente en cada request
@@ -242,7 +242,7 @@ cursor.execute(f'SET LOCAL search_path TO "{schema_name}", public')
 ```
 
 !!! info "Comillas dobles"
-    Los schemas que empiezan con numero (ej: `200_muni`) requieren comillas dobles en SQL: `"200_muni".users`. El Backend maneja esto automaticamente.
+    Los schemas que empiezan con número (ej: `200_muni`) requieren comillas dobles en SQL: `"200_muni".users`. El Backend maneja esto automáticamente.
 
 Ver [Multi-Tenant](../arquitectura/multi-tenant.md) y [Database](../backend/database.md).
 
@@ -250,11 +250,11 @@ Ver [Multi-Tenant](../arquitectura/multi-tenant.md) y [Database](../backend/data
 
 ## Docker Deploy Failed
 
-**Sintomas**: El deploy falla durante build o startup del contenedor.
+**Síntomas**: El deploy falla durante build o startup del contenedor.
 
 ### Build failed
 
-**Diagnostico**:
+**Diagnóstico**:
 
 ```bash
 docker compose build --no-cache <servicio>
@@ -262,16 +262,16 @@ docker compose build --no-cache <servicio>
 
 **Causas comunes**:
 
-| Error | Causa | Solucion |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| `ModuleNotFoundError` | Dependencia no esta en requirements.txt | `pip freeze > requirements.txt` |
-| `Python version` | Version incompatible | Verificar Dockerfile |
-| `Node version` | Version incompatible | Verificar `package.json` engines |
-| `Dockerfile error` | Dockerfile invalido | Verificar sintaxis |
+| `ModuleNotFoundError` | Dependencia no está en requirements.txt | `pip freeze > requirements.txt` |
+| `Python version` | Versión incompatible | Verificar Dockerfile |
+| `Node version` | Versión incompatible | Verificar `package.json` engines |
+| `Dockerfile error` | Dockerfile inválido | Verificar sintaxis |
 
 ### Startup crash
 
-**Diagnostico**:
+**Diagnóstico**:
 
 ```bash
 docker compose logs --tail 100 <servicio>
@@ -279,14 +279,14 @@ docker compose logs --tail 100 <servicio>
 
 **Causas comunes**:
 
-| Error | Causa | Solucion |
+| Error | Causa | Solución |
 |-------|-------|----------|
 | `PORT already in use` | Puerto hardcodeado | Usar `os.getenv("PORT")` |
 | `DATABASE_URL invalid` | Variable mal configurada | `docker compose exec <servicio> env` para verificar |
-| `Out of Memory` | Servicio consume mucha RAM | Aumentar limite en docker-compose.yml |
+| `Out of Memory` | Servicio consume mucha RAM | Aumentar límite en docker-compose.yml |
 | `Import error` | Dependencia faltante | Verificar requirements.txt |
 
-**Solucion general**:
+**Solución general**:
 
 ```bash
 # Ver variables de entorno
@@ -304,16 +304,16 @@ docker compose up -d --build <servicio>
 
 ## Frontend: Error "Failed to fetch" al llamar al Backend
 
-**Sintomas**: El frontend muestra error de red al intentar comunicarse con el Backend.
+**Síntomas**: El frontend muestra error de red al intentar comunicarse con el Backend.
 
 **Causas posibles**:
 
-1. Backend no esta corriendo
+1. Backend no está corriendo
 2. `NEXT_PUBLIC_API_URL` apunta a URL incorrecta
-3. Error de CORS (ver seccion dedicada)
-4. Certificado SSL invalido (produccion)
+3. Error de CORS (ver sección dedicada)
+4. Certificado SSL inválido (producción)
 
-**Solucion**:
+**Solución**:
 
 ```bash
 # Verificar que el Backend responde
@@ -328,7 +328,7 @@ NEXT_PUBLIC_API_URL=https://tu-backend.tu-dominio.com
 ```
 
 !!! tip "Prefijo NEXT_PUBLIC_"
-    Las variables de entorno en Next.js que empiezan con `NEXT_PUBLIC_` son accesibles desde el navegador. Las demas solo desde el servidor. `NEXT_PUBLIC_API_URL` debe ser la URL **publica** del Backend, no la interna de Docker.
+    Las variables de entorno en Next.js que empiezan con `NEXT_PUBLIC_` son accesibles desde el navegador. Las demás solo desde el servidor. `NEXT_PUBLIC_API_URL` debe ser la URL **pública** del Backend, no la interna de Docker.
 
 ---
 
@@ -336,11 +336,11 @@ NEXT_PUBLIC_API_URL=https://tu-backend.tu-dominio.com
 
 ### Error FULLPAGE
 
-**Sintomas**: Error 400 de Notary con mensaje "FULLPAGE" al firmar un documento.
+**Síntomas**: Error 400 de Notary con mensaje "FULLPAGE" al firmar un documento.
 
-**Causa**: No hay espacio suficiente en la ultima pagina del PDF para la firma visual.
+**Causa**: No hay espacio suficiente en la última página del PDF para la firma visual.
 
-**Solucion**: El Backend maneja esto automaticamente: detecta el error, agrega una pagina en blanco y reintenta la firma. Si persiste:
+**Solución**: El Backend maneja esto automáticamente: detecta el error, agrega una página en blanco y reintenta la firma. Si persiste:
 
 ```bash
 # Verificar logs del Backend
@@ -350,9 +350,9 @@ docker compose logs backend | grep FULLPAGE
 curl http://localhost:8001/health
 ```
 
-### Posicion de firma incorrecta
+### Posición de firma incorrecta
 
-**Causa**: El layout de firmas calcula posiciones automaticamente en 2 columnas. Si hay muchos firmantes, puede haber solapamiento.
+**Causa**: El layout de firmas calcula posiciones automáticamente en 2 columnas. Si hay muchos firmantes, puede haber solapamiento.
 
 **Referencia**: Ver [Layout de Firmas](../notary/layout-firmas.md) y [Firma Visual](../notary/firma-visual.md).
 
@@ -403,9 +403,9 @@ propósito: esas casillas no existen y cada rebote perjudica la reputación del 
 
 ---
 
-## Resumen Rapido
+## Resumen Rápido
 
-| Problema | Primera accion |
+| Problema | Primera acción |
 |----------|---------------|
 | TypeError schema_name | Agregar `=` en la llamada: `schema_name=schema_name` |
 | CORS | Verificar puerto o `FRONTEND_URL` |
@@ -415,7 +415,7 @@ propósito: esas casillas no existen y cada rebote perjudica la reputación del 
 | Schema not found | Verificar `information_schema.schemata` |
 | Deploy failed | `docker compose build --no-cache` o `docker compose logs` |
 | Frontend fetch error | Verificar `NEXT_PUBLIC_API_URL` y health del Backend |
-| Firma FULLPAGE | Se resuelve automaticamente (agrega pagina en blanco) |
+| Firma FULLPAGE | Se resuelve automáticamente (agrega página en blanco) |
 | `/health/db` da 404 | Llamarlo directo al contenedor, sin proxy |
 | Backend reiniciado sin base | Revisar la política de reinicio del contenedor |
 | No llega un mail de prueba | Las direcciones `k6-...` y los dominios `.example`/`.invalid`/`.test`/`.localhost` no reciben mail |

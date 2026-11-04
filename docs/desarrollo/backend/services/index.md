@@ -1,6 +1,6 @@
 # Capa de Servicios
 
-Toda la logica de negocio del backend reside en `services/`. Los endpoints son **thin controllers** que solo validan input y delegan a servicios.
+Toda la lógica de negocio del backend reside en `services/`. Los endpoints son **thin controllers** que solo validan input y delegan a servicios.
 
 ## Mapa de Servicios
 
@@ -72,9 +72,9 @@ graph TD
     Notary --> External2["GDI-Notary"]
 ```
 
-## Patron Comun
+## Patrón Común
 
-Todos los servicios siguen el mismo patron:
+Todos los servicios siguen el mismo patrón:
 
 ```python
 # services/documents/lifecycle/creation.py
@@ -107,8 +107,8 @@ def create_document(
     return {"success": True, "document_id": result['document_id']}
 ```
 
-!!! warning "Regla critica: schema_name"
-    **Todas** las funciones que acceden a BD usan `schema_name` como parametro keyword-only (con `*`). Nunca pasarlo posicional.
+!!! warning "Regla crítica: schema_name"
+    **Todas** las funciones que acceden a BD usan `schema_name` como parámetro keyword-only (con `*`). Nunca pasarlo posicional.
 
     ```python
     # CORRECTO

@@ -1,7 +1,7 @@
 # Endpoint /sign-pdf
 
 El endpoint principal de Notary. Firma documentos PDF con firma PAdES digital o visual,
-usando layout automatico de 2 columnas.
+usando layout automático de 2 columnas.
 
 ## Request
 
@@ -11,26 +11,26 @@ Content-Type: multipart/form-data
 X-API-Key: {api_key}
 ```
 
-### Parametros (Form Data)
+### Parámetros (Form Data)
 
-| Parametro | Tipo | Requerido | Descripcion |
+| Parámetro | Tipo | Requerido | Descripción |
 |-----------|------|-----------|-------------|
-| `pdf_file` | File | Si | PDF formato A4, max 64 MB |
-| `name` | string | Si | Nombre del firmante (1-100 chars) |
-| `seal` | string | Si | Cargo del firmante (1-50 chars) |
-| `department` | string | Si | Departamento (1-100 chars) |
-| `entity` | string | Si | Entidad (1-100 chars) |
-| `document_number` | string | No | Numero de documento para estampado (max 40 chars) |
+| `pdf_file` | File | Sí | PDF formato A4, max 64 MB |
+| `name` | string | Sí | Nombre del firmante (1-100 chars) |
+| `seal` | string | Sí | Cargo del firmante (1-50 chars) |
+| `department` | string | Sí | Departamento (1-100 chars) |
+| `entity` | string | Sí | Entidad (1-100 chars) |
+| `document_number` | string | No | Número de documento para estampado (max 40 chars) |
 | `city` | string | Condicional | Ciudad para estampado. Requerido si `document_number` presente |
 | `stamp_position` | string | No | `'first'` (default) o `'last'` |
-| `tenant_id` | string | No | ID del tenant (para logging; el certificado llega via `cert_file`) |
+| `tenant_id` | string | No | ID del tenant (para logging; el certificado llega vía `cert_file`) |
 | `use_pades` | string | No | `'true'` (default) o `'false'` |
 | `cert_file` | File | No | Archivo `.p12` del certificado (enviado por el Backend desde R2) |
 | `cert_password` | string | No | Password del `.p12` (enviado por el Backend) |
-| `expected_sha256` | string | No | Hash SHA-256 hex del PDF esperado. Si se envia, se verifica integridad antes de firmar |
+| `expected_sha256` | string | No | Hash SHA-256 hex del PDF esperado. Si se envía, se verifica integridad antes de firmar |
 
 !!! warning "Campos condicionales"
-    - `city` es **obligatorio** cuando se envia `document_number`
+    - `city` es **obligatorio** cuando se envía `document_number`
     - Para firma PAdES, el Backend debe enviar `cert_file` + `cert_password` (el certificado viene desde R2, no se busca localmente)
     - Si `expected_sha256` no coincide con el hash real del PDF recibido, se rechaza con `400 PDF_INTEGRITY_FAILED`
     - Si el PDF trae una firma de certificación (DocMDP), se rechaza con `422 PDF_CERTIFIED` antes de estampar o firmar. Ver [Validaciones](validaciones.md#control-de-certificacion-docmdp)
@@ -61,7 +61,7 @@ Notary rechaza con `401` un header que falta, que no coincide o que tiene **más
 
 ## Response
 
-**Exito (200):**
+**Éxito (200):**
 
 ```
 Content-Type: application/pdf
@@ -73,13 +73,13 @@ El body es el PDF firmado en bytes.
 
 **Header `X-Signature-Type`:**
 
-- `pades`: Se aplico firma PAdES criptografica
-- `visual`: Se aplico firma visual (sin componente criptografico)
+- `pades`: Se aplicó firma PAdES criptográfica
+- `visual`: Se aplicó firma visual (sin componente criptográfico)
 
 ### Nomenclatura del archivo
 
-- Si se envio `document_number`: el archivo se llama `{document_number}.pdf`
-- Si no se envio: se mantiene el nombre original del archivo subido
+- Si se envió `document_number`: el archivo se llama `{document_number}.pdf`
+- Si no se envió: se mantiene el nombre original del archivo subido
 
 ## Ejemplo con cURL
 
@@ -151,22 +151,22 @@ flowchart TD
     S --> T
 ```
 
-## Codigos de error
+## Códigos de error
 
-| Codigo | Error Code | Causa |
+| Código | Error Code | Causa |
 |--------|------------|-------|
 | 400 | `FILE_TOO_LARGE` | PDF excede 64 MB |
 | 400 | `INVALID_PDF_FILE` | No se puede leer el archivo |
 | 400 | `INVALID_PDF_FORMAT` | No comienza con `%PDF` |
 | 400 | `PDF_INTEGRITY_FAILED` | Hash SHA-256 del PDF no coincide con `expected_sha256` |
-| 400 | `INVALID_PARAMETERS` | Parametros de firma invalidos |
+| 400 | `INVALID_PARAMETERS` | Parámetros de firma inválidos |
 | 400 | `INVALID_STAMP_PARAMETERS` | `document_number` sin `city` |
 | 400 | `INVALID_STAMP_POSITION` | `stamp_position` no es `first` ni `last` |
 | 400 | `INVALID_TENANT_ID` | `tenant_id` con caracteres no permitidos |
 | 400 | `CERTIFICATE_NOT_PROVIDED` | No llego `cert_file` y `FALLBACK_TO_VISUAL=false` |
 | 400 | `CERTIFICATE_LOAD_ERROR` | Error al cargar certificado desde `cert_file` |
-| 400 | `LayoutError` | No se encontro `end-text` o pagina llena (`FULLPAGE`) |
-| 401 | `INVALID_API_KEY` | API Key invalida o faltante |
+| 400 | `LayoutError` | No se encontró `end-text` o página llena (`FULLPAGE`) |
+| 401 | `INVALID_API_KEY` | API Key inválida o faltante |
 | 401 | - | `X-Internal-Sign` faltante, inválido o con más de 60 s |
 | 413 | `REQUEST_BODY_TOO_LARGE` | El pedido entero pasa `MAX_REQUEST_BODY_SIZE_MB` (68 MB por defecto) |
 | 422 | `PDF_CERTIFIED` | El PDF trae firma de certificación (DocMDP) |
@@ -181,7 +181,7 @@ flowchart TD
 
 ### GET /health
 
-Health check sin autenticacion. Unico endpoint con IP publica en Fly.io.
+Health check sin autenticación. Único endpoint con IP pública en Fly.io.
 
 ```json
 {
@@ -197,7 +197,7 @@ Health check sin autenticacion. Unico endpoint con IP publica en Fly.io.
 
 ### POST /sign-pdf/verify
 
-Verifica las firmas PAdES de un PDF. Requiere API Key. Limite 50 MB.
+Verifica las firmas PAdES de un PDF. Requiere API Key. Límite 50 MB.
 
 ```json
 {
@@ -220,19 +220,19 @@ Si no hay firmas:
 
 ### POST /stamp-number
 
-Estampa numero/fecha en el PDF y devuelve el PDF estampado en base64 mas las
-coordenadas donde el cliente de firma (FirmadorGDI) debe insertar la firma criptografica.
+Estampa numero/fecha en el PDF y devuelve el PDF estampado en base64 más las
+coordenadas donde el cliente de firma (FirmadorGDI) debe insertar la firma criptográfica.
 Requiere API Key.
 
 Lleva el mismo control de certificación que `/sign-pdf`: un PDF certificado, ilegible o con
 contraseña de apertura recibe `422` y no se estampa.
 
-**Parametros (Form Data):**
+**Parámetros (Form Data):**
 
-| Parametro | Requerido | Descripcion |
+| Parámetro | Requerido | Descripción |
 |-----------|-----------|-------------|
-| `pdf_file` | Si | PDF a estampar |
-| `document_number` | No | Numero de documento. Si se omite, solo calcula posicion |
+| `pdf_file` | Sí | PDF a estampar |
+| `document_number` | No | Número de documento. Si se omite, solo calcula posición |
 | `city` | Condicional | Requerido si `document_number` presente |
 | `stamp_position` | No | `'first'` (default) o `'last'` |
 | `existing_count` | No | Override manual de firmas existentes (omitir para auto-deteccion) |
@@ -251,7 +251,7 @@ contraseña de apertura recibe `422` y no se estampa.
 
 ### GET /certificate/{tenant_id}
 
-Informacion de un certificado especifico. Requiere API Key.
+Información de un certificado específico. Requiere API Key.
 
 ```json
 {

@@ -1,13 +1,13 @@
 # Design System
 
-El design system de GDI-FRONTEND esta basado en shadcn/ui (variante New York) con colores dinamicos por tenant. La referencia visual esta disponible en `/design-system` en la aplicacion local.
+El design system de GDI-FRONTEND está basado en shadcn/ui (variante New York) con colores dinámicos por tenant. La referencia visual está disponible en `/design-system` en la aplicación local.
 
-## Referencia Rapida
+## Referencia Rápida
 
-| Recurso | Ubicacion |
+| Recurso | Ubicación |
 |---------|-----------|
 | Showcase visual | `http://localhost:3003/design-system` |
-| Codigo showcase | `src/pages/design-system/index.tsx` |
+| Código showcase | `src/pages/design-system/index.tsx` |
 | Componentes UI | `src/components/ui/` |
 | Utilidad cn() | `src/lib/utils.ts` |
 | Theme colores | `src/lib/theme.ts` |
@@ -19,13 +19,13 @@ El design system de GDI-FRONTEND esta basado en shadcn/ui (variante New York) co
 
 ## Colores
 
-### Color Primario (Dinamico por Tenant)
+### Color Primario (Dinámico por Tenant)
 
-El color primario cambia segun la organizacion (tenant) seleccionada. Se implementa mediante CSS variables que se sobreescriben dinamicamente con JavaScript.
+El color primario cambia según la organización (tenant) seleccionada. Se implementa mediante CSS variables que se sobreescriben dinámicamente con JavaScript.
 
 **Escala disponible en Tailwind**:
 
-| Token | Uso tipico |
+| Token | Uso típico |
 |-------|-----------|
 | `primary-50` | Background muy sutil |
 | `primary-100` | Background hover |
@@ -51,20 +51,20 @@ El color primario cambia segun la organizacion (tenant) seleccionada. Se impleme
 </div>
 ```
 
-**Implementacion tecnica**: Ver `src/lib/theme.ts` para la funcion `applyThemeColors()` que convierte HEX -> HSL -> escala de 10 niveles.
+**Implementación técnica**: Ver `src/lib/theme.ts` para la función `applyThemeColors()` que convierte HEX -> HSL -> escala de 10 niveles.
 
 ---
 
-### Colores Semanticos (Fijos)
+### Colores Semánticos (Fijos)
 
 Estos colores NO cambian por tenant. Se usan para estados universales.
 
 | Token | Valor | Uso |
 |-------|-------|-----|
-| `success` | `#10B981` | Operacion exitosa |
+| `success` | `#10B981` | Operación exitosa |
 | `warning` | `#F59E0B` | Advertencias |
 | `error` | `#EF4444` | Errores |
-| `info` | `#3B82F6` | Informacion |
+| `info` | `#3B82F6` | Información |
 
 ---
 
@@ -91,7 +91,7 @@ Variables HSL usadas por los componentes base de shadcn/ui:
 
 | Variable | Uso |
 |----------|-----|
-| `--background` | Fondo de la pagina |
+| `--background` | Fondo de la página |
 | `--foreground` | Texto principal |
 | `--card` | Fondo de cards |
 | `--popover` | Fondo de popovers |
@@ -106,11 +106,11 @@ Variables HSL usadas por los componentes base de shadcn/ui:
 
 ## Estados de Documento
 
-Los estados de documentos usan colores fijos (no dinamicos):
+Los estados de documentos usan colores fijos (no dinámicos):
 
 | Estado | Color Background | Clase CSS |
 |--------|-----------------|-----------|
-| En edicion | `#006CDB` (azul) | `bg-[#006CDB] text-white` |
+| En edición | `#006CDB` (azul) | `bg-[#006CDB] text-white` |
 | En proceso de firma | `#6F5AD8` (violeta) | `bg-[#6F5AD8] text-white` |
 | Firmar ahora | `#F9765D` (coral) | `bg-[#F9765D] text-white` |
 | Firmado | `#369D6D` (verde) | `bg-[#369D6D] text-white` |
@@ -119,7 +119,7 @@ Los estados de documentos usan colores fijos (no dinamicos):
 
 ## Badges de Sectores
 
-Los sectores se muestran con `SectorBadge`, un componente que acepta un color dinamico del API.
+Los sectores se muestran con `SectorBadge`, un componente que acepta un color dinámico del API.
 
 ### Con color del API (preferido)
 
@@ -145,7 +145,7 @@ Genera estilos inline:
 
 Usa `bg-neutral-100 border-neutral-400 text-neutral-600`.
 
-### Variantes estaticas (legacy)
+### Variantes estáticas (legacy)
 
 | Variante | Estilos |
 |----------|---------|
@@ -153,12 +153,12 @@ Usa `bg-neutral-100 border-neutral-400 text-neutral-600`.
 | `actuante` | `bg-sky-100 border-sky-400 text-sky-800` |
 | `default` | `bg-neutral-100 border-neutral-400 text-neutral-600` |
 
-!!! note "Preferir color dinamico"
-    Siempre usar la prop `color` con el valor del API. Las variantes estaticas son legacy y se deben evitar.
+!!! note "Preferir color dinámico"
+    Siempre usar la prop `color` con el valor del API. Las variantes estáticas son legacy y se deben evitar.
 
 ---
 
-## Iconografia
+## Iconografía
 
 Todos los iconos vienen de **Lucide React** (`lucide-react`).
 
@@ -171,11 +171,11 @@ import { FileText, Users, Search, ChevronDown } from 'lucide-react';
 !!! danger "Nunca usar"
     - Inline SVGs
     - Archivos `icons.tsx` custom
-    - Otras librerias de iconos
+    - Otras librerías de iconos
 
 ---
 
-## Tipografia
+## Tipografía
 
 **Fuente**: Montserrat (Google Fonts), cargada en `globals.css`.
 
@@ -191,9 +191,9 @@ Pesos usados: 400 (regular), 600 (semibold), 700 (bold).
 
 ## Patrones de Layout
 
-### Pagina con Sidebar
+### Página con Sidebar
 
-La mayoria de paginas usan un layout con menu lateral (`menuLateral.tsx`) y area de contenido:
+La mayoría de páginas usan un layout con menú lateral (`menuLateral.tsx`) y área de contenido:
 
 ```
 +---+------------------------------------------+
@@ -204,9 +204,9 @@ La mayoria de paginas usan un layout con menu lateral (`menuLateral.tsx`) y area
 +---+------------------------------------------+
 ```
 
-### Pagina con Panel Lateral
+### Página con Panel Lateral
 
-Paginas como creacion-documento y documentos-firma usan un split con panel lateral:
+Páginas como creacion-documento y documentos-firma usan un split con panel lateral:
 
 ```
 +---+------------------------+------------------+
@@ -219,7 +219,7 @@ Paginas como creacion-documento y documentos-firma usan un split con panel later
 
 ### Tabla con Filtros
 
-Paginas de listado (documentos, expedientes, notas) siguen:
+Páginas de listado (documentos, expedientes, notas) siguen:
 
 ```
 +---+------------------------------------------+
@@ -236,9 +236,9 @@ Paginas de listado (documentos, expedientes, notas) siguen:
 
 ---
 
-## Patron Combobox (Filtros)
+## Patrón Combobox (Filtros)
 
-Para filtros de busqueda con seleccion, se usa el patron Popover + Command (cmdk):
+Para filtros de búsqueda con selección, se usa el patrón Popover + Command (cmdk):
 
 ```tsx
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -283,4 +283,4 @@ import { cn } from "@/lib/utils";
 )} />
 ```
 
-`cn()` combina `clsx` (logica condicional) con `tailwind-merge` (resolucion de conflictos de clases).
+`cn()` combina `clsx` (lógica condicional) con `tailwind-merge` (resolución de conflictos de clases).

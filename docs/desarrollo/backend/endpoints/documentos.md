@@ -1,6 +1,6 @@
 # Endpoints de Documentos
 
-Endpoints para el ciclo de vida completo de documentos: creacion, edicion, preview, firma, rechazo y eliminacion.
+Endpoints para el ciclo de vida completo de documentos: creación, edición, preview, firma, rechazo y eliminación.
 
 ## Flujo de Vida de un Documento
 
@@ -103,7 +103,7 @@ Todos los campos son opcionales. Solo se actualizan los campos enviados.
 
 ### `POST /documents/{document_id}/preview-info`
 
-Obtiene informacion completa del documento para previsualizacion sin generar PDF.
+Obtiene información completa del documento para previsualización sin generar PDF.
 
 ### `POST /documents/{document_id}/preview-download`
 
@@ -164,23 +164,23 @@ Cambia el estado del documento de `draft` a `sent_to_sign`.
 
 ### `POST /documents/{document_id}/super-sign`
 
-Endpoint unificado que detecta automaticamente si el usuario es firmante comun o numerador.
+Endpoint unificado que detecta automáticamente si el usuario es firmante común o numerador.
 
-**Firmante comun:**
+**Firmante común:**
 
-1. Estampa firma digital via GDI-Notary
+1. Estampa firma digital vía GDI-Notary
 2. Actualiza estado del firmante a `signed`
 3. Documento sigue en `sent_to_sign`
 
-**Numerador (ultimo firmante):**
+**Numerador (último firmante):**
 
 1. Valida que todos los firmantes comunes hayan firmado
-2. Genera numero oficial (ej: `INF-2025-0001234-SMG-ADGEN`)
-3. Estampa firma y numera via GDI-Notary
+2. Genera número oficial (ej: `INF-2025-0001234-SMG-ADGEN`)
+3. Estampa firma y numera vía GDI-Notary
 4. Mueve PDF a bucket oficial en R2
 5. Cambia estado a `signed`
 
-**Response (firmante comun):**
+**Response (firmante común):**
 
 ```json
 {
@@ -285,7 +285,7 @@ Soft delete. Solo el creador puede eliminar documentos en estado `draft` o `reje
 
 Obtiene detalles de un documento en cualquier estado, delegando al servicio apropiado.
 
-**Response:** `UnifiedDocumentDetailsResponse` con `state_category` ("editing" o "signing") y detalles especificos.
+**Response:** `UnifiedDocumentDetailsResponse` con `state_category` ("editing" o "signing") y detalles específicos.
 
 Campos de certificado de origen:
 
@@ -305,9 +305,9 @@ oficial comparte el id con su borrador, así que el campo vale también para doc
 
 ### `GET /api/v1/documents/search-official/{doc_number}`
 
-Busca documento oficial por numero exacto. Sin restricciones de usuario.
+Busca documento oficial por número exacto. Sin restricciones de usuario.
 
-**Formato del numero:** `TIPO-AÑO-NUMERO-CIUDAD-SECTOR` (ej: `INF-2025-0001234-SMG-ADGEN`)
+**Formato del número:** `TIPO-AÑO-NUMERO-CIUDAD-SECTOR` (ej: `INF-2025-0001234-SMG-ADGEN`)
 
 **Response:**
 

@@ -97,9 +97,9 @@ graph LR
     Servicios --> Datos
 ```
 
-## Puertos y Tecnologias
+## Puertos y Tecnologías
 
-| Servicio | Puerto local | Puerto Fly.io | Tecnologia | Workers | Protocolo |
+| Servicio | Puerto local | Puerto Fly.io | Tecnología | Workers | Protocolo |
 |----------|-------------|---------------|------------|---------|-----------|
 | GDI-FRONTEND | 3003 | N/A (Vercel) | Next.js 15 (Pages Router) | Node.js | HTTP |
 | GDI-BackOffice-Front | 3013 | N/A (Vercel) | Next.js 15 (Pages Router) | Node.js | HTTP |
@@ -112,7 +112,7 @@ graph LR
 | PostgreSQL | 5432 | 5432 (solo tunnel) | PostgreSQL 17 + pgvector | Fly.io managed | TCP |
 
 !!! note "Puertos en Fly.io"
-    En Fly.io todos los servicios escuchan en el puerto `:8080` interno (configurado en `fly.*.toml` con `internal_port = 8080`). Los puertos locales (8000, 8001, etc.) son solo para desarrollo local. PDFComposer y Notary en PRD no tienen IP publica — solo accesibles via `*.internal:8080`.
+    En Fly.io todos los servicios escuchan en el puerto `:8080` interno (configurado en `fly.*.toml` con `internal_port = 8080`). Los puertos locales (8000, 8001, etc.) son solo para desarrollo local. PDFComposer y Notary en PRD no tienen IP pública — solo accesibles vía `*.internal:8080`.
 
 ## Dependencias entre Servicios
 
@@ -141,7 +141,7 @@ graph TD
 ```
 
 !!! note "MCP Server integrado"
-    El MCP Server (puerto 8005) esta integrado dentro del repositorio GDI-Backend en la carpeta `api_gateway/`. No es un servicio separado, sino un modulo del Backend que escucha en un puerto adicional.
+    El MCP Server (puerto 8005) está integrado dentro del repositorio GDI-Backend en la carpeta `api_gateway/`. No es un servicio separado, sino un módulo del Backend que escucha en un puerto adicional.
 
 ---
 
@@ -151,35 +151,35 @@ Medidas de seguridad implementadas transversalmente en los servicios.
 
 ### XSS Prevention
 
-| Capa | Libreria | Uso |
+| Capa | Librería | Uso |
 |------|----------|-----|
-| Backend (Python) | **nh3** | Sanitizacion de HTML en `save_document` y contenido generado por usuarios |
-| Frontend (JS) | **DOMPurify** | Sanitizacion de HTML antes de renderizar en el navegador |
+| Backend (Python) | **nh3** | Sanitización de HTML en `save_document` y contenido generado por usuarios |
+| Frontend (JS) | **DOMPurify** | Sanitización de HTML antes de renderizar en el navegador |
 
-El backend sanitiza todo contenido HTML antes de persistirlo en la base de datos, eliminando tags y atributos peligrosos (scripts, event handlers, iframes, etc.). El frontend aplica una segunda capa de sanitizacion al renderizar contenido que proviene de la API.
+El backend sanitiza todo contenido HTML antes de persistirlo en la base de datos, eliminando tags y atributos peligrosos (scripts, event handlers, iframes, etc.). El frontend aplica una segunda capa de sanitización al renderizar contenido que proviene de la API.
 
 ### Rate Limiting
 
 El Gateway implementa rate limiting dual:
 
-| Mecanismo | Tipo | Limite | Ventana |
+| Mecanismo | Tipo | Límite | Ventana |
 |-----------|------|--------|---------|
 | **In-memory** | Sliding window por IP | 60 requests | 1 minuto |
 | **Redis** | Distribuido (Upstash) | Configurable | Configurable |
 
 Implementado en `api_gateway/rate_limiter.py`. Usa `InMemoryRateLimiter` con sliding window. La IP del cliente se extrae considerando proxies de Fly.io (`fly-client-ip`, `x-forwarded-for`).
 
-Cuando se excede el limite, el servidor responde con `429 Too Many Requests` e incluye el header `Retry-After` con los segundos de espera.
+Cuando se excede el límite, el servidor responde con `429 Too Many Requests` e incluye el header `Retry-After` con los segundos de espera.
 
 ### Permission Enforcement en MCP Tools
 
-Las tools MCP verifican permisos del usuario autenticado antes de ejecutar cualquier operacion. El `MCPContext` incluye `user_id` y `schema_name`, que se propagan a los servicios de negocio para validar acceso a nivel de sector.
+Las tools MCP verifican permisos del usuario autenticado antes de ejecutar cualquier operación. El `MCPContext` incluye `user_id` y `schema_name`, que se propagan a los servicios de negocio para validar acceso a nivel de sector.
 
-### Sanitizacion de Datos Sensibles
+### Sanitización de Datos Sensibles
 
-| Funcion | Ubicacion | Proposito |
+| Función | Ubicación | Propósito |
 |---------|-----------|-----------|
 | `strip_storage_urls` | `api_gateway/tools/_sanitize.py` | Remueve URLs de storage (R2) de las respuestas MCP |
-| `search_users` | Tools MCP | Reduce datos privados en resultados de busqueda de usuarios |
+| `search_users` | Tools MCP | Reduce datos privados en resultados de búsqueda de usuarios |
 
-Las respuestas del Gateway nunca exponen URLs directas de Cloudflare R2 (`pdf_url`, `signed_pdf_url`). Estos campos se eliminan recursivamente antes de devolver datos al cliente MCP (GDI-522: `signed_pdf_url` dejo de existir en el REST tambien — queda la key en `_STORAGE_URL_KEYS` como defensa barata).
+Las respuestas del Gateway nunca exponen URLs directas de Cloudflare R2 (`pdf_url`, `signed_pdf_url`). Estos campos se eliminan recursivamente antes de devolver datos al cliente MCP (GDI-522: `signed_pdf_url` dejo de existir en el REST también — queda la key en `_STORAGE_URL_KEYS` como defensa barata).

@@ -1,19 +1,19 @@
 # Memos
 
-Comunicacion privada persona a persona. 6 endpoints bajo el prefijo `/memos`.
+Comunicación privada persona a persona. 6 endpoints bajo el prefijo `/memos`.
 
 ---
 
 ## Endpoints
 
-| # | Metodo | Ruta | Descripcion | Auth |
+| # | Método | Ruta | Descripción | Auth |
 |---|--------|------|-------------|------|
 | 1 | GET | `/memos/received` | Memos recibidos | Bearer |
 | 2 | GET | `/memos/sent` | Memos enviados | Bearer |
 | 3 | GET | `/memos/archived` | Memos archivados | Bearer |
 | 4 | GET | `/memos/{document_id}` | Detalle de un memo | Bearer |
 | 5 | PATCH | `/memos/{document_id}/archive` | Archivar/desarchivar | Bearer |
-| 6 | GET | `/memos/unread-count` | Contador de no leidos | Bearer |
+| 6 | GET | `/memos/unread-count` | Contador de no leídos | Bearer |
 
 ---
 
@@ -21,13 +21,13 @@ Comunicacion privada persona a persona. 6 endpoints bajo el prefijo `/memos`.
 
 Memos recibidos por el usuario autenticado (no archivados).
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Pagina |
-| `page_size` | int | 20 | Items por pagina (max 100) |
-| `search` | string | - | Busca en numero oficial, asunto, contenido |
+| `page` | int | 1 | Página |
+| `page_size` | int | 20 | Ítems por página (max 100) |
+| `search` | string | - | Busca en número oficial, asunto, contenido |
 | `date_filter` | string | - | Filtro predefinido: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
 | `date_from` | string | - | Fecha desde (YYYY-MM-DD) |
 | `date_to` | string | - | Fecha hasta (YYYY-MM-DD) |
@@ -69,7 +69,7 @@ Memos recibidos por el usuario autenticado (no archivados).
 
 Memos enviados por el usuario autenticado.
 
-**Parametros query:** Identicos a `/memos/received`.
+**Parámetros query:** Idénticos a `/memos/received`.
 
 **Response `200 OK`:**
 
@@ -105,7 +105,7 @@ Memos enviados por el usuario autenticado.
 
 Memos archivados por el usuario autenticado.
 
-**Parametros query:** `page`, `page_size`, `search`.
+**Parámetros query:** `page`, `page_size`, `search`.
 
 **Response:** Misma estructura que `/memos/received`.
 
@@ -165,7 +165,7 @@ Detalle completo de un memo. Si el usuario es destinatario y es su primera apert
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `403` | No sos remitente ni destinatario |
 | `404` | Memo no encontrado |
@@ -194,7 +194,7 @@ Archiva o desarchiva un memo. Solo disponible para destinatarios (no para el rem
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `403` | El remitente no puede archivar sus propios memos |
 | `404` | Memo no encontrado o no sos destinatario |
@@ -203,7 +203,7 @@ Archiva o desarchiva un memo. Solo disponible para destinatarios (no para el rem
 
 ## GET /memos/unread-count
 
-Cantidad de memos no leidos (para badge en menu lateral).
+Cantidad de memos no leídos (para badge en menú lateral).
 
 **Response `200 OK`:**
 
@@ -215,9 +215,9 @@ Cantidad de memos no leidos (para badge en menu lateral).
 
 ## Servicios
 
-Los servicios de memos estan en `services/memos/`:
+Los servicios de memos están en `services/memos/`:
 
-| Modulo | Responsabilidad |
+| Módulo | Responsabilidad |
 |--------|-----------------|
 | `validation.py` | Validar tipo MEMO, validar recipients, deduplicar |
 | `save_recipients.py` | INSERT/DELETE en `memo_recipients`, snapshot de sectores |
@@ -226,7 +226,7 @@ Los servicios de memos estan en `services/memos/`:
 | `archiving.py` | Toggle is_archived + archived_at |
 | `tracking.py` | Registrar opened_at, obtener detalle |
 | `header_builder.py` | Generar HTML de destinatarios para inyectar en PDF |
-| `unread.py` | COUNT de memos no leidos |
+| `unread.py` | COUNT de memos no leídos |
 
 ---
 
@@ -234,22 +234,22 @@ Los servicios de memos estan en `services/memos/`:
 
 **`memo_recipients`** (por tenant schema):
 
-| Columna | Tipo | Descripcion |
+| Columna | Tipo | Descripción |
 |---------|------|-------------|
 | `id` | UUID | PK |
 | `document_id` | UUID | FK a `document_draft.id` |
 | `recipient_user_id` | UUID | FK a `users.id` (destinatario) |
 | `sender_user_id` | UUID | FK a `users.id` (remitente) |
 | `recipient_type` | VARCHAR(3) | `TO`, `CC` o `BCC` |
-| `recipient_sector_id` | UUID | Snapshot del sector del destinatario al momento del envio |
-| `sender_sector_id` | UUID | Snapshot del sector del remitente al momento del envio |
+| `recipient_sector_id` | UUID | Snapshot del sector del destinatario al momento del envío |
+| `sender_sector_id` | UUID | Snapshot del sector del remitente al momento del envío |
 | `is_archived` | BOOLEAN | `false` = visible, `true` = archivado |
-| `archived_at` | TIMESTAMPTZ | Cuando se archivo |
-| `opened_at` | TIMESTAMPTZ | Cuando se abrio por primera vez (`NULL` = no leido) |
-| `created_at` | TIMESTAMPTZ | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | Fecha de actualizacion |
+| `archived_at` | TIMESTAMPTZ | Cuando se archivó |
+| `opened_at` | TIMESTAMPTZ | Cuando se abrió por primera vez (`NULL` = no leído) |
+| `created_at` | TIMESTAMPTZ | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | Fecha de actualización |
 
-**Indices:**
+**Índices:**
 
 - `idx_memo_recipients_document` — por document_id
 - `idx_memo_recipients_sender` — por sender_user_id

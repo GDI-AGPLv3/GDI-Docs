@@ -1,10 +1,10 @@
 # Cases Service
 
-Servicios de expedientes: creacion, transferencia, asignacion, caratulas CAEX y pases PV.
+Servicios de expedientes: creación, transferencia, asignación, carátulas CAEX y pases PV.
 
-**Ubicacion:** `services/cases/`
+**Ubicación:** `services/cases/`
 
-## Modulos
+## Módulos
 
 ```
 cases/
@@ -25,7 +25,7 @@ cases/
 
 ---
 
-## Creacion de Expedientes
+## Creación de Expedientes
 
 ### Flujo Completo
 
@@ -53,7 +53,7 @@ POST /api/v1/cases/
 
 ### `create_case()` (core.py)
 
-Funcion base **sincrona** para uso dentro de transacciones existentes.
+Función base **sincrona** para uso dentro de transacciones existentes.
 
 ```python
 def create_case(
@@ -69,7 +69,7 @@ def create_case(
 ) -> Dict[str, Any]:
 ```
 
-**Generacion de numero:**
+**Generación de número:**
 
 ```
 EE-{AÑO}-{SECUENCIA:05d}-{MUNICIPIO}-{DEPARTAMENTO}
@@ -78,7 +78,7 @@ Ejemplo: EE-2025-00001-SMG-ADGEN
 
 ### `create_case_cover()` (cover_creator.py)
 
-Crea la caratula CAEX automatica al crear un expediente.
+Crea la carátula CAEX automática al crear un expediente.
 
 ```python
 async def create_case_cover(
@@ -98,9 +98,9 @@ async def create_case_cover(
 **Pasos:**
 
 1. Crear documento CAEX en draft (`create_document`)
-2. Generar numero oficial con advisory lock
-3. Llamar a PDFComposer `/create-case/` para generar PDF de caratula
-4. Firmar PDF con Notary (incluye numero oficial y ciudad)
+2. Generar número oficial con advisory lock
+3. Llamar a PDFComposer `/create-case/` para generar PDF de carátula
+4. Firmar PDF con Notary (incluye número oficial y ciudad)
 5. Subir PDF firmado a R2 bucket oficial
 6. INSERT en `official_documents`
 7. Vincular documento al expediente (`case_documents`)
@@ -131,11 +131,11 @@ Transfiere propiedad de un expediente a otro sector.
 |------|---------------------|--------|
 | Transfer | `true` | Cambia sector propietario |
 | Assign | `false` | Asigna tarea sin cambiar propietario |
-| Close-assign | N/A | Cierra una asignacion activa |
+| Close-assign | N/A | Cierra una asignación activa |
 
-### Pases PV Automaticos
+### Pases PV Automáticos
 
-Si `create_official_doc = true`, se genera un documento PV (Pase de Vista) automatico usando `transfer_document_creator.py`:
+Si `create_official_doc = true`, se genera un documento PV (Pase de Vista) automático usando `transfer_document_creator.py`:
 
 ```
 transfer_case(create_official_doc=true)
@@ -159,10 +159,10 @@ transfer_case(create_official_doc=true)
 
 Un usuario puede ver un expediente si:
 
-| Condicion | Motivo (`access_reason`) |
+| Condición | Motivo (`access_reason`) |
 |-----------|------------------------|
 | Su sector es el propietario actual | `ADMINSECTOR` |
-| Su sector tiene una asignacion activa | `ASSIGNED` |
+| Su sector tiene una asignación activa | `ASSIGNED` |
 | Su sector fue propietario previamente | `PREVIOUS_OWNER` |
 | El usuario es el creador | `CREATOR` |
 
@@ -197,10 +197,10 @@ def create_movement(
 
 **Tipos de movimiento:**
 
-| Tipo | Descripcion |
+| Tipo | Descripción |
 |------|-------------|
 | `creation` | Expediente creado |
 | `transfer` | Transferencia de propiedad |
-| `assign` | Asignacion de tarea |
-| `close_assign` | Cierre de asignacion |
-| `document_proposal` | Propuesta de vinculacion de documento |
+| `assign` | Asignación de tarea |
+| `close_assign` | Cierre de asignación |
+| `document_proposal` | Propuesta de vinculación de documento |

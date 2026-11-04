@@ -1,10 +1,10 @@
 # Types
 
-Todas las interfaces TypeScript estan en `src/types/`, agrupadas por dominio. Son la fuente de verdad para los contratos de datos entre componentes, hooks y API routes.
+Todas las interfaces TypeScript están en `src/types/`, agrupadas por dominio. Son la fuente de verdad para los contratos de datos entre componentes, hooks y API routes.
 
 ## Archivos de Tipos
 
-| Archivo | Dominio | Descripcion |
+| Archivo | Dominio | Descripción |
 |---------|---------|-------------|
 | `cases.ts` | Expedientes | CaseItem, Expediente, CaseDetail, CaseMovement |
 | `notes.ts` | Notas | NoteReceived, NoteSent, NoteDetail, NoteArchived |
@@ -13,7 +13,7 @@ Todas las interfaces TypeScript estan en `src/types/`, agrupadas por dominio. So
 | `chat.ts` | Chat IA | ChatMessage, ChatResponse, SuggestedAction |
 | `documentTypes.ts` | Tipos Doc | DocumentType, SectorRestriction |
 | `preview.ts` | Preview | PreviewDocumentInfo, Signer, SignatureDetails |
-| `search.ts` | Busqueda | UnifiedDocumentResult, UnifiedExpedienteResult |
+| `search.ts` | Búsqueda | UnifiedDocumentResult, UnifiedExpedienteResult |
 | `tenant.ts` | Multi-Tenant | TenantAccess, TenantProfile, OnboardingResponse |
 | `unifiedDocument.ts` | Doc Unificado | EditingDocumentDetails, SigningDocumentDetails |
 | `quill.d.ts` | Editor | Declaraciones de tipos para React Quill |
@@ -24,7 +24,7 @@ Todas las interfaces TypeScript estan en `src/types/`, agrupadas por dominio. So
 
 ### CaseItem
 
-Representacion de un expediente como viene de la API.
+Representación de un expediente como viene de la API.
 
 ```typescript
 interface CaseItem {
@@ -204,7 +204,7 @@ interface NoteReadStatus {
 
 ## Nota - Destinatarios (nota.ts)
 
-Tipos especificos para documentos tipo NOTA con destinatarios por sector.
+Tipos específicos para documentos tipo NOTA con destinatarios por sector.
 
 ```typescript
 interface NotaRecipients {
@@ -219,7 +219,7 @@ Incluye helpers:
 - `hasRequiredRecipients(recipients)` - Verifica que hay al menos un TO
 - `flattenRecipients(recipients)` - Convierte a array plano
 - `groupRecipientsByType(recipients)` - Agrupa por tipo
-- `EMPTY_RECIPIENTS` - Estado inicial vacio
+- `EMPTY_RECIPIENTS` - Estado inicial vacío
 
 ---
 
@@ -335,7 +335,7 @@ interface TenantProfile {
 
 ## Documento Unificado (unifiedDocument.ts)
 
-Discriminated union que representa un documento en estado de edicion o firma.
+Discriminated unión que representa un documento en estado de edición o firma.
 
 ```typescript
 type UnifiedDocumentResponse = EditingDocumentDetails | SigningDocumentDetails;
@@ -377,7 +377,7 @@ function getDocumentRoute(stateCategory: StateCategory): string;
 
 ---
 
-## Busqueda (search.ts)
+## Búsqueda (search.ts)
 
 ```typescript
 interface UnifiedSearchResponse {

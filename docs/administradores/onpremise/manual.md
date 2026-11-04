@@ -585,7 +585,7 @@ watch -n 5 "docker inspect --format '{{.State.Health.Status}} reinicios-de-docke
 **CHECK:** a los ~100 s pasa a `unhealthy`, en los 10 s siguientes `gdi logs --tail=5 autoheal` dice
 `found to be unhealthy - Restarting container`, y a los pocos segundos vuelve a `healthy` y a
 contestar. Si en 3 minutos no se reinició, ver [14](#14-problemas) («autoheal no reinicia»). No hace
-falta `docker unpause`; si el contenedor quedara en pausa después del reinicio, `docker unpause "$C"`.
+falta `docker unpause`; si el contenedor quedará en pausa después del reinicio, `docker unpause "$C"`.
 
 ### 7.2. Recursos por contenedor (CPU y memoria)
 

@@ -1,11 +1,11 @@
-# Sistema y Catalogos
+# Sistema y Catálogos
 
-**7 endpoints** de datos maestros y catalogos del sistema.
+**7 endpoints** de datos maestros y catálogos del sistema.
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
 !!! info "Datos de referencia"
-    Estos endpoints devuelven datos maestros que cambian con poca frecuencia. Se recomienda cachear las respuestas localmente y refrescar periodicamente en lugar de consultar en cada operacion.
+    Estos endpoints devuelven datos maestros que cambian con poca frecuencia. Se recomienda cachear las respuestas localmente y refrescar periódicamente en lugar de consultar en cada operación.
 
 ---
 
@@ -66,7 +66,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/document-types" \
 GET /api/v1/system/document-states
 ```
 
-Devuelve el catalogo de estados posibles para documentos.
+Devuelve el catálogo de estados posibles para documentos.
 
 **Ejemplo:**
 
@@ -193,7 +193,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
 ```
 
 !!! tip "Uso al crear expedientes"
-    El campo `case_template_id` es requerido al crear un expediente con `POST /api/v1/cases/`. Consultar este endpoint para obtener los IDs validos.
+    El campo `case_template_id` es requerido al crear un expediente con `POST /api/v1/cases/`. Consultar este endpoint para obtener los IDs válidos.
 
 ---
 
@@ -248,12 +248,12 @@ GET /api/v1/system/users/search
 
 Busca usuarios por nombre o email. Pensado para funciones de autocompletado en interfaces.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Requerido | Default | Descripcion |
+| Parámetro | Tipo | Requerido | Default | Descripción |
 |-----------|------|-----------|---------|-------------|
-| `q` | string | Si | - | Texto de busqueda (minimo 2 caracteres) |
-| `limit` | int | No | `10` | Cantidad maxima de resultados |
+| `q` | string | Sí | - | Texto de búsqueda (mínimo 2 caracteres) |
+| `limit` | int | No | `10` | Cantidad máxima de resultados |
 
 **Ejemplo:**
 
@@ -280,26 +280,26 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/users/search?q=pere&l
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El parametro `q` es requerido y debe tener al menos 2 caracteres |
+| `400` | El parámetro `q` es requerido y debe tener al menos 2 caracteres |
 
-!!! warning "Minimo 2 caracteres"
-    La busqueda requiere al menos 2 caracteres en el parametro `q`. Consultas con un solo caracter devolverian demasiados resultados y seran rechazadas.
+!!! warning "Mínimo 2 caracteres"
+    La búsqueda requiere al menos 2 caracteres en el parámetro `q`. Consultas con un solo carácter devolverían demasiados resultados y serán rechazadas.
 
 ---
 
-### Informacion de usuario
+### Información de usuario
 
 ```
 GET /api/v1/system/users/{user_id}
 ```
 
-Devuelve la informacion detallada de un usuario especifico.
+Devuelve la información detallada de un usuario específico.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `user_id` | UUID | Identificador del usuario |
 
@@ -331,6 +331,6 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/users/550e8400-e29b-4
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Usuario no encontrado |

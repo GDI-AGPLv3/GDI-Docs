@@ -151,7 +151,7 @@ Dos casos más:
   detectar. Si encuentra certificación, sigue como certificado (y la validación estricta
   decide). Si encuentra alguna firma, rechaza con `IMPORT_SIGNATURES_UNREADABLE`. Si no
   encuentra nada, reescribe como un PDF sin firmas.
-- **`/Perms/DocMDP` sin ninguna firma.** Reescribe el PDF y borra `/Perms`. Si no lo borrara,
+- **`/Perms/DocMDP` sin ninguna firma.** Reescribe el PDF y borra `/Perms`. Si no lo borrará,
   Notary no podría firmarlo nunca.
 
 ## /embed-files/: adjuntos en un importado

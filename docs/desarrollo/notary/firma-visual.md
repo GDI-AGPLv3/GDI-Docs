@@ -1,13 +1,13 @@
 # Firma Visual
 
-El modulo `app/signature_inserter.py` implementa la firma visual de documentos PDF
+El módulo `app/signature_inserter.py` implementa la firma visual de documentos PDF
 usando **ReportLab** para generar el overlay y **pypdf** (>=4) para combinarlo con el PDF original.
 
 !!! info "Uso actual"
     La firma visual se usa como fallback en ambiente `test` cuando no hay
-    certificado disponible. En produccion, se usa la firma combinada PAdES + visual.
+    certificado disponible. En producción, se usa la firma combinada PAdES + visual.
 
-## Diseno de la firma
+## Diseño de la firma
 
 ```
 +-------------------------------------------+
@@ -21,12 +21,12 @@ usando **ReportLab** para generar el overlay y **pypdf** (>=4) para combinarlo c
   200 pts ancho x 80 pts alto
 ```
 
-- Rectangulo invisible (borde blanco)
+- Rectángulo invisible (borde blanco)
 - Nombre en negrita (Helvetica-Bold 10pt)
 - Cargo, departamento, entidad en regular (Helvetica 10pt)
 - Footer con identificador y fecha UTC (Helvetica 7pt)
 
-## Funcion principal: sign_pdf_document
+## Función principal: sign_pdf_document
 
 ```python
 def sign_pdf_document(
@@ -37,9 +37,9 @@ def sign_pdf_document(
 ) -> bytes:
 ```
 
-**Parametros requeridos en `signature_params`:**
+**Parámetros requeridos en `signature_params`:**
 
-| Clave | Descripcion |
+| Clave | Descripción |
 |-------|-------------|
 | `name` | Nombre del firmante |
 | `seal` | Cargo o sello |
@@ -48,10 +48,10 @@ def sign_pdf_document(
 
 ### Proceso
 
-1. Validar que todos los parametros requeridos esten presentes
+1. Validar que todos los parámetros requeridos estén presentes
 2. Leer el PDF original con `PdfReader`
 3. Crear overlay con la firma visual
-4. Combinar overlay con la **ultima pagina** del PDF
+4. Combinar overlay con la **última página** del PDF
 5. Retornar el PDF resultante
 
 ```python
@@ -62,7 +62,7 @@ for page_num, page in enumerate(pdf_reader.pages):
     pdf_writer.add_page(page)
 ```
 
-## Creacion del overlay
+## Creación del overlay
 
 ```python
 def create_signature_overlay(signature_params: Dict, x: float, y: float):
@@ -107,16 +107,16 @@ def create_signature_overlay(signature_params: Dict, x: float, y: float):
 
 | Aspecto | Firma Visual | Firma PAdES |
 |---------|-------------|-------------|
-| Criptografia | No | Si (SHA256 + certificado) |
-| Verificable en Adobe | No | Si (clic en la firma) |
-| Timestamp | Solo visual | TSA criptografico (con reintentos + circuit breaker) |
+| Criptografía | No | Sí (SHA256 + certificado) |
+| Verificable en Adobe | No | Sí (clic en la firma) |
+| Timestamp | Solo visual | TSA criptográfico (con reintentos + circuit breaker) |
 | Footer | "Digitally Signed by TEST SERVER" | Sin footer (datos en metadatos) |
 | Nombre | Normal | MAYUSCULAS |
-| Fecha visible | Si (en footer) | No (en metadatos) |
-| Libreria | ReportLab + pypdf | pyHanko |
+| Fecha visible | Sí (en footer) | No (en metadatos) |
+| Librería | ReportLab + pypdf | pyHanko |
 
 ## Excepciones
 
-| Excepcion | Causa |
+| Excepción | Causa |
 |-----------|-------|
-| `SignatureError` | Parametro faltante o error al procesar PDF |
+| `SignatureError` | Parámetro faltante o error al procesar PDF |

@@ -1,5 +1,5 @@
 site_name: GDI Docs
-site_description: Documentacion unificada del Sistema de Gestion Documental Inteligente para gobiernos LATAM
+site_description: Documentación unificada del Sistema de Gestión Documental Inteligente para gobiernos LATAM
 site_author: GDI Latam
 site_url: https://docs.gdilatam.com/
 
@@ -97,7 +97,7 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: true
-      title: En esta pagina
+      title: En esta página
 
 extra:
   social:
@@ -121,7 +121,7 @@ nav:
       - usuarios/index.md
       - Inicio:
           - usuarios/inicio/index.md
-      - Catalogos:
+      - Catálogos:
           - usuarios/catalogos/index.md
           - Tipos de Documento: usuarios/catalogos/tipos-de-documento.md
           - Tipos de Expediente: usuarios/catalogos/tipos-de-expediente.md
@@ -146,8 +146,8 @@ nav:
       - Legajos:
           - usuarios/legajos/index.md
           - Crear y Gestionar: usuarios/legajos/crear-legajo.md
-          - Verificacion: usuarios/legajos/verificacion.md
-          - Relaciones y Vinculos: usuarios/legajos/relaciones.md
+          - Verificación: usuarios/legajos/verificacion.md
+          - Relaciones y Vínculos: usuarios/legajos/relaciones.md
       - Notas:
           - usuarios/notas/index.md
           - Nota Enviada: usuarios/notas/nota-enviada.md
@@ -156,14 +156,14 @@ nav:
           - usuarios/memos/index.md
           - Memo Enviado: usuarios/memos/memo-enviado.md
           - Memo Recibido: usuarios/memos/memo-recibido.md
-      - Busqueda:
+      - Búsqueda:
           - usuarios/busqueda/buscador-general.md
       - Asistente AI:
           - usuarios/asistente-ai/index.md
 
   - Administradores:
       - administradores/index.md
-      - Informacion General: administradores/informacion-general.md
+      - Información General: administradores/informacion-general.md
       - Roles y Sellos: administradores/roles-y-sellos.md
       - Organigrama: administradores/organigrama.md
       - Tipos de Documentos: administradores/tipos-de-documentos.md
@@ -173,7 +173,7 @@ nav:
       - Digesto Normativo Público: administradores/digesto-normativo.md
       - Familias de Registro: administradores/familias-registro.md
       - Usuarios: administradores/usuarios.md
-      - Administracion: administradores/administracion.md
+      - Administración: administradores/administracion.md
       - Operar con IA (API):
           - administradores/operar-por-api.md
           - Referencia de Endpoints: administradores/operar-por-api-referencia.md
@@ -202,29 +202,29 @@ nav:
       - desarrollo/index.md
       - Gateway API:
           - desarrollo/gateway/index.md
-          - Autenticacion: desarrollo/gateway/autenticacion.md
+          - Autenticación: desarrollo/gateway/autenticacion.md
           - MCP Server: desarrollo/gateway/mcp-server.md
           - REST API:
               - desarrollo/gateway/rest-api/index.md
               - Expedientes: desarrollo/gateway/rest-api/expedientes.md
               - Documentos: desarrollo/gateway/rest-api/documentos.md
-              - Sistema y Catalogos: desarrollo/gateway/rest-api/sistema.md
+              - Sistema y Catálogos: desarrollo/gateway/rest-api/sistema.md
               - Notas: desarrollo/gateway/rest-api/notas.md
               - Legajos (RLM): desarrollo/gateway/rest-api/legajos.md
               - TAD Ciudadano:
                   - desarrollo/gateway/rest-api/tad/index.md
-                  - Conectar el Portal de Tramites: desarrollo/gateway/rest-api/tad/conectar-portal.md
+                  - Conectar el Portal de Trámites: desarrollo/gateway/rest-api/tad/conectar-portal.md
                   - Ciudadanos: desarrollo/gateway/rest-api/tad/ciudadanos.md
                   - Documentos: desarrollo/gateway/rest-api/tad/documentos.md
                   - Expedientes: desarrollo/gateway/rest-api/tad/expedientes.md
                   - Webhook de Notificaciones: desarrollo/gateway/rest-api/tad/webhook.md
           - Flujos Completos: desarrollo/gateway/flujos.md
-          - Errores y Codigos: desarrollo/gateway/errores.md
+          - Errores y Códigos: desarrollo/gateway/errores.md
           - Cambios de la API: desarrollo/gateway/changelog.md
       - Arquitectura:
           - desarrollo/arquitectura/index.md
           - Diagrama de Servicios: desarrollo/arquitectura/diagrama-servicios.md
-          - Comunicacion entre Servicios: desarrollo/arquitectura/comunicacion-entre-servicios.md
+          - Comunicación entre Servicios: desarrollo/arquitectura/comunicacion-entre-servicios.md
           - Multi-Tenant: desarrollo/arquitectura/multi-tenant.md
           - Flujos Principales: desarrollo/arquitectura/flujos-principales.md
           - Variables de Entorno: desarrollo/arquitectura/variables-entorno.md
@@ -233,7 +233,7 @@ nav:
           - Frontend:
               - desarrollo/frontend/index.md
               - Estructura del Proyecto: desarrollo/frontend/estructura-proyecto.md
-              - Paginas: desarrollo/frontend/paginas.md
+              - Páginas: desarrollo/frontend/paginas.md
               - Componentes: desarrollo/frontend/componentes.md
               - Hooks: desarrollo/frontend/hooks.md
               - Types: desarrollo/frontend/types.md
@@ -291,7 +291,7 @@ nav:
               - Schema Municipio: desarrollo/database/schema-municipio.md
               - Schema Audit: desarrollo/database/schema-audit.md
               - Scripts Deploy: desarrollo/database/scripts-deploy.md
-              - Numeracion: desarrollo/database/numeracion.md
+              - Numeración: desarrollo/database/numeracion.md
               - Enums y Tipos: desarrollo/database/enums-y-tipos.md
               - Herramientas: desarrollo/database/herramientas.md
               - Schema RLM: desarrollo/database/schema-rlm.md
@@ -299,7 +299,7 @@ nav:
               - desarrollo/deploy/index.md
               - Cloudflare R2: desarrollo/deploy/cloudflare-r2.md
               - GitHub Actions: desarrollo/deploy/github-actions.md
-      - Guias:
+      - Guías:
           - Desarrollo Local: desarrollo/guias/desarrollo-local.md
           - Nuevo Endpoint: desarrollo/guias/nuevo-endpoint.md
           - Nuevo Tipo de Documento: desarrollo/guias/nuevo-tipo-documento.md
@@ -307,4 +307,4 @@ nav:
 
   - Glosario: glosario.md
 
-copyright: Copyright &copy; 2026 GDI Latam - Documentacion Unificada
+copyright: Copyright &copy; 2026 GDI Latam - Documentación Unificada

@@ -1,21 +1,21 @@
 # Endpoints de Expedientes
 
-Endpoints para gestion de expedientes (cases). Prefijo: `/api/v1/cases`.
+Endpoints para gestión de expedientes (cases). Prefijo: `/api/v1/cases`.
 
 ## Listar Expedientes
 
 ### `GET /api/v1/cases/`
 
-Lista expedientes del usuario autenticado con filtros avanzados y paginacion.
+Lista expedientes del usuario autenticado con filtros avanzados y paginación.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Elementos por pagina (max 100) |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Elementos por página (max 100) |
 | `status` | string | null | `active`, `inactive`, `archived` |
-| `search` | string | null | Buscar en referencia y numero |
+| `search` | string | null | Buscar en referencia y número |
 | `date_filter` | string | null | `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
 | `date_from` | string | null | Fecha inicio (YYYY-MM-DD) |
 | `date_to` | string | null | Fecha fin (YYYY-MM-DD) |
@@ -63,9 +63,9 @@ Lista expedientes del usuario autenticado con filtros avanzados y paginacion.
 
 ### `POST /api/v1/cases/`
 
-Crea un expediente nuevo. La caratula (CAEX) se genera **en segundo plano**: el
-expediente y su numero existen y son definitivos apenas responde el endpoint,
-pero el PDF de la caratula llega unos segundos despues (GDI-436).
+Crea un expediente nuevo. La carátula (CAEX) se genera **en segundo plano**: el
+expediente y su número existen y son definitivos apenas responde el endpoint,
+pero el PDF de la carátula llega unos segundos después (GDI-436).
 
 **Request:**
 
@@ -82,19 +82,19 @@ pero el PDF de la caratula llega unos segundos despues (GDI-436).
 Son dos momentos, y el corte entre ambos es lo que hay que tener presente al
 integrar:
 
-*Dentro del request (sincronico):*
+*Dentro del request (sincrónico):*
 
 1. Valida template y usuario
-2. Genera numero de expediente (`EE-2025-00001-SMG-ADGEN`) -- **definitivo, no
-   cambia despues**
+2. Genera número de expediente (`EE-2025-00001-SMG-ADGEN`) -- **definitivo, no
+   cambia después**
 3. Crea el expediente en BD con estado `inactive`
-4. Reserva el numero de la CAEX y encola su generacion
+4. Reserva el número de la CAEX y encola su generación
 
-*Despues, en el worker escri (asincronico, tipicamente segundos):*
+*Después, en el worker escri (asincrónico, típicamente segundos):*
 
 5. Genera el PDF de la CAEX y lo firma
 6. Vincula la CAEX al expediente **en el folio 1**
-7. Recien ahi el expediente pasa a `active`
+7. Recién ahí el expediente pasa a `active`
 
 **Response (202 Accepted):**
 
@@ -120,27 +120,27 @@ integrar:
 }
 ```
 
-!!! warning "El `official_number` de la caratula existe antes que su PDF"
-    Ese numero se reserva en el momento 1, asi que viaja en la respuesta aunque
-    el documento todavia no exista. **No sirve para descargar el PDF hasta que
-    la caratula sale.** Para saber cuando termino, pollear `poll_url` -- el
-    mismo mecanismo y los mismos estados que la firma asincronica
+!!! warning "El `official_number` de la carátula existe antes que su PDF"
+    Ese número se reserva en el momento 1, así que viaja en la respuesta aunque
+    el documento todavía no exista. **No sirve para descargar el PDF hasta que
+    la carátula sale.** Para saber cuándo terminó, pollear `poll_url` -- el
+    mismo mecanismo y los mismos estados que la firma asincrónica
     (`queued | processing | signed | failed | expired`).
 
-**Mientras el expediente esta `inactive`:** su numero ya es definitivo y se
+**Mientras el expediente esta `inactive`:** su número ya es definitivo y se
 puede consultar, pero `GET /cases/{id}/permissions` devuelve todos los `can_*`
 en `false` con `is_creating: true`, y vincular o proponer documentos se rechaza
-hasta que la caratula sale. Es transitorio y se resuelve solo en segundos; no
-es un problema de permisos del usuario, y `is_creating` esta justamente para
+hasta que la carátula sale. Es transitorio y se resuelve solo en segundos; no
+es un problema de permisos del usuario, y `is_creating` está justamente para
 poder distinguir una cosa de la otra (GDI-470).
 
-**Si la caratula falla:** el expediente NO se pierde ni cambia de numero. Queda
-`inactive` esperandola, la cola reintenta con backoff, y existe
+**Si la carátula falla:** el expediente NO se pierde ni cambia de número. Queda
+`inactive` esperándola, la cola reintenta con backoff, y existe
 `POST /cases/{case_id}/retry-cover` para volver a encolarla a mano.
 
-**Response (200):** cuando el carril encolado esta apagado
-(`CASE_COVER_ASYNC_ENABLED=false`), la caratula se genera dentro del request y
-la respuesta llega con `status: "active"` y el `cover` ya completo, sin
+**Response (200):** cuando el carril encolado está apagado
+(`CASE_COVER_ASYNC_ENABLED=false`), la carátula se genera dentro del request y
+la respuesta llega con `status: "active"` y el `cover` ya completó, sin
 `session_id` ni `poll_url`.
 
 **Archivo:** `endpoints/cases/create_case.py`
@@ -193,20 +193,20 @@ Transfiere un expediente a otro sector.
 }
 ```
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
 | `target_sector_id` | Sector destino |
 | `reason` | Motivo (5-500 caracteres) |
 | `transfer_ownership` | `true`=transfiere propiedad, `false`=solo asigna tarea |
-| `assigned_user_id` | Usuario especifico (opcional) |
-| `create_official_doc` | Si `true`, genera PV (Pase de Vista) automatico |
+| `assigned_user_id` | Usuario específico (opcional) |
+| `create_official_doc` | Si `true`, genera PV (Pase de Vista) automático |
 
 **Errores de estado del expediente:**
 
-| Codigo | Cuando |
+| Código | Cuando |
 |--------|--------|
-| `409` | El expediente todavia se esta **creando** (falta su caratula). Transitorio: reintentar en unos segundos, o esperar el `poll_url` que devolvio la creacion (GDI-436) |
-| `422` | El expediente no esta activo por otro motivo (p. ej. **archivado**). Esto NO se resuelve esperando |
+| `409` | El expediente todavía se está **creando** (falta su carátula). Transitorio: reintentar en unos segundos, o esperar el `poll_url` que devolvió la creación (GDI-436) |
+| `422` | El expediente no está activo por otro motivo (p. ej. **archivado**). Esto NO se resuelve esperando |
 
 **Archivo:** `endpoints/cases/transfer_case.py`
 
@@ -231,11 +231,11 @@ Asigna tarea a otro sector sin transferir propiedad.
 
 ---
 
-## Cerrar Asignacion
+## Cerrar Asignación
 
 ### `POST /api/v1/cases/{case_id}/close-assign`
 
-Cierra una asignacion activa.
+Cierra una asignación activa.
 
 **Request:**
 
@@ -252,7 +252,7 @@ Cierra una asignacion activa.
 
 ### `GET /api/v1/cases/{case_id}/available-sectors`
 
-Obtiene sectores disponibles para transferencia o asignacion. Excluye el sector propietario actual.
+Obtiene sectores disponibles para transferencia o asignación. Excluye el sector propietario actual.
 
 ---
 
@@ -260,7 +260,7 @@ Obtiene sectores disponibles para transferencia o asignacion. Excluye el sector 
 
 ### `GET /api/v1/cases/sectors/{sector_id}/users`
 
-Lista usuarios activos de un sector para asignacion especifica.
+Lista usuarios activos de un sector para asignación específica.
 
 ---
 
@@ -280,11 +280,11 @@ Obtiene detalle completo de un expediente con movimientos, documentos y permisos
 
 ---
 
-## Buscar por Numero
+## Buscar por Número
 
 ### `GET /api/v1/cases/by-number/{case_number}`
 
-Busca un expediente por su numero exacto (ej: `EE-2025-00001-SMG-ADGEN`).
+Busca un expediente por su número exacto (ej: `EE-2025-00001-SMG-ADGEN`).
 
 ---
 
@@ -292,30 +292,30 @@ Busca un expediente por su numero exacto (ej: `EE-2025-00001-SMG-ADGEN`).
 
 ### `GET /api/v1/cases/{case_id}/download-zip`
 
-Descarga todos los documentos oficiales activos del expediente en un unico archivo ZIP.
+Descarga todos los documentos oficiales activos del expediente en un único archivo ZIP.
 
-**Autenticacion:** JWT Auth0 (igual que todos los endpoints del backend directo).
+**Autenticación:** JWT Auth0 (igual que todos los endpoints del backend directo).
 
 !!! warning "Solo disponible en el Backend directo"
-    Este endpoint **no esta expuesto en el Gateway REST** (`/api/v1/` del MCP Server). Es exclusivo de `GDI-Backend` en `/api/v1/cases/{case_id}/download-zip`. Los clientes que usen el Gateway no pueden invocarlo.
+    Este endpoint **no está expuesto en el Gateway REST** (`/api/v1/` del MCP Server). Es exclusivo de `GDI-Backend` en `/api/v1/cases/{case_id}/download-zip`. Los clientes que usen el Gateway no pueden invocarlo.
 
 **Path Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | ID del expediente |
 
 **Proceso:**
 
 1. Valida usuario autenticado (JWT).
-2. Verifica permiso de visualizacion (`can_user_view_case`). Si falla retorna 404 para no revelar existencia del expediente.
+2. Verifica permiso de visualización (`can_user_view_case`). Si falla retorna 404 para no revelar existencia del expediente.
 3. Obtiene el `case_number` desde BD.
 4. Consulta documentos oficiales activos con `official_number` y `pdf_url` presignada.
 5. Filtra los que tienen `is_active=true`, `official_number` y `pdf_url` (URLs presignadas de R2).
 6. Ordena por `order` ASC.
-7. Descarga todos los PDFs en paralelo via `asyncio.gather` con cliente `httpx.AsyncClient`.
+7. Descarga todos los PDFs en paralelo vía `asyncio.gather` con cliente `httpx.AsyncClient`.
 8. Verifica que el total no supere 500 MB (`BusinessLogicError` si lo supera).
-9. Construye el ZIP en un `SpooledTemporaryFile` con compresion `ZIP_STORED`.
+9. Construye el ZIP en un `SpooledTemporaryFile` con compresión `ZIP_STORED`.
 10. Retorna `StreamingResponse` en chunks de 64 KB.
 
 **Nombres de archivos dentro del ZIP:**
@@ -344,22 +344,22 @@ Content-Disposition: attachment; filename="EE-2025-00001-SMG-ADGEN.zip"
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | 401 | Usuario no autenticado |
-| 404 | Expediente no encontrado o sin permisos de visualizacion |
+| 404 | Expediente no encontrado o sin permisos de visualización |
 | 404 | El expediente no tiene documentos oficiales activos vinculados |
-| 422 | Limite de 500 MB superado (`BusinessLogicError`) |
-| 502 | No se pudo descargar ningun PDF de R2 |
+| 422 | Límite de 500 MB superado (`BusinessLogicError`) |
+| 502 | No se pudo descargar ningún PDF de R2 |
 
 **Archivo:** `endpoints/cases/download_case_zip.py`
 
-**Notas de implementacion:**
+**Notas de implementación:**
 
-- Los PDFs que fallan en la descarga de R2 se omiten con `logger.warning` (no abortan el ZIP si al menos uno tuvo exito).
+- Los PDFs que fallan en la descarga de R2 se omiten con `logger.warning` (no abortan el ZIP si al menos uno tuvo éxito).
 - Si TODOS los PDFs fallan → 502.
 - `SpooledTemporaryFile(max_size=50MB)`: hasta 50 MB se guarda en RAM; si es mayor, vuelca a disco temporario.
-- Compresion `ZIP_STORED` (sin compresion): los PDFs ya son binarios comprimidos; comprimirlos de nuevo no reduce el tamano y agrega CPU innecesaria.
+- Compresión `ZIP_STORED` (sin compresión): los PDFs ya son binarios comprimidos; comprimirlos de nuevo no reduce el tamaño y agrega CPU innecesaria.
 
 ---
 
@@ -369,7 +369,7 @@ Content-Disposition: attachment; filename="EE-2025-00001-SMG-ADGEN.zip"
 
 Lista los responsables activos de un expediente.
 
-**Descripcion:** Retorna el responsable administrador (`type=ADMIN`, unico activo a la vez) y la lista de responsables adicionales (`type=ADDITIONAL`). Requiere que el usuario pueda ver el expediente.
+**Descripción:** Retorna el responsable administrador (`type=ADMIN`, único activo a la vez) y la lista de responsables adicionales (`type=ADDITIONAL`). Requiere que el usuario pueda ver el expediente.
 
 **Response (200):**
 
@@ -418,12 +418,12 @@ Lista usuarios disponibles para ser asignados como responsables del expediente.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Requerido | Descripcion |
+| Parámetro | Tipo | Requerido | Descripción |
 |-----------|------|-----------|-------------|
 | `type` | string | SI | `ADMIN` o `ADDITIONAL` |
-| `sector_id` | UUID | NO | Filtrar por sector especifico (util en transferencia/asignacion) |
+| `sector_id` | UUID | NO | Filtrar por sector específico (útil en transferencia/asignacion) |
 
-**Logica por tipo:**
+**Lógica por tipo:**
 
 - `type=ADMIN`: usuarios del sector administrador actual del expediente.
 - `type=ADDITIONAL`: usuarios de sectores admin o actuantes activos del expediente (sector principal o con `can_edit=true` en `user_sector_permissions`).
@@ -448,12 +448,12 @@ Agrega un responsable al expediente.
 }
 ```
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
 | `user_id` | UUID | SI | Usuario a agregar como responsable |
 | `type` | string | SI | `ADMIN` o `ADDITIONAL` |
 | `sector_id` | UUID | SI | Sector del usuario responsable |
-| `reason` | string | NO | Motivo (min 1, max 500 chars; default: "Asignacion de responsable") |
+| `reason` | string | NO | Motivo (min 1, max 500 chars; default: "Asignación de responsable") |
 
 **Comportamiento por tipo:**
 
@@ -470,19 +470,19 @@ Quita un responsable del expediente (soft delete: `is_active = false`).
 
 **Path Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | ID del expediente |
 | `responsible_id` | UUID | ID del registro en `case_responsibles` |
 
 **Query Parameters (opcional):**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `reason` | string | Motivo de remocion (default: "Remocion de responsable") |
+| `reason` | string | Motivo de remoción (default: "Remoción de responsable") |
 
 Crea un movimiento de tipo `responsible_remove` en el historial.
 
 **Archivo:** `endpoints/cases/responsibles.py`
 
-**Tabla BD:** `{schema}.case_responsibles` (migracion 042b)
+**Tabla BD:** `{schema}.case_responsibles` (migración 042b)

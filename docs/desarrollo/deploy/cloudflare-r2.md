@@ -1,8 +1,8 @@
 # Cloudflare R2
 
-## Vision General
+## Visión General
 
-Cloudflare R2 es el servicio de almacenamiento de objetos de GDI Latam. Es compatible con la API S3 de AWS, lo que permite usar `boto3` (Python) para interactuar con el.
+Cloudflare R2 es el servicio de almacenamiento de objetos de GDI Latam. Es compatible con la API S3 de AWS, lo que permite usar `boto3` (Python) para interactuar con él.
 
 Se utiliza para almacenar:
 
@@ -14,28 +14,28 @@ Se utiliza para almacenar:
 
 ## Buckets
 
-| Bucket | Proposito | Acceso |
+| Bucket | Propósito | Acceso |
 |--------|-----------|--------|
 | `tenant-<id>-oficial` | PDFs firmados y oficiales | GDI-Backend (lectura/escritura) |
 | `tenant-<id>-tosign` | PDFs pendientes de firma (temporales) | GDI-Backend (lectura/escritura) |
-| `gdi-assets` | Logos e imagenes de organizaciones | GDI-BackOffice-Back (escritura), Frontends (lectura) |
+| `gdi-assets` | Logos e imágenes de organizaciones | GDI-BackOffice-Back (escritura), Frontends (lectura) |
 
 !!! info "Convenciones de naming"
-    Los nombres de bucket siguen el patron `tenant-<schema_name>-<tipo>`. Ejemplo: para el schema `200_muni`, los buckets son `tenant-test-oficial` y `tenant-test-tosign`.
+    Los nombres de bucket siguen el patrón `tenant-<schema_name>-<tipo>`. Ejemplo: para el schema `200_muni`, los buckets son `tenant-test-oficial` y `tenant-test-tosign`.
 
 ---
 
 ## Credenciales
 
-Las credenciales de R2 se almacenan como variables de entorno. Nunca en codigo fuente.
+Las credenciales de R2 se almacenan como variables de entorno. Nunca en código fuente.
 
-| Variable | Descripcion | Donde se usa |
+| Variable | Descripción | Donde se usa |
 |----------|-------------|--------------|
 | `CF_R2_ENDPOINT` | Endpoint S3-compatible | GDI-Backend |
 | `CF_R2_ACCESS_KEY_ID` | Access Key ID | GDI-Backend |
 | `CF_R2_SECRET_ACCESS_KEY` | Secret Access Key | GDI-Backend |
-| `CF_R2_SIGN_EXPIRATION` | Expiracion presigned URLs (seg) | GDI-Backend |
-| `CF_R2_SIGN_EXPIRATION` | Expiracion de presigned URLs (segundos) | GDI-Backend |
+| `CF_R2_SIGN_EXPIRATION` | Expiración presigned URLs (seg) | GDI-Backend |
+| `CF_R2_SIGN_EXPIRATION` | Expiración de presigned URLs (segundos) | GDI-Backend |
 
 **Formato del endpoint:**
 
@@ -48,9 +48,9 @@ https://<ACCOUNT_ID>.r2.cloudflarestorage.com
 
 ---
 
-## Acceso via S3 API (boto3)
+## Acceso vía S3 API (boto3)
 
-GDI-Backend usa `boto3` para interactuar con R2. La configuracion del cliente es:
+GDI-Backend usa `boto3` para interactuar con R2. La configuración del cliente es:
 
 ```python
 import boto3
@@ -178,15 +178,15 @@ graph LR
     end
 ```
 
-1. **Creacion**: El Backend genera un PDF via PDFComposer y lo sube al bucket `tosign`
-2. **Firma**: Cuando se inicia el proceso de firma, el Backend descarga de `tosign`, envia a Notary para firmar, y sube el resultado a `oficial`
+1. **Creación**: El Backend genera un PDF vía PDFComposer y lo sube al bucket `tosign`
+2. **Firma**: Cuando se inicia el proceso de firma, el Backend descarga de `tosign`, envía a Notary para firmar, y sube el resultado a `oficial`
 3. **Consulta**: El Frontend solicita un PDF al Backend, que genera una presigned URL temporal para la descarga directa desde R2
 
 ---
 
 ## Multi-Tenant
 
-Cada organizacion (tenant) tiene sus propios buckets con un prefijo de schema en las keys:
+Cada organización (tenant) tiene sus propios buckets con un prefijo de schema en las keys:
 
 ```
 # Tenant 200_muni
@@ -198,22 +198,22 @@ tenant-municipio-oficial/200_municipio/official/...
 tenant-municipio-tosign/200_municipio/tosign/...
 ```
 
-El codigo en `services/storage/cloudflare.py` obtiene el cliente R2 correcto usando:
+El código en `services/storage/cloudflare.py` obtiene el cliente R2 correcto usando:
 
 ```python
 r2_client = get_tenant_r2_client(schema_name=schema_name)
 ```
 
 !!! warning "Aislamiento de datos"
-    El `schema_name` se usa como prefijo en las keys de R2 para asegurar que un tenant no pueda acceder a los archivos de otro. Este patron es consistente con el multi-tenant de la base de datos.
+    El `schema_name` se usa como prefijo en las keys de R2 para asegurar que un tenant no pueda acceder a los archivos de otro. Este patrón es consistente con el multi-tenant de la base de datos.
 
 ---
 
 ## CORS
 
-Para que los frontends puedan descargar PDFs directamente desde R2 (via presigned URLs), se requiere configurar CORS en los buckets.
+Para que los frontends puedan descargar PDFs directamente desde R2 (vía presigned URLs), se requiere configurar CORS en los buckets.
 
-**Configuracion de CORS recomendada (via Cloudflare Dashboard):**
+**Configuración de CORS recomendada (vía Cloudflare Dashboard):**
 
 ```json
 [
@@ -232,7 +232,7 @@ Para que los frontends puedan descargar PDFs directamente desde R2 (via presigne
 ```
 
 !!! tip "Presigned URLs"
-    En la practica, GDI usa presigned URLs para la mayoria de descargas. Las presigned URLs no requieren CORS porque la autenticacion esta embebida en la URL misma. CORS solo es necesario si se hacen requests directos desde el navegador con headers de autenticacion.
+    En la práctica, GDI usa presigned URLs para la mayoría de descargas. Las presigned URLs no requieren CORS porque la autenticación está embebida en la URL misma. CORS solo es necesario si se hacen requests directos desde el navegador con headers de autenticación.
 
 ---
 
@@ -240,7 +240,7 @@ Para que los frontends puedan descargar PDFs directamente desde R2 (via presigne
 
 ### Verificar Conectividad
 
-Desde el Backend, se puede verificar la conexion a R2 listando los buckets:
+Desde el Backend, se puede verificar la conexión a R2 listando los buckets:
 
 ```python
 response = r2_client.list_buckets()
@@ -259,12 +259,12 @@ aws s3 ls s3://tenant-test-oficial/ \
 
 ---
 
-## Limites
+## Límites
 
-| Limite | Valor |
+| Límite | Valor |
 |--------|-------|
-| Tamano maximo de objeto | 5 GB (multipart upload) |
-| Tamano maximo de upload simple | 100 MB |
+| Tamaño máximo de objeto | 5 GB (multipart upload) |
+| Tamaño máximo de upload simple | 100 MB |
 | Operaciones Class A (escritura) | Gratis primeras 1M/mes |
 | Operaciones Class B (lectura) | Gratis primeras 10M/mes |
 | Storage | Gratis primeros 10 GB/mes |

@@ -1,16 +1,16 @@
 # MCP Server
 
-!!! info "Documentacion completa en la seccion Gateway"
-    La documentacion autoritativa del MCP Server vive en [desarrollo/gateway/mcp-server.md](../../gateway/mcp-server.md).
-    Esta pagina es un resumen de arquitectura interna; para la lista de tools, flujos y configuracion de clientes, ver esa seccion.
+!!! info "Documentación completa en la sección Gateway"
+    La documentación autoritativa del MCP Server vive en [desarrollo/gateway/mcp-server.md](../../gateway/mcp-server.md).
+    Esta página es un resumen de arquitectura interna; para la lista de tools, flujos y configuración de clientes, ver esa sección.
 
 El MCP Server expone **42 tools** (lectura y escritura) a agentes IA. Se implementa como Streamable HTTP (JSON-RPC) sobre el endpoint `POST /mcp`.
 
-**Ubicacion del codigo:** `api_gateway/http_server.py` (handler `handle_list_tools`) y `api_gateway/tools/` (implementacion de cada tool).
+**Ubicación del código:** `api_gateway/http_server.py` (handler `handle_list_tools`) y `api_gateway/tools/` (implementación de cada tool).
 
-## Implementacion Interna
+## Implementación Interna
 
-### Definicion de Tools (`http_server.py`)
+### Definición de Tools (`http_server.py`)
 
 Las tools se definen en `handle_list_tools` y se despachan en `handle_call_tool`. Cada tool recibe un `MCPContext` con el usuario y schema del tenant:
 
@@ -37,7 +37,7 @@ if name == "search_cases":
 
 ### Contexto Multi-Tenant (`auth_mcp.py`)
 
-El contexto se inyecta automaticamente desde el JWT:
+El contexto se inyecta automáticamente desde el JWT:
 
 ```python
 async def validate_mcp_auth(token: str) -> MCPContext:
@@ -56,7 +56,7 @@ async def validate_mcp_auth(token: str) -> MCPContext:
 
 ### Tools Layer (`tools/`)
 
-Los tools son funciones async que reciben `MCPContext` y parametros tipados:
+Los tools son funciones async que reciben `MCPContext` y parámetros tipados:
 
 ```python
 # tools/cases.py
@@ -74,7 +74,7 @@ async def search_cases(
     # Filtra por sectores del usuario automaticamente
 ```
 
-## Autenticacion MCP (`auth_mcp.py`)
+## Autenticación MCP (`auth_mcp.py`)
 
 Ver [OAuth Discovery](oauth-discovery.md) para el flujo completo.
 
@@ -89,4 +89,4 @@ VALID_AUDIENCES = [
 
 ### Multi-Tenant Selection
 
-Si un usuario tiene acceso a multiples organizaciones, el server devuelve error `multi_tenant_selection_required`. El agente debe usar la tool `list_my_tenants` para listar las opciones y luego incluir `tenant_id` en las llamadas.
+Si un usuario tiene acceso a múltiples organizaciones, el server devuelve error `multi_tenant_selection_required`. El agente debe usar la tool `list_my_tenants` para listar las opciones y luego incluir `tenant_id` en las llamadas.

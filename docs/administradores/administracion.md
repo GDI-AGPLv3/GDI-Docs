@@ -1,6 +1,6 @@
-# Administracion
+# Administración
 
-Gestiona que usuarios tienen permisos de administrador en el BackOffice. Los administradores pueden acceder a todas las secciones de configuracion de la organizacion.
+Gestiona que usuarios tienen permisos de administrador en el BackOffice. Los administradores pueden acceder a todas las secciones de configuración de la organización.
 
 ![Administracion](capturas/administracion.png)
 
@@ -25,7 +25,7 @@ Gestiona que usuarios tienen permisos de administrador en el BackOffice. Los adm
 
 La tabla muestra todos los usuarios con rol de administrador.
 
-| Columna | Descripcion |
+| Columna | Descripción |
 |---------|-------------|
 | **Usuario** | Avatar con inicial, nombre completo y email |
 | **Sector / Depto** | Departamento y sector del administrador |
@@ -33,11 +33,11 @@ La tabla muestra todos los usuarios con rol de administrador.
 
 ### Acciones
 
-| Accion | Descripcion |
+| Acción | Descripción |
 |--------|-------------|
 | **Buscar** | Filtrar administradores por nombre o email |
 | **Nuevo Administrador** | Agregar un usuario existente como administrador |
 | **Quitar** | Revocar permisos de administrador a un usuario |
 
-!!! warning "Precaucion"
-    Revocar permisos de administrador es una accion inmediata. El usuario perdera acceso al BackOffice en su proxima sesion. Asegurate de que siempre haya al menos un administrador activo.
+!!! warning "Precaución"
+    Revocar permisos de administrador es una acción inmediata. El usuario perderá acceso al BackOffice en su próxima sesión. Asegurate de que siempre haya al menos un administrador activo.

@@ -15,12 +15,12 @@ pool = await asyncpg.create_pool(
 )
 ```
 
-El pool se inicializa al arrancar la aplicacion en el `lifespan` de FastAPI (no en `startup`).
+El pool se inicializa al arrancar la aplicación en el `lifespan` de FastAPI (no en `startup`).
 
 ## Multi-Tenant: schema_name
 
-!!! danger "Regla Critica"
-    **Todas** las funciones de BD reciben `schema_name` como parametro **keyword-only** (despues de `*`). Esto es obligatorio para evitar SQL injection y tenant leakage.
+!!! danger "Regla Crítica"
+    **Todas** las funciones de BD reciben `schema_name` como parámetro **keyword-only** (después de `*`). Esto es obligatorio para evitar SQL injection y tenant leakage.
 
 ```python
 # CORRECTO
@@ -30,18 +30,18 @@ result = execute_query("SELECT ...", schema_name=schema_name)
 result = execute_query("SELECT ...", schema_name)
 ```
 
-### Como funciona
+### Cómo funciona
 
 1. El `TenantMiddleware` extrae `schema_name` del header `X-Tenant-Schema`
-2. El endpoint lo obtiene via `request.state.schema_name` o `Depends(get_tenant_schema)`
+2. El endpoint lo obtiene vía `request.state.schema_name` o `Depends(get_tenant_schema)`
 3. Se pasa a funciones de BD como `schema_name=schema_name`
-4. `get_conn()` ejecuta `SET LOCAL search_path TO "{schema}", public` dentro de una transaccion
+4. `get_conn()` ejecuta `SET LOCAL search_path TO "{schema}", public` dentro de una transacción
 
 ## Funciones Principales
 
 ### get_conn
 
-Context manager async que adquiere una conexion del pool con tenant context seguro.
+Context manager async que adquiere una conexión del pool con tenant context seguro.
 
 ```python
 @asynccontextmanager
@@ -58,11 +58,11 @@ async def get_conn(
 ```
 
 !!! danger "Seguridad multi-tenant"
-    Toda adquisicion abre SIEMPRE una transaccion y usa `SET LOCAL search_path`. Al COMMIT/ROLLBACK el search_path vuelve al default del pool. La conexion NUNCA regresa al pool contaminada con el tenant anterior.
+    Toda adquisición abre SIEMPRE una transacción y usa `SET LOCAL search_path`. Al COMMIT/ROLLBACK el search_path vuelve al default del pool. La conexión NUNCA regresa al pool contaminada con el tenant anterior.
 
 ### with_tenant
 
-Establece tenant context en una conexion que ya tiene una transaccion abierta. Usar cuando el caller pasa `conn` explicitamente.
+Establece tenant context en una conexión que ya tiene una transacción abierta. Usar cuando el caller pasa `conn` explícitamente.
 
 ```python
 async def with_tenant(
@@ -76,7 +76,7 @@ async def with_tenant(
 
 ### fetch_all
 
-SELECT que devuelve multiples filas.
+SELECT que devuelve múltiples filas.
 
 ```python
 async def fetch_all(sql: str, *params, schema_name: str) -> list[asyncpg.Record]:
@@ -92,7 +92,7 @@ async def fetch_one(sql: str, *params, schema_name: str) -> Optional[asyncpg.Rec
 
 ### fetch_val
 
-Escalar de la primera columna. Util para `INSERT ... RETURNING id`.
+Escalar de la primera columna. Útil para `INSERT ... RETURNING id`.
 
 ```python
 async def fetch_val(sql: str, *params, schema_name: str, column: int = 0) -> Any:
@@ -114,7 +114,7 @@ async def execute(
 
 ### transaction
 
-Context manager async para transacciones atomicas multi-statement.
+Context manager async para transacciones atómicas multi-statement.
 
 ```python
 @asynccontextmanager
@@ -135,7 +135,7 @@ async with transaction(schema_name="200_muni", user_id=uid) as conn:
 # COMMIT automatico al salir sin excepcion; ROLLBACK si excepcion
 ```
 
-## Validacion de Schema
+## Validación de Schema
 
 ```python
 def validate_schema_name(schema_name: str) -> str:
@@ -143,28 +143,28 @@ def validate_schema_name(schema_name: str) -> str:
 
 Valida que el schema sea seguro para SQL:
 
-- No vacio ni None
-- **Normaliza a minusculas** y elimina espacios
-- Solo letras minusculas, numeros y guion bajo (`^[a-z0-9_]+$`)
-- Maximo 63 caracteres (limite PostgreSQL)
+- No vacío ni None
+- **Normaliza a minúsculas** y elimina espacios
+- Solo letras minúsculas, números y guion bajo (`^[a-z0-9_]+$`)
+- Máximo 63 caracteres (límite PostgreSQL)
 - Bloquea schemas reservados (`information_schema`, `pg_catalog`, `pg_toast`)
-- Ejemplos validos: `"200_muni"`, `"public"`, `"municipio_abc"`
+- Ejemplos válidos: `"200_muni"`, `"public"`, `"municipio_abc"`
 
-!!! info "Normalizacion"
-    `validate_schema_name` llama a `.strip().lower()` antes de validar. El schema ingresado siempre se normaliza a minusculas en la capa de BD.
+!!! info "Normalización"
+    `validate_schema_name` llama a `.strip().lower()` antes de validar. El schema ingresado siempre se normaliza a minúsculas en la capa de BD.
 
 ## Codecs asyncpg
 
-Al inicializar cada conexion del pool (`_init_conn`), se registran codecs automaticos:
+Al inicializar cada conexión del pool (`_init_conn`), se registran codecs automáticos:
 
 - `json` / `jsonb` — encode/decode con `json.dumps` / `json.loads`
 - `uuid` — devuelve como `str` (compatible con Pydantic `str` fields, igual que psycopg2)
 
-## Conexion directa a PostgreSQL
+## Conexión directa a PostgreSQL
 
-El backend conecta directo a PostgreSQL (no PgBouncer). El pool asyncpg maneja sus propias conexiones. La deteccion de PgBouncer es por `DB_PORT == 6432` pero **no esta activada** en produccion actual.
+El backend conecta directo a PostgreSQL (no PgBouncer). El pool asyncpg maneja sus propias conexiones. La detección de PgBouncer es por `DB_PORT == 6432` pero **no está activada** en producción actual.
 
-## Funciones de Validacion
+## Funciones de Validación
 
 ```python
 async def check_user_exists(user_id: str, *, schema_name: str) -> bool:
@@ -173,18 +173,18 @@ async def get_document_basic_info(document_id: str, *, schema_name: str) -> Opti
 ```
 
 !!! note "Sin get_user_basic_info"
-    `get_user_basic_info()` no existe en `database.py`. Los datos de usuario se obtienen via `services/users/` o `user_service.py`.
+    `get_user_basic_info()` no existe en `database.py`. Los datos de usuario se obtienen vía `services/users/` o `user_service.py`.
 
-## Numeracion
+## Numeración
 
-La numeracion con advisory lock esta en `shared/numbering.py`, no en `database.py`.
+La numeración con advisory lock está en `shared/numbering.py`, no en `database.py`.
 
 - **Documentos**: advisory lock `888888`
 - **Legajos (RLM)**: advisory lock `777777`
 
-Formato de numero de expediente: `EE-{año}-{secuencia:06d}-{organizacion}-{departamento}`
+Formato de número de expediente: `EE-{año}-{secuencia:06d}-{organizacion}-{departamento}`
 
-## Contexto de Auditoria
+## Contexto de Auditoría
 
 Cuando se pasan `user_id` y `auth_source` a `get_conn()`, `execute()` o `transaction()`, se inyectan como GUC de PostgreSQL usando `set_config(..., true)` (scope transaccional):
 
@@ -193,4 +193,4 @@ SELECT set_config('app.user_id', 'uuid-del-usuario', true);
 SELECT set_config('app.auth_source', 'jwt', true);
 ```
 
-Esto permite que los triggers de auditoria en la BD registren quien hizo cada operacion. El GUC se revierte automaticamente al final de la transaccion (scope `true` = local a la transaccion).
+Esto permite que los triggers de auditoría en la BD registren quién hizo cada operación. El GUC se revierte automáticamente al final de la transacción (scope `true` = local a la transacción).

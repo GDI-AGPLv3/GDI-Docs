@@ -2,7 +2,7 @@
 
 Endpoints para el sistema de notas internas entre sectores. Prefijo: `/notes`.
 
-Las notas son documentos tipo NOTA con destinatarios (TO, CC, BCC). A diferencia de otros documentos, las notas tienen un flujo de envio y recepcion entre sectores.
+Las notas son documentos tipo NOTA con destinatarios (TO, CC, BCC). A diferencia de otros documentos, las notas tienen un flujo de envío y recepción entre sectores.
 
 ## Notas Recibidas
 
@@ -12,17 +12,17 @@ Lista notas recibidas por el sector del usuario.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `page` | int | Pagina |
-| `page_size` | int | Resultados por pagina |
+| `page` | int | Página |
+| `page_size` | int | Resultados por página |
 | `search` | string | Buscar en referencia |
 
 **Response incluye por nota:**
 
 - Datos de la nota (referencia, contenido, fecha)
-- Informacion del remitente (sector, usuario)
-- Tipo de recepcion: `to`, `cc`, `bcc`
+- Información del remitente (sector, usuario)
+- Tipo de recepción: `to`, `cc`, `bcc`
 - Estado de lectura: `is_read`
 
 **Archivo:** `endpoints/notes/received.py`
@@ -60,7 +60,7 @@ Obtiene detalle completo de una nota con todos sus destinatarios y contenido.
 - Contenido HTML de la nota
 - Lista de destinatarios TO, CC, BCC
 - Datos del remitente y sector
-- Fecha de envio y estado
+- Fecha de envío y estado
 
 **Archivo:** `endpoints/notes/detail.py`
 

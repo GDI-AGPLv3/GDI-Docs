@@ -1,13 +1,13 @@
 # Firmar con Token — FirmadorGDI
 
-Para firmar documentos con tu token físico (Feitian ePass2003) necesitas tener instalado **FirmadorGDI**, el cliente de firma digital de GDI. Hay instalador para **Windows** y para **Mac**: es el mismo programa, pero cada sistema tiene su propio archivo de descarga.
+Para firmar documentos con tu token físico (Feitian ePass2003) necesitás tener instalado **FirmadorGDI**, el cliente de firma digital de GDI. Hay instalador para **Windows** y para **Mac**: es el mismo programa, pero cada sistema tiene su propio archivo de descarga.
 
 !!! info "Primera vez"
     Si nunca instalaste FirmadorGDI en tu computadora, seguí primero los pasos de instalación más abajo.
 
 ---
 
-## Instalacion de FirmadorGDI
+## Instalación de FirmadorGDI
 
 ### Requisitos previos
 
@@ -140,7 +140,7 @@ FirmadorGDI solo le obedece a los servidores que tiene autorizados. El servidor 
 
 ---
 
-## Como firmar un documento con token
+## Cómo firmar un documento con token
 
 Una vez instalado FirmadorGDI, el proceso de firma desde GDI es el siguiente:
 

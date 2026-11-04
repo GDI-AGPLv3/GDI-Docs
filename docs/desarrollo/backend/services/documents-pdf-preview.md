@@ -1,8 +1,8 @@
 # Documents Preview & PDF
 
-Servicios para previsualizacion de documentos y generacion de PDFs.
+Servicios para previsualización de documentos y generación de PDFs.
 
-**Ubicacion:** `services/documents/preview/`
+**Ubicación:** `services/documents/preview/`
 
 ## Arquitectura
 
@@ -30,10 +30,10 @@ async def generate_document_preview(
 
 **Flujo por tipo de documento:**
 
-=== "HTML (estandar)"
+=== "HTML (estándar)"
 
     1. Auto-save si es necesario
-    2. Obtener datos del documento via `PreviewDataFetcher`
+    2. Obtener datos del documento vía `PreviewDataFetcher`
     3. Llamar a PDFComposer `/preview-pdf/`
     4. Retornar `pdf_content` (bytes) con `is_imported: False`
 
@@ -96,25 +96,25 @@ class PreviewDataFetcher:
 
 | Campo | Tabla | Uso |
 |-------|-------|-----|
-| `reference` | document_draft | Titulo del PDF |
+| `reference` | document_draft | Título del PDF |
 | `content` | document_draft | Cuerpo HTML |
 | `type_acronym` | document_types | Header del PDF (ej: "INFORME") |
-| `type_name` | document_types | Subtitulo del PDF |
+| `type_name` | document_types | Subtítulo del PDF |
 | `source_type` | document_types | Determina flujo (HTML/Importado) |
 | `municipality_logo_url` | settings | Logo en header del PDF |
 
 ---
 
-## Integracion con PDFComposer
+## Integración con PDFComposer
 
-El preview llama a diferentes endpoints de PDFComposer segun el tipo:
+El preview llama a diferentes endpoints de PDFComposer según el tipo:
 
 | Tipo | Endpoint | Marca de agua |
 |------|----------|---------------|
-| HTML | `/preview-pdf/` | Si (watermark "PREVISUALIZACION") |
-| NOTA preview | `/note-preview/` | Si |
+| HTML | `/preview-pdf/` | Sí (watermark "PREVISUALIZACION") |
+| NOTA preview | `/note-preview/` | Sí |
 | NOTA final | `/note/` | No |
-| Caratula | `/create-case/` | No |
+| Carátula | `/create-case/` | No |
 | Pase | `/move/` | No |
 | Importado | `/import/` | No |
 
@@ -149,7 +149,7 @@ pdfcomposer_data = {
 
 ## Auto-Save (`preview/auto_save.py`)
 
-Antes de generar un preview, se ejecuta un auto-guardado para asegurar que el PDF refleje los ultimos cambios del editor.
+Antes de generar un preview, se ejecuta un auto-guardado para asegurar que el PDF refleje los últimos cambios del editor.
 
 ```python
 class AutoSaveHandler:
@@ -162,19 +162,19 @@ class AutoSaveHandler:
 
 ---
 
-## Configuracion de PDFComposer
+## Configuración de PDFComposer
 
-| Variable | Descripcion |
+| Variable | Descripción |
 |----------|-------------|
 | `PDFCOMPOSER_URL` | URL del microservicio (Docker internal) |
-| `PDFCOMPOSER_API_KEY` | API Key para autenticacion |
+| `PDFCOMPOSER_API_KEY` | API Key para autenticación |
 
-**Timeout:** 90 segundos (generacion de PDF puede ser lenta).
+**Timeout:** 90 segundos (generación de PDF puede ser lenta).
 
 **Reintentos:** 1 reintento con espera de 1 segundo.
 
 **Validaciones del PDF retornado:**
 
-- Tamano > 0 bytes
+- Tamaño > 0 bytes
 - Magic bytes `%PDF`
-- Tamano maximo 10MB (30MB para import)
+- Tamaño máximo 10MB (30MB para import)

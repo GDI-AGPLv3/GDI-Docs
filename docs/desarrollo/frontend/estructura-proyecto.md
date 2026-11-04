@@ -1,6 +1,6 @@
 # Estructura del Proyecto
 
-## Arbol de Carpetas
+## Árbol de Carpetas
 
 ```
 GDI-FRONTEND/
@@ -62,18 +62,18 @@ GDI-FRONTEND/
 └── package.json                  # Dependencias
 ```
 
-## Descripcion de Carpetas
+## Descripción de Carpetas
 
 ### `src/pages/`
 
-Contiene exclusivamente paginas de Next.js Pages Router. Cada archivo o carpeta se convierte en una ruta publica. Las paginas importan componentes de `src/components/` y hooks de `src/hooks/`.
+Contiene exclusivamente páginas de Next.js Pages Router. Cada archivo o carpeta se convierte en una ruta publica. Las páginas importan componentes de `src/components/` y hooks de `src/hooks/`.
 
-!!! warning "Regla critica"
-    NUNCA colocar componentes reutilizables en `src/pages/`. Next.js interpreta todo dentro de `pages/` como rutas publicas.
+!!! warning "Regla crítica"
+    NUNCA colocar componentes reutilizables en `src/pages/`. Next.js interpreta todo dentro de `pages/` como rutas públicas.
 
 ### `src/components/`
 
-Componentes React organizados por modulo funcional. Los componentes base de shadcn/ui estan en `ui/`. Cada modulo (documentos, expedientes, notas) tiene su propia subcarpeta.
+Componentes React organizados por módulo funcional. Los componentes base de shadcn/ui están en `ui/`. Cada módulo (documentos, expedientes, notas) tiene su propia subcarpeta.
 
 ### `src/components/ui/`
 
@@ -84,28 +84,28 @@ Componentes de shadcn/ui (variante New York) basados en Radix UI:
 | `button.tsx` | Slot | Botones con variantes |
 | `input.tsx` | - | Campos de entrada |
 | `badge.tsx` | - | Etiquetas de estado |
-| `card.tsx` | - | Contenedores de informacion |
+| `card.tsx` | - | Contenedores de información |
 | `dialog.tsx` | Dialog | Modales |
 | `select.tsx` | Select | Selectores dropdown |
-| `tabs.tsx` | Tabs | Navegacion por pestanas |
+| `tabs.tsx` | Tabs | Navegación por pestañas |
 | `table.tsx` | - | Tablas de datos |
 | `popover.tsx` | Popover | Popovers flotantes |
-| `command.tsx` | cmdk | Combobox con busqueda |
+| `command.tsx` | cmdk | Combobox con búsqueda |
 | `dropdown-menu.tsx` | DropdownMenu | Menus contextuales |
 | `tooltip.tsx` | Tooltip | Tooltips informativos |
-| `sector-badge.tsx` | - | Badge con color dinamico por sector |
+| `sector-badge.tsx` | - | Badge con color dinámico por sector |
 
 ### `src/hooks/`
 
-Custom hooks que encapsulan logica de fetching, estado y efectos. Hay 40+ hooks organizados por dominio: autenticacion, documentos, expedientes, notas, busqueda, etc.
+Custom hooks que encapsulan lógica de fetching, estado y efectos. Hay 40+ hooks organizados por dominio: autenticación, documentos, expedientes, notas, búsqueda, etc.
 
 ### `src/lib/`
 
-Utilidades compartidas: `fetchWithAuth` para manejo de sesion expirada, `tenant.ts` para multi-tenant, `theme.ts` para colores dinamicos, `csrf.ts` para proteccion CSRF, entre otros.
+Utilidades compartidas: `fetchWithAuth` para manejo de sesión expirada, `tenant.ts` para multi-tenant, `theme.ts` para colores dinámicos, `csrf.ts` para protección CSRF, entre otros.
 
 ### `src/config/`
 
-Configuracion centralizada de la API (`api.config.ts`). Define todos los endpoints del backend como funciones type-safe.
+Configuración centralizada de la API (`api.config.ts`). Define todos los endpoints del backend como funciones type-safe.
 
 ### `src/types/`
 
@@ -113,4 +113,4 @@ Interfaces TypeScript agrupadas por dominio. Son la fuente de verdad para los ti
 
 ### `src/styles/`
 
-Archivo `globals.css` con la configuracion de Tailwind, CSS variables para colores dinamicos por tenant, y variables de shadcn/ui.
+Archivo `globals.css` con la configuración de Tailwind, CSS variables para colores dinámicos por tenant, y variables de shadcn/ui.

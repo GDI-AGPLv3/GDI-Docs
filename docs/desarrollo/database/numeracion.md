@@ -1,8 +1,8 @@
-# Sistema de Numeracion
+# Sistema de Numeración
 
-El sistema genera numeros oficiales unicos para todos los documentos del sistema. Usa **advisory locks** de PostgreSQL para prevenir race conditions en entornos concurrentes.
+El sistema genera números oficiales únicos para todos los documentos del sistema. Usa **advisory locks** de PostgreSQL para prevenir race conditions en entornos concurrentes.
 
-## Formato del Numero Oficial
+## Formato del Número Oficial
 
 ```
 {TIPO}-{ANIO}-{SECUENCIA:08d}-{MUNICIPIO}-{DEPARTAMENTO}
@@ -10,11 +10,11 @@ El sistema genera numeros oficiales unicos para todos los documentos del sistema
 
 | Componente | Ejemplo | Origen |
 |------------|---------|--------|
-| TIPO | `IF`, `CAEX`, `PV` | Acronimo del tipo de documento |
-| ANIO | `2026` | Anio actual |
-| SECUENCIA | `00000001` | Secuencia global (8 digitos, zero-padded) |
-| MUNICIPIO | `TXST` | Acronimo de la organizacion (de `public.municipalities`) |
-| DEPARTAMENTO | `INTE` | Acronimo del departamento del numerador |
+| TIPO | `IF`, `CAEX`, `PV` | Acrónimo del tipo de documento |
+| ANIO | `2026` | Año actual |
+| SECUENCIA | `00000001` | Secuencia global (8 dígitos, zero-padded) |
+| MUNICIPIO | `TXST` | Acrónimo de la organización (de `public.municipalities`) |
+| DEPARTAMENTO | `INTE` | Acrónimo del departamento del numerador |
 
 **Ejemplos:**
 
@@ -28,40 +28,40 @@ RESOL-2026-00000005-TXST-HAC     -- Resolucion
 
 ## Secuencia Global
 
-La secuencia es **global por anio**: todos los tipos de documentos comparten la misma secuencia. Esto garantiza:
+La secuencia es **global por año**: todos los tipos de documentos comparten la misma secuencia. Esto garantiza:
 
-- No hay numeros duplicados entre tipos de documento
-- Orden cronologico unico entre todos los documentos de la organizacion
-- Trazabilidad simple (el numero mas alto = ultimo documento numerado)
+- No hay números duplicados entre tipos de documento
+- Orden cronológico único entre todos los documentos de la organización
+- Trazabilidad simple (el número más alto = último documento numerado)
 
-La secuencia se resetea a 1 al cambiar de anio.
+La secuencia se resetea a 1 al cambiar de año.
 
 ## Advisory Lock
 
-### Por que Advisory Lock
+### Por qué Advisory Lock
 
 PostgreSQL sequences (`nextval`) no sirven porque:
 
-1. No se resetean por anio automaticamente
-2. Si una transaccion hace rollback, el numero se pierde (huecos permanentes)
+1. No se resetean por año automáticamente
+2. Si una transacción hace rollback, el número se pierde (huecos permanentes)
 
 El advisory lock permite:
 
 - Serializar el acceso al SELECT MAX + INSERT
-- Reutilizar numeros en caso de rollback (no hay huecos)
+- Reutilizar números en caso de rollback (no hay huecos)
 - Lock ultra corto (10-20ms)
 
 ### Lock IDs
 
 | Lock ID | Uso | Donde se usa |
 |---------|-----|--------------|
-| `888888` | Numeracion de documentos oficiales | `shared/numbering.py` |
-| `999999` | Numeracion de expedientes | `database.py` |
+| `888888` | Numeración de documentos oficiales | `shared/numbering.py` |
+| `999999` | Numeración de expedientes | `database.py` |
 
 !!! warning "Lock IDs fijos"
-    Los IDs `888888` y `999999` son arbitrarios pero deben ser unicos en todo el sistema. No cambiar sin verificar que no hay conflictos.
+    Los IDs `888888` y `999999` son arbitrarios pero deben ser únicos en todo el sistema. No cambiar sin verificar que no hay conflictos.
 
-### Flujo de Numeracion
+### Flujo de Numeración
 
 ```mermaid
 sequenceDiagram
@@ -84,9 +84,9 @@ sequenceDiagram
     Note over PG: Lock liberado
 ```
 
-### Codigo (Python)
+### Código (Python)
 
-El modulo `shared/numbering.py` del Backend centraliza toda la logica:
+El módulo `shared/numbering.py` del Backend centraliza toda la lógica:
 
 ```python
 # Lock ID unico para numeracion de documentos oficiales
@@ -147,9 +147,9 @@ async def generate_official_number(
 ```
 
 !!! note "schema_name keyword-only"
-    La funcion `generate_official_number` recibe `schema_name` despues de `*`, lo que lo hace keyword-only. Siempre debe llamarse como `schema_name=schema_name`.
+    La función `generate_official_number` recibe `schema_name` después de `*`, lo que lo hace keyword-only. Siempre debe llamarse como `schema_name=schema_name`.
 
-## Numeracion de Expedientes
+## Numeración de Expedientes
 
 Los expedientes usan un sistema similar con el lock ID `999999`:
 
@@ -182,16 +182,16 @@ def get_next_case_sequence(year: int = None, *, schema_name: str) -> int:
             return result['next_sequence']
 ```
 
-## Documentos Automaticos
+## Documentos Automáticos
 
-Dos tipos de documentos se generan automaticamente y usan el mismo sistema de numeracion:
+Dos tipos de documentos se generan automáticamente y usan el mismo sistema de numeración:
 
-| Tipo | Acronimo | Cuando se genera | Generador |
+| Tipo | Acrónimo | Cuando se genera | Generador |
 |------|----------|------------------|-----------|
-| Caratula | CAEX | Al crear un expediente | `services/cases/cover_creator.py` |
+| Carátula | CAEX | Al crear un expediente | `services/cases/cover_creator.py` |
 | Pase | PV | Al transferir un expediente | `services/cases/transfer_document_creator.py` |
 
-Ambos llaman a `generate_official_number()` del modulo `shared/numbering.py`.
+Ambos llaman a `generate_official_number()` del módulo `shared/numbering.py`.
 
 ## Tabla Resumen
 
@@ -199,8 +199,8 @@ Ambos llaman a `generate_official_number()` del modulo `shared/numbering.py`.
 |---------|---------------------|-------------|
 | Lock ID | 888888 | 999999 |
 | Formato | `{TIPO}-{ANIO}-{SEQ:08d}-{MUNI}-{DEPT}` | `EE-{ANIO}-{SEQ:06d}-{MUNI}-{DEPT}` |
-| Secuencia | Global por anio (8 digitos) | Global por anio (6 digitos) |
+| Secuencia | Global por año (8 dígitos) | Global por año (6 dígitos) |
 | Columna | `official_documents.global_sequence` | Extraida de `cases.case_number` |
-| Modulo | `shared/numbering.py` | `database.py` |
+| Módulo | `shared/numbering.py` | `database.py` |
 | Tipo lock | `pg_advisory_xact_lock` | `pg_advisory_xact_lock` |
-| Duracion lock | ~10-20ms | ~10-20ms |
+| Duración lock | ~10-20ms | ~10-20ms |

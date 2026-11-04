@@ -1,10 +1,10 @@
 # Notas
 
-**5 endpoints** para gestion de notas internas.
+**5 endpoints** para gestión de notas internas.
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
-Las notas son comunicaciones internas entre usuarios del sistema. Funcionan como un sistema de mensajeria interna vinculado al contexto de gestion documental.
+Las notas son comunicaciones internas entre usuarios del sistema. Funcionan como un sistema de mensajería interna vinculado al contexto de gestión documental.
 
 ---
 
@@ -16,15 +16,15 @@ Las notas son comunicaciones internas entre usuarios del sistema. Funcionan como
 GET /api/v1/notes/received
 ```
 
-Devuelve las notas recibidas por el usuario actual. Soporta paginacion.
+Devuelve las notas recibidas por el usuario actual. Soporta paginación.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina (max `100`) |
-| `unread_only` | bool | `false` | Mostrar solo notas no leidas |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página (max `100`) |
+| `unread_only` | bool | `false` | Mostrar solo notas no leídas |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
 
 **Ejemplo:**
@@ -66,14 +66,14 @@ curl -X GET "https://gateway.your-domain.com/api/v1/notes/received?unread_only=t
 GET /api/v1/notes/sent
 ```
 
-Devuelve las notas enviadas por el usuario actual. Soporta paginacion.
+Devuelve las notas enviadas por el usuario actual. Soporta paginación.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina (max `100`) |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página (max `100`) |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
 
 **Ejemplo:**
@@ -117,14 +117,14 @@ curl -X GET "https://gateway.your-domain.com/api/v1/notes/sent?page=1&page_size=
 GET /api/v1/notes/archived
 ```
 
-Devuelve las notas que el usuario ha archivado. Soporta paginacion.
+Devuelve las notas que el usuario ha archivado. Soporta paginación.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina (max `100`) |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página (max `100`) |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
 
 **Ejemplo:**
@@ -167,11 +167,11 @@ curl -X GET "https://gateway.your-domain.com/api/v1/notes/archived?page=1&page_s
 GET /api/v1/notes/{note_id}
 ```
 
-Devuelve el contenido completo de una nota. Si la nota estaba sin leer, se marca como leida automaticamente.
+Devuelve el contenido completo de una nota. Si la nota estaba sin leer, se marca como leída automáticamente.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `note_id` | UUID | Identificador de la nota |
 
@@ -210,13 +210,13 @@ curl -X GET "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-222
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Nota no encontrada |
 | `403` | El usuario no es remitente ni destinatario de la nota |
 
-!!! info "Marcado automatico de lectura"
-    Al consultar el detalle de una nota recibida, esta se marca como leida automaticamente. No es necesario realizar una accion adicional.
+!!! info "Marcado automático de lectura"
+    Al consultar el detalle de una nota recibida, esta se marca como leída automáticamente. No es necesario realizar una acción adicional.
 
 ---
 
@@ -228,20 +228,20 @@ curl -X GET "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-222
 PATCH /api/v1/notes/{note_id}/archive
 ```
 
-Archiva o desarchiva una nota. Las notas archivadas dejan de aparecer en la bandeja de recibidos y se muestran en la seccion de archivados.
+Archiva o desarchiva una nota. Las notas archivadas dejan de aparecer en la bandeja de recibidos y se muestran en la sección de archivados.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `note_id` | UUID | Identificador de la nota |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `archived` | bool | Si | `true` para archivar, `false` para desarchivar |
-| `sector_id` | UUID | Si | ID del sector desde el que se realiza la accion |
+| `archived` | bool | Sí | `true` para archivar, `false` para desarchivar |
+| `sector_id` | UUID | Sí | ID del sector desde el que se realiza la acción |
 
 **Ejemplo (archivar):**
 
@@ -291,8 +291,8 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/notes/a1b2c3d4-0000-1111-2
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | Campos requeridos faltantes o invalidos |
+| `400` | Campos requeridos faltantes o inválidos |
 | `403` | El usuario no tiene permisos sobre esta nota desde el sector indicado |
 | `404` | Nota no encontrada |

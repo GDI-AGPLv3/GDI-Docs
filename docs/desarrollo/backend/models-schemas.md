@@ -1,21 +1,21 @@
 # Models y Schemas
 
-El backend usa **Pydantic v2** para validacion de requests y responses. Los modelos estan organizados en `models/` por dominio.
+El backend usa **Pydantic v2** para validación de requests y responses. Los modelos están organizados en `models/` por dominio.
 
-## Convencion de Nombres
+## Convención de Nombres
 
-| Elemento | Patron | Ejemplo |
+| Elemento | Patrón | Ejemplo |
 |----------|--------|---------|
 | Request | `{Action}{Domain}Request` | `CreateDocumentRequest` |
 | Response | `{Action}{Domain}Response` | `CreateDocumentResponse` |
-| Item | `{Domain}Item` | `UserListItem` |
+| Ítem | `{Domain}Item` | `UserListItem` |
 | Lista | `{Domain}ListResponse` | `UserListResponse` |
 
 ## Modelos Principales
 
 ### AuthenticatedUser
 
-Modelo que representa al usuario autenticado en cada request. Se obtiene via `Depends(get_current_user)`.
+Modelo que representa al usuario autenticado en cada request. Se obtiene vía `Depends(get_current_user)`.
 
 ```python
 # models/schemas.py
@@ -29,7 +29,7 @@ class AuthenticatedUser(BaseModel):
 
 ### SectorPermission
 
-Permisos del usuario sobre un sector especifico.
+Permisos del usuario sobre un sector específico.
 
 ```python
 # models/schemas.py
@@ -48,7 +48,7 @@ class SectorPermission(BaseModel):
 
 Ubicados en `models/documents/`.
 
-### Creacion
+### Creación
 
 ```python
 # models/documents/creation.py
@@ -63,7 +63,7 @@ class CreateDocumentResponse(BaseModel):
     message: str
 ```
 
-### Edicion
+### Edición
 
 ```python
 # models/documents/editing.py
@@ -101,7 +101,7 @@ class SuperSignResponse(BaseModel):
     official_number: Optional[str] = None
 ```
 
-### Rechazo y Eliminacion
+### Rechazo y Eliminación
 
 ```python
 # models/documents/rejection.py
@@ -130,7 +130,7 @@ class UnifiedDocumentDetailsResponse(BaseModel):
     details: dict
 ```
 
-### Busqueda
+### Búsqueda
 
 ```python
 # models/documents/official_search.py
@@ -196,7 +196,7 @@ class Tags(str, Enum):
     SISTEMA = "sistema"
 ```
 
-## Jerarquia de Excepciones
+## Jerarquía de Excepciones
 
 Definida en `shared/exceptions.py`:
 
@@ -222,4 +222,4 @@ GDIBaseException
 └── ExternalServiceError         -> 502
 ```
 
-La funcion `exception_to_http_exception()` convierte automaticamente estas excepciones a `HTTPException` de FastAPI con el codigo HTTP correspondiente.
+La función `exception_to_http_exception()` convierte automáticamente estas excepciones a `HTTPException` de FastAPI con el código HTTP correspondiente.

@@ -1,14 +1,14 @@
 # REST API
 
-API REST publica con autenticacion por API Key para integraciones programaticas.
+API REST pública con autenticación por API Key para integraciones programáticas.
 
-**Ubicacion:** `api_gateway/rest_api.py`
+**Ubicación:** `api_gateway/rest_api.py`
 
-## Autenticacion
+## Autenticación
 
 Requiere **dos headers** en cada request:
 
-| Header | Descripcion | Ejemplo |
+| Header | Descripción | Ejemplo |
 |--------|-------------|---------|
 | `X-API-Key` | API Key del sistema externo | `sk-gdi-abc123...` |
 | `X-User-ID` | UUID del usuario que ejecuta | `550e8400-e29b-41d4-...` |
@@ -19,7 +19,7 @@ curl -H "X-API-Key: sk-gdi-abc123" \
      https://mcp.tu-dominio.com/api/v1/cases/search
 ```
 
-### Validacion (`auth_rest.py`)
+### Validación (`auth_rest.py`)
 
 ```python
 async def validate_rest_api_key(api_key: str, user_id: str) -> MCPContext:
@@ -37,7 +37,7 @@ async def validate_rest_api_key(api_key: str, user_id: str) -> MCPContext:
 |-------|-------|
 | 401 "X-API-Key header requerido" | Falta header |
 | 401 "X-User-ID header requerido" | Falta header |
-| 401 "API Key invalida o expirada" | Key no encontrada o expirada |
+| 401 "API Key inválida o expirada" | Key no encontrada o expirada |
 | 401 "Usuario no autorizado" | user_id no asociado a la API Key |
 
 ### Tablas de BD
@@ -67,7 +67,7 @@ public.api_key_users (
 
 ### Expedientes
 
-| Metodo | Endpoint | Descripcion |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/api/v1/cases/search` | Buscar expedientes |
 | GET | `/api/v1/cases/{case_id}` | Detalle de expediente |
@@ -77,7 +77,7 @@ public.api_key_users (
 
 ### Documentos
 
-| Metodo | Endpoint | Descripcion |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/api/v1/documents/search` | Buscar documentos |
 | GET | `/api/v1/documents/pending-signatures` | Firmas pendientes |
@@ -86,7 +86,7 @@ public.api_key_users (
 
 ### Sistema
 
-| Metodo | Endpoint | Descripcion |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/api/v1/system/document-types` | Tipos de documentos |
 | GET | `/api/v1/system/sectors` | Sectores y departamentos |
@@ -95,9 +95,9 @@ public.api_key_users (
 
 ---
 
-## Implementacion de Handlers
+## Implementación de Handlers
 
-Cada handler valida auth, extrae parametros y llama al tool correspondiente:
+Cada handler valida auth, extrae parámetros y llama al tool correspondiente:
 
 ```python
 async def api_search_cases(request: Request) -> JSONResponse:
@@ -127,7 +127,7 @@ async def api_search_cases(request: Request) -> JSONResponse:
     return _success_response(result)
 ```
 
-### Serializacion
+### Serialización
 
 Los handlers usan un serializador custom para `datetime` y `UUID`:
 
@@ -144,26 +144,26 @@ def _json_serializer(obj):
 
 ## Query Parameters Comunes
 
-### Busqueda de Expedientes
+### Búsqueda de Expedientes
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina (max 100) |
-| `search` | string | "" | Buscar por numero o referencia |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página (max 100) |
+| `search` | string | "" | Buscar por número o referencia |
 | `status` | string | null | `active`, `inactive`, `archived` |
 | `date_filter` | string | null | `today`, `week`, `month`, `year` |
-| `sector_filter` | string | null | Acronimo del sector |
+| `sector_filter` | string | null | Acrónimo del sector |
 
-### Busqueda de Documentos
+### Búsqueda de Documentos
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina |
-| `search` | string | "" | Buscar por referencia o numero |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página |
+| `search` | string | "" | Buscar por referencia o número |
 | `status` | string | null | `draft`, `sent_to_sign`, `signed` |
-| `doc_type` | string | null | Acronimo de tipo (INF, DICT, etc.) |
+| `doc_type` | string | null | Acrónimo de tipo (INF, DICT, etc.) |
 
 ---
 
