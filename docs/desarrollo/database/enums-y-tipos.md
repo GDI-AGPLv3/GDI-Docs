@@ -6,7 +6,7 @@ Todos los tipos enumerados se definen en el schema `public` y son compartidos po
 
 | ENUM | Valores | Uso |
 |------|---------|-----|
-| `country_enum` | 11 paises | `municipalities.country` |
+| `country_enum` | 11 países | `municipalities.country` |
 | `document_status` | 5 estados | `document_draft.status` |
 | `document_signer_status` | 3 estados | `document_signers.status` |
 | `movement_type` | 9 tipos | `case_movements.type` |
@@ -18,7 +18,7 @@ Todos los tipos enumerados se definen en el schema `public` y son compartidos po
 
 ## country_enum
 
-Codigos ISO de paises soportados (LATAM).
+Códigos ISO de países soportados (LATAM).
 
 ```sql
 CREATE TYPE "public"."country_enum" AS ENUM (
@@ -104,15 +104,15 @@ CREATE TYPE "public"."movement_type" AS ENUM (
 
 **Usado en:** `case_movements.type`
 
-| Valor | Descripcion | Genera PV |
+| Valor | Descripción | Genera PV |
 |-------|-------------|-----------|
 | `creation` | Movimiento inicial al crear expediente | No |
-| `transfer` | Transferencia a otro sector (genera Pase) | Si |
-| `assignment` | Asignacion a un usuario dentro del sector | No |
-| `assignment_close` | Cierre de una asignacion | No |
+| `transfer` | Transferencia a otro sector (genera Pase) | Sí |
+| `assignment` | Asignación a un usuario dentro del sector | No |
+| `assignment_close` | Cierre de una asignación | No |
 | `status_change` | Cambio de estado del expediente | No |
-| `document_link` | Vinculacion de un documento oficial | No |
-| `subsanacion` | Correccion de un documento erroneo | No |
+| `document_link` | Vinculación de un documento oficial | No |
+| `subsanacion` | Corrección de un documento erróneo | No |
 | `document_proposal` | Propuesta de vincular un borrador | No |
 | `document_proposal_reject` | Rechazo de una propuesta | No |
 
@@ -172,9 +172,9 @@ CREATE TYPE "public"."document_type_source" AS ENUM (
 
 **Usado en:** `document_types.type`, `global_document_types.type`
 
-| Valor | Descripcion | Ejemplo |
+| Valor | Descripción | Ejemplo |
 |-------|-------------|---------|
-| `HTML` | Documento creado con el editor integrado | Informe (IF), Resolucion (RESOL) |
+| `HTML` | Documento creado con el editor integrado | Informe (IF), Resolución (RESOL) |
 | `Importado` | PDF externo subido al sistema | Oficio Judicial (OFJUD), Plano (PLANO) |
 | `NOTA` | Nota con sistema de destinatarios (TO/CC/BCC) | Nota (NOTA) |
 
@@ -182,13 +182,13 @@ CREATE TYPE "public"."document_type_source" AS ENUM (
 
 ## Tipos de Datos Especiales
 
-Ademas de los ENUMs, el sistema usa estos tipos de PostgreSQL:
+Además de los ENUMs, el sistema usa estos tipos de PostgreSQL:
 
-| Tipo | Extension | Uso |
+| Tipo | Extensión | Uso |
 |------|-----------|-----|
 | `vector(1536)` | pgvector | Embeddings en `document_chunks.embedding` |
 | `UUID` | built-in | Primary keys y foreign keys |
-| `JSONB` | built-in | Contenido de documentos, schemas de datos, configuracion |
+| `JSONB` | built-in | Contenido de documentos, schemas de datos, configuración |
 | `UUID[]` | built-in | Array de sector IDs en `official_documents.signer_sector_ids` |
 | `TEXT[]` | built-in | Array de campos modificados en `audit_log.changed_fields` |
 

@@ -30,10 +30,10 @@ Lista todos los sectores con sus departamentos asociados.
 
 **Uso principal:**
 
-- Organigrama de la organizacion
+- Organigrama de la organización
 - Selector de sectores para transferencias
 - Filtros en listas de expedientes
-- Asignacion de usuarios a sectores
+- Asignación de usuarios a sectores
 
 **Archivo:** `endpoints/sectors/list_sectors.py`
 
@@ -57,12 +57,12 @@ Municipalidad
         └── Usuario 5
 ```
 
-- **Departamento**: Agrupacion administrativa (Secretaria, Direccion, etc.)
-- **Sector**: Subdivision operativa dentro del departamento
+- **Departamento**: Agrupación administrativa (Secretaría, Dirección, etc.)
+- **Sector**: Subdivisión operativa dentro del departamento
 - **Usuarios**: Pertenecen a un sector primario pero pueden tener permisos en otros
 
 Cada sector tiene:
 
-- `acronym`: Codigo corto para identificacion rapida
+- `acronym`: Código corto para identificación rápida
 - `department_color`: Color para UI
 - `user_count`: Cantidad de usuarios activos

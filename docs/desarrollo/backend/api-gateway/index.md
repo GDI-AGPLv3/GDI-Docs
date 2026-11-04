@@ -1,8 +1,8 @@
 # API Gateway
 
-El API Gateway de GDI-Backend expone dos interfaces externas: un **MCP Server** para clientes IA y una **REST API** para integraciones programaticas.
+El API Gateway de GDI-Backend expone dos interfaces externas: un **MCP Server** para clientes IA y una **REST API** para integraciones programáticas.
 
-**Ubicacion:** `api_gateway/`
+**Ubicación:** `api_gateway/`
 
 ## Arquitectura
 
@@ -48,7 +48,7 @@ api_gateway/
     └── notes.py       # get_notes, get_memos, get_sent_notes, etc.
 ```
 
-## Comparacion MCP vs REST
+## Comparación MCP vs REST
 
 | Aspecto | MCP Server | REST API |
 |---------|------------|----------|
@@ -57,10 +57,10 @@ api_gateway/
 | **Auth** | OAuth 2.0 (Auth0 JWT) | API Key + X-User-ID |
 | **Clientes** | Claude Code, ChatGPT, Gemini | Scripts, bots, apps |
 | **Discovery** | `/.well-known/oauth-protected-resource` | `/.well-known/openapi.json` |
-| **Multi-tenant** | Automatico (JWT -> email -> usuario) | Manual (X-User-ID -> sector) |
-| **Tools** | 42 tools (lectura y escritura) | Endpoints equivalentes via REST |
+| **Multi-tenant** | Automático (JWT -> email -> usuario) | Manual (X-User-ID -> sector) |
+| **Tools** | 42 tools (lectura y escritura) | Endpoints equivalentes vía REST |
 
-## URLs de Produccion
+## URLs de Producción
 
 | Servicio | URL |
 |----------|-----|

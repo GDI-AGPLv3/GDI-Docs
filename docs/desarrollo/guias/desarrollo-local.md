@@ -1,10 +1,10 @@
 # Desarrollo Local
 
-Guia para levantar el ecosistema GDI Latam en tu maquina local.
+Guía para levantar el ecosistema GDI Latam en tu máquina local.
 
 ## Requisitos
 
-| Software | Version | Notas |
+| Software | Versión | Notas |
 |----------|---------|-------|
 | Python | 3.12+ | Backend principal y microservicios |
 | Node.js | 20+ | Frontends (Next.js 15) |
@@ -17,7 +17,7 @@ Guia para levantar el ecosistema GDI Latam en tu maquina local.
 
 ## Clonar Repositorios
 
-Cada servicio es un repositorio Git independiente. La carpeta raiz **no es un repo**.
+Cada servicio es un repositorio Git independiente. La carpeta raíz **no es un repo**.
 
 ```bash
 # Crear directorio raiz
@@ -40,12 +40,12 @@ git clone <url>/GDI-AgenteLANG.git   # Agente IA (:8004)
 git clone <url>/GDI-BD.git           # Scripts SQL
 ```
 
-!!! warning "Git desde raiz"
-    Nunca ejecutar comandos `git` desde la carpeta raiz. Siempre operar dentro de cada repo individual o usar `git -C <repo>`.
+!!! warning "Git desde raíz"
+    Nunca ejecutar comandos `git` desde la carpeta raíz. Siempre operar dentro de cada repo individual o usar `git -C <repo>`.
 
 ## Variables de Entorno
 
-Cada servicio necesita su propio archivo `.env`. A continuacion las variables minimas para desarrollo local.
+Cada servicio necesita su propio archivo `.env`. A continuación las variables mínimas para desarrollo local.
 
 ### GDI-Backend (.env)
 
@@ -139,7 +139,7 @@ Ver referencia completa en [Variables de Entorno](../arquitectura/variables-ento
 
 ## Base de Datos Local
 
-### Opcion A: PostgreSQL local
+### Opción A: PostgreSQL local
 
 ```bash
 # Instalar extensiones (una vez)
@@ -158,7 +158,7 @@ psql -U postgres -d railway -f sql/02-seed-global.sql
 psql -U postgres -d railway -f sql/04-seed-demo.sql
 ```
 
-Ver mas detalles en [Base de Datos](../database/index.md) y [Scripts de Deploy](../database/scripts-deploy.md).
+Ver más detalles en [Base de Datos](../database/index.md) y [Scripts de Deploy](../database/scripts-deploy.md).
 
 ## Puertos del Ecosistema
 
@@ -226,10 +226,10 @@ npm install
 npm run dev  # Puerto 3013
 ```
 
-!!! tip "Inicio minimo"
-    Para desarrollo basico de documentos, solo necesitas: PostgreSQL + PDFComposer + Backend + Frontend. Los demas servicios son opcionales segun el feature que trabajes.
+!!! tip "Inicio mínimo"
+    Para desarrollo básico de documentos, solo necesitás: PostgreSQL + PDFComposer + Backend + Frontend. Los demás servicios son opcionales según el feature que trabajes.
 
-## Verificar Instalacion
+## Verificar Instalación
 
 ```bash
 # Health checks
@@ -261,7 +261,7 @@ curl -H "X-User-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
 
 ### Swagger UI
 
-FastAPI genera documentacion interactiva automaticamente:
+FastAPI genera documentación interactiva automáticamente:
 
 - Backend: `http://localhost:8000/docs`
 - BackOffice: `http://localhost:8010/docs`
@@ -291,7 +291,7 @@ pip install -r requirements.txt
 
 ### Hot Reload
 
-- **Python** (FastAPI): `uvicorn main:app --reload` recarga automaticamente al editar codigo
+- **Python** (FastAPI): `uvicorn main:app --reload` recarga automáticamente al editar código
 - **Next.js**: `npm run dev` tiene hot reload incluido
 
-Ver tambien [Troubleshooting](troubleshooting.md) para problemas comunes.
+Ver también [Troubleshooting](troubleshooting.md) para problemas comunes.

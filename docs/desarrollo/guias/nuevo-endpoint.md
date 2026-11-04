@@ -1,10 +1,10 @@
 # Agregar un Nuevo Endpoint
 
-Guia paso a paso para agregar un endpoint nuevo en GDI-Backend.
+Guía paso a paso para agregar un endpoint nuevo en GDI-Backend.
 
 ## Arquitectura de Endpoints
 
-El Backend sigue un patron de **endpoints thin**: los endpoints solo validan input y delegan la logica a services.
+El Backend sigue un patrón de **endpoints thin**: los endpoints solo validan input y delegan la lógica a services.
 
 ```
 endpoints/{categoria}/router.py   # Rutas HTTP (thin controllers)
@@ -41,12 +41,12 @@ class MiFeatureResponse(BaseModel):
     created_by: str
 ```
 
-!!! tip "Validacion"
-    Pydantic v2 valida automaticamente los datos de entrada. Usar `Field(...)` para campos requeridos y `Field(None)` para opcionales. Ver [Models y Schemas](../backend/models-schemas.md).
+!!! tip "Validación"
+    Pydantic v2 valida automáticamente los datos de entrada. Usar `Field(...)` para campos requeridos y `Field(None)` para opcionales. Ver [Models y Schemas](../backend/models-schemas.md).
 
 ## Paso 2: Crear el Service
 
-Toda la logica de negocio va en la capa de services. Nunca poner logica en los endpoints.
+Toda la lógica de negocio va en la capa de services. Nunca poner lógica en los endpoints.
 
 ```python
 # services/mi_feature/mi_feature_service.py
@@ -115,7 +115,7 @@ async def obtener_mi_feature(
 ```
 
 !!! danger "Regla keyword-only"
-    El parametro `schema_name` **siempre** va despues de `*` en la firma de la funcion. Nunca pasarlo como argumento posicional. Ver [Multi-Tenant](../arquitectura/multi-tenant.md).
+    El parámetro `schema_name` **siempre** va después de `*` en la firma de la función. Nunca pasarlo como argumento posicional. Ver [Multi-Tenant](../arquitectura/multi-tenant.md).
 
 ## Paso 3: Crear el Router (Endpoint)
 
@@ -176,7 +176,7 @@ async def get_mi_feature_endpoint(
         raise HTTPException(status_code=404, detail=str(e))
 ```
 
-### Patron del Endpoint
+### Patrón del Endpoint
 
 Todos los endpoints siguen el mismo flujo:
 
@@ -185,19 +185,19 @@ Todos los endpoints siguen el mismo flujo:
 3. Llamar al service con `schema_name=schema_name`
 4. Capturar excepciones y convertirlas a HTTP responses
 
-Ver [Middleware](../backend/middleware.md) y [Autenticacion](../backend/auth.md).
+Ver [Middleware](../backend/middleware.md) y [Autenticación](../backend/auth.md).
 
 ## Paso 4: Registrar el Router en main.py
 
-El Backend carga endpoints dinamicamente por categoria. Hay dos opciones:
+El Backend carga endpoints dinámicamente por categoría. Hay dos opciones:
 
-### Opcion A: Agregar a categoria existente
+### Opción A: Agregar a categoría existente
 
-Si tu feature encaja en una categoria existente (documents, cases, users, sectors, etc.), el router se carga automaticamente al colocarlo en la carpeta correcta.
+Si tu feature encaja en una categoría existente (documents, cases, users, sectors, etc.), el router se carga automáticamente al colocarlo en la carpeta correcta.
 
-### Opcion B: Nueva categoria
+### Opción B: Nueva categoría
 
-Si necesitas una nueva categoria, editar `main.py`:
+Si necesitás una nueva categoría, editar `main.py`:
 
 ```python
 # main.py - agregar la nueva categoria
@@ -208,7 +208,7 @@ endpoint_categories = [
 ]
 ```
 
-Y agregar la carga del router en la seccion de `include_endpoints`:
+Y agregar la carga del router en la sección de `include_endpoints`:
 
 ```python
 elif category == 'mi_feature':
@@ -217,11 +217,11 @@ elif category == 'mi_feature':
         app.include_router(router_module.router)
 ```
 
-## Paso 5: Agregar Autenticacion y Permisos
+## Paso 5: Agregar Autenticación y Permisos
 
-### Auth0 JWT (produccion)
+### Auth0 JWT (producción)
 
-El `TenantMiddleware` ya valida el JWT y extrae el usuario. Solo necesitas verificar permisos especificos en el service si aplica:
+El `TenantMiddleware` ya valida el JWT y extrae el usuario. Solo necesitás verificar permisos específicos en el service si aplica:
 
 ```python
 # En el service, verificar permiso especifico
@@ -234,7 +234,7 @@ async def crear_mi_feature(..., user_id: str, *, schema_name: str):
 
 ### Testing Mode
 
-Con `TESTING_MODE=true`, el middleware acepta `X-User-ID` como header en lugar de JWT. No necesitas cambiar nada en el endpoint.
+Con `TESTING_MODE=true`, el middleware acepta `X-User-ID` como header en lugar de JWT. No necesitás cambiar nada en el endpoint.
 
 ## Paso 6: Testear
 
@@ -277,10 +277,10 @@ curl http://localhost:8000/health
 ## Checklist
 
 - [ ] Schemas Pydantic creados en `models/`
-- [ ] Service creado en `services/` con logica de negocio
+- [ ] Service creado en `services/` con lógica de negocio
 - [ ] `schema_name` es keyword-only en todas las funciones de BD
 - [ ] Router creado en `endpoints/{categoria}/`
-- [ ] Router registrado en `main.py` (si nueva categoria)
+- [ ] Router registrado en `main.py` (si nueva categoría)
 - [ ] Endpoint extrae `schema_name` de `request.state`
 - [ ] Excepciones convertidas a HTTP responses
 - [ ] Testeado con curl o Swagger UI
@@ -288,10 +288,10 @@ curl http://localhost:8000/health
 
 ## Ejemplo Completo: Endpoint Existente
 
-Para referencia, ver como esta implementado el modulo de notas:
+Para referencia, ver cómo está implementado el módulo de notas:
 
 - **Endpoints**: `endpoints/notes/router.py`
 - **Service**: `services/notes/`
-- **Registrado en**: `main.py` linea 88 (`'notes'` en `endpoint_categories`)
+- **Registrado en**: `main.py` línea 88 (`'notes'` en `endpoint_categories`)
 
 Ver [Endpoints de Notas](../backend/endpoints/notas.md) y [Notes Service](../backend/services/notes-service.md).

@@ -1,41 +1,41 @@
-# Comunicacion entre Servicios
+# Comunicación entre Servicios
 
 ## Protocolos
 
-El ecosistema GDI utiliza tres protocolos de comunicacion:
+El ecosistema GDI utiliza tres protocolos de comunicación:
 
 | Protocolo | Uso | Formato |
 |-----------|-----|---------|
-| **REST (HTTP/JSON)** | Comunicacion general entre todos los servicios | JSON sobre HTTP |
-| **MCP (Model Context Protocol)** | Integracion con clientes IA (Claude, ChatGPT, Gemini) | JSON-RPC sobre HTTP |
+| **REST (HTTP/JSON)** | Comunicación general entre todos los servicios | JSON sobre HTTP |
+| **MCP (Model Context Protocol)** | Integración con clientes IA (Claude, ChatGPT, Gemini) | JSON-RPC sobre HTTP |
 | **S3 API** | Almacenamiento de PDFs en Cloudflare R2 | AWS S3 compatible |
 
 ## Tabla de Comunicaciones
 
-| Origen | Destino | Protocolo | Autenticacion | Puerto destino (Fly.io) | URL tipo |
+| Origen | Destino | Protocolo | Autenticación | Puerto destino (Fly.io) | URL tipo |
 |--------|---------|-----------|---------------|------------------------|----------|
-| GDI-FRONTEND | GDI-Backend | REST | Auth0 JWT (Bearer) | 8080 | Publica (Fly.io URL) |
-| GDI-BackOffice-Front | GDI-BackOffice-Back | REST | Auth0 JWT (Bearer) | 8080 | Publica (Fly.io URL) |
+| GDI-FRONTEND | GDI-Backend | REST | Auth0 JWT (Bearer) | 8080 | Pública (Fly.io URL) |
+| GDI-BackOffice-Front | GDI-BackOffice-Back | REST | Auth0 JWT (Bearer) | 8080 | Pública (Fly.io URL) |
 | GDI-Backend | GDI-PDFComposer | REST | API Key (`X-API-Key`) + `X-PDF-SHA256` | 8080 | Fly.io *.internal (privada) |
 | GDI-Backend | GDI-Notary | REST | API Key (`X-API-Key`) | 8080 | Fly.io *.internal (privada) |
 | GDI-Backend | Cloudflare R2 | S3 API | Access Key + Secret Key | 443 | Externa (HTTPS) |
 | GDI-AgenteLANG | GDI-Backend | REST | `X-API-Key` (INTERNAL_API_KEY) | 8080 | Fly.io *.internal (privada) |
 | GDI-AgenteLANG | OpenRouter | REST | API Key (Bearer) | 443 | Externa (HTTPS) |
 | GDI-AgenteLANG | PostgreSQL | TCP | Connection string | 5432 | Fly.io *.internal (privada) |
-| Cliente MCP | GDI-MCP Server | MCP (JSON-RPC) | OAuth 2.0 (Auth0 JWT) | 8080 | Publica (Fly.io URL) |
+| Cliente MCP | GDI-MCP Server | MCP (JSON-RPC) | OAuth 2.0 (Auth0 JWT) | 8080 | Pública (Fly.io URL) |
 | GDI-BackOffice-Back | PostgreSQL | TCP | Connection string | 5432 | Fly.io *.internal (privada) |
 
 !!! note "INTERNAL_API_KEY"
     La variable `INTERNAL_API_KEY` es compartida entre el Backend y AgenteLANG de cada ambiente. Hay una key distinta por ambiente. Se usa en el header `X-API-Key` para llamadas de AgenteLANG al Backend.
 
 !!! note "X-PDF-SHA256"
-    El Backend envia el header `X-PDF-SHA256` junto con el PDF al PDFComposer para verificacion de integridad del contenido.
+    El Backend envía el header `X-PDF-SHA256` junto con el PDF al PDFComposer para verificación de integridad del contenido.
 
-## Autenticacion Inter-Servicio
+## Autenticación Inter-Servicio
 
 ### Auth0 JWT (Frontend a Backend)
 
-Los frontends autentican usuarios mediante Auth0. El JWT se envia en el header `Authorization: Bearer <token>`. Los backends validan el token contra Auth0 JWKS.
+Los frontends autentican usuarios mediante Auth0. El JWT se envía en el header `Authorization: Bearer <token>`. Los backends validan el token contra Auth0 JWKS.
 
 ```
 Frontend → Auth0 (login) → JWT
@@ -45,7 +45,7 @@ Backend → Auth0 JWKS (validacion)
 
 ### API Key (Backend a Microservicios)
 
-La comunicacion entre el Backend y los microservicios (PDFComposer, Notary) usa API Keys simples en el header `X-API-Key`.
+La comunicación entre el Backend y los microservicios (PDFComposer, Notary) usa API Keys simples en el header `X-API-Key`.
 
 ```python
 # Ejemplo: Backend llamando a PDFComposer
@@ -55,7 +55,7 @@ response = await client.post(f"{PDFCOMPOSER_URL}/generate-pdf", headers=headers,
 
 ### OAuth 2.0 (MCP Server)
 
-Los clientes MCP externos (Claude Code, ChatGPT, Gemini) se autentican via OAuth 2.0 con Auth0:
+Los clientes MCP externos (Claude Code, ChatGPT, Gemini) se autentican vía OAuth 2.0 con Auth0:
 
 ```mermaid
 sequenceDiagram
@@ -74,9 +74,9 @@ sequenceDiagram
     M-->>C: Respuesta MCP
 ```
 
-### REST API Publica (API Key + User ID)
+### REST API Pública (API Key + User ID)
 
-La REST API del MCP Server tambien soporta autenticacion por API Key para integraciones programaticas:
+La REST API del MCP Server también soporta autenticación por API Key para integraciones programáticas:
 
 ```bash
 curl -H "X-API-Key: sk-gdi-xxx" \
@@ -84,11 +84,11 @@ curl -H "X-API-Key: sk-gdi-xxx" \
      https://mcp.tu-dominio.com/api/v1/cases/search
 ```
 
-## Comunicacion Interna (Fly.io Private Networking)
+## Comunicación Interna (Fly.io Private Networking)
 
 ### URLs Internas en PRD (servicio a servicio)
 
-En produccion (Fly.io), los servicios se comunican via red privada usando hostnames `*.internal` con puerto `8080`. Estas no pasan por internet, lo que reduce latencia y aumenta seguridad. PDFComposer y Notary en PRD **no tienen IP publica** — solo son accesibles via estas URLs internas.
+En producción (Fly.io), los servicios se comunican vía red privada usando hostnames `*.internal` con puerto `8080`. Estas no pasan por internet, lo que reduce latencia y aumenta seguridad. PDFComposer y Notary en PRD **no tienen IP pública** — solo son accesibles vía estas URLs internas.
 
 ```
 http://<app-name>.internal:8080
@@ -120,14 +120,14 @@ GDI_BACKEND_URL=http://localhost:8000
 ```
 
 !!! tip "Ventajas de Fly.io Private Networking"
-    - Sin exposicion a internet (microservicios sin IP publica en PRD)
-    - Menor latencia (misma region gru)
+    - Sin exposición a internet (microservicios sin IP pública en PRD)
+    - Menor latencia (misma región gru)
     - Sin costos de bandwidth externo
     - Nombres DNS estables (`<app-name>.internal`)
 
-### URLs Publicas (usuario a servicio)
+### URLs Públicas (usuario a servicio)
 
-Los frontends y clientes externos acceden via URLs publicas de Fly.io o dominios custom de Vercel:
+Los frontends y clientes externos acceden vía URLs públicas de Fly.io o dominios custom de Vercel:
 
 ```bash
 # Frontends en Vercel (PRD) - un subdominio por cliente/ambiente
@@ -139,9 +139,9 @@ https://<your-backend-app>.fly.dev/api/   # Backend
 https://<your-gateway-app>.fly.dev/mcp    # MCP Server
 ```
 
-### Comunicacion Externa
+### Comunicación Externa
 
-Algunos servicios se comunican con APIs externas que siempre usan HTTPS publico:
+Algunos servicios se comunican con APIs externas que siempre usan HTTPS público:
 
 ```bash
 # Cloudflare R2 (storage)
@@ -157,7 +157,7 @@ OPENROUTER_API_KEY=sk-or-...
 # Integrado en BackOffice-Back via Resend API
 ```
 
-## Patrones de Comunicacion
+## Patrones de Comunicación
 
 ### Request-Response sincrono
 
@@ -172,7 +172,7 @@ await upload_to_r2(signed_pdf, filename)
 
 ### Polling asincrono (AIWorker)
 
-El unico patron asincrono es el AIWorker de GDI-AgenteLANG, que hace polling cada 60 segundos sobre las tablas de documentos para generar resumenes y embeddings.
+El único patrón asincrono es el AIWorker de GDI-AgenteLANG, que hace polling cada 60 segundos sobre las tablas de documentos para generar resúmenes y embeddings.
 
 ```
 AIWorker (cada 60s) → PostgreSQL
@@ -184,7 +184,7 @@ AIWorker (cada 60s) → PostgreSQL
 
 ### Retry con fallback (Notary FULLPAGE)
 
-Cuando Notary detecta que la ultima pagina no tiene espacio para la firma, responde con error `FULLPAGE`. El Backend agrega automaticamente una pagina en blanco y reintenta:
+Cuando Notary detecta que la última página no tiene espacio para la firma, responde con error `FULLPAGE`. El Backend agrega automáticamente una página en blanco y reintenta:
 
 ```
 Backend → Notary: /sign-pdf (PDF original)
@@ -196,10 +196,10 @@ Notary → Backend: 200 (PDF firmado)
 
 ## Timeouts
 
-| Comunicacion | Timeout | Motivo |
+| Comunicación | Timeout | Motivo |
 |--------------|---------|--------|
-| Frontend a Backend | 30s | Request HTTP estandar |
-| Backend a PDFComposer | 60s | Generacion PDF puede ser lenta |
-| Backend a Notary | 30s | Firma es rapida |
+| Frontend a Backend | 30s | Request HTTP estándar |
+| Backend a PDFComposer | 60s | Generación PDF puede ser lenta |
+| Backend a Notary | 30s | Firma es rápida |
 | Backend a R2 | 30s | Upload/download de archivos |
 | AgenteLANG a OpenRouter | 60s | Respuesta de LLM |

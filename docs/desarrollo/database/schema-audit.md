@@ -1,6 +1,6 @@
 # Schema Audit
 
-Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schema_name}_audit` (ejemplo: `100_test_audit`). Registra automaticamente cambios en 9 tablas criticas mediante triggers.
+Cada organización tiene un schema de auditoría dedicado con nomenclatura `{schema_name}_audit` (ejemplo: `100_test_audit`). Registra automáticamente cambios en 9 tablas críticas mediante triggers.
 
 ## Arquitectura
 
@@ -13,7 +13,7 @@ Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schem
 
 ## Tabla: audit_log
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | BIGSERIAL | NO | auto | Identificador secuencial |
 | `event_time` | TIMESTAMPTZ | NO | `NOW()` | Momento del evento |
@@ -21,34 +21,34 @@ Cada organizacion tiene un schema de auditoria dedicado con nomenclatura `{schem
 | `table_name` | TEXT | NO | - | Tabla modificada |
 | `operation` | TEXT | NO | - | Tipo: INSERT, UPDATE, DELETE |
 | `user_name` | TEXT | SI | - | Usuario de PostgreSQL (`current_user`) |
-| `user_id` | UUID | SI | - | ID del usuario de la app (via GUC `app.user_id`) |
-| `auth_source` | VARCHAR(20) | SI | - | Origen de autenticacion |
+| `user_id` | UUID | SI | - | ID del usuario de la app (vía GUC `app.user_id`) |
+| `auth_source` | VARCHAR(20) | SI | - | Origen de autenticación |
 | `old_row` | JSONB | SI | - | Fila antes del cambio (UPDATE/DELETE) |
-| `new_row` | JSONB | SI | - | Fila despues del cambio (INSERT/UPDATE) |
+| `new_row` | JSONB | SI | - | Fila después del cambio (INSERT/UPDATE) |
 | `changed_fields` | TEXT[] | SI | - | Lista de campos modificados (solo UPDATE) |
 
-**Indices:**
+**Índices:**
 
-| Indice | Columnas | Proposito |
+| Índice | Columnas | Propósito |
 |--------|----------|-----------|
-| `idx_{schema}_audit_audit_log_event_time` | `event_time` | Busqueda por fecha |
+| `idx_{schema}_audit_audit_log_event_time` | `event_time` | Búsqueda por fecha |
 | `idx_{schema}_audit_audit_log_table` | `table_name` | Filtrar por tabla |
 | `idx_{schema}_audit_audit_log_user` | `user_id` | Buscar por usuario |
 | `idx_{schema}_audit_audit_log_table_event` | `(table_name, event_time DESC)` | Pantalla de auditoría: una tabla, lo más nuevo primero (migración 137) |
 
 ## Valores de auth_source
 
-| Valor | Origen | Descripcion |
+| Valor | Origen | Descripción |
 |-------|--------|-------------|
-| `jwt` | GDI-Frontend | Usuario autenticado via Auth0 JWT |
-| `api_key` | REST API | Acceso via API Key (GDI-MCP) |
-| `mcp_oauth` | MCP Server | Acceso via OAuth del MCP Server |
+| `jwt` | GDI-Frontend | Usuario autenticado vía Auth0 JWT |
+| `api_key` | REST API | Acceso vía API Key (GDI-MCP) |
+| `mcp_oauth` | MCP Server | Acceso vía OAuth del MCP Server |
 | `testing` | Testing mode | Modo de pruebas (sin Auth0) |
-| `system` | Backend | Operaciones automaticas del sistema |
+| `system` | Backend | Operaciones automáticas del sistema |
 
-## Funcion: fn_log_change
+## Función: fn_log_change
 
-La funcion `fn_log_change()` se ejecuta como trigger AFTER en cada operacion. Desde la
+La función `fn_log_change()` se ejecuta como trigger AFTER en cada operación. Desde la
 migración 137 recibe 2 argumentos por trigger (`TG_ARGV`):
 
 | Argumento | Valores | Qué hace |
@@ -92,9 +92,9 @@ Ejemplo: un UPDATE de `cases` que cambia `status` guarda en modo `diff`:
   "changed_fields": ["status", "updated_at"] }
 ```
 
-### Contexto de Auditoria (GUC)
+### Contexto de Auditoría (GUC)
 
-La funcion lee variables de sesion inyectadas por el Backend:
+La función lee variables de sesión inyectadas por el Backend:
 
 ```sql
 -- El Backend inyecta estos valores antes de cada operacion
@@ -113,9 +113,9 @@ with get_db_cursor(
     cursor.execute("INSERT INTO ...")
 ```
 
-La funcion usa `current_setting('app.user_id', true)` con el segundo parametro `true` para retornar NULL en lugar de error si la variable no existe.
+La función usa `current_setting('app.user_id', true)` con el segundo parámetro `true` para retornar NULL en lugar de error si la variable no existe.
 
-### Codigo SQL
+### Código SQL
 
 Fragmento de la versión de la migración 137 (la completa está en `sql/03-create-municipio.sql`):
 
@@ -183,13 +183,13 @@ $$ LANGUAGE plpgsql;
 | Tabla | Grupo | Modo | Columnas ruido | Que se registra |
 |-------|-------|------|----------------|-----------------|
 | `users` | Usuarios | `full` | `last_access` | Alta, cambios y baja de usuarios |
-| `departments` | Estructura | `full` | - | Creacion, renombramiento, cambio de jerarquia |
-| `sectors` | Estructura | `full` | - | Creacion, activacion/desactivacion |
+| `departments` | Estructura | `full` | - | Creación, renombramiento, cambio de jerarquía |
+| `sectors` | Estructura | `full` | - | Creación, activacion/desactivacion |
 | `citizens` | Ciudadanos | `full` | - | Alta y cambios de ciudadanos |
-| `official_documents` | Documentos | `diff` | `indexed_at` | Numeracion de documentos oficiales |
-| `cases` | Expedientes | `diff` | `last_modified_at` | Creacion, cambio de estado, archivado |
+| `official_documents` | Documentos | `diff` | `indexed_at` | Numeración de documentos oficiales |
+| `cases` | Expedientes | `diff` | `last_modified_at` | Creación, cambio de estado, archivado |
 | `case_movements` | Expedientes | `diff` | - | Transferencias, asignaciones, subsanaciones |
-| `case_assignment_tasks` | Expedientes | `diff` | - | Tareas de asignacion |
+| `case_assignment_tasks` | Expedientes | `diff` | - | Tareas de asignación |
 | `case_official_documents` | Expedientes | `diff` | - | Vinculacion/desvinculacion de docs a expedientes |
 
 Conteo por schema de municipio: 9 triggers `trg_audit_*` más 1 de sincronización
@@ -222,7 +222,7 @@ Un UPDATE que cambia otra columna, que pone `updated_at` a mano o que no cambia 
 moviendo `updated_at` como siempre. Las demás tablas siguen con `public.fn_set_updated_at()`.
 
 !!! note "Tablas NO auditadas"
-    Tablas de alta frecuencia como `document_draft`, `document_signers`, `user_roles` y `notes_recipients` no tienen triggers de auditoria para evitar impacto en rendimiento. Solo se auditan las tablas donde los cambios tienen impacto legal o administrativo.
+    Tablas de alta frecuencia como `document_draft`, `document_signers`, `user_roles` y `notes_recipients` no tienen triggers de auditoría para evitar impacto en rendimiento. Solo se auditan las tablas donde los cambios tienen impacto legal o administrativo.
 
 !!! info "Lo ya escrito no cambia"
     La migración 137 no borra ni achica los registros que ya estaban en `audit_log`. Rige para
@@ -230,7 +230,7 @@ moviendo `updated_at` como siempre. Las demás tablas siguen con `public.fn_set_
 
 ## Consultas Utiles
 
-### Ver ultimos cambios
+### Ver últimos cambios
 
 ```sql
 SELECT event_time, table_name, operation, user_id, changed_fields
@@ -239,7 +239,7 @@ ORDER BY event_time DESC
 LIMIT 20;
 ```
 
-### Filtrar por tabla y operacion
+### Filtrar por tabla y operación
 
 ```sql
 SELECT event_time, operation, user_id, auth_source,
@@ -251,7 +251,7 @@ WHERE table_name = 'cases'
 ORDER BY event_time DESC;
 ```
 
-### Ver cambios de un usuario especifico
+### Ver cambios de un usuario específico
 
 ```sql
 SELECT event_time, table_name, operation, changed_fields

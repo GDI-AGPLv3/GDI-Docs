@@ -1,8 +1,8 @@
 # Estructura del Proyecto
 
-Organizacion de carpetas y archivos del backend GDI.
+Organización de carpetas y archivos del backend GDI.
 
-## Arbol de Carpetas
+## Árbol de Carpetas
 
 ```
 GDI-Backend/
@@ -215,35 +215,35 @@ GDI-Backend/
     └── __init__.py
 ```
 
-## Patron de Organizacion
+## Patrón de Organización
 
 ### Endpoints (Controladores)
 
-Cada modulo de endpoint sigue el patron **thin controller**:
+Cada módulo de endpoint sigue el patrón **thin controller**:
 
-1. Recibe request con validacion Pydantic
-2. Extrae `schema_name` via `Depends(get_tenant_schema)`
-3. Extrae usuario via `Depends(get_current_user)`
+1. Recibe request con validación Pydantic
+2. Extrae `schema_name` vía `Depends(get_tenant_schema)`
+3. Extrae usuario vía `Depends(get_current_user)`
 4. Delega a service
 5. Retorna response tipado
 
-### Services (Logica de Negocio)
+### Services (Lógica de Negocio)
 
-Los services estan organizados por dominio funcional. El modulo mas complejo es `services/documents/`, que esta subdividido en:
+Los services están organizados por dominio funcional. El módulo más complejo es `services/documents/`, que está subdividido en:
 
 | Submmodulo | Responsabilidad |
 |-----------|----------------|
 | `core/` | Queries base, repositorio, builder, validador |
 | `catalog/` | Tipos de documentos, estados, metadata |
-| `lifecycle/` | Creacion, edicion, eliminacion, rechazo |
-| `signing/` | Firma digital, numeracion, firma unificada |
-| `retrieval/` | Busqueda, detalles, contenido |
+| `lifecycle/` | Creación, edición, eliminación, rechazo |
+| `signing/` | Firma digital, numeración, firma unificada |
+| `retrieval/` | Búsqueda, detalles, contenido |
 | `preview/` | Preview PDF, auto-guardado |
 | `importing/` | Importar PDFs externos |
 
 ### Models (Schemas Pydantic)
 
-Organizados por dominio con convencion `{Model}{Action}`:
+Organizados por dominio con convención `{Model}{Action}`:
 
 - `CreateDocumentRequest` / `CreateDocumentResponse`
 - `SaveDocumentRequest` / `SaveDocumentResponse`

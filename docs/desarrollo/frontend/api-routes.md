@@ -1,10 +1,10 @@
 # API Routes
 
-Todas las API routes estan en `src/pages/api/` y actuan como proxy server-side hacia GDI-Backend (:8000). El cliente nunca contacta al backend directamente.
+Todas las API routes están en `src/pages/api/` y actuan como proxy server-side hacia GDI-Backend (:8000). El cliente nunca contacta al backend directamente.
 
-## Patron General
+## Patrón General
 
-Cada API route sigue este patron:
+Cada API route sigue este patrón:
 
 ```typescript
 import { NextApiRequest, NextApiResponse } from "next";
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 ### Documentos
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
 | `/api/documents` | GET | `GET /users/documents` | Lista documentos del usuario actual |
 | `/api/create-document` | POST | `POST /documents` | Crear nuevo documento |
@@ -51,25 +51,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 | `/api/documents/[documentId]/super-sign` | POST | `POST /documents/{id}/sign` | Firmar documento |
 | `/api/documents/[documentId]/reject` | POST | `POST /documents/{id}/reject` | Rechazar documento con motivo |
 | `/api/documents/[documentId]/delete` | DELETE | `DELETE /documents/{id}` | Eliminar documento (soft delete) |
-| `/api/documents/[documentId]/preview-info` | GET | `GET /documents/{id}/preview-info` | Info de previsualizacion |
+| `/api/documents/[documentId]/preview-info` | GET | `GET /documents/{id}/preview-info` | Info de previsualización |
 | `/api/documents/[documentId]/preview-download` | POST | `POST /documents/{id}/preview-download` | Descargar PDF de preview |
 | `/api/documents/[documentId]/signature-details` | GET | `GET /documents/{id}/signature-details` | Detalles de firma y progreso |
 | `/api/documents/[documentId]/replace-pdf` | POST | `POST /documents/{id}/replace-pdf` | Reemplazar PDF importado |
-| `/api/documents/check-signer-permissions` | GET | Verificacion de permisos | Verificar si usuario puede firmar |
+| `/api/documents/check-signer-permissions` | GET | Verificación de permisos | Verificar si usuario puede firmar |
 | `/api/document-details/[documentId]` | GET | `GET /documents/{id}/editor-details` | Detalles para el editor (legacy) |
 | `/api/document-types` | GET | `GET /document-types` | Lista tipos de documento |
 | `/api/documents-autocomplete` | GET | `GET /api/v1/documents/autocomplete` | Autocompletado de documentos |
 | `/api/documents-getpdf` | GET | `GET /documents/{id}/geturl_officialdoc` | URL del PDF oficial |
-| `/api/documents-search-official` | GET | `GET /api/v1/documents/search-official/{num}` | Buscar por numero oficial |
+| `/api/documents-search-official` | GET | `GET /api/v1/documents/search-official/{num}` | Buscar por número oficial |
 | `/api/import-document` | POST | `POST /documents` | Importar documento PDF |
 | `/api/subsanar-documento` | POST | `POST /api/v1/cases/{id}/subsanar` | Subsanar documento en expediente |
 | `/api/vincular-documento` | POST | `POST /api/v1/cases/{id}/documents/link` | Vincular documento a expediente |
 
 ### Expedientes
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
-| `/api/expedientes` | GET | `GET /api/v1/cases/` | Lista expedientes con filtros y paginacion |
+| `/api/expedientes` | GET | `GET /api/v1/cases/` | Lista expedientes con filtros y paginación |
 | `/api/crear-expediente` | POST | `POST /api/v1/cases/` | Crear nuevo expediente |
 | `/api/case-details` | GET | `GET /api/v1/cases/{id}` | Detalle del expediente |
 | `/api/detalle-expediente` | GET | `GET /api/v1/cases/{id}/documents` | Documentos de un expediente |
@@ -78,27 +78,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 | `/api/case-permissions` | GET | `GET /api/v1/cases/{id}/permissions` | Permisos del usuario en el expediente |
 | `/api/assign-case` | POST | `POST /api/v1/cases/{id}/assign` | Asignar expediente a sector |
 | `/api/transfer-case` | POST | `POST /api/v1/cases/{id}/transfer` | Transferir expediente |
-| `/api/close-assign` | POST | `POST /api/v1/cases/{id}/close-assign` | Cerrar asignacion |
-| `/api/prepare-assignment` | GET | `GET /api/v1/cases/{id}/prepare-assignment` | Datos para formulario de asignacion |
+| `/api/close-assign` | POST | `POST /api/v1/cases/{id}/close-assign` | Cerrar asignación |
+| `/api/prepare-assignment` | GET | `GET /api/v1/cases/{id}/prepare-assignment` | Datos para formulario de asignación |
 | `/api/prepare-transfer` | GET | `GET /api/v1/cases/{id}/prepare-transfer` | Datos para formulario de transferencia |
 | `/api/proposed-document-action` | POST | `POST /api/v1/cases/{id}/proposed-documents/{pid}/accept` | Aceptar/rechazar doc propuesto |
-| `/api/buscador-exp` | GET | `GET /api/v1/cases/number/{num}` | Buscar expediente por numero |
-| `/api/expedientes/by-number/[caseNumber]` | GET | `GET /api/v1/cases/number/{num}` | Buscar expediente por numero (ruta alternativa) |
+| `/api/buscador-exp` | GET | `GET /api/v1/cases/number/{num}` | Buscar expediente por número |
+| `/api/expedientes/by-number/[caseNumber]` | GET | `GET /api/v1/cases/number/{num}` | Buscar expediente por número (ruta alternativa) |
 | `/api/filtra-trata` | GET | `GET /api/v1/cases/templates` | Obtener plantillas/tratas de expedientes |
 
 ### Notas
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
-| `/api/notes/received` | GET | `GET /notes/received` | Notas recibidas con paginacion |
-| `/api/notes/sent` | GET | `GET /notes/sent` | Notas enviadas con paginacion |
+| `/api/notes/received` | GET | `GET /notes/received` | Notas recibidas con paginación |
+| `/api/notes/sent` | GET | `GET /notes/sent` | Notas enviadas con paginación |
 | `/api/notes/archived` | GET | `GET /notes/archived` | Notas archivadas |
 | `/api/notes/[id]` | GET | `GET /notes/{id}` | Detalle de nota |
 | `/api/notes/[id]/archive` | POST | `POST /notes/{id}/archive` | Archivar/desarchivar nota |
 
 ### Usuarios y Sectores
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
 | `/api/users` | GET | `GET /users` | Lista de usuarios |
 | `/api/users/me` | GET | `GET /users/profile` | Perfil del usuario actual |
@@ -109,39 +109,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 ### Dashboard
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
 | `/api/dashboard/feed` | GET | `GET /api/v1/dashboard/feed` | Feed de actividad |
-| `/api/dashboard/stats` | GET | `GET /api/v1/dashboard/stats` | Estadisticas del sector |
+| `/api/dashboard/stats` | GET | `GET /api/v1/dashboard/stats` | Estadísticas del sector |
 
 ### Chat / Asistente
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
 | `/api/chat` | POST | `POST /chat` | Chat general con IA |
 | `/api/case-chat` | POST | `POST /case-chat` | Chat contextual por expediente |
 | `/api/case-welcome` | GET | `GET /case-welcome` | Mensaje de bienvenida contextual |
 
-### Busqueda
+### Búsqueda
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
-| `/api/unified-search` | GET | `GET /api/v1/search/unified` | Busqueda unificada (docs + expedientes) |
+| `/api/unified-search` | GET | `GET /api/v1/search/unified` | Búsqueda unificada (docs + expedientes) |
 
 ### Auth y Sistema
 
-| Ruta API | Metodo | Backend Endpoint | Descripcion |
+| Ruta API | Método | Backend Endpoint | Descripción |
 |----------|--------|-----------------|-------------|
 | `/api/auth/onboarding` | GET | `GET /onboarding` | Datos de onboarding multi-tenant |
 | `/api/csrf-token` | GET | - | Obtener token CSRF (local, no proxy) |
 | `/api/health` | GET | - | Health check |
-| `/api/index` | GET | - | Endpoint raiz (hello world) |
+| `/api/index` | GET | - | Endpoint raíz (hello world) |
 
 ---
 
-## Rutas Dinamicas
+## Rutas Dinámicas
 
-Las API routes con parametros usan el patron de Next.js `[param]`:
+Las API routes con parámetros usan el patrón de Next.js `[param]`:
 
 ```
 /api/documents/[documentId]/save.ts      -> /api/documents/abc-123/save
@@ -172,7 +172,7 @@ Cliente (browser)                    API Route (server)                   Backen
 
 Todas las API routes usan `handleApiError()` que:
 
-1. Detecta errores de autenticacion (401)
+1. Detecta errores de autenticación (401)
 2. Loguea el error con contexto
 3. Retorna respuesta JSON estandarizada
 

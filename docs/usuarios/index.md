@@ -5,12 +5,12 @@ hide:
 
 # Manual de Usuario
 
-**Manual de usuario** del Sistema de Gestion Documental Inteligente para gobiernos LATAM.
+**Manual de usuario** del Sistema de Gestión Documental Inteligente para gobiernos LATAM.
 
-Esta documentacion describe como utilizar cada pantalla de la aplicacion, que campos completar, que validaciones aplican y que resultado esperar de cada accion.
+Esta documentación describe como utilizar cada pantalla de la aplicación, que campos completar, que validaciones aplican y que resultado esperar de cada acción.
 
 !!! video "Video tutoriales"
-    Serie completa de tutoriales en la [**lista de reproduccion de GDI Latam en YouTube**](https://www.youtube.com/playlist?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq). Cada seccion de este manual incluye su video. Para empezar:
+    Serie completa de tutoriales en la [**lista de reproducción de GDI Latam en YouTube**](https://www.youtube.com/playlist?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq). Cada sección de este manual incluye su video. Para empezar:
 
     <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/g9TRURHcURg?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #1 — Inicio y Dashboard" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
@@ -24,15 +24,15 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     Tablero de pendientes de cada usuario: firmas, memos, notas, novedades de tus expedientes y trabajo sin tomar en tu sector.
 
-    [:octicons-arrow-right-24: Ver seccion](inicio/index.md)
+    [:octicons-arrow-right-24: Ver sección](inicio/index.md)
 
--   :material-format-list-bulleted:{ .lg .middle } **Catalogos**
+-   :material-format-list-bulleted:{ .lg .middle } **Catálogos**
 
     ---
 
-    Listas maestras del sistema: tipos de documento y tipos de expediente disponibles para cada organizacion.
+    Listas maestras del sistema: tipos de documento y tipos de expediente disponibles para cada organización.
 
-    [:octicons-arrow-right-24: Ver seccion](catalogos/index.md)
+    [:octicons-arrow-right-24: Ver sección](catalogos/index.md)
 
 -   :material-file-document-edit:{ .lg .middle } **Documentos**
 
@@ -40,15 +40,15 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     Crear documentos, editarlos, agregar firmantes, previsualizar, firmar y gestionar el ciclo de vida completo.
 
-    [:octicons-arrow-right-24: Ver seccion](documentos/index.md)
+    [:octicons-arrow-right-24: Ver sección](documentos/index.md)
 
 -   :material-folder-open:{ .lg .middle } **Expedientes**
 
     ---
 
-    Gestionar expedientes electronicos, vincular documentos, realizar movimientos y consultar el historial.
+    Gestionar expedientes electrónicos, vincular documentos, realizar movimientos y consultar el historial.
 
-    [:octicons-arrow-right-24: Ver seccion](expedientes/index.md)
+    [:octicons-arrow-right-24: Ver sección](expedientes/index.md)
 
 -   :material-book-open-variant:{ .lg .middle } **Legajos (RLM)**
 
@@ -56,7 +56,7 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     Registrar, verificar y consultar legajos digitales organizados por familias de registro con campos configurables y vencimientos.
 
-    [:octicons-arrow-right-24: Ver seccion](legajos/index.md)
+    [:octicons-arrow-right-24: Ver sección](legajos/index.md)
 
 -   :material-email:{ .lg .middle } **Notas**
 
@@ -64,7 +64,7 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     Enviar y recibir notas oficiales entre sectores del organismo con tracking de apertura.
 
-    [:octicons-arrow-right-24: Ver seccion](notas/index.md)
+    [:octicons-arrow-right-24: Ver sección](notas/index.md)
 
 -   :material-email-lock:{ .lg .middle } **Memos**
 
@@ -72,23 +72,23 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
     Comunicaciones privadas persona a persona con destinatarios TO/CC/CCO y tracking de lectura.
 
-    [:octicons-arrow-right-24: Ver seccion](memos/index.md)
+    [:octicons-arrow-right-24: Ver sección](memos/index.md)
 
--   :material-magnify:{ .lg .middle } **Busqueda**
+-   :material-magnify:{ .lg .middle } **Búsqueda**
 
     ---
 
-    Buscar documentos y expedientes en todo el sistema desde una unica barra de busqueda.
+    Buscar documentos y expedientes en todo el sistema desde una única barra de búsqueda.
 
-    [:octicons-arrow-right-24: Ver seccion](busqueda/buscador-general.md)
+    [:octicons-arrow-right-24: Ver sección](busqueda/buscador-general.md)
 
 -   :material-robot:{ .lg .middle } **Asistente AI**
 
     ---
 
-    Consultar documentos y expedientes con lenguaje natural, generar resumenes y conectar asistentes externos.
+    Consultar documentos y expedientes con lenguaje natural, generar resúmenes y conectar asistentes externos.
 
-    [:octicons-arrow-right-24: Ver seccion](asistente-ai/index.md)
+    [:octicons-arrow-right-24: Ver sección](asistente-ai/index.md)
 
 </div>
 
@@ -96,20 +96,20 @@ Esta documentacion describe como utilizar cada pantalla de la aplicacion, que ca
 
 ## Secciones del sistema
 
-| Seccion | Descripcion |
+| Sección | Descripción |
 |---------|-------------|
 | **[Inicio](inicio/index.md)** | Tablero de pendientes: firmas, memos, notas, novedades de expedientes y trabajo del sector |
-| **Catalogos** | Listas maestras: tipos de documento y tipos de expediente |
+| **Catálogos** | Listas maestras: tipos de documento y tipos de expediente |
 | **Documentos** | Crear, editar, firmar y gestionar documentos oficiales |
-| **Expedientes** | Gestionar expedientes electronicos, vincular documentos, movimientos |
+| **Expedientes** | Gestionar expedientes electrónicos, vincular documentos, movimientos |
 | **Legajos (RLM)** | Registrar, verificar y consultar legajos digitales con campos configurables |
 | **Notas** | Enviar y recibir notas oficiales entre sectores |
 | **Memos** | Comunicaciones privadas persona a persona con tracking de lectura |
-| **Busqueda** | Buscar documentos y expedientes en todo el sistema |
+| **Búsqueda** | Buscar documentos y expedientes en todo el sistema |
 | **Asistente AI** | Consultar documentos y expedientes con lenguaje natural |
-| **[Glosario](../glosario.md)** | Terminos y conceptos utilizados en el sistema |
+| **[Glosario](../glosario.md)** | Términos y conceptos utilizados en el sistema |
 
 ---
 
 !!! info "Sobre este manual"
-    Este manual esta optimizado para lectura humana y para consulta por asistentes de inteligencia artificial (ChatGPT, Claude, Gemini, etc.) que necesiten explicar el funcionamiento del sistema a los usuarios.
+    Este manual está optimizado para lectura humana y para consulta por asistentes de inteligencia artificial (ChatGPT, Claude, Gemini, etc.) que necesiten explicar el funcionamiento del sistema a los usuarios.

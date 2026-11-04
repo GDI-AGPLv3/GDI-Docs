@@ -1,8 +1,8 @@
 # Documents Core
 
-Modulos base del sistema de documentos: queries SQL, repository de datos, constructor de respuestas y validador de reglas de negocio.
+Módulos base del sistema de documentos: queries SQL, repository de datos, constructor de respuestas y validador de reglas de negocio.
 
-**Ubicacion:** `services/documents/core/`
+**Ubicación:** `services/documents/core/`
 
 ## Arquitectura
 
@@ -18,21 +18,21 @@ core/
 
 ## Queries (`core/queries.py`)
 
-Centraliza **todas** las consultas SQL del modulo de documentos. Cada query es una funcion que retorna un string SQL.
+Centraliza **todas** las consultas SQL del módulo de documentos. Cada query es una función que retorna un string SQL.
 
-### Queries por Categoria
+### Queries por Categoría
 
-| Categoria | Funciones | Proposito |
+| Categoría | Funciones | Propósito |
 |-----------|-----------|-----------|
-| **Creacion** | `insert_document_draft_query`, `insert_document_signer_query` | INSERT de drafts y firmantes |
-| **Edicion** | `update_document_reference_query`, `update_document_content_query` | UPDATE de campos |
-| **Eliminacion** | `soft_delete_document_query`, `unlink_document_from_cases_query` | Soft delete + desvincular |
+| **Creación** | `insert_document_draft_query`, `insert_document_signer_query` | INSERT de drafts y firmantes |
+| **Edición** | `update_document_reference_query`, `update_document_content_query` | UPDATE de campos |
+| **Eliminación** | `soft_delete_document_query`, `unlink_document_from_cases_query` | Soft delete + desvincular |
 | **Rechazo** | `update_document_to_rejected_query`, `insert_rejection_record_query` | Cambiar estado + registrar |
 | **Firma** | `get_signer_role_and_document_status_query`, `update_signer_status_to_signed_query` | Proceso de firma |
 | **Consulta** | `get_document_details_for_editing_query`, `search_official_document_by_number_query` | Lectura de datos |
-| **Catalogo** | `get_all_document_types_query`, `get_all_display_states_query` | Datos maestros |
+| **Catálogo** | `get_all_document_types_query`, `get_all_display_states_query` | Datos maestros |
 
-### Ejemplo: Query de Detalles para Edicion
+### Ejemplo: Query de Detalles para Edición
 
 ```python
 def get_document_details_for_editing_query() -> str:
@@ -58,7 +58,7 @@ def get_document_details_for_editing_query() -> str:
 
 ### Tipos Excluidos
 
-Algunos tipos de documentos se excluyen de listados generales (son automaticos):
+Algunos tipos de documentos se excluyen de listados generales (son automáticos):
 
 ```python
 def get_excluded_types_clause() -> str:
@@ -71,7 +71,7 @@ def get_excluded_types_clause() -> str:
 
 ## Repository (`core/repository.py`)
 
-Patron Repository que centraliza acceso a datos. Todas las funciones son `@staticmethod` con `schema_name` keyword-only.
+Patrón Repository que centraliza acceso a datos. Todas las funciones son `@staticmethod` con `schema_name` keyword-only.
 
 ```python
 class DocumentRepository:
@@ -146,13 +146,13 @@ class DocumentBuilder:
         }
 ```
 
-### Extraccion de Contenido
+### Extracción de Contenido
 
-Soporta multiples formatos de contenido para migracion gradual:
+Soporta múltiples formatos de contenido para migración gradual:
 
 | Prioridad | Formato | Clave JSON |
 |-----------|---------|------------|
-| 1 | Estandar nuevo | `{"html": "contenido"}` |
+| 1 | Estándar nuevo | `{"html": "contenido"}` |
 | 2 | Legacy | `{"detalle": "contenido"}` |
 | 3 | Alternativo | `{"body": "contenido"}` |
 | 4 | TipTap | `{"type": "doc", "content": [...]}` |
@@ -194,10 +194,10 @@ class DocumentValidator:
 
 ### Reglas de Firmantes
 
-| Regla | Validacion |
+| Regla | Validación |
 |-------|------------|
-| Identificacion | `user_id` O `email`, nunca ambos |
+| Identificación | `user_id` O `email`, nunca ambos |
 | Numerador | Exactamente 1 por documento |
-| UUID | Formato valido si se proporciona `user_id` |
+| UUID | Formato válido si se proporciona `user_id` |
 | Email | Debe contener `@` si se proporciona |
 | is_numerator | Debe ser `bool` |

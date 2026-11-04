@@ -4,7 +4,7 @@ El backend usa dos middleware principales: **CORS** y **TenantMiddleware**.
 
 ## Orden de Middleware
 
-Los middleware se ejecutan en orden inverso al registro (el ultimo registrado se ejecuta primero):
+Los middleware se ejecutan en orden inverso al registro (el último registrado se ejecuta primero):
 
 ```python
 # main.py
@@ -14,7 +14,7 @@ app.add_middleware(TenantMiddleware)       # Se ejecuta primero
 
 ## CORS Middleware
 
-Configurado para permitir acceso desde frontends en desarrollo y produccion.
+Configurado para permitir acceso desde frontends en desarrollo y producción.
 
 ```python
 # main.py
@@ -41,9 +41,9 @@ app.add_middleware(
 
 ## TenantMiddleware
 
-Middleware critico que valida el acceso multi-tenant en cada request. Definido en `middleware/tenant_middleware.py`.
+Middleware crítico que valida el acceso multi-tenant en cada request. Definido en `middleware/tenant_middleware.py`.
 
-### Flujo de Validacion
+### Flujo de Validación
 
 ```
 Request entrante
@@ -90,7 +90,7 @@ Request entrante
 
 ### Rutas Excluidas
 
-Las siguientes rutas no requieren validacion de tenant:
+Las siguientes rutas no requieren validación de tenant:
 
 ```python
 EXCLUDED_PATHS = {
@@ -108,7 +108,7 @@ EXCLUDED_PATHS = {
 
 El TenantMiddleware inyecta estos valores en `request.state` para uso en endpoints:
 
-| Atributo | Tipo | Descripcion |
+| Atributo | Tipo | Descripción |
 |----------|------|-------------|
 | `schema_name` | `str` | Schema PostgreSQL del tenant (ej: `"200_muni"`) |
 | `tenant_user_id` | `str` | UUID del usuario en el schema |
@@ -118,29 +118,29 @@ El TenantMiddleware inyecta estos valores en `request.state` para uso en endpoin
 
 ### Correlation ID
 
-Cada request recibe un correlation ID unico para trazabilidad:
+Cada request recibe un correlation ID único para trazabilidad:
 
-- Si viene en header `X-Correlation-ID`: se reutiliza (propagacion entre servicios)
-- Si no viene: se genera uno nuevo automaticamente
+- Si viene en header `X-Correlation-ID`: se reutiliza (propagación entre servicios)
+- Si no viene: se genera uno nuevo automáticamente
 - Se agrega al response header `X-Correlation-ID`
 
-### Activacion Automatica de Usuarios
+### Activación Automática de Usuarios
 
 Cuando un usuario con `estado=0` y `auth_id=PENDING_*` hace login por primera vez:
 
 1. El middleware detecta el estado pendiente
 2. Extrae el `auth_id` real del JWT (`sub`)
 3. Actualiza `estado=1`, `auth_id`, `full_name`, `profile_picture_url`
-4. El usuario queda activo automaticamente
+4. El usuario queda activo automáticamente
 
 ### Auto-completar auth_id
 
-Si un usuario existente no tiene `auth_id` (migrado o creado manualmente) pero envia un JWT valido, el middleware auto-completa el `auth_id` en la BD.
+Si un usuario existente no tiene `auth_id` (migrado o creado manualmente) pero envía un JWT válido, el middleware auto-completa el `auth_id` en la BD.
 
 ### Seguridad
 
-!!! warning "Validacion de Schema"
-    El schema_name se valida contra una whitelist usando `is_valid_schema()` para prevenir SQL injection. Solo se permiten caracteres alfanumericos y guion bajo.
+!!! warning "Validación de Schema"
+    El schema_name se valida contra una whitelist usando `is_valid_schema()` para prevenir SQL injection. Solo se permiten caracteres alfanuméricos y guion bajo.
 
-!!! warning "TESTING_MODE en Produccion"
-    Si `TESTING_MODE=true` se detecta en un entorno de produccion, se desactiva automaticamente por seguridad.
+!!! warning "TESTING_MODE en Producción"
+    Si `TESTING_MODE=true` se detecta en un entorno de producción, se desactiva automáticamente por seguridad.

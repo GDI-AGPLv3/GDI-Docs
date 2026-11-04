@@ -6,16 +6,16 @@
 |-----------|-------|
 | Puerto | `:8001` (desarrollo) |
 | Framework | FastAPI 0.104.1 |
-| Firma criptografica | pyHanko 0.27.1 (PAdES-B-T) |
+| Firma criptográfica | pyHanko 0.27.1 (PAdES-B-T) |
 | Firma visual | ReportLab + pypdf |
-| Analisis PDF | PyMuPDF (fitz) |
+| Análisis PDF | PyMuPDF (fitz) |
 | Runtime | Python 3.11, Gunicorn 21.2.0 |
-| Deploy | Docker, Fly.io (internal-only, sin IP publica) |
+| Deploy | Docker, Fly.io (internal-only, sin IP pública) |
 
-## Que hace
+## Qué hace
 
-Notary recibe un PDF y datos del firmante, aplica una firma digital (PAdES criptografica o visual)
-y opcionalmente estampa informacion del documento (numero, ciudad, fecha).
+Notary recibe un PDF y datos del firmante, aplica una firma digital (PAdES criptográfica o visual)
+y opcionalmente estampa información del documento (número, ciudad, fecha).
 
 ```mermaid
 flowchart LR
@@ -31,29 +31,29 @@ flowchart LR
 
 ## Modos de firma
 
-### Firma PAdES (recomendado para produccion)
+### Firma PAdES (recomendado para producción)
 
-Firma digital criptografica embebida en el PDF, cumpliendo el estandar PAdES-B-T (Basic with Time):
+Firma digital criptográfica embebida en el PDF, cumpliendo el estándar PAdES-B-T (Basic with Time):
 
-- Firma criptografica con certificado PKCS#12 (.p12)
+- Firma criptográfica con certificado PKCS#12 (.p12)
 - Timestamp de servidor TSA (Time Stamping Authority)
-- Representacion visual con datos del firmante
+- Representación visual con datos del firmante
 - Verificable en Adobe Acrobat Reader (clic en la firma)
 
 ### Firma Visual (solo testing)
 
-Firma con elementos visuales (texto y lineas) sin componente criptografico:
+Firma con elementos visuales (texto y líneas) sin componente criptográfico:
 
 - Nombre, cargo, departamento, entidad del firmante
 - Timestamp de servidor
-- No es verificable criptograficamente
+- No es verificable criptográficamente
 
 ## Comportamiento por ambiente
 
 | Ambiente | `ENVIRONMENT` | `FALLBACK_TO_VISUAL` | Si no hay certificado |
 |----------|---------------|----------------------|-----------------------|
 | Desarrollo | `test` | `true` (default) | Usa firma visual |
-| Produccion | `prd` | `false` (default) | Error 400 |
+| Producción | `prd` | `false` (default) | Error 400 |
 
 ## Estructura del proyecto
 
@@ -86,29 +86,29 @@ GDI-Notary/
 
 ## Endpoints
 
-| Endpoint | Metodo | Auth | Descripcion |
+| Endpoint | Método | Auth | Descripción |
 |----------|--------|------|-------------|
-| `/sign-pdf` | POST | Si | Firma PDF (PAdES o visual) |
-| `/sign-pdf/verify` | POST | Si | Verifica firmas PAdES de un PDF |
-| `/stamp-number` | POST | Si | Estampa numero/fecha y devuelve coordenadas para FirmadorGDI |
-| `/sign-pdf/prepare` | POST | Si | Firma con token, fase A: estampa y devuelve el digest que firma el token |
-| `/sign-pdf/finish` | POST | Si | Firma con token, fase B: completa la firma con la del token y sube el PDF |
-| `/timestamp-pdf` | POST | Si | Agrega un sello de tiempo (DocTimeStamp) a un PDF ya firmado |
+| `/sign-pdf` | POST | Sí | Firma PDF (PAdES o visual) |
+| `/sign-pdf/verify` | POST | Sí | Verifica firmas PAdES de un PDF |
+| `/stamp-number` | POST | Sí | Estampa numero/fecha y devuelve coordenadas para FirmadorGDI |
+| `/sign-pdf/prepare` | POST | Sí | Firma con token, fase A: estampa y devuelve el digest que firma el token |
+| `/sign-pdf/finish` | POST | Sí | Firma con token, fase B: completa la firma con la del token y sube el PDF |
+| `/timestamp-pdf` | POST | Sí | Agrega un sello de tiempo (DocTimeStamp) a un PDF ya firmado |
 | `/health` | GET | No | Health check (HTTP, sin auth) |
 
 !!! warning "PDF con firma de certificación"
     `/sign-pdf`, `/stamp-number`, `/sign-pdf/prepare` y `/sign-pdf/finish` no tocan un PDF con
     firma de certificación (DocMDP): responden `422 PDF_CERTIFIED`. Ver
     [Validaciones](validaciones.md#control-de-certificacion-docmdp).
-| `/certificate/{tenant_id}` | GET | Si | Info de certificado |
-| `/certificates` | GET | Si | Lista certificados |
+| `/certificate/{tenant_id}` | GET | Sí | Info de certificado |
+| `/certificates` | GET | Sí | Lista certificados |
 
 ## Variables de entorno
 
-| Variable | Default | Descripcion |
+| Variable | Default | Descripción |
 |----------|---------|-------------|
-| `ENVIRONMENT` | `test` | Ambiente de ejecucion (`test` o `prd`) |
-| `API_KEY` | (requerida) | API Key de autenticacion. Falla si no esta seteada |
+| `ENVIRONMENT` | `test` | Ambiente de ejecución (`test` o `prd`) |
+| `API_KEY` | (requerida) | API Key de autenticación. Falla si no está seteada |
 | `CERTS_DIR` | `./certs` | Directorio de certificados |
 | `TSA_URL` | `http://timestamp.digicert.com` | Servidor de timestamp |
 | `TSA_TIMEOUT` | `3` | Timeout por intento TSA (segundos) |
@@ -119,7 +119,7 @@ GDI-Notary/
 
 !!! warning "FALLBACK_TO_VISUAL"
     El default de `FALLBACK_TO_VISUAL` en `config.py` es `false`. Para desarrollo
-    sin certificado, setear explicitamente `FALLBACK_TO_VISUAL=true`.
+    sin certificado, setear explícitamente `FALLBACK_TO_VISUAL=true`.
 
 ## Flujo completo de firma
 

@@ -3,9 +3,9 @@ hide:
   - toc
 ---
 
-# Documentacion Tecnica
+# Documentación Técnica
 
-**Documentacion tecnica por servicio** del Sistema de Gestion Documental Inteligente para gobiernos LATAM.
+**Documentación técnica por servicio** del Sistema de Gestión Documental Inteligente para gobiernos LATAM.
 
 ---
 
@@ -15,7 +15,7 @@ hide:
 
     ---
 
-    Interfaz publica de integracion: MCP Server para agentes IA (Claude, ChatGPT) y REST API para sistemas externos. 45 endpoints documentados.
+    Interfaz pública de integración: MCP Server para agentes IA (Claude, ChatGPT) y REST API para sistemas externos. 45 endpoints documentados.
 
     [:octicons-arrow-right-24: Ver Gateway API](gateway/index.md)
 
@@ -23,7 +23,7 @@ hide:
 
     ---
 
-    Vision general, diagramas de servicios, comunicacion inter-servicio, multi-tenant y flujos principales.
+    Visión general, diagramas de servicios, comunicación inter-servicio, multi-tenant y flujos principales.
 
     [:octicons-arrow-right-24: Ver arquitectura](arquitectura/index.md)
 
@@ -31,17 +31,17 @@ hide:
 
     ---
 
-    Documentacion tecnica interna: Frontend, Backend, Database, Notary y Deploy. Para el equipo de desarrollo GDI.
+    Documentación técnica interna: Frontend, Backend, Database, Notary y Deploy. Para el equipo de desarrollo GDI.
 
     [:octicons-arrow-right-24: Ver referencia interna](referencia-interna/index.md)
 
--   :material-book-open-variant:{ .lg .middle } **Guias**
+-   :material-book-open-variant:{ .lg .middle } **Guías**
 
     ---
 
     Desarrollo local, crear endpoints, nuevos tipos de documento, nuevas organizaciones y troubleshooting.
 
-    [:octicons-arrow-right-24: Ver guias](guias/desarrollo-local.md)
+    [:octicons-arrow-right-24: Ver guías](guias/desarrollo-local.md)
 
 </div>
 

@@ -1,19 +1,19 @@
 # Agregar un Nuevo Tipo de Documento
 
-Guia paso a paso para agregar un nuevo tipo de documento al sistema GDI. Un tipo de documento define la categoria de un documento (Informe, Dictamen, Acta, etc.) con su acronimo, formato y reglas de visibilidad.
+Guía paso a paso para agregar un nuevo tipo de documento al sistema GDI. Un tipo de documento define la categoría de un documento (Informe, Dictamen, Acta, etc.) con su acrónimo, formato y reglas de visibilidad.
 
 ## Contexto
 
 El sistema de tipos de documento tiene dos niveles:
 
-1. **Global** (`public.global_document_types`): Catalogo maestro con 61 tipos definidos. Compartido entre todas las organizaciones.
-2. **Per-tenant** (`{schema}.document_types`): Tipos habilitados para cada organizacion, referenciando al catalogo global.
+1. **Global** (`public.global_document_types`): Catálogo maestro con 61 tipos definidos. Compartido entre todas las organizaciones.
+2. **Per-tenant** (`{schema}.document_types`): Tipos habilitados para cada organización, referenciando al catálogo global.
 
-Cada organizacion puede habilitar un subconjunto de los tipos globales y definir que rangos/sectores pueden usarlos.
+Cada organización puede habilitar un subconjunto de los tipos globales y definir qué rangos/sectores pueden usarlos.
 
 Ver [Schema Public](../database/schema-public.md) y [Schema Municipio](../database/schema-municipio.md) para el detalle de las tablas.
 
-## Paso 1: Agregar al Catalogo Global (SQL)
+## Paso 1: Agregar al Catálogo Global (SQL)
 
 ### En `02-seed-global.sql`
 
@@ -28,16 +28,16 @@ VALUES
     (62, 'MITIPO', 'Mi Tipo de Documento', 'HTML', true);
 ```
 
-| Campo | Descripcion | Valores |
+| Campo | Descripción | Valores |
 |-------|-------------|---------|
-| `id` | Secuencial unico | Siguiente disponible (62+) |
-| `acronym` | Acronimo corto (usado en numeracion) | Ej: `INF`, `DICT`, `RESOL` |
+| `id` | Secuencial único | Siguiente disponible (62+) |
+| `acronym` | Acrónimo corto (usado en numeración) | Ej: `INF`, `DICT`, `RESOL` |
 | `name` | Nombre completo | Ej: `Informe`, `Dictamen` |
 | `type` | Formato del documento | `HTML` (editor), `Importado` (PDF externo), `NOTA` (notas) |
-| `is_active` | Visible en el catalogo | `true` / `false` |
+| `is_active` | Visible en el catálogo | `true` / `false` |
 
 !!! warning "Tipos internos"
-    Los tipos PV (Pase de Vista) y CAEX (Caratula de Expediente) tienen `is_active = false` porque son generados automaticamente por el sistema al transferir o crear expedientes. No deben ser visibles para los usuarios.
+    Los tipos PV (Pase de Vista) y CAEX (Carátula de Expediente) tienen `is_active = false` porque son generados automáticamente por el sistema al transferir o crear expedientes. No deben ser visibles para los usuarios.
 
 ### Ejecutar en BD existente
 
@@ -47,11 +47,11 @@ INSERT INTO public.global_document_types (id, acronym, name, type, is_active)
 VALUES (62, 'MITIPO', 'Mi Tipo de Documento', 'HTML', true);
 ```
 
-## Paso 2: Habilitar en Organizacion (SQL)
+## Paso 2: Habilitar en Organización (SQL)
 
-Cada organizacion tiene su propia tabla `document_types` que referencia al catalogo global. Al habilitar un tipo, se define que rangos pueden crear documentos de ese tipo.
+Cada organización tiene su propia tabla `document_types` que referencia al catálogo global. Al habilitar un tipo, se define qué rangos pueden crear documentos de ese tipo.
 
-### Agregar a `document_types` de la organizacion
+### Agregar a `document_types` de la organización
 
 ```sql
 -- Habilitar el tipo en el municipio 200_muni
@@ -69,7 +69,7 @@ VALUES (
 
 ### Configurar permisos por rango
 
-La tabla `document_types_allowed_by_rank` define que rangos pueden crear cada tipo:
+La tabla `document_types_allowed_by_rank` define qué rangos pueden crear cada tipo:
 
 ```sql
 -- Obtener el ID local del tipo recien creado
@@ -97,8 +97,8 @@ WHERE dt.acronym = 'MITIPO'
 AND s.sector_type = 'PRIV';  -- Solo sectores privados
 ```
 
-!!! info "Sin restriccion por sector"
-    Si no se agrega ninguna fila a `enabled_document_types_by_sector`, el tipo esta disponible para todos los sectores.
+!!! info "Sin restricción por sector"
+    Si no se agrega ninguna fila a `enabled_document_types_by_sector`, el tipo está disponible para todos los sectores.
 
 ### Actualizar seeds para futuros deploys
 
@@ -112,15 +112,15 @@ VALUES
     ('MITIPO', 'Mi Tipo de Documento', 'HTML', 62, true);
 ```
 
-Y tambien en el template de nuevas organizaciones `03-create-municipio.sql` si debe estar disponible por defecto.
+Y también en el template de nuevas organizaciones `03-create-municipio.sql` si debe estar disponible por defecto.
 
 ## Paso 3: Backend - Schemas y Validaciones
 
-El Backend ya carga los tipos de documento de la BD dinamicamente. No necesitas cambiar codigo para tipos basicos (HTML o Importado).
+El Backend ya carga los tipos de documento de la BD dinámicamente. No necesitás cambiar código para tipos básicos (HTML o Importado).
 
 ### Verificar carga del tipo
 
-El endpoint `GET /document-types` retorna todos los tipos activos de la organizacion:
+El endpoint `GET /document-types` retorna todos los tipos activos de la organización:
 
 ```bash
 curl http://localhost:8000/document-types \
@@ -128,9 +128,9 @@ curl http://localhost:8000/document-types \
   -H "X-Tenant-Schema: 200_muni"
 ```
 
-### Para tipos con logica especial
+### Para tipos con lógica especial
 
-Si el nuevo tipo necesita logica diferente (como NOTA que tiene destinatarios), debes modificar el service de creacion:
+Si el nuevo tipo necesita lógica diferente (como NOTA que tiene destinatarios), debes modificar el service de creación:
 
 ```python
 # services/documents/lifecycle/creation.py
@@ -144,11 +144,11 @@ async def create_document(data, *, schema_name: str):
         pass
 ```
 
-Ver [Documents Lifecycle](../backend/services/documents-lifecycle.md) para entender el flujo de creacion.
+Ver [Documents Lifecycle](../backend/services/documents-lifecycle.md) para entender el flujo de creación.
 
 ## Paso 4: PDFComposer - Template Jinja2 (si necesario)
 
-Si el nuevo tipo necesita un formato PDF diferente al estandar, debes crear un template en GDI-PDFComposer.
+Si el nuevo tipo necesita un formato PDF diferente al estándar, debes crear un template en GDI-PDFComposer.
 
 ### Crear template HTML
 
@@ -197,15 +197,15 @@ TEMPLATE_MAP = {
 ```
 
 !!! tip "Template por defecto"
-    La mayoria de los tipos de documento usan el template `default` (`plantilla.html`). Solo crea un template custom si el formato PDF difiere significativamente del estandar.
+    La mayoría de los tipos de documento usan el template `default` (`plantilla.html`). Solo crea un template custom si el formato PDF difiere significativamente del estándar.
 
-## Paso 5: Frontend - UI de Creacion
+## Paso 5: Frontend - UI de Creación
 
-### Agregar a la UI de creacion
+### Agregar a la UI de creación
 
-El Frontend carga los tipos de documento del Backend dinamicamente via `GET /document-types`. Para tipos basicos, el selector ya los muestra sin cambios.
+El Frontend carga los tipos de documento del Backend dinámicamente vía `GET /document-types`. Para tipos básicos, el selector ya los muestra sin cambios.
 
-Si necesitas un icono o color especifico:
+Si necesitás un icono o color específico:
 
 ```typescript
 // GDI-FRONTEND/src/lib/document-type-config.ts
@@ -221,7 +221,7 @@ export const DOCUMENT_TYPE_CONFIG: Record<string, DocumentTypeConfig> = {
 
 ### Para tipos con campos adicionales
 
-Si el tipo requiere campos extra en el formulario de creacion (como NOTA que tiene destinatarios):
+Si el tipo requiere campos extra en el formulario de creación (como NOTA que tiene destinatarios):
 
 ```typescript
 // GDI-FRONTEND/src/components/documents/create/MiTipoFields.tsx
@@ -241,20 +241,20 @@ Y condicionar su renderizado en el formulario principal:
 {documentType === "MITIPO" && <MiTipoFields onChange={handleChange} />}
 ```
 
-## Paso 6: BackOffice - Configuracion
+## Paso 6: BackOffice - Configuración
 
-El BackOffice permite a administradores gestionar los tipos de documento habilitados. Si el tipo ya esta en `global_document_types`, aparecera automaticamente en la interfaz de configuracion.
+El BackOffice permite a administradores gestionar los tipos de documento habilitados. Si el tipo ya está en `global_document_types`, aparecerá automáticamente en la interfaz de configuración.
 
-Para agregar configuraciones especificas:
+Para agregar configuraciones específicas:
 
-1. **Habilitar/deshabilitar tipo**: La tabla `document_types` de la organizacion con `is_active`
+1. **Habilitar/deshabilitar tipo**: La tabla `document_types` de la organización con `is_active`
 2. **Permisos por rango**: La tabla `document_types_allowed_by_rank`
-3. **Restriccion por sector**: La tabla `enabled_document_types_by_sector`
+3. **Restricción por sector**: La tabla `enabled_document_types_by_sector`
 
 ## Checklist
 
 - [ ] Tipo agregado a `public.global_document_types` (SQL)
-- [ ] Tipo habilitado en `{schema}.document_types` de la organizacion
+- [ ] Tipo habilitado en `{schema}.document_types` de la organización
 - [ ] Permisos por rango configurados en `document_types_allowed_by_rank`
 - [ ] Seeds actualizados (`02-seed-global.sql`, `04-seed-demo.sql`)
 - [ ] Template `03-create-municipio.sql` actualizado (si el tipo va por defecto)
@@ -262,15 +262,15 @@ Para agregar configuraciones especificas:
 - [ ] PDFComposer: template Jinja2 creado (solo si formato especial)
 - [ ] Frontend: icono/color configurado (opcional)
 - [ ] Frontend: campos adicionales en formulario (si aplica)
-- [ ] Probado creacion, preview y firma del nuevo tipo
+- [ ] Probado creación, preview y firma del nuevo tipo
 
 ## Ejemplo: Tipo NOTA
 
-El tipo NOTA es un buen ejemplo de tipo con logica especial:
+El tipo NOTA es un buen ejemplo de tipo con lógica especial:
 
 - **SQL**: Tiene `type = 'NOTA'` (enum `document_type_source`)
 - **Backend**: Service dedicado en `services/notes/` con destinatarios, tracking de lectura, archivado
 - **BD**: Tablas adicionales `notes_recipients` y `notes_openings`
-- **Frontend**: UI especifica con selector de destinatarios y bandejas (recibidos, enviados, archivados)
+- **Frontend**: UI específica con selector de destinatarios y bandejas (recibidos, enviados, archivados)
 
 Ver [Notes Service](../backend/services/notes-service.md) y [Endpoints de Notas](../backend/endpoints/notas.md).

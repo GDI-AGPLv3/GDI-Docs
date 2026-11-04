@@ -1,6 +1,6 @@
 # Ciudadanos
 
-Gestion de la **base de ciudadanos** del municipio. Estos endpoints usan solo `X-API-Key` (no llevan `X-Citizen-ID`).
+Gestión de la **base de ciudadanos** del municipio. Estos endpoints usan solo `X-API-Key` (no llevan `X-Citizen-ID`).
 
 ---
 
@@ -14,10 +14,10 @@ Crea un ciudadano o actualiza su estado si ya existe (upsert por `country_id`).
 
 **Body:**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `full_name` | string | Si | Nombre completo |
-| `country_id` | string | Si | ID nacional (CUIL en Argentina). Es la clave de upsert. |
+| `full_name` | string | Sí | Nombre completo |
+| `country_id` | string | Sí | ID nacional (CUIL en Argentina). Es la clave de upsert. |
 | `estado` | string | No | `pendiente` (default), `validado` o `bloqueado` |
 
 **Ejemplo:**
@@ -56,7 +56,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/tad/citizens" \
 GET /api/v1/tad/citizens/{id_o_country_id}
 ```
 
-Acepta el **UUID** del ciudadano o su **`country_id`** (CUIL). Devuelve el mismo objeto del alta. `404` generico si no existe.
+Acepta el **UUID** del ciudadano o su **`country_id`** (CUIL). Devuelve el mismo objeto del alta. `404` genérico si no existe.
 
 ```bash
 curl "https://gateway.your-domain.com/api/v1/tad/citizens/27333444556" \
@@ -64,7 +64,7 @@ curl "https://gateway.your-domain.com/api/v1/tad/citizens/27333444556" \
 ```
 
 !!! warning "Rate limit estricto"
-    Este endpoint tiene un limite adicional de **10 requests/min** por ser el mas expuesto a enumeracion de CUILs.
+    Este endpoint tiene un límite adicional de **10 requests/min** por ser el más expuesto a enumeración de CUILs.
 
 ---
 
@@ -84,12 +84,12 @@ Acepta el **UUID** del ciudadano o su **`country_id`** (CUIL), igual que el GET.
 
 **Errores:**
 
-| Codigo | Motivo |
+| Código | Motivo |
 |--------|--------|
-| `400` | Body con campos distintos de `estado`, o estado invalido |
+| `400` | Body con campos distintos de `estado`, o estado inválido |
 | `404` | Ciudadano inexistente |
 
-**Ciclo tipico del portal:**
+**Ciclo típico del portal:**
 
 1. `POST /tad/citizens` al registrarse el vecino → queda `pendiente` (ya puede **ver** expedientes que le compartan).
 2. El municipio valida la identidad → `PATCH {"estado": "validado"}` → ya puede **crear y firmar**.

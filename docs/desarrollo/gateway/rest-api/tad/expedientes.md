@@ -1,16 +1,16 @@
 # Expedientes
 
-Un ciudadano puede **iniciar expedientes** (tramites) y **seguir los que le compartieron**. El acceso es siempre por share explicito: no hay navegacion libre de expedientes.
+Un ciudadano puede **iniciar expedientes** (trámites) y **seguir los que le compartieron**. El acceso es siempre por share explícito: no hay navegación libre de expedientes.
 
 ---
 
-## Catalogo de tipos de expediente
+## Catálogo de tipos de expediente
 
 ```
 GET /api/v1/tad/case-templates
 ```
 
-Devuelve los tipos de expediente cuyo canal de creacion es `api` o `both` (configurable por el administrador en BackOffice).
+Devuelve los tipos de expediente cuyo canal de creación es `api` o `both` (configurable por el administrador en BackOffice).
 
 **Respuesta `200 OK`:**
 
@@ -35,7 +35,7 @@ Devuelve los tipos de expediente cuyo canal de creacion es `api` o `both` (confi
 POST /api/v1/tad/cases
 ```
 
-Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la reparticion de radicacion configurada en el tipo, **encola** la caratula (CAEX) firmada por el ciudadano y lo comparte automaticamente con el.
+Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la repartición de radicación configurada en el tipo, **encola** la carátula (CAEX) firmada por el ciudadano y lo comparte automáticamente con él.
 
 **Body:**
 
@@ -63,38 +63,38 @@ Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la r
 }
 ```
 
-`400` si el `case_template_id` no existe o su canal no admite creacion por API.
+`400` si el `case_template_id` no existe o su canal no admite creación por API.
 
-!!! warning "El expediente nace sin caratula: su numero ya es definitivo, el PDF todavia no existe"
-    El `case_number` y el `official_number` de la caratula se reservan dentro
-    del request y **no cambian nunca**. El PDF de la caratula, en cambio, lo
-    genera un worker unos segundos despues (GDI-436), y recien cuando sale el
+!!! warning "El expediente nace sin carátula: su número ya es definitivo, el PDF todavía no existe"
+    El `case_number` y el `official_number` de la carátula se reservan dentro
+    del request y **no cambian nunca**. El PDF de la carátula, en cambio, lo
+    genera un worker unos segundos después (GDI-436), y recién cuando sale el
     expediente pasa a `active`.
 
     Mientras tanto, para ESE expediente:
 
-    - `GET /tad/cases/{id}` lo devuelve **sin documentos** (la caratula todavia
-      no esta vinculada).
+    - `GET /tad/cases/{id}` lo devuelve **sin documentos** (la carátula todavía
+      no está vinculada).
     - `POST /tad/cases/{id}/propose` responde **`409`**: no se puede proponer
-      un documento a un expediente que todavia se esta creando.
+      un documento a un expediente que todavía se está creando.
 
     Las dos cosas son transitorias y se resuelven solas.
 
-    **Como saber cuando termino:** pollear `GET /tad/cases/{id}` hasta que
+    **Cómo saber cuándo terminó:** pollear `GET /tad/cases/{id}` hasta que
     `status` sea **`active`**. Cuando pasa a `active`, en el mismo momento, la
-    caratula ya esta vinculada y el `propose` deja de responder `409`.
+    carátula ya está vinculada y el `propose` deja de responder `409`.
 
-    !!! danger "Ese `creating` de arriba NO es el valor que vas a leer despues"
+    !!! danger "Ese `creating` de arriba NO es el valor que vas a leer después"
         Los dos endpoints usan la misma clave con **valores distintos**, y esto
         rompe a cualquiera que compare contra `"creating"` en el poll:
 
-        | Endpoint | Mientras se crea | Cuando termino |
+        | Endpoint | Mientras se crea | Cuando terminó |
         |---|---|---|
         | `POST /tad/cases` (respuesta del alta) | `"creating"` | `"active"` (kill-switch) |
         | `GET /tad/cases/{id}` y `GET /tad/cases` | **`"inactive"`** | `"active"` |
 
-        `creating` es un valor **sintetico** que solo existe en la respuesta del
-        alta, para que el portal sepa que falta la caratula. En la base el
+        `creating` es un valor **sintético** que solo existe en la respuesta del
+        alta, para que el portal sepa que falta la carátula. En la base el
         expediente nace `inactive`, y el worker lo pasa a `active` al salir el
         PDF: por eso el detalle y el listado nunca devuelven `creating`.
 
@@ -114,8 +114,8 @@ Requiere `X-Citizen-ID` de un ciudadano **validado**. Crea el expediente en la r
     Con el kill-switch `CASE_COVER_ASYNC_ENABLED=false` no hay nada que
     esperar: `status` llega en `"active"` y `session_id`/`poll_url` en `null`.
 
-    Si la caratula falla, el expediente **no se pierde ni cambia de numero**:
-    queda esperandola y la cola reintenta.
+    Si la carátula falla, el expediente **no se pierde ni cambia de número**:
+    queda esperándola y la cola reintenta.
 
 ---
 
@@ -153,7 +153,7 @@ Devuelve los expedientes **compartidos con el ciudadano** de `X-Citizen-ID` (inc
 GET /api/v1/tad/cases/{case_id}
 ```
 
-Solo si el expediente esta compartido con el ciudadano; si no, `404` generico (no distingue "no existe" de "no compartido").
+Solo si el expediente está compartido con el ciudadano; si no, `404` genérico (no distingue "no existe" de "no compartido").
 
 **Respuesta `200 OK`:**
 
@@ -181,14 +181,14 @@ Solo si el expediente esta compartido con el ciudadano; si no, `404` generico (n
 
 `documents` lista los documentos **vinculados** (oficiales) del expediente. Los documentos solo *propuestos* no aparecen hasta que el municipio los acepte.
 
-!!! warning "Cambio de contrato (GDI-229): aca ya no viene `pdf_url`"
-    Hasta la version 3.17.0 cada documento traia un `pdf_url` presignado listo para abrir.
+!!! warning "Cambio de contrato (GDI-229): acá ya no viene `pdf_url`"
+    Hasta la versión 3.17.0 cada documento traía un `pdf_url` presignado listo para abrir.
     **Ya no.** Ahora viene `pdf_source` (`"official"`), que dice de que carril sale el PDF, y
     **la URL se pide aparte** al endpoint de abajo, cuando el ciudadano realmente va a ver el
     documento.
 
     El motivo: antes se firmaba una URL por CADA documento de CADA listado, aunque nadie
-    abriera ninguno, y el TTL empezaba a correr ahi mismo. Un expediente de 30 documentos
+    abriera ninguno, y el TTL empezaba a correr ahí mismo. Un expediente de 30 documentos
     gastaba 30 firmas para mostrar una lista.
 
 ## Obtener la URL de un documento
@@ -212,18 +212,18 @@ en **ese** expediente.
 }
 ```
 
-`expires_in` es **un entero de segundos** (180), no un texto: se puede hacer aritmetica con el.
+`expires_in` es **un entero de segundos** (180), no un texto: se puede hacer aritmética con él.
 
-| Codigo | Que significa | Que hacer |
+| Código | Que significa | Que hacer |
 |--------|---------------|-----------|
 | `200` | URL generada | Descargar el PDF **ya** |
-| `404` | No existe, no es tuyo, esta reservado, desvinculado o todavia sin firmar | No reintentar |
+| `404` | No existe, no es tuyo, está reservado, desvinculado o todavía sin firmar | No reintentar |
 | `502` | Fallo transitorio de storage | **Reintentar** en unos segundos |
 | `500` | Error interno | Reportar |
 
 !!! danger "El `404` no distingue"
-    Por diseno, un documento ajeno y uno inexistente dan el **mismo** 404:
-    el portal no puede usar el codigo de error para averiguar si un UUID existe.
+    Por diseño, un documento ajeno y uno inexistente dan el **mismo** 404:
+    el portal no puede usar el código de error para averiguar si un UUID existe.
 
 ---
 
@@ -233,7 +233,7 @@ en **ese** expediente.
 POST /api/v1/tad/cases/{case_id}/propose
 ```
 
-Propone vincular un documento **ya firmado por el mismo ciudadano** a un expediente compartido con el. Del lado municipal la propuesta se acepta o rechaza desde la app GDI (igual que cualquier propuesta interna).
+Propone vincular un documento **ya firmado por el mismo ciudadano** a un expediente compartido con él. Del lado municipal la propuesta se acepta o rechaza desde la app GDI (igual que cualquier propuesta interna).
 
 **Body:**
 
@@ -253,21 +253,21 @@ Propone vincular un documento **ya firmado por el mismo ciudadano** a un expedie
 
 **Errores:**
 
-| Codigo | Motivo |
+| Código | Motivo |
 |--------|--------|
-| `404` | Expediente no compartido / inexistente, o documento inexistente **o de otro ciudadano** (mensaje generico) |
-| `409` | El documento no esta firmado, o **ya tiene una propuesta pendiente** en ese expediente, o el **expediente todavia se esta creando** (ver abajo) |
+| `404` | Expediente no compartido / inexistente, o documento inexistente **o de otro ciudadano** (mensaje genérico) |
+| `409` | El documento no está firmado, o **ya tiene una propuesta pendiente** en ese expediente, o el **expediente todavía se está creando** (ver abajo) |
 
 !!! note "Propuestas repetidas"
     Proponer dos veces el mismo documento devuelve `409` mientras la primera propuesta siga pendiente. Si el municipio la rechaza, el documento puede proponerse de nuevo.
 
-!!! tip "Un `409` recien creado el expediente se resuelve esperando"
+!!! tip "Un `409` recién creado el expediente se resuelve esperando"
     Los tres `409` de la tabla NO son equivalentes: los dos primeros piden que
     cambies algo (firmar el documento, esperar que resuelvan la propuesta
-    anterior), pero el de **expediente en creacion** se arregla solo en unos
-    segundos, cuando sale la caratula.
+    anterior), pero el de **expediente en creación** se arregla solo en unos
+    segundos, cuando sale la carátula.
 
-    Si acabas de crear el expediente con `POST /tad/cases`, espera a que
+    Si acabás de crear el expediente con `POST /tad/cases`, espera a que
     `GET /tad/cases/{id}` devuelva `status: "active"` antes de proponer. El
     mensaje del error lo distingue del resto:
 
@@ -275,13 +275,13 @@ Propone vincular un documento **ya firmado por el mismo ciudadano** a un expedie
     > instantes y volvé a proponer el documento.
 
     El cuerpo del `409` trae **solo** la clave `error` con ese texto: no hay
-    `Retry-After` ni un codigo de error estable, asi que los tres casos se
+    `Retry-After` ni un código de error estable, así que los tres casos se
     distinguen por el mensaje. (La respuesta si trae un header
-    `x-correlation-id`, util para reportar un problema a soporte.)
+    `x-correlation-id`, útil para reportar un problema a soporte.)
 
 ---
 
-## Flujo completo tipico
+## Flujo completo típico
 
 ```mermaid
 sequenceDiagram

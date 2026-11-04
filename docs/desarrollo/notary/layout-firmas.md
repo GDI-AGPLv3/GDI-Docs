@@ -1,6 +1,6 @@
 # Layout de firmas (2 columnas)
 
-El modulo `app/layout.py` implementa el algoritmo de posicionamiento automatico de firmas
+El módulo `app/layout.py` implementa el algoritmo de posicionamiento automático de firmas
 en documentos PDF, usando un layout de 2 columnas.
 
 ## Diagrama del layout
@@ -20,11 +20,11 @@ en documentos PDF, usando un layout de 2 columnas.
 +-------------------------------------+
 ```
 
-## Constantes de configuracion
+## Constantes de configuración
 
 Definidas en `app/config.py`:
 
-| Constante | Valor | Descripcion |
+| Constante | Valor | Descripción |
 |-----------|-------|-------------|
 | `FIRST_SIGNATURE_X` | 50 | Columna izquierda (firmas impares) |
 | `SECOND_SIGNATURE_X` | 270 | Columna derecha (firmas pares) |
@@ -32,9 +32,9 @@ Definidas en `app/config.py`:
 | `SIGNATURE_HEIGHT` | 80 | Alto de cada firma (pts) |
 | `ROW_SPACING` | 20 | Espaciado entre filas (pts) |
 | `SIGNATURE_OFFSET_BELOW` | 100 | Distancia debajo del "end-text" (pts) |
-| `MIN_SIGNATURE_Y` | 100 | Posicion Y minima (margen inferior) |
-| `PAGE_WIDTH` | 612 | Ancho pagina Letter (pts) |
-| `PAGE_HEIGHT` | 792 | Alto pagina Letter (pts) |
+| `MIN_SIGNATURE_Y` | 100 | Posición Y mínima (margen inferior) |
+| `PAGE_WIDTH` | 612 | Ancho página Letter (pts) |
+| `PAGE_HEIGHT` | 792 | Alto página Letter (pts) |
 
 ## Sistemas de coordenadas
 
@@ -44,7 +44,7 @@ Definidas en `app/config.py`:
     - **PyMuPDF**: Origen `(0,0)` en esquina **superior izquierda**, Y crece hacia abajo
     - **ReportLab**: Origen `(0,0)` en esquina **inferior izquierda**, Y crece hacia arriba
 
-    La conversion es: `reportlab_y = page_height - pymupdf_y`
+    La conversión es: `reportlab_y = page_height - pymupdf_y`
 
 ## Algoritmo paso a paso
 
@@ -59,9 +59,9 @@ def find_end_text_positions(pdf_content: bytes) -> List[Tuple[float, float]]:
     return positions
 ```
 
-Solo busca en la **ultima pagina** del documento. Si no encuentra "end-text", el proceso falla con `LayoutError`.
+Solo busca en la **última página** del documento. Si no encuentra "end-text", el proceso falla con `LayoutError`.
 
-### 2. Calcular posicion Y de la primera firma
+### 2. Calcular posición Y de la primera firma
 
 ```python
 def get_first_signature_y_position(pdf_content: bytes) -> Optional[float]:
@@ -77,7 +77,7 @@ def get_first_signature_y_position(pdf_content: bytes) -> Optional[float]:
     return reportlab_y
 ```
 
-### 3. Calcular posicion de la N-esima firma
+### 3. Calcular posición de la N-esima firma
 
 ```python
 def calculate_signature_position(
@@ -107,11 +107,11 @@ def calculate_signature_position(
     return (x, y)
 ```
 
-### 4. Ejemplo numerico
+### 4. Ejemplo numérico
 
-Con `end-text` encontrado en PyMuPDF `y=500` y pagina Letter (`height=792`):
+Con `end-text` encontrado en PyMuPDF `y=500` y página Letter (`height=792`):
 
-| Firma | Numero | Columna | X | Fila | Y (ReportLab) |
+| Firma | Número | Columna | X | Fila | Y (ReportLab) |
 |-------|--------|---------|---|------|----------------|
 | 1ra | 1 | Izquierda | 50 | 0 | 192 |
 | 2da | 2 | Derecha | 270 | 0 | 192 |
@@ -119,9 +119,9 @@ Con `end-text` encontrado en PyMuPDF `y=500` y pagina Letter (`height=792`):
 | 4ta | 4 | Derecha | 270 | 1 | 92 |
 | 5ta | 5 | - | - | 2 | Error FULLPAGE |
 
-Calculo primera firma: `page_height - (text_y + offset) = 792 - (500 + 100) = 192`
+Cálculo primera firma: `page_height - (text_y + offset) = 792 - (500 + 100) = 192`
 
-## Deteccion de firmas existentes
+## Detección de firmas existentes
 
 ```python
 def count_existing_signatures(pdf_content: bytes) -> int:
@@ -143,12 +143,12 @@ def count_existing_signatures(pdf_content: bytes) -> int:
     return max(visual_count, pades_count)
 ```
 
-!!! info "Deteccion dual"
-    El sistema detecta tanto firmas visuales (por patron de texto) como
+!!! info "Detección dual"
+    El sistema detecta tanto firmas visuales (por patrón de texto) como
     firmas PAdES (por metadatos embebidos). Usa el mayor para evitar
-    superposicion en cualquier caso.
+    superposición en cualquier caso.
 
-## Validacion de espacio
+## Validación de espacio
 
 ```python
 def validate_signature_space(x: float, y: float) -> bool:
@@ -169,5 +169,5 @@ def validate_signature_space(x: float, y: float) -> bool:
     return True
 ```
 
-Si la validacion falla, se lanza `LayoutError("FULLPAGE")` indicando que no hay mas espacio
-para firmas en la pagina.
+Si la validación falla, se lanza `LayoutError("FULLPAGE")` indicando que no hay más espacio
+para firmas en la página.

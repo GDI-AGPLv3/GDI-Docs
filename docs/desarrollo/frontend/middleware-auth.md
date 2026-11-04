@@ -1,8 +1,8 @@
-# Middleware y Autenticacion
+# Middleware y Autenticación
 
 ## Arquitectura de Auth
 
-GDI-FRONTEND usa Auth0 como proveedor de identidad, integrado mediante `@auth0/nextjs-auth0` v4. La autenticacion se maneja en tres capas:
+GDI-FRONTEND usa Auth0 como proveedor de identidad, integrado mediante `@auth0/nextjs-auth0` v4. La autenticación se maneja en tres capas:
 
 ```
 1. Middleware (server-side)     -> Protege rutas, redirige si no hay sesion
@@ -27,7 +27,7 @@ export const auth0 = new Auth0Client({
 });
 ```
 
-Se configura automaticamente desde variables de entorno: `AUTH0_SECRET`, `AUTH0_ISSUER_BASE_URL`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_BASE_URL`.
+Se configura automáticamente desde variables de entorno: `AUTH0_SECRET`, `AUTH0_ISSUER_BASE_URL`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_BASE_URL`.
 
 ---
 
@@ -35,7 +35,7 @@ Se configura automaticamente desde variables de entorno: `AUTH0_SECRET`, `AUTH0_
 
 **Archivo**: `src/middleware.ts`
 
-El middleware intercepta todas las requests (excepto assets estaticos y API routes) y maneja autenticacion.
+El middleware intercepta todas las requests (excepto assets estáticos y API routes) y maneja autenticación.
 
 ### Rutas Protegidas
 
@@ -84,9 +84,9 @@ Redirect a /?session_expired=true
 El middleware se aplica a todas las rutas excepto:
 
 - `/api/*` - API routes (tienen su propia auth)
-- `/_next/static/*` - Assets estaticos
-- `/_next/image/*` - Optimizacion de imagenes
-- `favicon.ico`, `fondo.jpg`, etc. - Assets publicos
+- `/_next/static/*` - Assets estáticos
+- `/_next/image/*` - Optimización de imágenes
+- `favicon.ico`, `fondo.jpg`, etc. - Assets públicos
 
 ```typescript
 export const config = {
@@ -100,12 +100,12 @@ export const config = {
 
 ## Rutas de Auth0
 
-Auth0 maneja automaticamente estas rutas:
+Auth0 maneja automáticamente estas rutas:
 
-| Ruta | Proposito |
+| Ruta | Propósito |
 |------|-----------|
 | `/auth/login` | Redirige a Auth0 Universal Login |
-| `/auth/logout` | Cierra sesion y limpia cookies |
+| `/auth/logout` | Cierra sesión y limpia cookies |
 | `/auth/callback` | Procesa el callback OAuth tras login |
 | `/auth/profile` | Retorna datos del usuario autenticado |
 
@@ -149,9 +149,9 @@ Auth0 maneja automaticamente estas rutas:
 
 **Archivo**: `src/lib/getServerToken.ts`
 
-Las API routes necesitan obtener el token JWT de la sesion Auth0 para enviarlo al backend.
+Las API routes necesitan obtener el token JWT de la sesión Auth0 para enviarlo al backend.
 
-### Jerarquia de Autenticacion
+### Jerarquía de Autenticación
 
 ```
 Prioridad 1: Auth0 session -> JWT access token
@@ -185,7 +185,7 @@ Prioridad 3: Sin auth -> Error 401
 
 ### Headers Generados
 
-| Header | Valor | Descripcion |
+| Header | Valor | Descripción |
 |--------|-------|-------------|
 | `Authorization` | `Bearer {jwt}` | Token JWT de Auth0 |
 | `X-Tenant-Schema` | `200_muni` | Schema del tenant (pasado desde el cliente) |
@@ -211,7 +211,7 @@ const response = await fetch('/api/documents', {
 
 ### fetchWithAuth
 
-Wrapper de fetch que detecta 401 y redirige al login automaticamente.
+Wrapper de fetch que detecta 401 y redirige al login automáticamente.
 
 ```typescript
 const response = await fetchWithAuth('/api/documents');
@@ -231,19 +231,19 @@ En desarrollo, se puede bypassear Auth0 proporcionando un `user_id`:
 2. Cookie `user_id` en el navegador
 3. Header `X-User-ID` en requests
 
-El testing mode tiene timeout de 30 minutos y se gestiona via `testingMode.ts`.
+El testing mode tiene timeout de 30 minutos y se gestiona vía `testingMode.ts`.
 
 ---
 
-## Proteccion CSRF
+## Protección CSRF
 
 **Archivo**: `src/lib/csrf.ts`
 
-Las API routes que aceptan POST usan proteccion CSRF con patron double-submit cookie:
+Las API routes que aceptan POST usan protección CSRF con patrón double-submit cookie:
 
-1. El cliente solicita un token CSRF via `GET /api/csrf-token`
+1. El cliente solicita un token CSRF vía `GET /api/csrf-token`
 2. El servidor genera un token random de 32 bytes y lo setea como cookie `httpOnly`
-3. El cliente envia el token en el header `x-csrf-token`
+3. El cliente envía el token en el header `x-csrf-token`
 4. El servidor compara header vs cookie usando `crypto.timingSafeEqual`
 
 ```typescript
@@ -257,7 +257,7 @@ if (!requireCsrf(req, res)) return;  // Retorna 403 si invalido
 
 El proceso de logout limpia todos los estados:
 
-1. Limpia sesion de testing (`clearTestingSession`)
+1. Limpia sesión de testing (`clearTestingSession`)
 2. Limpia datos multi-tenant (`clearAllTenantData`)
 3. Limpia `sessionStorage` completo
 4. Limpia `localStorage` completo

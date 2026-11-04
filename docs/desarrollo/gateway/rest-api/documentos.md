@@ -1,6 +1,6 @@
 # Documentos
 
-**20 endpoints** para gestion de documentos (mas 4 de vinculacion a expedientes documentados en [Expedientes](expedientes.md)).
+**20 endpoints** para gestión de documentos (más 4 de vinculación a expedientes documentados en [Expedientes](expedientes.md)).
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID` salvo que se indique lo contrario.
 
@@ -14,17 +14,17 @@ Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y 
 GET /api/v1/documents/search
 ```
 
-Busca documentos con filtros opcionales. Soporta paginacion.
+Busca documentos con filtros opcionales. Soporta paginación.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina (max `100`) |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página (max `100`) |
 | `search` | string | - | Busca por `document_number`. `%` y `_` cuentan como letras, no como comodines |
 | `status` | string | - | Filtrar por estado visual: `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
-| `document_type` | string | - | Filtrar por acronimo del tipo: `INF`, `DICT`, etc. |
+| `document_type` | string | - | Filtrar por acrónimo del tipo: `INF`, `DICT`, etc. |
 | `case_id` | string | - | Filtrar por expediente |
 
 **Ejemplo:**
@@ -102,16 +102,16 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/pending-signatures
 GET /api/v1/documents/{document_id}
 ```
 
-Devuelve la informacion completa de un documento.
+Devuelve la información completa de un documento.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
 !!! info "X-User-ID opcional"
-    Se requiere `X-User-ID` para acceder a documentos que estan en proceso de firma. Para documentos en otros estados, es opcional.
+    Se requiere `X-User-ID` para acceder a documentos que están en proceso de firma. Para documentos en otros estados, es opcional.
 
 **Ejemplo:**
 
@@ -135,10 +135,10 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 }
 ```
 
-| Campo | Descripcion |
+| Campo | Descripción |
 |-------|-------------|
 | `state_category` | `editing` (borrador o rechazado) o `signing` (en firma o firmado) |
-| `details` | Los datos del documento. Cambian segun `state_category` |
+| `details` | Los datos del documento. Cambian según `state_category` |
 | `linked_case` | Expediente vinculado, o `null` |
 | `certified_origin` | `true` si es un PDF importado **certificado de origen** (ver abajo) |
 
@@ -151,7 +151,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | `document_id inválido (se espera UUID)` |
 | `404` | Documento no encontrado |
@@ -167,14 +167,14 @@ GET /api/v1/documents/{document_id}/content
 
 Devuelve el contenido HTML de un documento oficial firmado.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
 !!! warning "Solo documentos oficiales firmados"
-    Este endpoint solo funciona para documentos que ya fueron firmados y tienen numero oficial. Los borradores no tienen contenido disponible por esta via.
+    Este endpoint solo funciona para documentos que ya fueron firmados y tienen número oficial. Los borradores no tienen contenido disponible por esta vía.
 
 **Ejemplo:**
 
@@ -196,10 +196,10 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Documento no encontrado |
-| `400` | El documento no es oficial o no esta firmado |
+| `400` | El documento no es oficial o no está firmado |
 
 ---
 
@@ -211,9 +211,9 @@ GET /api/v1/documents/{document_id}/url
 
 Genera una URL temporal firmada para descargar el PDF del documento. La URL expira en 10 minutos.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
@@ -236,12 +236,12 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 }
 ```
 
-!!! tip "Tiempo de expiracion"
-    La URL es valida por `600` segundos (10 minutos). Despues de ese tiempo, se debe solicitar una nueva URL.
+!!! tip "Tiempo de expiración"
+    La URL es válida por `600` segundos (10 minutos). Después de ese tiempo, se debe solicitar una nueva URL.
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Documento no encontrado o sin PDF disponible |
 
@@ -255,9 +255,9 @@ GET /api/v1/documents/{document_id}/signature-details
 
 Devuelve los detalles de firma de un documento (firmantes, fechas, estado de cada firma).
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
@@ -290,25 +290,25 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Documento no encontrado |
 
 ---
 
-### Buscar documento oficial por numero
+### Buscar documento oficial por número
 
 ```
 GET /api/v1/documents/search-official/{doc_number}
 ```
 
-Busca un documento oficial por su numero exacto.
+Busca un documento oficial por su número exacto.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `doc_number` | string | Numero oficial del documento (ej: `IF-2025-00012-SMG-ADGEN`) |
+| `doc_number` | string | Número oficial del documento (ej: `IF-2025-00012-SMG-ADGEN`) |
 
 **Ejemplo:**
 
@@ -333,24 +333,24 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/search-official/IF
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a proposito: no revela si existe) |
+| `404` | No existe **o** el usuario no tiene permiso para verlo (misma respuesta a propósito: no revela si existe) |
 
 !!! warning "Alcanzar un documento de otro sector depende de un permiso del usuario"
     Igual que con los expedientes, un usuario solo ve los documentos de sus
-    sectores. La busqueda por numero exacto amplia ese alcance **unicamente si
+    sectores. La búsqueda por número exacto amplia ese alcance **únicamente si
     su ficha tiene activado `can_global_search_documents`**, permiso que se
     administra por usuario desde el BackOffice y viene **desactivado** por
     defecto.
 
-    Sin ese permiso, un documento de otro sector responde `404` aunque el numero
+    Sin ese permiso, un documento de otro sector responde `404` aunque el número
     sea correcto.
 
     Vale la misma advertencia que para expedientes: si el portal expone
-    "consulta por numero" al publico, conviene usar una API Key asociada a un
+    "consulta por número" al público, conviene usar una API Key asociada a un
     usuario **sin** el permiso global, o filtrar antes de mostrar. Ver
-    [Visibilidad y busqueda global](expedientes.md#visibilidad-y-busqueda-global).
+    [Visibilidad y búsqueda global](expedientes.md#visibilidad-y-busqueda-global).
 
 ---
 
@@ -362,12 +362,12 @@ GET /api/v1/documents/check-signer-permissions
 
 Verifica si un usuario tiene permisos para firmar documentos de un tipo determinado.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Requerido | Descripcion |
+| Parámetro | Tipo | Requerido | Descripción |
 |-----------|------|-----------|-------------|
-| `user_id` | UUID | Si | ID del usuario a verificar |
-| `document_type_acronym` | string | Si | Acronimo del tipo de documento (ej: `INF`, `DICT`) |
+| `user_id` | UUID | Sí | ID del usuario a verificar |
+| `document_type_acronym` | string | Sí | Acrónimo del tipo de documento (ej: `INF`, `DICT`) |
 
 **Ejemplo:**
 
@@ -402,10 +402,10 @@ Crea un nuevo documento en estado borrador.
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `document_type_acronym` | string | Si | Acronimo del tipo de documento (`INF`, `DICT`, etc.) |
-| `reference` | string | Si | Descripcion o asunto del documento |
+| `document_type_acronym` | string | Sí | Acrónimo del tipo de documento (`INF`, `DICT`, etc.) |
+| `reference` | string | Sí | Descripción o asunto del documento |
 | `case_id` | UUID | No | Vincular directamente a un expediente |
 | `recipients` | list | No | Lista de UUIDs de usuarios destinatarios |
 
@@ -437,10 +437,10 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/" \
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | Tipo de documento invalido o campos requeridos faltantes |
-| `404` | Expediente no encontrado (si se paso `case_id`) |
+| `400` | Tipo de documento inválido o campos requeridos faltantes |
+| `404` | Expediente no encontrado (si se pasó `case_id`) |
 
 !!! tip "Tipos de documentos"
     Para ver los tipos de documentos disponibles, usar `GET /api/v1/system/document-types`.
@@ -459,11 +459,11 @@ Importa un archivo PDF externo como documento en el sistema.
 
 **Campos del formulario:**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `document_type_acronym` | string | Si | Acronimo del tipo de documento |
-| `reference` | string | Si | Descripcion del documento |
-| `pdf_file` | file | Si | Archivo PDF a importar |
+| `document_type_acronym` | string | Sí | Acrónimo del tipo de documento |
+| `reference` | string | Sí | Descripción del documento |
+| `pdf_file` | file | Sí | Archivo PDF a importar |
 
 **Ejemplo:**
 
@@ -491,11 +491,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | Archivo no es PDF valido o campos requeridos faltantes |
+| `400` | Archivo no es PDF válido o campos requeridos faltantes |
 | `400` | El PDF trae una firma de certificación que GDI no puede conservar (ver abajo) |
-| `422` | Archivo excede el tamano maximo permitido |
+| `422` | Archivo excede el tamaño máximo permitido |
 
 !!! info "PDF que ya viene certificado"
     Si el PDF trae una firma de certificación válida, GDI lo guarda **byte a byte** como
@@ -518,15 +518,15 @@ PATCH /api/v1/documents/{document_id}
 
 Actualiza el contenido y/o metadatos de un documento en estado borrador.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
 | `content` | string | No | Contenido HTML del documento |
 | `reference` | string | No | Nueva referencia o asunto |
@@ -560,9 +560,9 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-23
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no esta en estado borrador |
+| `400` | El documento no está en estado borrador |
 | `403` | Sin permisos para editar este documento |
 | `404` | Documento no encontrado |
 
@@ -577,9 +577,9 @@ PUT /api/v1/documents/{document_id}/imported-pdf
 Reemplaza el archivo PDF de un documento importado en estado `draft` o `rejected`. Un
 documento `rejected` sigue en ese estado hasta que se lo vuelve a enviar a firma.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento importado |
 
@@ -587,9 +587,9 @@ documento `rejected` sigue en ese estado hasta que se lo vuelve a enviar a firma
 
 **Campos del formulario:**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `pdf_file` | file | Si | Nuevo archivo PDF |
+| `pdf_file` | file | Sí | Nuevo archivo PDF |
 
 **Ejemplo:**
 
@@ -612,13 +612,13 @@ curl -X PUT "https://gateway.your-domain.com/api/v1/documents/a7b8c9d0-e1f2-3456
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | El documento no es importado |
 | `400` | El PDF nuevo es un certificado de origen y el documento ya tiene adjuntos: `El PDF nuevo viene certificado de origen y no admite adjuntos agregados desde GDI...` |
 | `404` | Documento no encontrado |
 | `409` | `Solo se puede reemplazar PDF en documentos draft o rejected`: el documento está en firma o ya es oficial |
-| `422` | Archivo no es PDF valido |
+| `422` | Archivo no es PDF válido |
 
 ---
 
@@ -630,9 +630,9 @@ DELETE /api/v1/documents/{document_id}
 
 Elimina un documento que se encuentra en estado `draft` o `rejected`.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
@@ -657,9 +657,9 @@ curl -X DELETE "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no esta en estado `draft` o `rejected` |
+| `400` | El documento no está en estado `draft` o `rejected` |
 | `403` | Sin permisos para eliminar este documento |
 | `404` | Documento no encontrado |
 
@@ -673,11 +673,11 @@ curl -X DELETE "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-2
 POST /api/v1/documents/{document_id}/start-signing
 ```
 
-Envia un documento borrador al circuito de firma. Cambia el estado del documento a `sent_to_sign`.
+Envía un documento borrador al circuito de firma. Cambia el estado del documento a `sent_to_sign`.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
@@ -701,9 +701,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no esta en estado borrador o no tiene firmantes asignados |
+| `400` | El documento no está en estado borrador o no tiene firmantes asignados |
 | `403` | Sin permisos para enviar a firma |
 | `404` | Documento no encontrado |
 
@@ -718,11 +718,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 POST /api/v1/documents/{document_id}/sign
 ```
 
-Aplica la firma del usuario actual al documento. Si todos los firmantes requeridos firman, el documento pasa a estado `signed` y se genera el numero oficial.
+Aplica la firma del usuario actual al documento. Si todos los firmantes requeridos firman, el documento pasa a estado `signed` y se genera el número oficial.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
@@ -745,8 +745,8 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 }
 ```
 
-!!! warning "Firma digital con token fisico"
-    Este endpoint solo acepta **firma electronica**. Si el documento requiere firma con token fisico (`signature_policy=digital_all`, o el usuario es numerador con `digital_num`), la API devuelve `422` con el mensaje _"Este documento requiere firma con token fisico. Firma desde el portal web."_. La firma con token se realiza desde el portal web con FirmadorGDI.
+!!! warning "Firma digital con token físico"
+    Este endpoint solo acepta **firma electrónica**. Si el documento requiere firma con token físico (`signature_policy=digital_all`, o el usuario es numerador con `digital_num`), la API devuelve `422` con el mensaje _"Este documento requiere firma con token físico. Firma desde el portal web."_. La firma con token se realiza desde el portal web con FirmadorGDI.
 
     **Excepción:** un certificado de origen (`certified_origin: true`) se firma por este endpoint
     aunque el tipo exija firma digital. Nadie firma ese PDF: los firmantes comunes dan
@@ -754,14 +754,14 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no esta en estado `sent_to_sign`, o `document_id inválido (se espera UUID)` |
+| `400` | El documento no está en estado `sent_to_sign`, o `document_id inválido (se espera UUID)` |
 | `403` | El usuario no es firmante de este documento |
 | `403` | El numerador no tiene el rango que pide el tipo. El texto dice cuál falta: `Sin permiso de rango para numerar '<tipo>'...` |
 | `404` | Documento no encontrado |
 | `409` | Certificado de origen cuyo PDF cambió desde que se importó: `El PDF cambió desde que se verificó como certificado de origen...` |
-| `422` | El documento requiere firma con token fisico |
+| `422` | El documento requiere firma con token físico |
 | `429` | La cola de firma está saturada. Con `Retry-After`, reintentar después de esos segundos. Sin `Retry-After`, avisar al municipio: reintentar no sirve |
 | `503` | Espera pasajera (por ejemplo, `"code": "CERTIFIED_CHECK_RETRY"` en un certificado de origen). Reintentar después de `Retry-After` |
 
@@ -775,17 +775,17 @@ POST /api/v1/documents/{document_id}/reject
 
 Rechaza un documento que se encuentra en proceso de firma. El documento vuelve al estado `rejected`.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `document_id` | UUID | Identificador del documento |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `reason` | string | Si | Motivo del rechazo |
+| `reason` | string | Sí | Motivo del rechazo |
 
 **Ejemplo:**
 
@@ -837,9 +837,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | Motivo vacio, o `document_id inválido (se espera UUID)` |
+| `400` | Motivo vacío, o `document_id inválido (se espera UUID)` |
 | `403` | El usuario no es firmante de este documento |
 | `404` | Documento no encontrado |
 | `409` | El documento ya estaba rechazado, ya es oficial, o se firmó mientras se lo rechazaba. Consultar su estado con `GET /documents/{id}` |
@@ -856,17 +856,17 @@ POST /api/v1/cases/{case_id}/documents/link
 
 Vincula un documento oficial (firmado) a un expediente.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | Identificador del expediente |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `official_document_id` | UUID | Si | ID del documento oficial a vincular |
+| `official_document_id` | UUID | Sí | ID del documento oficial a vincular |
 
 **Ejemplo:**
 
@@ -892,11 +892,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no es oficial o ya esta vinculado |
+| `400` | El documento no es oficial o ya está vinculado |
 | `403` | Sin permisos sobre el expediente |
-| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
+| `409` | El expediente todavía se está **creando** (falta su carátula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---
@@ -907,19 +907,19 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 POST /api/v1/cases/{case_id}/documents/propose
 ```
 
-Propone vincular un documento en estado borrador a un expediente. Requiere aceptacion por parte del responsable del expediente.
+Propone vincular un documento en estado borrador a un expediente. Requiere aceptación por parte del responsable del expediente.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | Identificador del expediente |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `document_draft_id` | UUID | Si | ID del documento borrador a proponer |
+| `document_draft_id` | UUID | Sí | ID del documento borrador a proponer |
 
 **Ejemplo:**
 
@@ -947,11 +947,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | El documento no esta en estado borrador, o `case_id` / `document_draft_id` no es un UUID |
+| `400` | El documento no está en estado borrador, o `case_id` / `document_draft_id` no es un UUID |
 | `403` | Sin permisos para proponer documentos a este expediente |
-| `409` | El expediente todavia se esta **creando** (falta su caratula): es transitorio, reintentar en unos segundos (GDI-436) |
+| `409` | El expediente todavía se está **creando** (falta su carátula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 
 ---
@@ -962,19 +962,19 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 POST /api/v1/cases/{case_id}/documents/accept-proposal
 ```
 
-Acepta una propuesta de vinculacion de documento a un expediente.
+Acepta una propuesta de vinculación de documento a un expediente.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | Identificador del expediente |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `proposed_id` | UUID | Si | ID de la propuesta a aceptar |
+| `proposed_id` | UUID | Sí | ID de la propuesta a aceptar |
 
 **Ejemplo:**
 
@@ -1000,7 +1000,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | La propuesta ya fue procesada, o `case_id` / `proposed_id` no es un UUID |
 | `403` | Sin permisos para aceptar propuestas en este expediente |
@@ -1014,19 +1014,19 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 POST /api/v1/cases/{case_id}/documents/reject-proposal
 ```
 
-Rechaza una propuesta de vinculacion de documento.
+Rechaza una propuesta de vinculación de documento.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `case_id` | UUID | Identificador del expediente |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `proposed_id` | UUID | Si | ID de la propuesta a rechazar |
+| `proposed_id` | UUID | Sí | ID de la propuesta a rechazar |
 
 **Ejemplo:**
 
@@ -1052,7 +1052,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | La propuesta ya fue procesada, o `case_id` / `proposed_id` no es un UUID |
 | `403` | Sin permisos para rechazar propuestas en este expediente |
