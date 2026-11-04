@@ -1,27 +1,27 @@
-# Autenticacion
+# Autenticación
 
-El Gateway soporta **dos metodos de autenticacion** segun el tipo de cliente:
+El Gateway soporta **dos métodos de autenticación** según el tipo de cliente:
 
-| Metodo | Clientes | Mecanismo | Uso tipico |
+| Método | Clientes | Mecanismo | Uso típico |
 |--------|----------|-----------|------------|
-| **REST API Key** | Scripts, bots, sistemas | `X-API-Key` + `X-User-ID` (headers) | Integraciones programaticas |
-| **MCP OAuth 2.0** | Claude, ChatGPT, Gemini | JWT via Auth0 | Agentes de inteligencia artificial |
+| **REST API Key** | Scripts, bots, sistemas | `X-API-Key` + `X-User-ID` (headers) | Integraciones programáticas |
+| **MCP OAuth 2.0** | Claude, ChatGPT, Gemini | JWT vía Auth0 | Agentes de inteligencia artificial |
 
 ---
 
-## REST API - Autenticacion por API Key
+## REST API - Autenticación por API Key
 
 ### Headers requeridos
 
 Cada request a la REST API (`/api/v1/*`) requiere **dos headers obligatorios**:
 
-| Header | Formato | Descripcion |
+| Header | Formato | Descripción |
 |--------|---------|-------------|
 | `X-API-Key` | `sk-gdi-xxx` | API Key del sistema externo, almacenada como hash en la tabla `public.api_keys` |
-| `X-User-ID` | UUID v4 | Identificador del usuario que ejecuta la operacion. Debe estar autorizado para esa API Key en `public.api_key_users` |
+| `X-User-ID` | UUID v4 | Identificador del usuario que ejecuta la operación. Debe estar autorizado para esa API Key en `public.api_key_users` |
 
 !!! warning "Ambos headers son obligatorios"
-    Si falta cualquiera de los dos headers, el Gateway responde `401 Unauthorized` inmediatamente. No existe autenticacion solo por API Key sin identificar al usuario.
+    Si falta cualquiera de los dos headers, el Gateway responde `401 Unauthorized` inmediatamente. No existe autenticación solo por API Key sin identificar al usuario.
 
 ### Ejemplo de request
 
@@ -31,7 +31,7 @@ curl -H "X-API-Key: sk-gdi-abc123" \
      "https://gateway.your-domain.com/api/v1/cases/search?page=1&status=active"
 ```
 
-### Flujo de validacion
+### Flujo de validación
 
 El Gateway ejecuta los siguientes pasos en orden al recibir un request REST:
 
@@ -51,17 +51,17 @@ flowchart TD
     L --> M["Construir MCPContext<br/>y ejecutar operacion"]
 ```
 
-### Errores de autenticacion REST
+### Errores de autenticación REST
 
-| HTTP | Mensaje | Causa | Solucion |
+| HTTP | Mensaje | Causa | Solución |
 |------|---------|-------|----------|
-| 401 | `X-API-Key header requerido` | No se envio el header `X-API-Key` | Agregar el header con la API Key proporcionada por el administrador |
-| 401 | `X-User-ID header requerido para REST API` | No se envio el header `X-User-ID` | Agregar el header con el UUID del usuario |
+| 401 | `X-API-Key header requerido` | No se envió el header `X-API-Key` | Agregar el header con la API Key proporcionada por el administrador |
+| 401 | `X-User-ID header requerido para REST API` | No se envió el header `X-User-ID` | Agregar el header con el UUID del usuario |
 | 401 | `API Key invalida o expirada` | La API Key no existe, fue desactivada o expiro | Verificar la key con el administrador. Solicitar una nueva si expiro |
-| 401 | `Usuario no autorizado para esta API Key` | El User ID no esta asociado a esa API Key | Solicitar al administrador que vincule el usuario a la API Key |
+| 401 | `Usuario no autorizado para esta API Key` | El User ID no está asociado a esa API Key | Solicitar al administrador que vincule el usuario a la API Key |
 
 !!! note "Formato de respuesta de error"
-    Todos los errores de autenticacion devuelven un JSON con la siguiente estructura:
+    Todos los errores de autenticación devuelven un JSON con la siguiente estructura:
 
     ```json
     {
@@ -70,26 +70,26 @@ flowchart TD
     }
     ```
 
-### Como obtener API Key y User ID
+### Cómo obtener API Key y User ID
 
-Las credenciales se gestionan exclusivamente desde el **BackOffice** (panel de administracion):
+Las credenciales se gestionan exclusivamente desde el **BackOffice** (panel de administración):
 
 1. El administrador del municipio accede al BackOffice
-2. En la seccion de **API Keys**, crea una nueva key con un nombre descriptivo (ej: "Sistema de Tramites Municipal")
+2. En la sección de **API Keys**, crea una nueva key con un nombre descriptivo (ej: "Sistema de Trámites Municipal")
 3. El sistema genera una key con formato `sk-gdi-xxx` y la muestra **una sola vez**
-4. El administrador asocia uno o mas usuarios a esa key (tabla `api_key_users`)
-5. El administrador entrega la API Key y los User IDs al equipo tecnico que realizara la integracion
+4. El administrador asocia uno o más usuarios a esa key (tabla `api_key_users`)
+5. El administrador entrega la API Key y los User IDs al equipo técnico que realizará la integración
 
 !!! danger "Seguridad de la API Key"
-    La API Key se muestra una unica vez al momento de crearla. Si se pierde, el administrador debe generar una nueva. Nunca incluir API Keys en codigo fuente o repositorios publicos.
+    La API Key se muestra una única vez al momento de crearla. Si se pierde, el administrador debe generar una nueva. Nunca incluir API Keys en código fuente o repositorios públicos.
 
 ---
 
-## MCP Server - Autenticacion OAuth 2.0
+## MCP Server - Autenticación OAuth 2.0
 
-### Descripcion general
+### Descripción general
 
-El MCP Server utiliza **OAuth 2.0** con Auth0 como proveedor de identidad. El flujo de autenticacion es **completamente automatico** para clientes compatibles: el usuario solo necesita iniciar sesion con su cuenta de GDI cuando el navegador se lo solicite.
+El MCP Server utiliza **OAuth 2.0** con Auth0 como proveedor de identidad. El flujo de autenticación es **completamente automático** para clientes compatibles: el usuario solo necesita iniciar sesión con su cuenta de GDI cuando el navegador se lo solicite.
 
 Los clientes soportados actualmente son:
 
@@ -98,9 +98,9 @@ Los clientes soportados actualmente son:
 - **Gemini** (Google)
 
 !!! info "Estandares implementados"
-    El flujo se basa en los RFCs 9728 (OAuth Protected Resource Metadata) y 8414 (OAuth Authorization Server Metadata), lo que permite a los clientes MCP descubrir automaticamente como autenticarse sin configuracion manual.
+    El flujo se basa en los RFCs 9728 (OAuth Protected Resource Metadata) y 8414 (OAuth Authorization Server Metadata), lo que permite a los clientes MCP descubrir automáticamente como autenticarse sin configuración manual.
 
-### Flujo de autenticacion paso a paso
+### Flujo de autenticación paso a paso
 
 ```mermaid
 sequenceDiagram
@@ -130,9 +130,9 @@ sequenceDiagram
 
 ### Detalle de cada paso
 
-**Paso 1-2: Desafio de autenticacion**
+**Paso 1-2: Desafío de autenticación**
 
-El cliente MCP intenta conectarse al endpoint `/mcp` sin credenciales. El Gateway responde con un `401 Unauthorized` y un header `WWW-Authenticate` que indica donde descubrir la configuracion OAuth:
+El cliente MCP intenta conectarse al endpoint `/mcp` sin credenciales. El Gateway responde con un `401 Unauthorized` y un header `WWW-Authenticate` que indica dónde descubrir la configuración OAuth:
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -147,7 +147,7 @@ Content-Type: application/json
 
 **Paso 3-4: Discovery del recurso protegido (RFC 9728)**
 
-El cliente consulta el endpoint de metadata para saber a que servidor de autorizacion debe dirigirse:
+El cliente consulta el endpoint de metadata para saber a qué servidor de autorización debe dirigirse:
 
 ```bash
 curl "https://gateway.your-domain.com/.well-known/oauth-protected-resource"
@@ -169,29 +169,29 @@ curl "https://gateway.your-domain.com/.well-known/oauth-protected-resource"
 }
 ```
 
-**Paso 5-8: Login via Auth0**
+**Paso 5-8: Login vía Auth0**
 
-El cliente MCP redirige al usuario a Auth0 para autenticarse. El usuario ingresa sus credenciales de GDI (email + contrasena) en el navegador. Auth0 emite un JWT al completar el login.
+El cliente MCP redirige al usuario a Auth0 para autenticarse. El usuario ingresa sus credenciales de GDI (email + contraseña) en el navegador. Auth0 emite un JWT al completar el login.
 
-**Paso 9-14: Operacion autenticada**
+**Paso 9-14: Operación autenticada**
 
-El cliente envia requests al endpoint `/mcp` incluyendo el JWT como Bearer token. El Gateway valida el token, identifica al usuario y ejecuta la operacion con los permisos correspondientes.
+El cliente envía requests al endpoint `/mcp` incluyendo el JWT como Bearer token. El Gateway valida el token, identifica al usuario y ejecuta la operación con los permisos correspondientes.
 
 ### Endpoints de discovery
 
-| Endpoint | RFC | Proposito |
+| Endpoint | RFC | Propósito |
 |----------|-----|-----------|
 | `/.well-known/oauth-protected-resource` | RFC 9728 | Indica el authorization server (Auth0) y scopes soportados |
 | `/.well-known/oauth-authorization-server` | RFC 8414 | Metadata OAuth completa (authorize, token, register endpoints). Proxy del `openid-configuration` de Auth0 |
-| `/.well-known/mcp.json` | MCP Spec | Manifest del servidor MCP (nombre, version, tools disponibles) |
-| `/.well-known/openapi.json` | OpenAPI 3.0 | Especificacion REST API. Usado por ChatGPT Actions para auto-configuracion |
+| `/.well-known/mcp.json` | MCP Spec | Manifest del servidor MCP (nombre, versión, tools disponibles) |
+| `/.well-known/openapi.json` | OpenAPI 3.0 | Especificación REST API. Usado por ChatGPT Actions para auto-configuracion |
 
 !!! note "ChatGPT y discovery"
-    ChatGPT requiere especificamente el endpoint `/.well-known/oauth-authorization-server` (no el path estandar de OpenID Connect). Tambien acepta el alias `/.well-known/oauth-authorization-server/mcp`.
+    ChatGPT requiere específicamente el endpoint `/.well-known/oauth-authorization-server` (no el path estándar de OpenID Connect). También acepta el alias `/.well-known/oauth-authorization-server/mcp`.
 
-### Validacion del JWT
+### Validación del JWT
 
-El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, con cache de 30 minutos. El unico audience valido es la Custom API del gateway (`MCP_RESOURCE_URI`), aceptado **con y sin barra final** (los clientes MCP canonicalizan el `resource` y le agregan `/`):
+El Gateway valida el JWT recibido contra las JWKS (JSON Web Key Set) de Auth0, con cache de 30 minutos. El único audience válido es la Custom API del gateway (`MCP_RESOURCE_URI`), aceptado **con y sin barra final** (los clientes MCP canonicalizan el `resource` y le agregan `/`):
 
 ```
 Audiences validos (api_gateway/auth_mcp.py):
@@ -201,7 +201,7 @@ Audiences validos (api_gateway/auth_mcp.py):
 
 NO se acepta el audience del Management API (`https://<tenant>.auth0.com/api/v2/`).
 
-Del JWT se extrae el **email** del usuario. Los clientes MCP son *third-party* (DCR) y su token sale con scope `offline_access` solo (sin `openid`), por lo que **no** trae el claim `email` estandar ni sirve para `/userinfo` (devuelve 401). El email viaja en el claim **con namespace** `https://gdilatam.com/email` que agrega un Action de Auth0; el gateway lo lee con `_email_from_payload`. Con el email se busca al usuario en la base de datos y se construye el contexto de operacion.
+Del JWT se extrae el **email** del usuario. Los clientes MCP son *third-party* (DCR) y su token sale con scope `offline_access` solo (sin `openid`), por lo que **no** trae el claim `email` estándar ni sirve para `/userinfo` (devuelve 401). El email viaja en el claim **con namespace** `https://gdilatam.com/email` que agrega un Action de Auth0; el gateway lo lee con `_email_from_payload`. Con el email se busca al usuario en la base de datos y se construye el contexto de operación.
 
 !!! info "El email solo no alcanza: manda el `sub`"
     Desde el 26/10/2026 (versión 5.8.0), cada usuario de GDI queda atado al `sub` de su cuenta de Auth0 la
@@ -211,11 +211,11 @@ Del JWT se extrae el **email** del usuario. Los clientes MCP son *third-party* (
     todavía no entró nunca se ata en su primer ingreso.
 
 !!! warning "Requisitos Auth0 para MCP"
-    Para que un cliente MCP obtenga un JWT valido (y no un token opaco), el tenant necesita: **DCR habilitado**, la **conexion de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server registrado con la barra final** (`https://<gateway>/`). Ver [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
+    Para que un cliente MCP obtenga un JWT válido (y no un token opaco), el tenant necesita: **DCR habilitado**, la **conexión de BD a Domain Level**, un **client-grant `default_for: third_party_clients`** sobre la API, y el **resource server registrado con la barra final** (`https://<gateway>/`). Ver [OAuth Discovery > Requisitos Auth0 para MCP](../backend/api-gateway/oauth-discovery.md#requisitos-auth0-para-mcp).
 
-### Multi-tenant: usuarios con multiples organizaciones
+### Multi-tenant: usuarios con múltiples organizaciones
 
-Si un usuario tiene acceso a mas de una organizacion (municipalidad), el Gateway responde con un error que indica que debe seleccionar un tenant:
+Si un usuario tiene acceso a más de una organización (municipalidad), el Gateway responde con un error que indica que debe seleccionar un tenant:
 
 ```json
 {
@@ -237,7 +237,7 @@ Si un usuario tiene acceso a mas de una organizacion (municipalidad), el Gateway
 Para resolver esto:
 
 1. El agente IA ejecuta el tool `list_my_tenants` para obtener las organizaciones disponibles
-2. El usuario indica a cual quiere conectarse
+2. El usuario indica a cuál quiere conectarse
 3. Las llamadas subsiguientes incluyen el `tenant_id` seleccionado
 
 ---
@@ -281,7 +281,7 @@ CREATE TABLE public.api_key_users (
 );
 ```
 
-### Relacion entre tablas
+### Relación entre tablas
 
 ```mermaid
 erDiagram
@@ -309,24 +309,24 @@ erDiagram
     }
 ```
 
-Una API Key puede tener **multiples usuarios** asociados. Esto permite que un sistema externo opere con distintos usuarios segun el contexto (por ejemplo, un bot que crea documentos en nombre de diferentes funcionarios).
+Una API Key puede tener **múltiples usuarios** asociados. Esto permite que un sistema externo opere con distintos usuarios según el contexto (por ejemplo, un bot que crea documentos en nombre de diferentes funcionarios).
 
 ---
 
 ## Backup API Keys (Sync)
 
-Los endpoints de sincronizacion (`/api/v1/sync/*`) usan un mecanismo de autenticacion diferente al flujo normal.
+Los endpoints de sincronización (`/api/v1/sync/*`) usan un mecanismo de autenticación diferente al flujo normal.
 
 ### Diferencias con las API Keys standard
 
 | Aspecto | API Key standard | Backup API Key |
 |---------|-----------------|----------------|
-| `X-User-ID` | Requerido | **Prohibido** (se rechaza si se envia) |
+| `X-User-ID` | Requerido | **Prohibido** (se rechaza si se envía) |
 | `key_type` en BD | `standard` | `backup` |
-| Validacion IP | No | Si (campo `allowed_origins` en `api_keys`) |
+| Validación IP | No | Sí (campo `allowed_origins` en `api_keys`) |
 | Uso | Todas las operaciones | Solo `/api/v1/sync/*` |
 
-### Flujo de autenticacion Backup
+### Flujo de autenticación Backup
 
 ```mermaid
 flowchart TD
@@ -346,31 +346,31 @@ flowchart TD
     M -->|Si| O["Ejecutar operacion"]
 ```
 
-### Errores de autenticacion Backup
+### Errores de autenticación Backup
 
-Todos los errores de autenticacion backup devuelven `{"error": "Acceso denegado"}` sin detallar el motivo (por seguridad).
+Todos los errores de autenticación backup devuelven `{"error": "Acceso denegado"}` sin detallar el motivo (por seguridad).
 
 | HTTP | Causa real |
 |------|-----------|
-| 401 | Key no encontrada, tipo incorrecto, inactiva, expirada, o se envio `X-User-ID` |
-| 403 | IP del cliente no esta en `allowed_origins` |
+| 401 | Key no encontrada, tipo incorrecto, inactiva, expirada, o se envió `X-User-ID` |
+| 403 | IP del cliente no está en `allowed_origins` |
 | 429 | Rate limit excedido (incluye `Retry-After` en segundos) |
 
 ---
 
-## Comparacion de metodos
+## Comparación de métodos
 
 | Aspecto | REST API Key | MCP OAuth 2.0 |
 |---------|-------------|---------------|
 | **Quien lo usa** | Sistemas, scripts, bots | Agentes IA (Claude, ChatGPT, Gemini) |
-| **Credenciales** | API Key + User ID (headers) | JWT automatico via Auth0 |
-| **Configuracion** | Manual (el admin crea la key) | Automatica (discovery RFC 9728) |
-| **Identidad del usuario** | Explicita (`X-User-ID` header) | Implicita (email del JWT) |
-| **Expiracion** | Configurable o permanente | JWT con TTL de Auth0 + refresh token |
-| **Multi-tenant** | Resuelto por `municipality_id` en `api_key_users` | Resuelto por email, con selector si hay multiples orgs |
+| **Credenciales** | API Key + User ID (headers) | JWT automático vía Auth0 |
+| **Configuración** | Manual (el admin crea la key) | Automática (discovery RFC 9728) |
+| **Identidad del usuario** | Explícita (`X-User-ID` header) | Implícita (email del JWT) |
+| **Expiración** | Configurable o permanente | JWT con TTL de Auth0 + refresh token |
+| **Multi-tenant** | Resuelto por `municipality_id` en `api_key_users` | Resuelto por email, con selector si hay múltiples orgs |
 | **Permisos** | Mismos que el usuario en la UI | Mismos que el usuario en la UI |
-| **Revocacion** | Desactivar key en BackOffice | Desactivar usuario en Auth0 |
+| **Revocación** | Desactivar key en BackOffice | Desactivar usuario en Auth0 |
 
-!!! tip "Cual usar"
-    - Si tu integracion es un **script o sistema automatizado**, usa **REST API Key**. Es mas simple de configurar y no requiere flujo OAuth.
-    - Si tu integracion es un **agente IA** que opera en nombre de un usuario humano, usa **MCP OAuth 2.0**. El usuario se autentica con su propia cuenta y el agente hereda sus permisos.
+!!! tip "Cuál usar"
+    - Si tu integración es un **script o sistema automatizado**, usa **REST API Key**. Es más simple de configurar y no requiere flujo OAuth.
+    - Si tu integración es un **agente IA** que opera en nombre de un usuario humano, usa **MCP OAuth 2.0**. El usuario se autentica con su propia cuenta y el agente hereda sus permisos.

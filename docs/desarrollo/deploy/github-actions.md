@@ -1,28 +1,28 @@
 # GitHub Actions
 
-## Vision General
+## Visión General
 
 GDI Latam usa GitHub Actions para CI/CD. Cada push a las ramas `dev`, `hml` o `prd` dispara el workflow correspondiente, que corre lint/tests y luego hace deploy directamente a Fly.io usando `flyctl`.
 
-El flujo es escalonado de 3 niveles: **`dev` (DEV) → `hml` (HML = HML) → `prd` (PRD = PRD + DEMO)**. HML es ambiente de homologacion/sandbox (sin clientes reales) y se deploya desde `hml`; PRD es produccion real y DEMO son trials de prospectos, ambos desde `prd`.
+El flujo es escalonado de 3 niveles: **`dev` (DEV) → `hml` (HML = HML) → `prd` (PRD = PRD + DEMO)**. HML es ambiente de homologacion/sandbox (sin clientes reales) y se deploya desde `hml`; PRD es producción real y DEMO son trials de prospectos, ambos desde `prd`.
 
-Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente via Vercel al hacer push a su Production Branch: `hml-frontend` y `hml-backoffice-front` apuntan a `hml`; los `prd-*`/`prd-*` apuntan a `prd`.
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automáticamente vía Vercel al hacer push a su Production Branch: `hml-frontend` y `hml-backoffice-front` apuntan a `hml`; los `prd-*`/`prd-*` apuntan a `prd`.
 
 ---
 
 ## Repositorios
 
-Cada servicio es un repositorio independiente en la organizacion GitHub (your-org):
+Cada servicio es un repositorio independiente en la organización GitHub (your-org):
 
 | Repositorio | Servicio | Stack | Deploy |
 |-------------|----------|-------|--------|
 | GDI-FRONTEND | GDI-FRONTEND | Next.js 15 | Vercel (auto) |
-| GDI-Backend | GDI-Backend + MCP Gateway | FastAPI | Fly.io via Actions |
+| GDI-Backend | GDI-Backend + MCP Gateway | FastAPI | Fly.io vía Actions |
 | GDI-BackOffice-Front | GDI-BackOffice-Front | Next.js 15 | Vercel (auto) |
-| GDI-BackOffice-Back | GDI-BackOffice-Back | FastAPI | Fly.io via Actions |
-| GDI-PDFComposer | GDI-PDFComposer | FastAPI | Fly.io via Actions |
-| GDI-Notary | GDI-Notary | FastAPI + pyHanko | Fly.io via Actions |
-| GDI-AgenteLANG | GDI-AgenteLANG | FastAPI + LangGraph | Fly.io via Actions |
+| GDI-BackOffice-Back | GDI-BackOffice-Back | FastAPI | Fly.io vía Actions |
+| GDI-PDFComposer | GDI-PDFComposer | FastAPI | Fly.io vía Actions |
+| GDI-Notary | GDI-Notary | FastAPI + pyHanko | Fly.io vía Actions |
+| GDI-AgenteLANG | GDI-AgenteLANG | FastAPI + LangGraph | Fly.io vía Actions |
 | GDI-BD | -- | Scripts SQL, migraciones | Manual |
 
 ---
@@ -34,18 +34,18 @@ Cada servicio es un repositorio independiente en la organizacion GitHub (your-or
 | `dev` | `deploy-dev.yml` | GitHub Actions → Fly.io DEV | `gdi-*-dev` (org: <your-fly-org-dev>) |
 | `hml` | `deploy-hml.yml` | GitHub Actions → Fly.io HML | `hml-*` (org: <your-fly-org>) |
 | `prd` | `deploy-prd.yml` | GitHub Actions → Fly.io PRD | `prd-*` + `prd-*` (org: <your-fly-org>) |
-| `feat/*`, `fix/*`, etc. | - | Sin deploy automatico | Solo CI (lint) |
+| `feat/*`, `fix/*`, etc. | - | Sin deploy automático | Solo CI (lint) |
 
-> **`deploy-hml.yml` existe en GDI-Backend, GDI-AgenteLANG y GDI-BackOffice-Back** (los repos con apps `hml-*`). Dispara en push a `hml` y deploya SOLO las apps `hml-*` (en Backend: `hml-backend` + `hml-gateway`). HML salio de `deploy-prd.yml`, asi que `prd` ahora deploya solo `prd-*` + `prd-*`.
+> **`deploy-hml.yml` existe en GDI-Backend, GDI-AgenteLANG y GDI-BackOffice-Back** (los repos con apps `hml-*`). Dispara en push a `hml` y deploya SOLO las apps `hml-*` (en Backend: `hml-backend` + `hml-gateway`). HML salio de `deploy-prd.yml`, así que `prd` ahora deploya solo `prd-*` + `prd-*`.
 
 !!! warning "Nunca hacer deploy manual"
-    Excepto para PostgreSQL, el deploy siempre es via `git push`. Nunca ejecutar `flyctl deploy` manualmente en apps de backend/microservicios.
+    Excepto para PostgreSQL, el deploy siempre es vía `git push`. Nunca ejecutar `flyctl deploy` manualmente en apps de backend/microservicios.
 
 ---
 
 ## Workflow de CI/CD
 
-### Como Funciona
+### Cómo Funciona
 
 1. Desarrollador hace `git push` a `dev` o `prd`
 2. GitHub Actions ejecuta el workflow correspondiente
@@ -126,13 +126,13 @@ graph TD
     C --> D["Health check HML"]
 ```
 
-Usa `fly.hml.toml` / `fly.hml.gateway.toml` y el token `FLY_API_TOKEN_PRD` (HML vive en la org Fly de produccion). Los fronts HML (`hml-frontend`, `hml-backoffice-front`) se deployan via Vercel con Production Branch = `hml`.
+Usa `fly.hml.toml` / `fly.hml.gateway.toml` y el token `FLY_API_TOKEN_PRD` (HML vive en la org Fly de producción). Los fronts HML (`hml-frontend`, `hml-backoffice-front`) se deployan vía Vercel con Production Branch = `hml`.
 
 ---
 
 ## Workflow PRD (rama: prd) — PRD + DEMO
 
-`deploy-prd.yml` deploya **PRD (produccion real) y DEMO (trials) en jobs paralelos**, despues de lint+tests. Ya NO incluye HML (salio a `hml`) y ya NO usa cascada con health-checks encadenados entre clientes: PRD y DEMO se deployan en paralelo, cada uno con su propio `fly.{cliente}.toml`.
+`deploy-prd.yml` deploya **PRD (producción real) y DEMO (trials) en jobs paralelos**, después de lint+tests. Ya NO incluye HML (salio a `hml`) y ya NO usa cascada con health-checks encadenados entre clientes: PRD y DEMO se deployan en paralelo, cada uno con su propio `fly.{cliente}.toml`.
 
 ```mermaid
 graph TD
@@ -145,9 +145,9 @@ Cada cliente tiene su propio `fly.{cliente}.toml` y `fly.{cliente}.gateway.toml`
 
 | Config | Rama | Ambiente |
 |--------|------|----------|
-| `fly.prd.toml` / `fly.prd.gateway.toml` | `prd` | PRD (produccion real) |
+| `fly.prd.toml` / `fly.prd.gateway.toml` | `prd` | PRD (producción real) |
 | `fly.prd.toml` / `fly.prd.gateway.toml` | `prd` | DEMO (trials) |
-| `fly.hml.toml` / `fly.hml.gateway.toml` | `hml` | HML (homologacion) |
+| `fly.hml.toml` / `fly.hml.gateway.toml` | `hml` | HML (homologación) |
 
 ---
 
@@ -165,15 +165,15 @@ Todos los servicios backend tienen su propio `Dockerfile`. Fly.io lo usa en el `
 
 ### Frontends (Vercel)
 
-Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automaticamente a Vercel cuando se hace push a la rama conectada. No requieren Dockerfile ni workflow de Actions.
+Los frontends (GDI-FRONTEND, GDI-BackOffice-Front) se despliegan automáticamente a Vercel cuando se hace push a la rama conectada. No requieren Dockerfile ni workflow de Actions.
 
 ---
 
 ## GitHub Secrets
 
-Los siguientes secrets se configuran en cada repositorio o a nivel de organizacion:
+Los siguientes secrets se configuran en cada repositorio o a nivel de organización:
 
-| Secret | Descripcion | Donde obtener |
+| Secret | Descripción | Donde obtener |
 |--------|-------------|---------------|
 | `FLY_API_TOKEN` | Token Fly.io para DEV (org: <your-fly-org-dev>) | `flyctl tokens create deploy -o <your-fly-org-dev>` |
 | `FLY_API_TOKEN_PRD` | Token Fly.io para PRD (org: <your-fly-org>) | `flyctl tokens create deploy -o <your-fly-org>` |
@@ -186,9 +186,9 @@ Los siguientes secrets se configuran en cada repositorio o a nivel de organizaci
 2. **Settings** > **Secrets and variables** > **Actions**
 3. Click **New repository secret**
 
-**A nivel de organizacion (recomendado):**
+**A nivel de organización (recomendado):**
 
-1. Ir a la organizacion your-org en GitHub
+1. Ir a la organización your-org en GitHub
 2. **Settings** > **Secrets and variables** > **Actions**
 3. Agregar secrets compartidos y seleccionar repositorios que pueden acceder
 
@@ -207,11 +207,11 @@ graph TD
     F --> G
 ```
 
-HML no aparece aca: se deploya por separado desde `hml` (`deploy-hml.yml`).
+HML no aparece acá: se deploya por separado desde `hml` (`deploy-hml.yml`).
 
 ---
 
-## Buenas Practicas
+## Buenas Prácticas
 
 ### Branching
 
@@ -233,8 +233,8 @@ git push origin feat/nueva-funcionalidad
 # Cuando HML esta homologado, merge hml → prd = Deploy PRD (PRD + DEMO)
 ```
 
-!!! tip "Proteccion de rama prd"
-    Configura proteccion de rama en `prd` para requerir Pull Request con review antes de merge. Esto evita deployments accidentales a produccion.
+!!! tip "Protección de rama prd"
+    Configura protección de rama en `prd` para requerir Pull Request con review antes de merge. Esto evita deployments accidentales a producción.
 
 ### Commits
 
@@ -256,13 +256,13 @@ docs(deploy): update Fly.io configuration guide
 - [ ] Tests pasando localmente
 - [ ] Secrets actualizados en Fly.io si hay variables nuevas (`flyctl secrets set`)
 - [ ] Health check del servicio funciona en DEV
-- [ ] Sin credenciales hardcodeadas en codigo ni en fly.*.toml
+- [ ] Sin credenciales hardcodeadas en código ni en fly.*.toml
 - [ ] PR revisado y aprobado
 - [ ] Migraciones de BD ejecutadas si hay cambios de schema
 
 ### Post-deploy Checklist
 
-- [ ] Logs sin errores criticos (`flyctl logs -a <app>`)
+- [ ] Logs sin errores críticos (`flyctl logs -a <app>`)
 - [ ] Health check respondiendo 200
 - [ ] Funcionalidad testeada en DEV, luego homologada en HML (HML) antes de promover a prd
 - [ ] Servicios dependientes funcionando

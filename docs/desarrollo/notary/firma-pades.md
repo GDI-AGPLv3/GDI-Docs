@@ -1,19 +1,19 @@
 # Firma PAdES
 
-El modulo `app/pades_signer.py` implementa la firma digital PAdES-B-T (Basic with Time)
-usando la libreria **pyHanko**.
+El módulo `app/pades_signer.py` implementa la firma digital PAdES-B-T (Basic with Time)
+usando la librería **pyHanko**.
 
-## Que es PAdES
+## Qué es PAdES
 
-PAdES (PDF Advanced Electronic Signatures) es un estandar de ETSI para firmas
-electronicas avanzadas en documentos PDF.
+PAdES (PDF Advanced Electronic Signatures) es un estándar de ETSI para firmas
+electrónicas avanzadas en documentos PDF.
 
 **PAdES-B-T** incluye:
 
-- Firma criptografica embebida en el PDF
+- Firma criptográfica embebida en el PDF
 - Timestamp de un servidor TSA (Time Stamping Authority)
 - Hash SHA-256
-- Compatible con Adobe Acrobat Reader (verificacion con clic)
+- Compatible con Adobe Acrobat Reader (verificación con clic)
 
 ## Flujo de firma PAdES
 
@@ -32,10 +32,10 @@ flowchart TD
     J --> K[PDF firmado PAdES-B-T]
 ```
 
-## Funcion principal: sign_pdf_combined
+## Función principal: sign_pdf_combined
 
-Esta es la funcion usada en produccion. Combina firma criptografica PAdES con
-representacion visual profesional.
+Esta es la función usada en producción. Combina firma criptográfica PAdES con
+representación visual profesional.
 
 ```python
 async def sign_pdf_combined(
@@ -48,7 +48,7 @@ async def sign_pdf_combined(
 ) -> bytes:
 ```
 
-### Configuracion del firmante
+### Configuración del firmante
 
 ```python
 # Crear firmante desde archivo .p12 (metodo nativo de pyHanko)
@@ -60,7 +60,7 @@ signer = signers.SimpleSigner.load_pkcs12(
 
 ### Campo de firma visual
 
-El campo se posiciona en la ultima pagina usando las coordenadas calculadas por `layout.py`:
+El campo se posiciona en la última página usando las coordenadas calculadas por `layout.py`:
 
 ```python
 sig_field_spec = fields.SigFieldSpec(
@@ -103,7 +103,7 @@ Municipalidad del Futuro
 
 - Nombre en MAYUSCULAS para destacar
 - Sin borde, sin fondo
-- Sin fecha visible (la fecha esta en los metadatos de la firma)
+- Sin fecha visible (la fecha está en los metadatos de la firma)
 
 ### Metadata de la firma
 
@@ -127,8 +127,8 @@ La metadata es visible al hacer clic en la firma en Adobe Reader:
 ## Timestamp (TSA) con reintentos y circuit breaker
 
 El cliente TSA usa `RetryingTimestamper` (wrapper sobre `HTTPTimeStamper`) con backoff
-exponencial y circuit breaker. La funcion `get_timestamp_client()` **nunca devuelve None**:
-si `TSA_URL` no esta configurado, lanza `PAdESTimestampError`.
+exponencial y circuit breaker. La función `get_timestamp_client()` **nunca devuelve None**:
+si `TSA_URL` no está configurado, lanza `PAdESTimestampError`.
 
 ```python
 # Config
@@ -137,9 +137,9 @@ TSA_TIMEOUT = int(os.getenv("TSA_TIMEOUT", "3"))   # segundos por intento
 TSA_RETRIES = int(os.getenv("TSA_RETRIES", "2"))   # reintentos (total = retries + 1)
 ```
 
-### Logica de reintentos
+### Lógica de reintentos
 
-Con los valores default: 3 intentos x 3s + backoffs (0.2s + 0.6s) = ~9.8s maximo por firma.
+Con los valores default: 3 intentos x 3s + backoffs (0.2s + 0.6s) = ~9.8s máximo por firma.
 
 | Intento | Espera antes |
 |---------|-------------|
@@ -149,13 +149,13 @@ Con los valores default: 3 intentos x 3s + backoffs (0.2s + 0.6s) = ~9.8s maximo
 
 ### Circuit breaker
 
-Protege contra TSA caido de forma sostenida. Implementado en `TsaCircuitBreaker`:
+Protege contra TSA caído de forma sostenida. Implementado en `TsaCircuitBreaker`:
 
 | Estado | Comportamiento |
 |--------|---------------|
 | `CLOSED` | Normal, todas las llamadas pasan |
 | `OPEN` | Fail-fast: lanza `PAdESTsaUnavailableError` sin llamar al TSA |
-| `HALF_OPEN` | Deja pasar 1 request de prueba; exito → `CLOSED`, fallo → `OPEN` |
+| `HALF_OPEN` | Deja pasar 1 request de prueba; éxito → `CLOSED`, fallo → `OPEN` |
 
 - **Umbral de apertura**: 5 fallos consecutivos
 - **Cooldown**: 60 segundos en `OPEN` antes de pasar a `HALF_OPEN`
@@ -163,9 +163,9 @@ Protege contra TSA caido de forma sostenida. Implementado en `TsaCircuitBreaker`
 
 Cuando el circuit breaker esta `OPEN`, Notary devuelve `HTTP 503 TSA_UNAVAILABLE`
 independientemente de `FALLBACK_TO_VISUAL`, para que el Backend pueda distinguir
-"TSA caido" de "sin certificado".
+"TSA caído" de "sin certificado".
 
-Servidores TSA publicos soportados:
+Servidores TSA públicos soportados:
 
 | Servidor | URL |
 |----------|-----|
@@ -219,14 +219,14 @@ def verify_pades_signature(pdf_content: bytes) -> dict:
 
 ## Excepciones
 
-| Excepcion | HTTP | Causa |
+| Excepción | HTTP | Causa |
 |-----------|------|-------|
 | `PAdESSigningError` | 500 | Error general de firma |
 | `PAdESTimestampError` | 500 | Todos los reintentos al TSA fallaron |
 | `PAdESTsaUnavailableError` | 503 | Circuit breaker abierto (subclase de `PAdESTimestampError`) |
-| `PAdESCertificateError` | 400 | Certificado invalido o expirado |
+| `PAdESCertificateError` | 400 | Certificado inválido o expirado |
 
-## Configuracion en config.py
+## Configuración en config.py
 
 ```python
 PADES_SIGNATURE_FIELD_NAME = "GDI_Signature"   # Prefijo del campo

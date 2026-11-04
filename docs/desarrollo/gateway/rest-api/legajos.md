@@ -1,6 +1,6 @@
 # Legajos (RLM)
 
-**20 endpoints** para gestion de legajos del modulo RLM (Registro Legajo Multiproposito).
+**20 endpoints** para gestión de legajos del módulo RLM (Registro Legajo Multipropósito).
 
 Todos los endpoints usan la base URL `https://gateway.your-domain.com/api/v1` y requieren los headers `X-API-Key` y `X-User-ID`.
 
@@ -16,16 +16,16 @@ En todas las rutas `/records/{record_id}/...`, los ids del path (`record_id`, `r
 GET /api/v1/records/search
 ```
 
-Busca legajos con filtros opcionales. Soporta paginacion.
+Busca legajos con filtros opcionales. Soporta paginación.
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina (max `100`) |
-| `family_code` | string | - | Codigo de registro: `ARQ`, `LUM`, `ORD`, etc. |
-| `search` | string | - | Busca por numero de legajo o datos enriquecidos |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página (max `100`) |
+| `family_code` | string | - | Código de registro: `ARQ`, `LUM`, `ORD`, etc. |
+| `search` | string | - | Busca por número de legajo o datos enriquecidos |
 | `state` | string | - | Filtrar por estado del legajo |
 
 **Ejemplo:**
@@ -64,11 +64,11 @@ curl -X GET "https://gateway.your-domain.com/api/v1/records/search?family_code=A
 GET /api/v1/records/{record_id}
 ```
 
-Devuelve la informacion completa de un legajo, incluyendo datos enriquecidos, estado, registro al que pertenece, permisos del usuario y resumen IA.
+Devuelve la información completa de un legajo, incluyendo datos enriquecidos, estado, registro al que pertenece, permisos del usuario y resumen IA.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
@@ -107,7 +107,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-a
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 | `403` | Sin permisos para ver el legajo |
@@ -120,7 +120,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-a
 GET /api/v1/registries
 ```
 
-Devuelve las familias de registros disponibles en la organizacion (ej: Arquitectura, Luminarias, Ordenamiento).
+Devuelve las familias de registros disponibles en la organización (ej: Arquitectura, Luminarias, Ordenamiento).
 
 **Ejemplo:**
 
@@ -160,22 +160,22 @@ curl -X GET "https://gateway.your-domain.com/api/v1/registries" \
 GET /api/v1/records/{record_id}/history
 ```
 
-Devuelve el historial de cambios del legajo con paginacion.
+Devuelve el historial de cambios del legajo con paginación.
 
 Vincular y desvincular quedan en el historial. El campo `action` vale `document_linked`, `document_unlinked`, `case_linked` o `case_unlinked`.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página |
 
 **Ejemplo:**
 
@@ -187,7 +187,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-a
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 
@@ -199,24 +199,24 @@ curl -X GET "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-a
 GET /api/v1/records/{record_id}/relations
 ```
 
-Devuelve los legajos relacionados (padre, hijo, reemplaza, etc.) con paginacion.
+Devuelve los legajos relacionados (padre, hijo, reemplaza, etc.) con paginación.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 
@@ -228,24 +228,24 @@ Devuelve los legajos relacionados (padre, hijo, reemplaza, etc.) con paginacion.
 GET /api/v1/records/{record_id}/cases
 ```
 
-Devuelve los expedientes vinculados al legajo con paginacion.
+Devuelve los expedientes vinculados al legajo con paginación.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 
@@ -257,25 +257,25 @@ Devuelve los expedientes vinculados al legajo con paginacion.
 GET /api/v1/records/{record_id}/documents
 ```
 
-Devuelve los documentos vinculados al legajo con paginacion.
+Devuelve los documentos vinculados al legajo con paginación.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
-**Parametros query:**
+**Parámetros query:**
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Numero de pagina |
-| `page_size` | int | `20` | Resultados por pagina |
-| `search` | string | - | Filtra por numero oficial o referencia. Busca por "contiene" y no distingue mayusculas |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `20` | Resultados por página |
+| `search` | string | - | Filtra por número oficial o referencia. Busca por "contiene" y no distingue mayúsculas |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 
@@ -289,14 +289,14 @@ Devuelve los documentos vinculados al legajo con paginacion.
 POST /api/v1/records
 ```
 
-Crea un nuevo legajo en un registro especifico.
+Crea un nuevo legajo en un registro específico.
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `registry_code` | string | Si | Codigo del registro (`ARQ`, `LUM`, `ORD`) |
-| `display_name` | string | Si | Nombre descriptivo del legajo |
+| `registry_code` | string | Sí | Código del registro (`ARQ`, `LUM`, `ORD`) |
+| `display_name` | string | Sí | Nombre descriptivo del legajo |
 | `data` | object | No | Campos enriquecidos del legajo |
 
 **Ejemplo:**
@@ -329,9 +329,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records" \
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | `registry_code` o `display_name` faltantes, o datos invalidos |
+| `400` | `registry_code` o `display_name` faltantes, o datos inválidos |
 | `404` | Registro no encontrado |
 | `403` | Sin permisos para crear legajos |
 
@@ -345,22 +345,22 @@ PATCH /api/v1/records/{record_id}
 
 Actualiza el estado o nombre de un legajo.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
 | `state` | string | Parcial | Nuevo estado del legajo |
 | `display_name` | string | Parcial | Nuevo nombre descriptivo |
 | `reason` | string | No | Motivo del cambio |
 
 !!! warning "Al menos uno requerido"
-    Debe enviarse al menos `state` o `display_name`. Si no se envia ninguno, devuelve `400`.
+    Debe enviarse al menos `state` o `display_name`. Si no se envía ninguno, devuelve `400`.
 
 **Ejemplo:**
 
@@ -377,9 +377,9 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `400` | Ningun campo proporcionado |
+| `400` | Ningún campo proporcionado |
 | `404` | Legajo no encontrado |
 | `403` | Sin permisos para actualizar |
 
@@ -393,16 +393,16 @@ PATCH /api/v1/records/{record_id}/fields/{field_name}
 
 Actualiza un campo individual de los datos enriquecidos del legajo.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 | `field_name` | string | Nombre del campo a actualizar |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
 | `value` | any | No | Nuevo valor del campo |
 | `expiration_date` | string | No | Fecha de vencimiento (ISO 8601) |
@@ -428,7 +428,7 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo o campo no encontrado |
 | `403` | Sin permisos para editar el campo |
@@ -441,21 +441,21 @@ curl -X PATCH "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890
 POST /api/v1/records/{record_id}/fields/{field_name}/verify
 ```
 
-Marca un campo como verificado, vinculandolo a un documento oficial de respaldo.
+Marca un campo como verificado, vinculándolo a un documento oficial de respaldo.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 | `field_name` | string | Nombre del campo a verificar |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `document_id` | string | Si | UUID del documento oficial de respaldo |
-| `notes` | string | No | Notas de verificacion |
+| `document_id` | string | Sí | UUID del documento oficial de respaldo |
+| `notes` | string | No | Notas de verificación |
 
 **Ejemplo:**
 
@@ -472,7 +472,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | `document_id` faltante |
 | `404` | Legajo, campo o documento no encontrado |
@@ -486,11 +486,11 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-
 POST /api/v1/records/{record_id}/report
 ```
 
-Genera un informe IFRLM (snapshot del estado actual del legajo). Crea un documento tipo IFRLM, lo vincula al legajo y registra la accion en el historial.
+Genera un informe IFRLM (snapshot del estado actual del legajo). Crea un documento tipo IFRLM, lo vincula al legajo y registra la acción en el historial.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
@@ -504,34 +504,34 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `404` | Legajo no encontrado |
 | `403` | Sin permisos para generar informe |
 
 ---
 
-### Crear relacion entre legajos
+### Crear relación entre legajos
 
 ```
 POST /api/v1/records/{record_id}/relations
 ```
 
-Crea una relacion entre dos legajos.
+Crea una relación entre dos legajos.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo origen |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `target_record_id` | string | Si | UUID del legajo destino |
-| `relation_type` | string | Si | Tipo: `parent`, `child`, `related`, `replaces`, `sibling`, `cousin` |
-| `notes` | string | No | Notas sobre la relacion |
+| `target_record_id` | string | Sí | UUID del legajo destino |
+| `relation_type` | string | Sí | Tipo: `parent`, `child`, `related`, `replaces`, `sibling`, `cousin` |
+| `notes` | string | No | Notas sobre la relación |
 
 **Ejemplo:**
 
@@ -549,7 +549,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | `target_record_id` o `relation_type` faltantes |
 | `404` | Legajo origen o destino no encontrado |
@@ -557,26 +557,26 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records/a1b2c3d4-e5f6-7890-
 
 ---
 
-### Eliminar relacion entre legajos
+### Eliminar relación entre legajos
 
 ```
 DELETE /api/v1/records/{record_id}/relations/{relation_id}
 ```
 
-Elimina una relacion existente entre dos legajos.
+Elimina una relación existente entre dos legajos.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
-| `relation_id` | UUID | Identificador de la relacion |
+| `relation_id` | UUID | Identificador de la relación |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `404` | Legajo o relacion no encontrada |
+| `404` | Legajo o relación no encontrada |
 | `403` | Sin permisos |
 
 ---
@@ -589,26 +589,26 @@ POST /api/v1/records/{record_id}/cases
 
 Vincula un expediente existente al legajo.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `case_id` | string | Si | UUID del expediente a vincular |
-| `notes` | string | No | Notas sobre la vinculacion |
+| `case_id` | string | Sí | UUID del expediente a vincular |
+| `notes` | string | No | Notas sobre la vinculación |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | `case_id` faltante |
 | `404` | Legajo o expediente no encontrado |
-| `409` | El expediente ya esta vinculado al legajo |
+| `409` | El expediente ya está vinculado al legajo |
 
 ---
 
@@ -618,20 +618,20 @@ Vincula un expediente existente al legajo.
 DELETE /api/v1/records/{record_id}/cases/{link_id}
 ```
 
-Elimina la vinculacion entre un legajo y un expediente.
+Elimina la vinculación entre un legajo y un expediente.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
-| `link_id` | UUID | Identificador del vinculo |
+| `link_id` | UUID | Identificador del vínculo |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `404` | Legajo o vinculo no encontrado |
+| `404` | Legajo o vínculo no encontrado |
 | `403` | Sin permisos |
 
 ---
@@ -642,29 +642,29 @@ Elimina la vinculacion entre un legajo y un expediente.
 POST /api/v1/records/{record_id}/documents
 ```
 
-Vincula un documento existente al legajo, opcionalmente asociandolo a un campo especifico.
+Vincula un documento existente al legajo, opcionalmente asociándolo a un campo específico.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
 
 **Body (JSON):**
 
-| Campo | Tipo | Requerido | Descripcion |
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `document_id` | string | Si | UUID del documento a vincular |
+| `document_id` | string | Sí | UUID del documento a vincular |
 | `field_name` | string | No | Campo del legajo al que asociar el documento |
-| `notes` | string | No | Notas sobre la vinculacion |
+| `notes` | string | No | Notas sobre la vinculación |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
 | `400` | `document_id` faltante |
 | `404` | Legajo o documento no encontrado |
-| `409` | El documento ya esta vinculado al legajo |
+| `409` | El documento ya está vinculado al legajo |
 
 ---
 
@@ -674,39 +674,39 @@ Vincula un documento existente al legajo, opcionalmente asociandolo a un campo e
 DELETE /api/v1/records/{record_id}/documents/{link_id}
 ```
 
-Elimina la vinculacion entre un legajo y un documento.
+Elimina la vinculación entre un legajo y un documento.
 
-**Parametros path:**
+**Parámetros path:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
 | `record_id` | UUID | Identificador del legajo |
-| `link_id` | UUID | Identificador del vinculo |
+| `link_id` | UUID | Identificador del vínculo |
 
 **Errores:**
 
-| Codigo | Descripcion |
+| Código | Descripción |
 |--------|-------------|
-| `404` | Legajo o vinculo no encontrado |
+| `404` | Legajo o vínculo no encontrado |
 | `403` | Sin permisos |
 
 ---
 
 ## MCP Tools (Legajos)
 
-El Gateway expone 3 tools MCP para legajos, accesibles via el protocolo MCP (JSON-RPC over SSE).
+El Gateway expone 3 tools MCP para legajos, accesibles vía el protocolo MCP (JSON-RPC over SSE).
 
 ### `search_records`
 
 Busca legajos con filtros. Equivalente al endpoint REST `GET /api/v1/records/search`.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `family_code` | string | null | Codigo de registro (`ARQ`, `LUM`, `ORD`) |
-| `search` | string | null | Texto de busqueda |
+| `family_code` | string | null | Código de registro (`ARQ`, `LUM`, `ORD`) |
+| `search` | string | null | Texto de búsqueda |
 | `state` | string | null | Filtro por estado |
-| `page` | int | 1 | Numero de pagina |
-| `page_size` | int | 20 | Items por pagina (max 100) |
+| `page` | int | 1 | Número de página |
+| `page_size` | int | 20 | Ítems por página (max 100) |
 
 **Respuesta:**
 
@@ -724,7 +724,7 @@ Busca legajos con filtros. Equivalente al endpoint REST `GET /api/v1/records/sea
 
 Obtiene el detalle completo de un legajo. Equivalente al endpoint REST `GET /api/v1/records/{record_id}`.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `record_id` | string | *requerido* | UUID del legajo |
 
@@ -734,7 +734,7 @@ Obtiene el detalle completo de un legajo. Equivalente al endpoint REST `GET /api
 
 Lista las familias de registros disponibles. Equivalente al endpoint REST `GET /api/v1/registries`.
 
-| Parametro | Tipo | Default | Descripcion |
+| Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | *(ninguno)* | - | - | - |
 
@@ -754,12 +754,12 @@ Lista las familias de registros disponibles. Equivalente al endpoint REST `GET /
 
 ## Errores Comunes
 
-| Codigo | Situacion | Solucion |
+| Código | Situación | Solución |
 |--------|-----------|----------|
-| `400` | Campos requeridos faltantes | Verificar que `registry_code`, `display_name`, etc. esten presentes |
+| `400` | Campos requeridos faltantes | Verificar que `registry_code`, `display_name`, etc. estén presentes |
 | `400` | Un id del path no es UUID | Verificar `record_id`, `relation_id` o `link_id` |
-| `401` | API Key invalida o `X-User-ID` faltante | Verificar headers de autenticacion |
+| `401` | API Key inválida o `X-User-ID` faltante | Verificar headers de autenticación |
 | `403` | Sin permisos sobre el legajo | El usuario no tiene acceso al sector del legajo |
 | `404` | Legajo, registro o recurso no encontrado | Verificar UUID |
-| `409` | Vinculo duplicado | El expediente o documento ya esta vinculado |
+| `409` | Vínculo duplicado | El expediente o documento ya está vinculado |
 | `500` | Error interno | Revisar logs del Gateway |

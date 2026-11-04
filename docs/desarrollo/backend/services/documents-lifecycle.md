@@ -1,8 +1,8 @@
 # Documents Lifecycle
 
-Servicios del ciclo de vida de documentos: creacion, edicion, eliminacion y rechazo.
+Servicios del ciclo de vida de documentos: creación, edición, eliminación y rechazo.
 
-**Ubicacion:** `services/documents/lifecycle/`
+**Ubicación:** `services/documents/lifecycle/`
 
 ## Flujo de Estados
 
@@ -26,7 +26,7 @@ Servicios del ciclo de vida de documentos: creacion, edicion, eliminacion y rech
 
 ---
 
-## Creacion (`lifecycle/creation.py`)
+## Creación (`lifecycle/creation.py`)
 
 ### `create_document()`
 
@@ -45,13 +45,13 @@ def create_document(
 
 **Flujo:**
 
-1. Validar inputs (acronimo, referencia, UUID del creador)
+1. Validar inputs (acrónimo, referencia, UUID del creador)
 2. Detectar si es tipo NOTA (validar recipients si aplica)
 3. Obtener `document_type_id` desde BD
 4. Generar UUID para el documento
 5. INSERT en `document_draft` con estado `draft`
 6. Asignar creador como firmante numerador (signing_order=1)
-7. Si es NOTA con recipients: guardar en misma transaccion
+7. Si es NOTA con recipients: guardar en misma transacción
 8. Commit y retornar resultado
 
 **Reglas especiales para NOTA:**
@@ -59,10 +59,10 @@ def create_document(
 | Escenario | Comportamiento |
 |-----------|----------------|
 | NOTA con recipients | Valida y guarda TO/CC/BCC |
-| NOTA sin recipients | Valido (se agregan despues con `save`) |
+| NOTA sin recipients | Válido (se agregan después con `save`) |
 | No-NOTA con recipients | Ignora con warning en log |
 
-**Contexto de auditoria:**
+**Contexto de auditoría:**
 
 ```python
 # Inyecta metadata para triggers de BD
@@ -71,11 +71,11 @@ set_audit_context(cursor, user_id=creator_id, auth_source=auth_source)
 
 ---
 
-## Edicion (`lifecycle/editing.py`)
+## Edición (`lifecycle/editing.py`)
 
 ### `get_document_details_for_editing()`
 
-Obtiene datos completos del documento para la pantalla de edicion.
+Obtiene datos completos del documento para la pantalla de edición.
 
 ```python
 def get_document_details_for_editing(
@@ -85,7 +85,7 @@ def get_document_details_for_editing(
 
 **Datos incluidos en la respuesta:**
 
-- Datos basicos: referencia, contenido HTML, estado, tipo
+- Datos básicos: referencia, contenido HTML, estado, tipo
 - Firmantes con sello, departamento, foto de perfil
 - Info de rechazo (si aplica)
 - PDF URL (si es documento importado y existe en R2)
@@ -94,7 +94,7 @@ def get_document_details_for_editing(
 
 ### `save_document_changes()`
 
-Guarda cambios en un documento existente. Soporta actualizacion parcial.
+Guarda cambios en un documento existente. Soporta actualización parcial.
 
 ```python
 def save_document_changes(
@@ -111,9 +111,9 @@ def save_document_changes(
 ) -> Dict[str, Any]:
 ```
 
-**Operaciones atomicas en transaccion:**
+**Operaciones atómicas en transacción:**
 
-| Campo | Operacion |
+| Campo | Operación |
 |-------|-----------|
 | `reference` | UPDATE document_draft.reference |
 | `content` | UPDATE document_draft.content (formato `{"html": "..."}`) |
@@ -121,8 +121,8 @@ def save_document_changes(
 | `recipients` | DELETE + INSERT en note_recipients (solo NOTA) |
 | `proposed_case_ids` | DELETE + INSERT en case_proposed_documents (deduplicados) |
 
-!!! info "Deduplicacion"
-    Los `proposed_case_ids` se deduplican automaticamente con `set()` para prevenir vinculaciones duplicadas. Se registra en `case_history` solo para expedientes **nuevos**.
+!!! info "Deduplicación"
+    Los `proposed_case_ids` se deduplican automáticamente con `set()` para prevenir vinculaciones duplicadas. Se registra en `case_history` solo para expedientes **nuevos**.
 
 ### `check_document_can_be_edited()`
 
@@ -130,11 +130,11 @@ Verifica sin lanzar excepciones (retorna `dict` con `can_edit: bool`).
 
 ---
 
-## Eliminacion (`lifecycle/deletion.py`)
+## Eliminación (`lifecycle/deletion.py`)
 
 ### `delete_document()`
 
-Soft delete: marca `is_deleted = true` sin borrar fisicamente.
+Soft delete: marca `is_deleted = true` sin borrar físicamente.
 
 ```python
 def delete_document(
@@ -144,7 +144,7 @@ def delete_document(
 
 **Validaciones:**
 
-| Validacion | Error |
+| Validación | Error |
 |------------|-------|
 | Documento no existe | `DocumentNotFoundError` |
 | Ya eliminado | `ConflictError` |
@@ -158,7 +158,7 @@ def delete_document(
 1. Validar formato de UUIDs
 2. Obtener documento y verificar condiciones
 3. Limpiar PDF de R2 (soft-fail, no bloquea si falla)
-4. En transaccion: desvincular de expedientes + soft delete
+4. En transacción: desvincular de expedientes + soft delete
 5. Retornar resultado con info de cleanup
 
 ```python
@@ -173,7 +173,7 @@ pdf_cleanup_info = _cleanup_pdf_from_r2(document_id, schema_name=schema_name)
 
 ### `reject_document()`
 
-Rechaza un documento con motivo. Revierte el estado para edicion.
+Rechaza un documento con motivo. Revierte el estado para edición.
 
 ```python
 def reject_document(
@@ -185,11 +185,11 @@ def reject_document(
 
 | Rol | Permitido |
 |-----|-----------|
-| Creador del documento | Si |
-| Firmante asignado | Si |
+| Creador del documento | Sí |
+| Firmante asignado | Sí |
 | Otro usuario | No (403) |
 
-**Operaciones en transaccion:**
+**Operaciones en transacción:**
 
 1. `UPDATE document_draft SET status = 'rejected', sent_to_sign_at = NULL, sent_by = NULL`
 2. `INSERT INTO document_rejections`
@@ -198,8 +198,8 @@ def reject_document(
 
 **Consultas adicionales:**
 
-| Funcion | Proposito |
+| Función | Propósito |
 |---------|-----------|
 | `get_document_rejections()` | Historial de rechazos de un documento |
 | `get_rejected_documents_for_user()` | Documentos rechazados donde el usuario participa |
-| `can_user_reject_document()` | Verificacion sin excepciones |
+| `can_user_reject_document()` | Verificación sin excepciones |

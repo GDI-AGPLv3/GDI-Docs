@@ -1,121 +1,121 @@
 # Endpoints
 
-!!! tip "Endpoints publicos del Gateway"
-    Los endpoints publicos del Gateway API (MCP + REST) estan documentados en la seccion [Gateway API](../../gateway/index.md). Esta pagina documenta los endpoints internos del Backend que consume el Frontend directamente.
+!!! tip "Endpoints públicos del Gateway"
+    Los endpoints públicos del Gateway API (MCP + REST) están documentados en la sección [Gateway API](../../gateway/index.md). Esta página documenta los endpoints internos del Backend que consume el Frontend directamente.
 
 Tabla resumen de todos los endpoints REST del backend. Organizados por dominio.
 
 ## Documentos
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/document-types` | Listar tipos de documentos | Si |
-| GET | `/document-states` | Listar estados visuales | Si |
-| POST | `/documents` | Crear documento (draft) | Si |
-| POST | `/documents/import` | Crear documento importado (PDF externo) | Si |
-| GET | `/documents/autocomplete` | Autocompletado de documentos oficiales | Si |
-| GET | `/api/v1/documents/search-official/{doc_number}` | Buscar documento oficial por numero | Si |
-| GET | `/documents/{id}/details` | Detalles unificados del documento | Si |
-| GET | `/documents/{id}/editor` | Detalles para editor | Si |
-| GET | `/documents/{id}/signature-details` | Detalles de firma | Si |
-| PATCH | `/documents/{id}/save` | Guardar cambios (contenido, firmantes, etc.) | Si |
-| PUT | `/documents/{id}/replace-pdf` | Reemplazar PDF importado | Si |
-| POST | `/documents/{id}/preview-info` | Informacion para preview | Si |
-| POST | `/documents/{id}/preview-download` | Descargar PDF de preview | Si |
-| POST | `/documents/{id}/start-signing-process` | Iniciar proceso de firma | Si |
-| POST | `/documents/{id}/super-sign` | Firma unificada (comun o numerador) | Si |
-| POST | `/documents/{id}/reject` | Rechazar documento | Si |
-| DELETE | `/documents/{id}` | Eliminar documento (soft delete) | Si |
-| GET | `/documents/{id}/official-url` | URL del PDF oficial | Si |
-| GET | `/documents/{id}/content` | Contenido HTML del documento | Si |
-| GET | `/documents/{id}/check-signer-permissions` | Verificar permisos de firma | Si |
+| GET | `/document-types` | Listar tipos de documentos | Sí |
+| GET | `/document-states` | Listar estados visuales | Sí |
+| POST | `/documents` | Crear documento (draft) | Sí |
+| POST | `/documents/import` | Crear documento importado (PDF externo) | Sí |
+| GET | `/documents/autocomplete` | Autocompletado de documentos oficiales | Sí |
+| GET | `/api/v1/documents/search-official/{doc_number}` | Buscar documento oficial por número | Sí |
+| GET | `/documents/{id}/details` | Detalles unificados del documento | Sí |
+| GET | `/documents/{id}/editor` | Detalles para editor | Sí |
+| GET | `/documents/{id}/signature-details` | Detalles de firma | Sí |
+| PATCH | `/documents/{id}/save` | Guardar cambios (contenido, firmantes, etc.) | Sí |
+| PUT | `/documents/{id}/replace-pdf` | Reemplazar PDF importado | Sí |
+| POST | `/documents/{id}/preview-info` | Información para preview | Sí |
+| POST | `/documents/{id}/preview-download` | Descargar PDF de preview | Sí |
+| POST | `/documents/{id}/start-signing-process` | Iniciar proceso de firma | Sí |
+| POST | `/documents/{id}/super-sign` | Firma unificada (común o numerador) | Sí |
+| POST | `/documents/{id}/reject` | Rechazar documento | Sí |
+| DELETE | `/documents/{id}` | Eliminar documento (soft delete) | Sí |
+| GET | `/documents/{id}/official-url` | URL del PDF oficial | Sí |
+| GET | `/documents/{id}/content` | Contenido HTML del documento | Sí |
+| GET | `/documents/{id}/check-signer-permissions` | Verificar permisos de firma | Sí |
 
 ## Expedientes
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/api/v1/cases/` | Listar expedientes con filtros y paginacion | Si |
-| POST | `/api/v1/cases/` | Crear expediente (genera CAEX automatica) | Si |
-| GET | `/api/v1/cases/templates` | Plantillas de expedientes disponibles | Si |
-| GET | `/api/v1/cases/{id}` | Detalle de expediente | Si |
-| GET | `/api/v1/cases/by-number/{num}` | Buscar expediente por numero | Si |
-| POST | `/api/v1/cases/{id}/transfer` | Transferir expediente a otro sector | Si |
-| POST | `/api/v1/cases/{id}/assign` | Asignar tarea sin transferir propiedad | Si |
-| POST | `/api/v1/cases/{id}/close-assign` | Cerrar asignacion | Si |
-| GET | `/api/v1/cases/{id}/available-sectors` | Sectores disponibles para transferencia | Si |
-| GET | `/api/v1/cases/sectors/{sector_id}/users` | Usuarios de un sector | Si |
-| POST | `/api/v1/cases/{id}/link-document` | Vincular documento oficial a expediente | Si |
-| GET | `/api/v1/cases/{id}/actions` | Acciones disponibles para el usuario | Si |
-| POST | `/api/v1/cases/{id}/subsanar` | Subsanar documento en expediente | Si |
-| GET | `/api/v1/cases/{id}/proposed-documents` | Documentos propuestos | Si |
+| GET | `/api/v1/cases/` | Listar expedientes con filtros y paginación | Sí |
+| POST | `/api/v1/cases/` | Crear expediente (genera CAEX automática) | Sí |
+| GET | `/api/v1/cases/templates` | Plantillas de expedientes disponibles | Sí |
+| GET | `/api/v1/cases/{id}` | Detalle de expediente | Sí |
+| GET | `/api/v1/cases/by-number/{num}` | Buscar expediente por número | Sí |
+| POST | `/api/v1/cases/{id}/transfer` | Transferir expediente a otro sector | Sí |
+| POST | `/api/v1/cases/{id}/assign` | Asignar tarea sin transferir propiedad | Sí |
+| POST | `/api/v1/cases/{id}/close-assign` | Cerrar asignación | Sí |
+| GET | `/api/v1/cases/{id}/available-sectors` | Sectores disponibles para transferencia | Sí |
+| GET | `/api/v1/cases/sectors/{sector_id}/users` | Usuarios de un sector | Sí |
+| POST | `/api/v1/cases/{id}/link-document` | Vincular documento oficial a expediente | Sí |
+| GET | `/api/v1/cases/{id}/actions` | Acciones disponibles para el usuario | Sí |
+| POST | `/api/v1/cases/{id}/subsanar` | Subsanar documento en expediente | Sí |
+| GET | `/api/v1/cases/{id}/proposed-documents` | Documentos propuestos | Sí |
 
 ## Usuarios
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/users` | Listar usuarios activos | Si |
-| GET | `/users/{id}/profile` | Perfil de usuario | Si |
-| GET | `/users/search` | Buscar usuarios | Si |
-| GET | `/users/{id}/documents` | Documentos del usuario con filtros | Si |
+| GET | `/users` | Listar usuarios activos | Sí |
+| GET | `/users/{id}/profile` | Perfil de usuario | Sí |
+| GET | `/users/search` | Buscar usuarios | Sí |
+| GET | `/users/{id}/documents` | Documentos del usuario con filtros | Sí |
 
 ## Sectores
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/api/v1/sectors/` | Listar sectores con departamentos | Si |
+| GET | `/api/v1/sectors/` | Listar sectores con departamentos | Sí |
 
 ## Notas
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/notes/received` | Notas recibidas | Si |
-| GET | `/notes/sent` | Notas enviadas | Si |
-| GET | `/notes/archived` | Notas archivadas | Si |
-| GET | `/notes/{id}` | Detalle de nota | Si |
-| POST | `/notes/{id}/archive` | Archivar nota | Si |
+| GET | `/notes/received` | Notas recibidas | Sí |
+| GET | `/notes/sent` | Notas enviadas | Sí |
+| GET | `/notes/archived` | Notas archivadas | Sí |
+| GET | `/notes/{id}` | Detalle de nota | Sí |
+| POST | `/notes/{id}/archive` | Archivar nota | Sí |
 
 ## Memos
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/memos/received` | Memos recibidos | Si |
-| GET | `/memos/sent` | Memos enviados | Si |
-| GET | `/memos/archived` | Memos archivados | Si |
-| GET | `/memos/{id}` | Detalle de memo (registra apertura) | Si |
-| PATCH | `/memos/{id}/archive` | Archivar/desarchivar memo | Si |
-| GET | `/memos/unread-count` | Contador de no leidos | Si |
+| GET | `/memos/received` | Memos recibidos | Sí |
+| GET | `/memos/sent` | Memos enviados | Sí |
+| GET | `/memos/archived` | Memos archivados | Sí |
+| GET | `/memos/{id}` | Detalle de memo (registra apertura) | Sí |
+| PATCH | `/memos/{id}/archive` | Archivar/desarchivar memo | Sí |
+| GET | `/memos/unread-count` | Contador de no leídos | Sí |
 
-Documentacion completa: [Memos](memos.md)
+Documentación completa: [Memos](memos.md)
 
 ## Dashboard
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/api/v1/dashboard/feed` | Feed de actividad reciente | Si |
-| GET | `/api/v1/dashboard/stats` | Estadisticas del usuario | Si |
+| GET | `/api/v1/dashboard/feed` | Feed de actividad reciente | Sí |
+| GET | `/api/v1/dashboard/stats` | Estadísticas del usuario | Sí |
 
 ## Legajos (RLM)
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
-| GET | `/api/v1/records/` | Listar legajos con filtros y paginacion | Si |
-| POST | `/api/v1/records/` | Crear legajo | Si |
-| GET | `/api/v1/records/{id}` | Detalle de legajo | Si |
-| PATCH | `/api/v1/records/{id}` | Actualizar legajo | Si |
-| GET | `/api/v1/records/families` | Familias de registro disponibles | Si |
+| GET | `/api/v1/records/` | Listar legajos con filtros y paginación | Sí |
+| POST | `/api/v1/records/` | Crear legajo | Sí |
+| GET | `/api/v1/records/{id}` | Detalle de legajo | Sí |
+| PATCH | `/api/v1/records/{id}` | Actualizar legajo | Sí |
+| GET | `/api/v1/records/families` | Familias de registro disponibles | Sí |
 
-Documentacion completa: [Legajos (RLM)](legajos.md)
+Documentación completa: [Legajos (RLM)](legajos.md)
 
 ## Sistema
 
-| Metodo | Path | Descripcion | Auth |
+| Método | Path | Descripción | Auth |
 |--------|------|-------------|------|
 | GET | `/health` | Health check | No |
-| GET | `/auth/test` | Test de autenticacion | Si |
+| GET | `/auth/test` | Test de autenticación | Sí |
 
-## Patron de Endpoint
+## Patrón de Endpoint
 
-Todos los endpoints siguen el mismo patron:
+Todos los endpoints siguen el mismo patrón:
 
 ```python
 @router.post("/documents/{document_id}/action")

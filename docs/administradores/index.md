@@ -5,29 +5,29 @@ hide:
 
 # Administradores - BackOffice
 
-**Panel de administracion** del Sistema de Gestion Documental Inteligente para gobiernos LATAM.
+**Panel de administración** del Sistema de Gestión Documental Inteligente para gobiernos LATAM.
 
-Esta seccion documenta el uso del BackOffice, la herramienta de administracion para gestionar organizaciones, usuarios, permisos, sectores y configuracion del sistema.
+Esta sección documenta el uso del BackOffice, la herramienta de administración para gestionar organizaciones, usuarios, permisos, sectores y configuración del sistema.
 
 ---
 
 <div class="grid cards" markdown>
 
--   :material-information:{ .lg .middle } **Informacion General**
+-   :material-information:{ .lg .middle } **Información General**
 
     ---
 
-    Datos institucionales de la organizacion: nombre, acronimo, ciudad de firma, logo y color institucional.
+    Datos institucionales de la organización: nombre, acrónimo, ciudad de firma, logo y color institucional.
 
-    [:octicons-arrow-right-24: Ver seccion](informacion-general.md)
+    [:octicons-arrow-right-24: Ver sección](informacion-general.md)
 
 -   :material-stamp:{ .lg .middle } **Roles y Sellos**
 
     ---
 
-    Rangos jerarquicos y sellos de firma. Define quien puede numerar cada tipo de documento.
+    Rangos jerárquicos y sellos de firma. Define quien puede numerar cada tipo de documento.
 
-    [:octicons-arrow-right-24: Ver seccion](roles-y-sellos.md)
+    [:octicons-arrow-right-24: Ver sección](roles-y-sellos.md)
 
 -   :material-sitemap:{ .lg .middle } **Organigrama**
 
@@ -35,79 +35,79 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     Estructura organizativa: reparticiones, sectores, usuarios asignados y responsables.
 
-    [:octicons-arrow-right-24: Ver seccion](organigrama.md)
+    [:octicons-arrow-right-24: Ver sección](organigrama.md)
 
 -   :material-file-cog:{ .lg .middle } **Tipos de Documentos**
 
     ---
 
-    Configurar tipos de documento habilitados, restricciones por sector y por rango. Catalogo global.
+    Configurar tipos de documento habilitados, restricciones por sector y por rango. Catálogo global.
 
-    [:octicons-arrow-right-24: Ver seccion](tipos-de-documentos.md)
+    [:octicons-arrow-right-24: Ver sección](tipos-de-documentos.md)
 
 -   :material-folder-cog:{ .lg .middle } **Tipos de Expedientes**
 
     ---
 
-    Configurar tipos de expediente habilitados, departamentos permitidos y catalogo global.
+    Configurar tipos de expediente habilitados, departamentos permitidos y catálogo global.
 
-    [:octicons-arrow-right-24: Ver seccion](tipos-de-expedientes.md)
+    [:octicons-arrow-right-24: Ver sección](tipos-de-expedientes.md)
 
 -   :material-lock:{ .lg .middle } **Expedientes y Documentos Reservados**
 
     ---
 
-    Modelo de confidencialidad por tipo (`is_reserved`): quien ve un item reservado, integridad al vincular y contenido fuera de la IA.
+    Modelo de confidencialidad por tipo (`is_reserved`): quien ve un ítem reservado, integridad al vincular y contenido fuera de la IA.
 
-    [:octicons-arrow-right-24: Ver seccion](reservados.md)
+    [:octicons-arrow-right-24: Ver sección](reservados.md)
 
 -   :material-earth:{ .lg .middle } **Documentos y Legajos Públicos**
 
     ---
 
-    Tercera pata de visibilidad: abrir documentos y legajos a la ciudadania sin login. Configuracion por tipo/familia, API publica y reglas de seguridad.
+    Tercera pata de visibilidad: abrir documentos y legajos a la ciudadanía sin login. Configuración por tipo/familia, API pública y reglas de seguridad.
 
-    [:octicons-arrow-right-24: Ver seccion](documentos-publicos.md)
+    [:octicons-arrow-right-24: Ver sección](documentos-publicos.md)
 
 -   :material-book-open-page-variant:{ .lg .middle } **Digesto Normativo Público**
 
     ---
 
-    Guia paso a paso para publicar el digesto del municipio: tipos publicos, carga de normas, legajos NORMA y conexion del portal via API.
+    Guía paso a paso para publicar el digesto del municipio: tipos públicos, carga de normas, legajos NORMA y conexión del portal vía API.
 
-    [:octicons-arrow-right-24: Ver seccion](digesto-normativo.md)
+    [:octicons-arrow-right-24: Ver sección](digesto-normativo.md)
 
 -   :material-folder-multiple:{ .lg .middle } **Familias de Registro**
 
     ---
 
-    Plantillas para legajos: campos, permisos por sector, estados configurables y codigos de familia.
+    Plantillas para legajos: campos, permisos por sector, estados configurables y códigos de familia.
 
-    [:octicons-arrow-right-24: Ver seccion](familias-registro.md)
+    [:octicons-arrow-right-24: Ver sección](familias-registro.md)
 
 -   :material-account-group:{ .lg .middle } **Usuarios**
 
     ---
 
-    Administrar usuarios: crear, editar, asignar sectores, roles, sellos y permisos de busqueda.
+    Administrar usuarios: crear, editar, asignar sectores, roles, sellos y permisos de búsqueda.
 
-    [:octicons-arrow-right-24: Ver seccion](usuarios.md)
+    [:octicons-arrow-right-24: Ver sección](usuarios.md)
 
--   :material-shield-account:{ .lg .middle } **Administracion**
+-   :material-shield-account:{ .lg .middle } **Administración**
 
     ---
 
     Gestionar que usuarios tienen permisos de administrador en el BackOffice.
 
-    [:octicons-arrow-right-24: Ver seccion](administracion.md)
+    [:octicons-arrow-right-24: Ver sección](administracion.md)
 
 -   :material-certificate:{ .lg .middle } **Certificados**
 
     ---
 
-    Gestionar certificados digitales para firma electronica de documentos.
+    Gestionar certificados digitales para firma electrónica de documentos.
 
-    [:octicons-arrow-right-24: Ver seccion](certificados.md)
+    [:octicons-arrow-right-24: Ver sección](certificados.md)
 
 -   :material-backup-restore:{ .lg .middle } **Backups (GDI Sync)**
 
@@ -115,7 +115,7 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
     Descarga una copia local y siempre actualizada de todos los datos y documentos del municipio.
 
-    [:octicons-arrow-right-24: Ver seccion](backups.md)
+    [:octicons-arrow-right-24: Ver sección](backups.md)
 
 -   :material-scale-balance:{ .lg .middle } **Implementación GDI**
 
@@ -129,29 +129,29 @@ Esta seccion documenta el uso del BackOffice, la herramienta de administracion p
 
 ---
 
-## Menu del BackOffice
+## Menú del BackOffice
 
 El sidebar izquierdo del BackOffice contiene las siguientes secciones:
 
-| Seccion | Descripcion | Estado |
+| Sección | Descripción | Estado |
 |---------|-------------|--------|
-| **Informacion general** | Datos y branding de la organizacion | Documentado |
-| **Roles y Sellos** | Jerarquias y sellos de firma | Documentado |
+| **Información general** | Datos y branding de la organización | Documentado |
+| **Roles y Sellos** | Jerarquías y sellos de firma | Documentado |
 | **Organigrama** | Estructura organizativa | Documentado |
-| **Tipos de Documentos** | Catalogo de tipos de documento | Documentado |
-| **Tipos de Expedientes** | Catalogo de tipos de expediente | Documentado |
+| **Tipos de Documentos** | Catálogo de tipos de documento | Documentado |
+| **Tipos de Expedientes** | Catálogo de tipos de expediente | Documentado |
 | **Familias de Registro** | Plantillas para legajos (campos, permisos, estados) | Documentado |
-| **Usuarios** | Gestion de usuarios | Documentado |
-| **Administracion** | Permisos de admin | Documentado |
-| **Certificados** | Certificados digitales | Proximamente |
+| **Usuarios** | Gestión de usuarios | Documentado |
+| **Administración** | Permisos de admin | Documentado |
+| **Certificados** | Certificados digitales | Próximamente |
 | **Backups** | Copia local de datos y documentos (GDI Sync) | Documentado |
 | **Integraciones** | Integraciones externas | No disponible |
 | **API Key** | Claves de API | No disponible |
-| **Auditorias** | Registros de auditoria | No disponible |
+| **Auditorías** | Registros de auditoría | No disponible |
 
 ## Acceso al BackOffice
 
-El BackOffice es accesible en un puerto separado (`:3013`) y requiere credenciales de administrador. Solo usuarios con permisos de administracion pueden acceder a estas funcionalidades.
+El BackOffice es accesible en un puerto separado (`:3013`) y requiere credenciales de administrador. Solo usuarios con permisos de administración pueden acceder a estas funcionalidades.
 
 | Componente | Puerto | URL |
 |-----------|--------|-----|

@@ -1,17 +1,17 @@
-# Conectar el portal de tramites
+# Conectar el portal de trámites
 
-Guia de punta a punta para el equipo que desarrolla el **portal de tramites del municipio**: que hay que tener antes de escribir la primera linea, cual es el flujo completo de un tramite y **como se entera el portal del numero oficial** de un documento firmado.
+Guía de punta a punta para el equipo que desarrolla el **portal de trámites del municipio**: que hay que tener antes de escribir la primera línea, cual es el flujo completo de un trámite y **como se entera el portal del número oficial** de un documento firmado.
 
-Si buscas el contrato campo por campo de cada endpoint, esta en [Ciudadanos](ciudadanos.md), [Documentos](documentos.md), [Expedientes](expedientes.md) y [Webhook](webhook.md). Esta pagina es el hilo que los une.
+Si buscás el contrato campo por campo de cada endpoint, está en [Ciudadanos](ciudadanos.md), [Documentos](documentos.md), [Expedientes](expedientes.md) y [Webhook](webhook.md). Esta página es el hilo que los une.
 
 !!! info "Disponibilidad por ambiente"
-    El flujo asincronico (`202`), `GET /tad/documents/{id}`, la `Idempotency-Key` y el campo
-    `event` en los webhooks estan disponibles en **todos** los ambientes.
+    El flujo asincrónico (`202`), `GET /tad/documents/{id}`, la `Idempotency-Key` y el campo
+    `event` en los webhooks están disponibles en **todos** los ambientes.
 
     **Webhooks sin links**: en **DEV** los avisos ya no traen `pdf_url` ni `documents[].url`;
-    llega a **HML** y **produccion** con el proximo pase. Hasta entonces, en esos ambientes el
-    aviso todavia puede traer esos campos: **ignoralos** y pedi la URL con el ID, que funciona
-    igual en todos los ambientes. Asi el portal no cambia cuando llegue el pase.
+    llega a **HML** y **producción** con el próximo pase. Hasta entonces, en esos ambientes el
+    aviso todavía puede traer esos campos: **ignoralos** y pedí la URL con el ID, que funciona
+    igual en todos los ambientes. Así el portal no cambia cuando llegue el pase.
 
 ---
 
@@ -23,19 +23,19 @@ Cinco cosas que se piden **una sola vez** al administrador del municipio (BackOf
 |---|-----|------------------|----------|
 | 1 | **URL del Gateway** de tu municipio | Administrador / equipo GDI | No hay a donde pegarle |
 | 2 | **API Key de tipo TAD** (`key_type='tad'`) | BackOffice → `/api-key` | `401` en todo |
-| 3 | **URL de callback + secret del webhook**, cargados en esa misma key | BackOffice → `/api-key` | El portal nunca se entera del numero oficial |
+| 3 | **URL de callback + secret del webhook**, cargados en esa misma key | BackOffice → `/api-key` | El portal nunca se entera del número oficial |
 | 4 | **Tipos de documento con "Firmable por TAD"** activo | BackOffice → Tipos de Documento | `400 Tipo de documento 'X' no habilitado para firma ciudadana (TAD)` |
-| 5 | **Tipos de expediente con canal `api` o `both`** | BackOffice → Tipos de Expediente | El catalogo de expedientes vuelve vacio |
+| 5 | **Tipos de expediente con canal `api` o `both`** | BackOffice → Tipos de Expediente | El catálogo de expedientes vuelve vacío |
 
 !!! danger "La API Key es del municipio entero"
-    Identifica al municipio completo y no tiene usuario asociado: quien la tiene puede operar a nombre de **cualquier** ciudadano de la base. Vive en el **backend** del portal, nunca en el navegador ni en una app movil.
+    Identifica al municipio completo y no tiene usuario asociado: quien la tiene puede operar a nombre de **cualquier** ciudadano de la base. Vive en el **backend** del portal, nunca en el navegador ni en una app móvil.
 
 !!! warning "El webhook se configura del lado de GDI, no del tuyo"
-    La URL de callback la carga el administrador en la API Key. Es el paso que mas se olvida: sin el, `POST /tad/documents` sigue devolviendo `202` con normalidad, la firma se hace bien... y el aviso con el numero **no le llega a nadie**. Verificalo con [`POST /tad/webhook/test`](webhook.md#probar-el-webhook-sandbox) **antes** de escribir el resto del portal.
+    La URL de callback la carga el administrador en la API Key. Es el paso que más se olvida: sin él, `POST /tad/documents` sigue devolviendo `202` con normalidad, la firma se hace bien... y el aviso con el número **no le llega a nadie**. Verificalo con [`POST /tad/webhook/test`](webhook.md#probar-el-webhook-sandbox) **antes** de escribir el resto del portal.
 
 ### Prueba de humo (5 minutos)
 
-Antes de integrar nada, confirma que la key funciona y que tu receptor de webhooks esta vivo:
+Antes de integrar nada, confirma que la key funciona y que tu receptor de webhooks está vivo:
 
 ```bash
 export GW="https://gateway.tu-muni.gob.ar"
@@ -48,7 +48,7 @@ curl -s "$GW/api/v1/tad/document-types" -H "X-API-Key: $KEY"
 curl -s -X POST "$GW/api/v1/tad/webhook/test" -H "X-API-Key: $KEY"
 ```
 
-El segundo comando te devuelve **que contesto tu propio servidor** (`delivered`, `status_code`, `error`). Si ahi no da verde, no sigas: el resto del flujo depende de eso.
+El segundo comando te devuelve **que contestó tu propio servidor** (`delivered`, `status_code`, `error`). Si ahí no da verde, no sigas: el resto del flujo depende de eso.
 
 ---
 
@@ -82,7 +82,7 @@ El segundo comando te devuelve **que contesto tu propio servidor** (`delivered`,
                                                           la vinculacion
 ```
 
-Los pasos 1 y 2 se hacen una vez por vecino; del 3 al 6, una vez por tramite.
+Los pasos 1 y 2 se hacen una vez por vecino; del 3 al 6, una vez por trámite.
 
 ---
 
@@ -90,7 +90,7 @@ Los pasos 1 y 2 se hacen una vez por vecino; del 3 al 6, una vez por tramite.
 
 ### Paso 1 y 2 — El ciudadano tiene que existir y estar validado
 
-`POST /tad/documents` exige un ciudadano en estado `validado`. Un ciudadano recien creado nace `pendiente` y **no puede firmar** (`403`).
+`POST /tad/documents` exige un ciudadano en estado `validado`. Un ciudadano recién creado nace `pendiente` y **no puede firmar** (`403`).
 
 ```bash
 # Alta (upsert por country_id: si ya existe, actualiza en vez de duplicar)
@@ -104,13 +104,13 @@ curl -X PATCH "$GW/api/v1/tad/citizens/27333444556" \
   -d '{"estado": "validado"}'
 ```
 
-**Quien valida es el municipio, no GDI.** GDI solo guarda el estado: el criterio (login con AFIP/ANSES, validacion presencial, mesa de entradas) lo define el portal. Decidilo antes de salir a produccion, porque es el paso que puede dejar tramites frenados esperando a una persona.
+**Quien valida es el municipio, no GDI.** GDI solo guarda el estado: el criterio (login con AFIP/ANSES, validación presencial, mesa de entradas) lo define el portal. Decidilo antes de salir a producción, porque es el paso que puede dejar trámites frenados esperando a una persona.
 
 Detalle completo en [Ciudadanos](ciudadanos.md).
 
-### Paso 3 — Preguntar que se puede firmar
+### Paso 3 — Preguntar qué se puede firmar
 
-Nunca hardcodees acronimos: el administrador puede habilitar o deshabilitar tipos en cualquier momento.
+Nunca hardcodees acrónimos: el administrador puede habilitar o deshabilitar tipos en cualquier momento.
 
 ```bash
 curl -s "$GW/api/v1/tad/document-types" -H "X-API-Key: $KEY"
@@ -119,10 +119,10 @@ curl -s "$GW/api/v1/tad/document-types" -H "X-API-Key: $KEY"
 De cada tipo te importan dos cosas: el `acronym` (es lo que manda el `POST`, no el `id`) y el `has_fields`:
 
 - `has_fields: false` → mandas HTML libre en `content_html` (o nada, y sale la `reference`).
-- `has_fields: true` → es un **formulario controlado (FFCC)**: primero pedis los campos con `GET /tad/document-types/{id}/fields` (aca si, por `id`) y despues mandas `form_data`. Ver [FFCC](documentos.md#variante-ffcc-formulario-controlado).
+- `has_fields: true` → es un **formulario controlado (FFCC)**: primero pedis los campos con `GET /tad/document-types/{id}/fields` (acá sí, por `id`) y después mandas `form_data`. Ver [FFCC](documentos.md#variante-ffcc-formulario-controlado).
 - Si el tipo es **Importado**, mandas el PDF ya armado en `pdf_base64`.
 
-### Paso 4 — Crear y firmar: la respuesta es `202`, no el numero
+### Paso 4 — Crear y firmar: la respuesta es `202`, no el número
 
 ```bash
 curl -X POST "$GW/api/v1/tad/documents" \
@@ -150,26 +150,26 @@ Que hacer con cada campo:
 
 | Campo | Que es | Que hace el portal con esto |
 |---|---|---|
-| `document_id` | El documento, ya creado | **Guardalo.** Es la clave con la que vas a reconocer el webhook y con la que se propone la vinculacion al expediente |
+| `document_id` | El documento, ya creado | **Guardalo.** Es la clave con la que vas a reconocer el webhook y con la que se propone la vinculación al expediente |
 | `session_id` | Esta corrida de firma | Guardalo para trazar el caso con soporte si algo no llega |
-| `status` | `queued` | La firma esta en cola |
-| `expires_at` | Vencimiento de la sesion de firma (30 min por defecto) | Si pasado ese plazo no llego ningun webhook, es un caso a revisar |
+| `status` | `queued` | La firma está en cola |
+| `expires_at` | Vencimiento de la sesión de firma (30 min por defecto) | Si pasado ese plazo no llego ningún webhook, es un caso a revisar |
 
-!!! tip "Cuanto tarda el `202`"
-    Sale en **1 o 2 segundos**, tambien en la primera llamada del dia: el PDF lo arma el
-    worker, no el pedido. Si un alta corta por timeout de red, **no asumas que fallo**:
+!!! tip "Cuánto tarda el `202`"
+    Sale en **1 o 2 segundos**, también en la primera llamada del día: el PDF lo arma el
+    worker, no el pedido. Si un alta corta por timeout de red, **no asumas que falló**:
     reintenta con la **misma** `Idempotency-Key` y vas a recibir el `202` original.
 
 !!! danger "Guardar el `document_id` no es opcional"
-    Es el **unico** identificador que vincula tu solicitud con el webhook que va a llegar despues. Persistilo junto al tramite **en la misma transaccion** en la que registras el pedido del vecino, antes de contestarle nada al navegador. Si lo perdes, el documento se firma igual pero tu portal no tiene como saber de quien era.
+    Es el **único** identificador que vincula tu solicitud con el webhook que va a llegar después. Persistilo junto al trámite **en la misma transacción** en la que registrás el pedido del vecino, antes de contestarle nada al navegador. Si lo perdés, el documento se firma igual pero tu portal no tiene cómo saber de quién era.
 
-### Paso 5 — Saber el numero oficial
+### Paso 5 — Saber el número oficial
 
-Esta es la parte que mas confunde al llegar de un modelo sincronico. **El numero no viene en el `202`.** El sellado y la subida ocurren despues de contestarte, asi que GDI cierra el pedido y avisa cuando termina.
+Esta es la parte que más confunde al llegar de un modelo sincrónico. **El número no viene en el `202`.** El sellado y la subida ocurren después de contestarte, así que GDI cierra el pedido y avisa cuando termina.
 
-Cuanto tarda, en la practica: **unos pocos segundos** (medido en DEV contra almacenamiento real: el numero aparecio **4,5 s** despues del alta). Pero se midieron picos de **mas de un minuto** en homologacion sin que nada estuviera roto: la cola drena, con picos.
+Cuanto tarda, en la práctica: **unos pocos segundos** (medido en DEV contra almacenamiento real: el número aparecio **4,5 s** después del alta). Pero se midieron picos de **más de un minuto** en homologación sin que nada estuviera roto: la cola drena, con picos.
 
-No armes la experiencia del vecino asumiendo que el numero va a estar listo cuando termine de cargar la pagina siguiente: mostrale que el tramite fue recibido y actualizalo cuando llegue el aviso.
+No armes la experiencia del vecino asumiendo que el número va a estar listo cuando termine de cargar la página siguiente: mostrale que el trámite fue recibido y actualizalo cuando llegue el aviso.
 
 #### Camino oficial: el webhook `documents.signed`
 
@@ -185,13 +185,13 @@ No armes la experiencia del vecino asumiendo que el numero va a estar listo cuan
 
 Tu handler tiene que, en este orden:
 
-1. **Validar la firma HMAC** del header `X-GDI-Signature` ([como](webhook.md#verificacion-de-firma-hmac)). Sin esto cualquiera que descubra tu URL te inyecta numeros falsos.
-2. **Responder `2xx` rapido** — encolar y procesar despues. GDI reintenta con backoff exponencial durante horas si no contestas.
-3. Buscar el tramite por `document_id` y guardar el `official_number`.
-4. **Pedir el PDF con el `document_id`**: el aviso no trae link. Llama a [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento), que devuelve un `pdf_url` recien firmado; vence a los **3 minutos** (180 s), asi que descargalo en el momento. No guardes el link en tu base: guarda el `document_id` y pedi un link nuevo cada vez que haga falta.
-5. **Deduplicar**: la entrega es *al menos una vez*. El mismo `documents.signed` puede llegar dos veces; si ya tenes numero para ese `document_id`, ignoralo.
+1. **Validar la firma HMAC** del header `X-GDI-Signature` ([como](webhook.md#verificacion-de-firma-hmac)). Sin esto cualquiera que descubra tu URL te inyecta números falsos.
+2. **Responder `2xx` rápido** — encolar y procesar después. GDI reintenta con backoff exponencial durante horas si no contestás.
+3. Buscar el trámite por `document_id` y guardar el `official_number`.
+4. **Pedir el PDF con el `document_id`**: el aviso no trae link. Llama a [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento), que devuelve un `pdf_url` recién firmado; vence a los **3 minutos** (180 s), así que descargalo en el momento. No guardes el link en tu base: guarda el `document_id` y pedí un link nuevo cada vez que haga falta.
+5. **Deduplicar**: la entrega es *al menos una vez*. El mismo `documents.signed` puede llegar dos veces; si ya tenés número para ese `document_id`, ignoralo.
 
-Y el par negativo, que hay que manejar si o si:
+Y el par negativo, que hay que manejar sí o sí:
 
 ```json
 {
@@ -203,12 +203,12 @@ Y el par negativo, que hay que manejar si o si:
 }
 ```
 
-El documento **queda sin numerar**. El portal puede volver a dar de alta el documento (un `POST` nuevo) — **con una `Idempotency-Key` nueva**, porque la anterior ya quedo consumida por el alta que si se acepto y te devolveria el mismo `202` sin crear nada. `failure_reason` es un codigo para soporte, no un texto para mostrarle al vecino; el detalle de cada valor esta en [Documentos](documentos.md#que-hacer-con-cada-failure_reason).
+El documento **queda sin numerar**. El portal puede volver a dar de alta el documento (un `POST` nuevo) — **con una `Idempotency-Key` nueva**, porque la anterior ya quedó consumida por el alta que sí se aceptó y te devolvería el mismo `202` sin crear nada. `failure_reason` es un código para soporte, no un texto para mostrarle al vecino; el detalle de cada valor está en [Documentos](documentos.md#que-hacer-con-cada-failure_reason).
 
 !!! tip "Un solo endpoint receptor para todos los eventos"
     Los tres eventos llegan a la **misma** URL de callback y todos traen el campo
     `event`: ruteá por ahí. **Ignora silenciosamente** los que no reconozcas — es la forma
-    de que un evento nuevo en una version futura de GDI no te tire el handler.
+    de que un evento nuevo en una versión futura de GDI no te tire el handler.
 
 #### El otro camino: preguntar
 
@@ -235,25 +235,25 @@ curl -s "$GW/api/v1/tad/documents/$DOC_ID"   -H "X-API-Key: $KEY" -H "X-Citizen-
 }
 ```
 
-`status` es `queued` (esperar), `signed` (listo, con numero y PDF) o `failed` (con `failure_reason`: hay que volver a dar de alta el documento). Detalle en [Documentos](documentos.md#consultar-el-estado-de-un-documento).
+`status` es `queued` (esperar), `signed` (listo, con número y PDF) o `failed` (con `failure_reason`: hay que volver a dar de alta el documento). Detalle en [Documentos](documentos.md#consultar-el-estado-de-un-documento).
 
 Para que sirve, en concreto:
 
-- **Desarrollo**: `localhost` no es alcanzable desde GDI, asi que sin esto habria que montar un tunel solo para ver si la firma salio.
-- **Reconciliar**: un trámite que quedo en `queued` pasado el `expires_at`, o uno cuyo webhook se perdio porque tu servidor estuvo caido mas tiempo que los reintentos.
+- **Desarrollo**: `localhost` no es alcanzable desde GDI, así que sin esto habría que montar un túnel solo para ver si la firma salio.
+- **Reconciliar**: un trámite que quedó en `queued` pasado el `expires_at`, o uno cuyo webhook se perdió porque tu servidor estuvo caído más tiempo que los reintentos.
 - **Respaldo del webhook**, mientras el municipio termina de publicar el endpoint de callback.
 
 !!! warning "Preguntar no reemplaza escuchar"
     El webhook avisa **cuando pasa algo**; esto contesta **cuando preguntan**. Un portal
     que sondee en loop cerrado se come el rate limit de la key (30 req/min) y se entera
-    **mas tarde** que uno que escucha. Si vas a sondear igual, hacelo con backoff
-    (2 s, 5 s, 15 s, 30 s) y solo sobre los documentos que todavia esperas.
+    **más tarde** que uno que escucha. Si vas a sondear igual, hacelo con backoff
+    (2 s, 5 s, 15 s, 30 s) y solo sobre los documentos que todavía esperas.
 
     **Configura el webhook igual.** Este endpoint es una red, no el piso.
 
-### Paso 6 — Expediente y vinculacion
+### Paso 6 — Expediente y vinculación
 
-A diferencia del documento, el expediente **si devuelve el numero al instante** (es sincronico):
+A diferencia del documento, el expediente **si devuelve el número al instante** (es sincrónico):
 
 ```bash
 curl -X POST "$GW/api/v1/tad/cases" \
@@ -270,10 +270,10 @@ curl -X POST "$GW/api/v1/tad/cases" \
 }
 ```
 
-El `case_template_id` es el **UUID** que devuelve `GET /tad/case-templates`, no un numero
-correlativo: sacalo siempre del catalogo.
+El `case_template_id` es el **UUID** que devuelve `GET /tad/case-templates`, no un número
+correlativo: sacalo siempre del catálogo.
 
-El expediente nace con su caratula y **compartido con el ciudadano** que lo inicio. Despues, con el documento ya firmado (paso 5), se **propone** la vinculacion: el municipio la acepta o la rechaza desde la aplicacion. Es asi a proposito — el portal propone, el municipio dispone.
+El expediente nace con su carátula y **compartido con el ciudadano** que lo inició. Después, con el documento ya firmado (paso 5), se **propone** la vinculación: el municipio la acepta o la rechaza desde la aplicación. Es así a propósito — el portal propone, el municipio dispone.
 
 Detalle en [Expedientes](expedientes.md).
 
@@ -281,9 +281,9 @@ Detalle en [Expedientes](expedientes.md).
 
 ## 4. Reintentos: mandá siempre una `Idempotency-Key`
 
-Cada `POST /tad/documents` crea un documento **nuevo**. Si el portal reintenta por un timeout de red y la primera llamada en realidad si habia llegado, quedan **dos documentos firmados y numerados** para el mismo tramite. Un timeout **no significa que el documento no se creo**.
+Cada `POST /tad/documents` crea un documento **nuevo**. Si el portal reintenta por un timeout de red y la primera llamada en realidad si había llegado, quedan **dos documentos firmados y numerados** para el mismo trámite. Un timeout **no significa que el documento no se creó**.
 
-La solucion es un header:
+La solución es un header:
 
 ```bash
 curl -X POST "$GW/api/v1/tad/documents"   -H "X-API-Key: $KEY" -H "X-Citizen-ID: 27333444556"   -H "Idempotency-Key: tramite-4711"   -H "Content-Type: application/json"   -d '{ ... }'
@@ -292,60 +292,60 @@ curl -X POST "$GW/api/v1/tad/documents"   -H "X-API-Key: $KEY" -H "X-Citizen-ID:
 Con la misma clave, un reintento devuelve **la misma respuesta** (`202` + header `Idempotent-Replay: true`) en vez de crear un segundo documento.
 
 !!! danger "Una clave por trámite, no por intento"
-    Es el error que anula toda la proteccion: si generas un UUID nuevo en cada reintento,
+    Es el error que anula toda la protección: si generás un UUID nuevo en cada reintento,
     para GDI son solicitudes distintas y vas a tener duplicados igual. La clave se genera
-    **cuando el vecino aprieta el boton** y se guarda junto al tramite; todos los
-    reintentos de ese envio la reusan.
+    **cuando el vecino aprieta el botón** y se guarda junto al trámite; todos los
+    reintentos de ese envío la reusan.
 
 Reglas del resto:
 
-- La clave vive **24 horas** y su alcance es tu API Key. Maximo 255 caracteres.
+- La clave vive **24 horas** y su alcance es tu API Key. Máximo 255 caracteres.
 - **Misma clave con otro contenido → `409`**: es una clave reciclada por error. Cada solicitud distinta necesita la suya.
 - **Reintento mientras el primero se procesa → `409`**: esperar unos segundos.
 - **Si el alta falla (`400`/`403`), la clave queda libre**: se corrige el cuerpo y se reintenta con la misma.
-- **No se deduplica por contenido**: dos solicitudes identicas del mismo vecino pueden ser dos tramites reales. Sos vos el que sabe si son el mismo.
+- **No se deduplica por contenido**: dos solicitudes idénticas del mismo vecino pueden ser dos trámites reales. Sos vos el que sabe si son el mismo.
 
-Y aunque uses la clave, sigue valiendo lo de siempre: no reintentes automaticamente un timeout sin mirar. Con `Idempotency-Key` el reintento es seguro; sin ella, un timeout es "no se que paso" y conviene marcarlo para revision — o preguntar con [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento).
+Y aunque uses la clave, sigue valiendo lo de siempre: no reintentes automáticamente un timeout sin mirar. Con `Idempotency-Key` el reintento es seguro; sin ella, un timeout es "no se que pasó" y conviene marcarlo para revisión — o preguntar con [`GET /tad/documents/{id}`](documentos.md#consultar-el-estado-de-un-documento).
 
 Contrato completo en [Documentos](documentos.md#reintentos-seguros-idempotency-key).
 
-## 5. Checklist antes de produccion
+## 5. Checklist antes de producción
 
 - [ ] La API Key vive solo en el backend; no aparece en el bundle del front ni en un repo.
-- [ ] El webhook esta configurado en la key y `POST /tad/webhook/test` da `delivered: true`.
+- [ ] El webhook está configurado en la key y `POST /tad/webhook/test` da `delivered: true`.
 - [ ] El handler **valida la firma HMAC** y rechaza timestamps fuera de la ventana de 5 minutos.
 - [ ] El handler responde `2xx` en menos de un par de segundos (encola y procesa aparte).
 - [ ] El handler **deduplica** por `document_id`.
 - [ ] El handler rutea por `event` e **ignora los desconocidos**.
 - [ ] Se maneja `documents.signature_failed`, no solo el camino feliz.
 - [ ] El PDF se pide con el `document_id` a `GET /tad/documents/{id}` y se descarga en el momento (el link vence a los **3 minutos**); nunca se guarda el link.
-- [ ] El `document_id` se persiste junto al tramite antes de contestarle al vecino.
-- [ ] El `POST /tad/documents` manda `Idempotency-Key`, **una por tramite** (no por intento).
-- [ ] El re-alta despues de un `signature_failed` usa una `Idempotency-Key` **nueva**.
+- [ ] El `document_id` se persiste junto al trámite antes de contestarle al vecino.
+- [ ] El `POST /tad/documents` manda `Idempotency-Key`, **una por trámite** (no por intento).
+- [ ] El re-alta después de un `signature_failed` usa una `Idempotency-Key` **nueva**.
 - [ ] El `503` se distingue por su mensaje: "servidor ocupado" se reintenta, migraciones pendientes se escala.
 - [ ] Se conoce el rate limit real **de tu API Key** (preguntarselo al administrador) y se maneja el `429`.
-- [ ] Si hay carga inicial de padron, se contemplo el limite de **5/min** del alta de ciudadanos.
-- [ ] Esta definido **quien y como** pasa un ciudadano de `pendiente` a `validado`.
-- [ ] Hay un tablero o alerta para tramites que quedaron en `queued` pasado el `expires_at`.
+- [ ] Si hay carga inicial de padrón, se contempló el límite de **5/min** del alta de ciudadanos.
+- [ ] Está definido **quien y como** pasa un ciudadano de `pendiente` a `validado`.
+- [ ] Hay un tablero o alerta para trámites que quedaron en `queued` pasado el `expires_at`.
 
 ---
 
-## 6. Sintomas y causas
+## 6. Síntomas y causas
 
-| Sintoma | Causa mas probable |
+| Síntoma | Causa más probable |
 |---|---|
-| `401` en todo | La key no es de tipo TAD (una key REST comun **no** sirve para `/tad/*`), o esta vencida/inactiva |
-| `403` al crear un documento | El ciudadano esta `pendiente` (falta el PATCH a `validado`) o `bloqueado` |
-| `400 Tipo de documento 'X' no habilitado...` | Falta tildar "Firmable por TAD" en BackOffice, o el acronimo no existe (el mensaje es el mismo en ambos casos, a proposito) |
+| `401` en todo | La key no es de tipo TAD (una key REST común **no** sirve para `/tad/*`), o está vencida/inactiva |
+| `403` al crear un documento | El ciudadano está `pendiente` (falta el PATCH a `validado`) o `bloqueado` |
+| `400 Tipo de documento 'X' no habilitado...` | Falta tildar "Firmable por TAD" en BackOffice, o el acrónimo no existe (el mensaje es el mismo en ambos casos, a propósito) |
 | El `202` llega pero **nunca** el webhook | La API Key no tiene `webhook_url` configurada. Confirmalo con `POST /tad/webhook/test`: si da `422`, es eso. Mientras tanto, el estado se consulta con `GET /tad/documents/{id}` |
-| El PDF da error al descargarlo | El `pdf_url` vencio (dura **3 min**). Pedi uno nuevo con `GET /tad/documents/{id}` y descargalo en el momento |
-| El handler busca `pdf_url` en el webhook y no lo encuentra | Despues de la version 4.2.1 del backend el aviso **no trae link**: pedilo con el `document_id` ([Webhook](webhook.md)) |
+| El PDF da error al descargarlo | El `pdf_url` vencio (dura **3 min**). Pedí uno nuevo con `GET /tad/documents/{id}` y descargalo en el momento |
+| El handler busca `pdf_url` en el webhook y no lo encuentra | Después de la versión 4.2.1 del backend el aviso **no trae link**: pedilo con el `document_id` ([Webhook](webhook.md)) |
 | Documentos duplicados | Reintento sin `Idempotency-Key`, o una clave nueva por intento. Ver [Reintentos](#4-reintentos-manda-siempre-una-idempotency-key) |
 | `409` al crear un documento | Reintento en curso con la misma `Idempotency-Key`, o clave reusada con otro contenido |
-| El `POST /tad/documents` corta por timeout | El alta **puede haber salido igual**. Reintenta con la **misma** `Idempotency-Key`: si ya existia, recibis el `202` original con `Idempotent-Replay: true` |
+| El `POST /tad/documents` corta por timeout | El alta **puede haber salido igual**. Reintenta con la **misma** `Idempotency-Key`: si ya existía, recibis el `202` original con `Idempotent-Replay: true` |
 | Rehiciste un documento tras un `failed` y no pasa nada | Reusaste la `Idempotency-Key`: te devolvio el `202` viejo (`Idempotent-Replay: true`) sin crear nada. Va con clave nueva |
 | `429` | Rate limit. Fijate cual: el general **de tu key** (60/min por defecto), el de `POST /tad/citizens` (5/min), el de `GET /tad/citizens/*` (10/min) o el que va por IP (30/min) |
-| `429` al cargar el padron | Es el limite de 5/min del alta de ciudadanos. Coordinar la carga inicial con el equipo GDI |
-| `503` con "servidor ocupado" | Pico de carga momentaneo: **reintentar con backoff**, se resuelve solo |
+| `429` al cargar el padrón | Es el límite de 5/min del alta de ciudadanos. Coordinar la carga inicial con el equipo GDI |
+| `503` con "servidor ocupado" | Pico de carga momentáneo: **reintentar con backoff**, se resuelve solo |
 | `503` por migraciones pendientes | Infraestructura del tenant incompleta. No es un error del portal: avisar al equipo GDI |
-| El catalogo de expedientes vuelve vacio | Ningun tipo de expediente tiene canal `api` o `both` |
+| El catálogo de expedientes vuelve vacío | Ningún tipo de expediente tiene canal `api` o `both` |

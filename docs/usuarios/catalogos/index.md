@@ -1,6 +1,6 @@
-# Catalogos
+# Catálogos
 
-Los catalogos son las listas maestras del sistema. Cada organizacion habilita su propia seleccion de tipos a partir de estos catalogos globales.
+Los catálogos son las listas maestras del sistema. Cada organización habilita su propia selección de tipos a partir de estos catálogos globales.
 
 ---
 
@@ -10,16 +10,16 @@ Los catalogos son las listas maestras del sistema. Cada organizacion habilita su
 
     ---
 
-    Los 61 tipos de documento disponibles en el sistema, organizados por categoria: documentos HTML, documentos importados (PDF) y tipos internos.
+    Los 61 tipos de documento disponibles en el sistema, organizados por categoría: documentos HTML, documentos importados (PDF) y tipos internos.
 
-    [:octicons-arrow-right-24: Ver catalogo](tipos-de-documento.md)
+    [:octicons-arrow-right-24: Ver catálogo](tipos-de-documento.md)
 
 -   :material-folder-open:{ .lg .middle } **Tipos de Expediente**
 
     ---
 
-    Los 30 tipos de expediente disponibles para clasificar tramites municipales: habilitaciones, compras, obras, RRHH y mas.
+    Los 30 tipos de expediente disponibles para clasificar trámites municipales: habilitaciones, compras, obras, RRHH y más.
 
-    [:octicons-arrow-right-24: Ver catalogo](tipos-de-expediente.md)
+    [:octicons-arrow-right-24: Ver catálogo](tipos-de-expediente.md)
 
 </div>

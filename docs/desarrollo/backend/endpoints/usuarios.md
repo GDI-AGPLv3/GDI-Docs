@@ -1,12 +1,12 @@
 # Endpoints de Usuarios
 
-Endpoints para gestion de usuarios y perfiles.
+Endpoints para gestión de usuarios y perfiles.
 
 ## Listar Usuarios
 
 ### `GET /users`
 
-Lista todos los usuarios activos del sistema. Ordenados alfabeticamente.
+Lista todos los usuarios activos del sistema. Ordenados alfabéticamente.
 
 **Uso principal:** Dropdowns, selectores de firmantes, directorio.
 
@@ -42,7 +42,7 @@ Obtiene perfil completo de un usuario con sector, departamento y permisos.
 
 **Response incluye:**
 
-- Datos basicos: `full_name`, `email`, `cuit`
+- Datos básicos: `full_name`, `email`, `cuit`
 - Sector: `sector_id`, `sector_acronym`
 - Departamento: `department_id`, `department_name`, `department_acronym`
 - Sello por defecto: `default_seal_id`, `default_seal_name`
@@ -57,15 +57,15 @@ Obtiene perfil completo de un usuario con sector, departamento y permisos.
 
 ### `GET /users/search`
 
-Busca usuarios por nombre o email con paginacion.
+Busca usuarios por nombre o email con paginación.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `query` | string | Texto de busqueda (nombre o email) |
-| `page` | int | Pagina (default 1) |
-| `page_size` | int | Resultados por pagina |
+| `query` | string | Texto de búsqueda (nombre o email) |
+| `page` | int | Página (default 1) |
+| `page_size` | int | Resultados por página |
 
 **Archivo:** `endpoints/users/search_users.py`
 
@@ -75,17 +75,17 @@ Busca usuarios por nombre o email con paginacion.
 
 ### `GET /users/{user_id}/documents`
 
-Lista documentos del usuario con filtros avanzados y paginacion.
+Lista documentos del usuario con filtros avanzados y paginación.
 
 **Query Parameters:**
 
-| Parametro | Tipo | Descripcion |
+| Parámetro | Tipo | Descripción |
 |-----------|------|-------------|
-| `page` | int | Pagina |
-| `page_size` | int | Resultados por pagina |
+| `page` | int | Página |
+| `page_size` | int | Resultados por página |
 | `status` | string | Filtro de estado |
 | `document_type` | string | Filtro por tipo (acronym) |
-| `search` | string | Buscar en referencia y numero |
+| `search` | string | Buscar en referencia y número |
 | `date_from` | string | Fecha inicio |
 | `date_to` | string | Fecha fin |
 
@@ -94,9 +94,9 @@ Lista documentos del usuario con filtros avanzados y paginacion.
 - `document_id`, `reference`, `status`, `display_status`
 - `doc_type`: "draft" o "official"
 - `acronym`: Tipo de documento (INF, DICT, etc.)
-- `official_number`: Numero oficial (si firmado)
+- `official_number`: Número oficial (si firmado)
 - `rol_usuario`: "creador", "firmante", "numerador", "otro"
-- `usuario_ya_firmo`: Si el usuario ya firmo
+- `usuario_ya_firmo`: Si el usuario ya firmó
 - `todos_firmantes_comunes_firmaron`: Si todos los comunes firmaron
 
 **Archivo:** `endpoints/users/get_documents.py`

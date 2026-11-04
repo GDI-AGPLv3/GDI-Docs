@@ -1,12 +1,12 @@
 # OAuth Discovery
 
-Endpoints de descubrimiento OAuth 2.0 que permiten a clientes MCP descubrir automaticamente como autenticarse.
+Endpoints de descubrimiento OAuth 2.0 que permiten a clientes MCP descubrir automáticamente como autenticarse.
 
-**Ubicacion:** `api_gateway/http_server.py`
+**Ubicación:** `api_gateway/http_server.py`
 
 ## RFCs Implementados
 
-| RFC | Endpoint | Proposito |
+| RFC | Endpoint | Propósito |
 |-----|----------|-----------|
 | RFC 9728 | `/.well-known/oauth-protected-resource` | Descubrir authorization server |
 | RFC 8414 | `/.well-known/oauth-authorization-server` | Metadata OAuth completa |
@@ -93,7 +93,7 @@ GET /.well-known/oauth-authorization-server
 ```
 
 !!! info "ChatGPT"
-    ChatGPT requiere especificamente `/.well-known/oauth-authorization-server` (no el path de OpenID). Tambien acepta el alias `/.well-known/oauth-authorization-server/mcp`.
+    ChatGPT requiere específicamente `/.well-known/oauth-authorization-server` (no el path de OpenID). También acepta el alias `/.well-known/oauth-authorization-server/mcp`.
 
 ### `/.well-known/mcp.json`
 
@@ -114,7 +114,7 @@ Manifest del servidor MCP:
 
 ### `/.well-known/openapi.json`
 
-Especificacion OpenAPI 3.0 para la REST API. Usado por ChatGPT Actions:
+Especificación OpenAPI 3.0 para la REST API. Usado por ChatGPT Actions:
 
 ```json
 {
@@ -134,17 +134,17 @@ Especificacion OpenAPI 3.0 para la REST API. Usado por ChatGPT Actions:
 
 ## Requisitos Auth0 para MCP
 
-Para que el flujo OAuth de MCP funcione, el tenant Auth0 necesita **cuatro** cosas. Si falta alguna, el cliente termina con un **access token opaco** (no-JWT) y el gateway responde 401 con "Issuer no valido".
+Para que el flujo OAuth de MCP funcione, el tenant Auth0 necesita **cuatro** cosas. Si falta alguna, el cliente termina con un **access token opaco** (no-JWT) y el gateway responde 401 con "Issuer no válido".
 
 ### 1. API (resource server) creada
 
-Un resource server cuyo `identifier` sea la URL publica del gateway (`MCP_RESOURCE_URI`), firmado con RS256. Ejemplo DEV: `https://<your-gateway-app>.fly.dev`.
+Un resource server cuyo `identifier` sea la URL pública del gateway (`MCP_RESOURCE_URI`), firmado con RS256. Ejemplo DEV: `https://<your-gateway-app>.fly.dev`.
 
 ### 2. DCR habilitado
 
 `Settings > Advanced > OIDC Dynamic Application Registration` (tenant flag `enable_dynamic_client_registration = true`). Los clientes MCP (Claude Code, claude.ai, etc.) se auto-registran por Dynamic Client Registration.
 
-### 3. Conexion de BD a Domain Level
+### 3. Conexión de BD a Domain Level
 
 La Database Connection (`Username-Password-Authentication`) promovida a Domain Level (`is_domain_connection = true`). Es requisito de DCR.
 
@@ -166,7 +166,7 @@ POST /api/v2/client-grants
 
 Los clientes MCP **canonicalizan** el `resource` (RFC 8707 / RFC 9728): a un host sin path le agregan `/`. Por eso piden el token para `https://<gateway>/` (CON barra final), aunque el discovery anuncie la URL sin barra.
 
-Consecuencia: en Auth0 tiene que existir un resource server con **ese identifier exacto (con barra)** mas su client-grant third-party. Como los identifiers de Auth0 son inmutables, se registran las **dos** formas (con y sin `/`), cada una con su grant. El gateway acepta el audience con y sin barra (`_get_mcp_valid_audiences`).
+Consecuencia: en Auth0 tiene que existir un resource server con **ese identifier exacto (con barra)** más su client-grant third-party. Como los identifiers de Auth0 son inmutables, se registran las **dos** formas (con y sin `/`), cada una con su grant. El gateway acepta el audience con y sin barra (`_get_mcp_valid_audiences`).
 
 ### Audiences JWT soportados
 
@@ -182,18 +182,18 @@ VALID_AUDIENCES = [
 
 ### Email del usuario: claim namespaced
 
-El access token de un cliente third-party sale con scope `offline_access` unicamente (**sin `openid`**). Por eso **no trae el claim `email` estandar** y **no sirve para `/userinfo`** (devuelve 401). El email del usuario viaja en un claim **con namespace** que agrega un Action de Auth0:
+El access token de un cliente third-party sale con scope `offline_access` únicamente (**sin `openid`**). Por eso **no trae el claim `email` estándar** y **no sirve para `/userinfo`** (devuelve 401). El email del usuario viaja en un claim **con namespace** que agrega un Action de Auth0:
 
 - `https://gdilatam.com/email`
 - `https://gdilatam.com/name`
 
-El gateway lo lee con `_email_from_payload` (con fallback al claim `email` estandar).
+El gateway lo lee con `_email_from_payload` (con fallback al claim `email` estándar).
 
 ---
 
 ## Respuesta 401 del MCP
 
-Cuando un cliente envia un request sin token, el server responde:
+Cuando un cliente envía un request sin token, el server responde:
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -206,20 +206,20 @@ Content-Type: application/json
 }
 ```
 
-El header `WWW-Authenticate` con `resource_metadata` es la clave para que clientes MCP descubran automaticamente el flujo OAuth.
+El header `WWW-Authenticate` con `resource_metadata` es la clave para que clientes MCP descubran automáticamente el flujo OAuth.
 
 ---
 
 ## Troubleshooting
 
-| Error | Causa | Solucion |
+| Error | Causa | Solución |
 |-------|-------|----------|
 | "Authorization required" | No hay token OAuth | Usar cliente MCP con OAuth |
-| "Token invalido" | JWT expirado o mal formado | Re-autenticar via OAuth |
-| "multi_tenant_selection_required" | Usuario con multiples organizaciones | Especificar `tenant_id` |
-| "Audience no valido" | Token con audience incorrecto | Verificar audience en Auth0 |
-| Cliente recibe token **opaco** (no-JWT) / "Issuer no valido" | Falta el client-grant `default_for: third_party_clients` en la API | Crear el client-grant third-party (ver Requisitos Auth0 #4) |
+| "Token inválido" | JWT expirado o mal formado | Re-autenticar vía OAuth |
+| "multi_tenant_selection_required" | Usuario con múltiples organizaciones | Especificar `tenant_id` |
+| "Audience no válido" | Token con audience incorrecto | Verificar audience en Auth0 |
+| Cliente recibe token **opaco** (no-JWT) / "Issuer no válido" | Falta el client-grant `default_for: third_party_clients` en la API | Crear el client-grant third-party (ver Requisitos Auth0 #4) |
 | `Client is not authorized to access resource server` | El resource pedido (con barra final) no existe en Auth0 o no tiene grant | Registrar el resource server con barra `https://<gateway>/` + su grant |
 | `access_denied: Service not found: https://<gateway>/` | No hay API con el identifier con barra final | Crear el resource server con barra final |
-| "Usuario no encontrado" | Email no existe en BD (o no se pudo leer el claim namespaced) | Verificar usuario en la organizacion y el Action que agrega `https://gdilatam.com/email` |
+| "Usuario no encontrado" | Email no existe en BD (o no se pudo leer el claim namespaced) | Verificar usuario en la organización y el Action que agrega `https://gdilatam.com/email` |
 | Discovery no funciona | Endpoint no accesible | Verificar CORS y rutas en http_server.py |

@@ -2,7 +2,7 @@
 
 ## Concepto
 
-GDI Latam usa una estrategia de **schema-per-tenant** en PostgreSQL. Cada organizacion tiene su propio schema de base de datos, lo que garantiza aislamiento completo de datos sin necesidad de bases de datos separadas.
+GDI Latam usa una estrategia de **schema-per-tenant** en PostgreSQL. Cada organización tiene su propio schema de base de datos, lo que garantiza aislamiento completo de datos sin necesidad de bases de datos separadas.
 
 ```
 PostgreSQL
@@ -42,20 +42,20 @@ PostgreSQL
 
 ## Nomenclatura de Schemas
 
-Los schemas siguen el patron `{numero}_{nombre}`:
+Los schemas siguen el patrón `{numero}_{nombre}`:
 
-| Schema | Organizacion | Uso |
+| Schema | Organización | Uso |
 |--------|-----------|-----|
-| `200_muni` | Organizacion de prueba | Desarrollo y demos |
-| `200_muni_audit` | Auditoria de test | Logs de cambios |
+| `200_muni` | Organización de prueba | Desarrollo y demos |
+| `200_muni_audit` | Auditoría de test | Logs de cambios |
 
-Cada organizacion nueva recibe un numero unico y su nombre como identificador.
+Cada organización nueva recibe un número único y su nombre como identificador.
 
 ## Tenant Middleware
 
 ### GDI-Backend
 
-El Backend principal extrae el `schema_name` del JWT del usuario autenticado via Auth0. El middleware `TenantMiddleware` lo inyecta en `request.state.schema_name` para que todos los endpoints lo utilicen.
+El Backend principal extrae el `schema_name` del JWT del usuario autenticado vía Auth0. El middleware `TenantMiddleware` lo inyecta en `request.state.schema_name` para que todos los endpoints lo utilicen.
 
 ```python
 # Flujo de extraccion de tenant
@@ -75,7 +75,7 @@ async def list_documents(request: Request):
 
 ### GDI-BackOffice-Back
 
-El BackOffice soporta tres modos de autenticacion para determinar el tenant:
+El BackOffice soporta tres modos de autenticación para determinar el tenant:
 
 === "API Key"
     ```
@@ -91,7 +91,7 @@ El BackOffice soporta tres modos de autenticacion para determinar el tenant:
     ```
     En modo testing, el schema siempre es `200_muni`.
 
-=== "JWT (Produccion)"
+=== "JWT (Producción)"
     ```
     Headers: Authorization: Bearer <jwt> + X-Tenant-Schema
     ```
@@ -99,10 +99,10 @@ El BackOffice soporta tres modos de autenticacion para determinar el tenant:
 
 ## Regla keyword-only: schema_name
 
-!!! danger "Regla critica"
-    El parametro `schema_name` es **keyword-only** en TODAS las funciones que acceden a base de datos. Esto se implementa con el asterisco `*` en la firma de la funcion.
+!!! danger "Regla crítica"
+    El parámetro `schema_name` es **keyword-only** en TODAS las funciones que acceden a base de datos. Esto se implementa con el asterisco `*` en la firma de la función.
 
-### Definicion
+### Definición
 
 ```python
 # El * antes de schema_name lo hace keyword-only
@@ -149,15 +149,15 @@ get_authenticated_user(user_id, *, schema_name: str)
 get_tenant_r2_client(*, schema_name: str)
 ```
 
-### Por que keyword-only
+### Por qué keyword-only
 
 1. **Previene SQL injection de tenant** (tenant leakage entre organizaciones)
 2. **Errores detectados en runtime** si se olvida el `=`
-3. **Imposible confundir orden de parametros** cuando hay multiples argumentos
+3. **Imposible confundir orden de parámetros** cuando hay múltiples argumentos
 
 ## Ejemplo de Query con Schema
 
-Los schemas de organizacion pueden empezar con numero (ej: `200_muni`), lo que requiere comillas dobles en SQL:
+Los schemas de organización pueden empezar con número (ej: `200_muni`), lo que requiere comillas dobles en SQL:
 
 ```sql
 -- Query directa con schema
@@ -168,7 +168,7 @@ SET search_path TO "200_muni";
 SELECT * FROM official_documents WHERE document_id = $1;
 ```
 
-En el codigo Python, el patron es:
+En el código Python, el patrón es:
 
 ```python
 async def get_document(document_id: str, *, schema_name: str):
@@ -185,7 +185,7 @@ async def get_document(document_id: str, *, schema_name: str):
 
 ### GDI-Backend (asyncpg)
 
-El Backend principal usa un pool asincrono de conexiones. Cada conexion configura el `search_path` al schema del tenant antes de ejecutar queries.
+El Backend principal usa un pool asincrono de conexiones. Cada conexión configura el `search_path` al schema del tenant antes de ejecutar queries.
 
 ```python
 # shared/database.py
@@ -237,7 +237,7 @@ pool = await asyncpg.create_pool(dsn=DATABASE_URL, min_size=1, max_size=5)
 
 ## Buckets R2 por Tenant
 
-El almacenamiento en Cloudflare R2 tambien es por tenant. Los nombres de bucket incluyen el identificador de la organizacion:
+El almacenamiento en Cloudflare R2 también es por tenant. Los nombres de bucket incluyen el identificador de la organización:
 
 ```
 Cloudflare R2
@@ -247,7 +247,7 @@ Cloudflare R2
 └── tenant-ejemplo-oficial   # PDFs firmados (200_ejemplo)
 ```
 
-La configuracion de buckets esta en la tabla `settings` de cada schema:
+La configuración de buckets está en la tabla `settings` de cada schema:
 
 ```sql
 SELECT bucket_oficial, bucket_tosign FROM "200_muni".settings;

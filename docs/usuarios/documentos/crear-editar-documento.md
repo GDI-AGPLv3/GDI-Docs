@@ -1,6 +1,6 @@
 # Crear y Editar Documento
 
-Esta pantalla permite crear un nuevo documento oficial o editar uno existente en estado borrador o rechazado. Se compone de dos zonas: el **panel central** (editor de contenido) y el **panel lateral derecho** (firmantes, vinculacion y acciones).
+Esta pantalla permite crear un nuevo documento oficial o editar uno existente en estado borrador o rechazado. Se compone de dos zonas: el **panel central** (editor de contenido) y el **panel lateral derecho** (firmantes, vinculación y acciones).
 
 !!! video "Video tutorial"
     **GDI — Crear y firmar un Informe: paso a paso**
@@ -11,9 +11,9 @@ Esta pantalla permite crear un nuevo documento oficial o editar uno existente en
 
 ---
 
-## Paso 1: Abrir el dialogo de creacion
+## Paso 1: Abrir el diálogo de creación
 
-Desde la seccion **Documentos**, hacer click en el boton **"+ Crear"** en la esquina superior derecha. Se abre un dialogo modal con dos campos.
+Desde la sección **Documentos**, hacer click en el botón **"+ Crear"** en la esquina superior derecha. Se abre un diálogo modal con dos campos.
 
 ![Dialogo de creacion - Selector de tipos](../capturas/crear-documento-tipos.png)
 
@@ -21,11 +21,11 @@ Desde la seccion **Documentos**, hacer click en el boton **"+ Crear"** en la esq
 
 | Propiedad | Valor |
 |-----------|-------|
-| **Tipo de campo** | Selector desplegable con busqueda |
-| **Obligatorio** | Si |
-| **Busqueda** | Se puede escribir para filtrar por nombre, sigla o descripcion |
+| **Tipo de campo** | Selector desplegable con búsqueda |
+| **Obligatorio** | Sí |
+| **Búsqueda** | Se puede escribir para filtrar por nombre, sigla o descripción |
 
-Se muestra la lista de tipos disponibles en formato `(SIGLA) Nombre -- Descripcion`. La lista de tipos habilitados depende de la configuracion de la organizacion. Los tipos se muestran en orden alfabetico.
+Se muestra la lista de tipos disponibles en formato `(SIGLA) Nombre -- Descripcion`. La lista de tipos habilitados depende de la configuración de la organización. Los tipos se muestran en orden alfabético.
 
 ![Dialogo de creacion - Referencia](../capturas/crear-documento-dialogo.png)
 
@@ -34,27 +34,27 @@ Se muestra la lista de tipos disponibles en formato `(SIGLA) Nombre -- Descripci
 | Propiedad | Valor |
 |-----------|-------|
 | **Tipo de campo** | Texto libre (textarea) |
-| **Obligatorio** | Si |
-| **Limite** | 100 caracteres (se muestra contador `0/100`) |
+| **Obligatorio** | Sí |
+| **Límite** | 100 caracteres (se muestra contador `0/100`) |
 | **Placeholder** | *"Ingrese referencia del documento"* |
 
-La referencia es el titulo descriptivo del documento. Aparece en el listado de documentos, en las busquedas y en el encabezado del PDF generado. Ejemplo: *"Informe situacion patrimonial segundo trimestre"*.
+La referencia es el título descriptivo del documento. Aparece en el listado de documentos, en las búsquedas y en el encabezado del PDF generado. Ejemplo: *"Informe situación patrimonial segundo trimestre"*.
 
-### Botones del dialogo
+### Botones del diálogo
 
-| Boton | Accion |
+| Botón | Acción |
 |-------|--------|
-| **Cancelar** | Cierra el dialogo sin crear nada |
+| **Cancelar** | Cierra el diálogo sin crear nada |
 | **Crear** | Crea el documento en estado borrador y abre el editor |
 
 !!! warning "Importante"
-    La referencia se puede editar despues en el editor. El limite es de 100 caracteres, tanto en este dialogo como en el editor.
+    La referencia se puede editar después en el editor. El límite es de 100 caracteres, tanto en este diálogo como en el editor.
 
 ---
 
 ## Paso 2: Editor de documento
 
-Al crear el documento, se abre la pantalla de edicion con el panel central y el panel lateral.
+Al crear el documento, se abre la pantalla de edición con el panel central y el panel lateral.
 
 ![Pantalla de edicion de documento](../capturas/edicion-documento.png)
 
@@ -63,7 +63,7 @@ Al crear el documento, se abre la pantalla de edicion con el panel central y el 
 En la parte superior se muestra:
 
 - **Flecha de retorno** (`<`): vuelve al listado de documentos
-- **Titulo**: `Crear Documento: {SIGLA} - {Nombre del tipo}` (ej: "Crear Documento: IF - Informe")
+- **Título**: `Crear Documento: {SIGLA} - {Nombre del tipo}` (ej: "Crear Documento: IF - Informe")
 
 ---
 
@@ -74,36 +74,36 @@ En la parte superior se muestra:
 | Propiedad | Valor |
 |-----------|-------|
 | **Tipo de campo** | Texto libre (input) |
-| **Obligatorio** | Si |
-| **Limite** | 100 caracteres (con contador) |
-| **Ubicacion** | Arriba del editor, campo con borde inferior |
+| **Obligatorio** | Sí |
+| **Límite** | 100 caracteres (con contador) |
+| **Ubicación** | Arriba del editor, campo con borde inferior |
 
-Se carga con el valor ingresado en el dialogo de creacion. Se puede modificar libremente.
+Se carga con el valor ingresado en el diálogo de creación. Se puede modificar libremente.
 
 ### Campo: Cuerpo del documento
 
 | Propiedad | Valor |
 |-----------|-------|
 | **Tipo de campo** | Editor de texto enriquecido (Quill) |
-| **Obligatorio** | Si (para documentos tipo HTML) |
-| **Limite** | Sin limite de caracteres |
+| **Obligatorio** | Sí (para documentos tipo HTML) |
+| **Límite** | Sin límite de caracteres |
 
 #### Barra de herramientas del editor
 
-| Herramienta | Funcion |
+| Herramienta | Función |
 |-------------|---------|
-| **Normal** | Selector de estilo de parrafo (texto normal o titulo de nivel 1, 2 o 3) |
+| **Normal** | Selector de estilo de párrafo (texto normal o título de nivel 1, 2 o 3) |
 | Tamaño | Selector del tamaño de letra |
 | Fuente | Selector del tipo de letra |
 | **B** | Negrita |
 | **I** | Cursiva |
 | **U** | Subrayado |
-| Lista numerada | Lista con numeros (1, 2, 3...) |
+| Lista numerada | Lista con números (1, 2, 3...) |
 | Lista con puntos | Lista con puntos |
-| Alineación | Alinear el parrafo a la izquierda, al centro, a la derecha o justificado |
+| Alineación | Alinear el párrafo a la izquierda, al centro, a la derecha o justificado |
 | Ícono de imagen | Insertar una imagen. Ver [Insertar una imagen](#insertar-una-imagen) |
 
-El editor soporta copiar y pegar texto desde procesadores de texto (Word, Google Docs) manteniendo formato basico.
+El editor soporta copiar y pegar texto desde procesadores de texto (Word, Google Docs) manteniendo formato básico.
 
 #### Insertar una imagen
 
@@ -132,91 +132,91 @@ Para cambiar la imagen antes de insertarla, hacer click en *"Elegir otra imagen"
     Si se pega o se arrastra una imagen dentro del texto, el editor no la inserta. Muestra el aviso *"La imagen no se pegó. Para insertar una imagen usá el botón de imagen de la barra."* La imagen se agrega solo con el botón de la barra.
 
 !!! info "Documentos importados (PDF)"
-    Para tipos de documento marcados como "Importado" (ej: Informe Grafico Importado, Contrato, Plano), en lugar del editor de texto se muestra una **zona de carga de PDF**. Se puede arrastrar un archivo o hacer click para seleccionarlo.
+    Para tipos de documento marcados como "Importado" (ej: Informe Gráfico Importado, Contrato, Plano), en lugar del editor de texto se muestra una **zona de carga de PDF**. Se puede arrastrar un archivo o hacer click para seleccionarlo.
 
 ---
 
 ## Panel lateral derecho
 
-El panel lateral contiene tres secciones colapsables y los botones de accion.
+El panel lateral contiene tres secciones colapsables y los botones de acción.
 
-### Seccion: Firmantes
+### Sección: Firmantes
 
 ![Seccion firmantes en el panel lateral](../capturas/edicion-documento.png)
 
 | Propiedad | Valor |
 |-----------|-------|
-| **Obligatorio** | Si (minimo 1 firmante) |
+| **Obligatorio** | Sí (mínimo 1 firmante) |
 | **Buscador** | Escribir al menos 2 caracteres para buscar usuarios por nombre |
 
-#### Como agregar firmantes
+#### Cómo agregar firmantes
 
-1. Escribir en el campo de busqueda (ej: *"Sant"*)
+1. Escribir en el campo de búsqueda (ej: *"Sant"*)
 2. Se despliega una lista de usuarios que coinciden
 3. Hacer click en un usuario para agregarlo a la lista de firmantes
-4. Repetir para agregar mas firmantes
+4. Repetir para agregar más firmantes
 
 #### Firmante numerador
 
-El **firmante numerador** es quien otorga el numero oficial al documento. Se identifica con un **check azul** (circulo con tilde) al lado de su nombre.
+El **firmante numerador** es quien otorga el número oficial al documento. Se identifica con un **check azul** (círculo con tilde) al lado de su nombre.
 
-| Regla | Descripcion |
+| Regla | Descripción |
 |-------|-------------|
-| Solo puede haber **1 numerador** | Al marcar un firmante como numerador, el anterior se desmarca automaticamente |
-| El numerador **firma ultimo** | Independientemente de su posicion en la lista, siempre firma al final |
+| Solo puede haber **1 numerador** | Al marcar un firmante como numerador, el anterior se desmarca automáticamente |
+| El numerador **firma último** | Independientemente de su posición en la lista, siempre firma al final |
 | Requiere **rango adecuado** | El numerador debe tener el rango necesario para el tipo de documento (ej: un Decreto requiere rango de Intendente) |
 
 #### Acciones sobre firmantes
 
-| Accion | Como |
+| Acción | Como |
 |--------|------|
-| **Marcar como numerador** | Click en el circulo vacio junto al nombre |
+| **Marcar como numerador** | Click en el círculo vacío junto al nombre |
 | **Eliminar firmante** | Click en el icono de papelera roja |
 
-!!! warning "Validacion de permisos"
+!!! warning "Validación de permisos"
     Al previsualizar, el sistema verifica que el numerador tenga el rango necesario para firmar el tipo de documento seleccionado. Si no tiene permisos suficientes, se muestra una advertencia en color amarillo y no se puede iniciar el proceso de firma.
 
 ---
 
-### Seccion: Vincular a un expediente (opcional)
+### Sección: Vincular a un expediente (opcional)
 
 | Propiedad | Valor |
 |-----------|-------|
 | **Obligatorio** | No |
-| **Buscador** | Escribir al menos 2 caracteres para buscar expedientes por numero o referencia |
-| **Colapsable** | Si (se puede expandir/contraer con la flecha) |
+| **Buscador** | Escribir al menos 2 caracteres para buscar expedientes por número o referencia |
+| **Colapsable** | Sí (se puede expandir/contraer con la flecha) |
 
-#### Como vincular
+#### Cómo vincular
 
-1. Expandir la seccion "Vincular a un expediente (opcional)"
-2. Escribir en el campo "Buscar expediente..." (ej: *"EE-2026"* o *"Habilitacion"*)
+1. Expandir la sección "Vincular a un expediente (opcional)"
+2. Escribir en el campo "Buscar expediente..." (ej: *"EE-2026"* o *"Habilitación"*)
 3. Se despliega una lista de expedientes que coinciden
-4. Hacer click en un expediente para proponerlo como vinculacion
-5. El expediente aparece en la lista "Expedientes vinculados" con su numero y referencia
+4. Hacer click en un expediente para proponerlo como vinculación
+5. El expediente aparece en la lista "Expedientes vinculados" con su número y referencia
 
-#### Eliminar vinculacion propuesta
+#### Eliminar vinculación propuesta
 
 Click en el icono de papelera junto al expediente.
 
-!!! info "Vinculacion propuesta vs. oficial"
-    La vinculacion desde esta pantalla es una **propuesta**. El documento aparecera como "Propuesto para vincular" en el expediente destino. El administrador del expediente debera **aceptar o rechazar** la propuesta para que se convierta en vinculacion oficial.
+!!! info "Vinculación propuesta vs. oficial"
+    La vinculación desde esta pantalla es una **propuesta**. El documento aparecerá como "Propuesto para vincular" en el expediente destino. El administrador del expediente deberá **aceptar o rechazar** la propuesta para que se convierta en vinculación oficial.
 
 ---
 
-### Seccion: Destinatarios (solo para tipo NOTA)
+### Sección: Destinatarios (solo para tipo NOTA)
 
 !!! note "Solo visible para documentos tipo NOTA"
-    Esta seccion aparece unicamente cuando el tipo de documento es **NOTA**. Para otros tipos no se muestra.
+    Esta sección aparece únicamente cuando el tipo de documento es **NOTA**. Para otros tipos no se muestra.
 
 | Propiedad | Valor |
 |-----------|-------|
-| **Obligatorio** | Si (al menos 1 destinatario en "Para") |
+| **Obligatorio** | Sí (al menos 1 destinatario en "Para") |
 
 Los destinatarios son **sectores** del organismo (no usuarios individuales):
 
-| Campo | Descripcion | Obligatorio |
+| Campo | Descripción | Obligatorio |
 |-------|-------------|-------------|
-| **Para (TO)** | Sectores destinatarios principales | Si (minimo 1) |
+| **Para (TO)** | Sectores destinatarios principales | Sí (mínimo 1) |
 | **CC** | Sectores en copia | No |
 | **CCO (BCC)** | Sectores en copia oculta | No |
 
@@ -224,33 +224,33 @@ Los destinatarios son **sectores** del organismo (no usuarios individuales):
 
 ## Acciones: Guardar y Previsualizar
 
-En la parte inferior del panel lateral se encuentran los dos botones de accion.
+En la parte inferior del panel lateral se encuentran los dos botones de acción.
 
-### Boton: Guardar
-
-| Propiedad | Valor |
-|-----------|-------|
-| **Estilo** | Boton con borde, texto "Guardar" |
-| **Habilitado cuando** | La referencia no esta vacia |
-
-Guarda el estado actual del documento como **borrador**. Se pueden guardar cambios parciales sin necesidad de completar todo. El documento queda en estado **"En edicion"** y se puede continuar editando despues.
-
-Al guardar se envian al servidor: referencia, contenido HTML, lista de firmantes con su orden y numerador, destinatarios (si es NOTA) y expedientes propuestos.
-
-### Boton: Previsualizar
+### Botón: Guardar
 
 | Propiedad | Valor |
 |-----------|-------|
-| **Estilo** | Boton azul (primario), texto "Previsualizar" |
-| **Habilitado cuando** | La referencia no esta vacia Y el contenido tiene texto |
+| **Estilo** | Botón con borde, texto "Guardar" |
+| **Habilitado cuando** | La referencia no está vacía |
 
-Guarda automaticamente y luego navega a la **vista previa del documento en formato PDF**.
+Guarda el estado actual del documento como **borrador**. Se pueden guardar cambios parciales sin necesidad de completar todo. El documento queda en estado **"En edición"** y se puede continuar editando después.
+
+Al guardar se envían al servidor: referencia, contenido HTML, lista de firmantes con su orden y numerador, destinatarios (si es NOTA) y expedientes propuestos.
+
+### Botón: Previsualizar
+
+| Propiedad | Valor |
+|-----------|-------|
+| **Estilo** | Botón azul (primario), texto "Previsualizar" |
+| **Habilitado cuando** | La referencia no está vacía Y el contenido tiene texto |
+
+Guarda automáticamente y luego navega a la **vista previa del documento en formato PDF**.
 
 ![Vista previa del documento](../capturas/previsualizacion-documento.png)
 
 La vista previa muestra:
 
-- El **PDF generado** con membrete oficial de la organizacion, referencia y contenido
+- El **PDF generado** con membrete oficial de la organización, referencia y contenido
 - Marca de agua **"PREVISUALIZACION"** en diagonal
 - Panel lateral con tipo de documento, firmantes y expedientes propuestos
 - Botones **"Volver"** (regresa al editor) y **"Comenzar proceso de firma"**
@@ -261,13 +261,13 @@ La vista previa muestra:
 
 ### Estados posibles
 
-| Estado | Descripcion | Se puede editar |
+| Estado | Descripción | Se puede editar |
 |--------|-------------|:---------------:|
-| **En edicion** | Documento en borrador, creado pero no enviado a firmar | Si |
-| **En proceso de firma** | Se inicio el proceso de firma. Los firmantes van firmando en orden | No |
+| **En edición** | Documento en borrador, creado pero no enviado a firmar | Sí |
+| **En proceso de firma** | Se inició el proceso de firma. Los firmantes van firmando en orden | No |
 | **Firmar ahora** | Es el turno del usuario actual para firmar | No |
-| **Firmado** | Todos firmaron. El documento tiene numero oficial | No |
-| **Rechazado** | Un firmante o el creador rechazo el documento | Si |
+| **Firmado** | Todos firmaron. El documento tiene número oficial | No |
+| **Rechazado** | Un firmante o el creador rechazo el documento | Sí |
 
 ### Flujo completo
 
@@ -303,14 +303,14 @@ Comenzar proceso de firma (solo el creador puede hacerlo)
 Al iniciar el proceso de firma, el panel lateral muestra:
 
 - Banner verde: *"El documento se encuentra en proceso de firmas"*
-- **Resumen IA**: Se genera automaticamente un resumen del documento
+- **Resumen IA**: Se genera automáticamente un resumen del documento
 - **Firmantes** con estado (Pendiente / Firmado) y badge **NUM** para el numerador
 - **Expedientes propuestos** vinculados
 - Botones: **"Firmar Documento"**, **"Cancelar Firma"**, **"Cerrar"**
 
 ![Firma realizada con exito](../capturas/firma-realizada.png)
 
-Al firmar exitosamente se muestra un dialogo de confirmacion con el **numero oficial** asignado al documento (ej: `ANEXO-2026-00000150-TXST-INTE`).
+Al firmar exitosamente se muestra un diálogo de confirmación con el **número oficial** asignado al documento (ej: `ANEXO-2026-00000150-TXST-INTE`).
 
 ---
 
@@ -322,36 +322,36 @@ Al firmar exitosamente se muestra un dialogo de confirmacion con el **numero ofi
     2. **Solo el creador o un firmante** pueden rechazar un documento en proceso de firma
     3. El **numerador** debe tener el **rango adecuado** para el tipo de documento (ej: un Decreto requiere rango de Intendente)
     4. Los **firmantes regulares firman primero**, en el orden asignado. El numerador firma al final
-    5. Al firmar el numerador, se genera el **numero oficial** del documento (ej: `IF-2026-00000122-TXST-INTE`)
-    6. Un documento **rechazado** puede ser editado y enviado nuevamente a firma (ciclo de subsanacion)
-    7. Los tipos **CAEX** (Caratula de Expediente) y **PV** (Pase de Vista) son autogenerados por el sistema y no aparecen en el selector
+    5. Al firmar el numerador, se genera el **número oficial** del documento (ej: `IF-2026-00000122-TXST-INTE`)
+    6. Un documento **rechazado** puede ser editado y enviado nuevamente a firma (ciclo de subsanación)
+    7. Los tipos **CAEX** (Carátula de Expediente) y **PV** (Pase de Vista) son autogenerados por el sistema y no aparecen en el selector
 
 ---
 
-## Catalogo de tipos de documento
+## Catálogo de tipos de documento
 
-Para ver la lista completa de tipos de documento disponibles en el sistema (HTML, Importados e Internos), consultar el [Catalogo de Tipos de Documento](../catalogos/tipos-de-documento.md).
+Para ver la lista completa de tipos de documento disponibles en el sistema (HTML, Importados e Internos), consultar el [Catálogo de Tipos de Documento](../catalogos/tipos-de-documento.md).
 
 !!! info "Tipos habilitados"
-    Cada organizacion define su propia lista de tipos habilitados a partir del catalogo global. La lista que ves en el selector depende de la configuracion de tu organizacion.
+    Cada organización define su propia lista de tipos habilitados a partir del catálogo global. La lista que ves en el selector depende de la configuración de tu organización.
 
 ---
 
-## Formato del numero oficial
+## Formato del número oficial
 
-Al firmar el numerador, se genera un numero unico con el siguiente formato:
+Al firmar el numerador, se genera un número único con el siguiente formato:
 
 ```
 {SIGLA}-{ANO}-{SECUENCIAL}-{TENANT}-{DEPARTAMENTO}
 ```
 
-| Parte | Ejemplo | Descripcion |
+| Parte | Ejemplo | Descripción |
 |-------|---------|-------------|
-| SIGLA | `IF` | Acronimo del tipo de documento |
-| ANO | `2026` | Ano de creacion |
-| SECUENCIAL | `00000122` | Numero secuencial (8 digitos, unico por tenant) |
-| TENANT | `TXST` | Codigo de la organizacion/tenant |
-| DEPARTAMENTO | `INTE` | Acronimo del departamento del numerador |
+| SIGLA | `IF` | Acrónimo del tipo de documento |
+| ANO | `2026` | Año de creación |
+| SECUENCIAL | `00000122` | Número secuencial (8 dígitos, único por tenant) |
+| TENANT | `TXST` | Código de la organizacion/tenant |
+| DEPARTAMENTO | `INTE` | Acrónimo del departamento del numerador |
 
 Ejemplo completo: `IF-2026-00000122-TXST-INTE`
 
@@ -359,20 +359,20 @@ Ejemplo completo: `IF-2026-00000122-TXST-INTE`
 
 ## Preguntas frecuentes
 
-??? question "Puedo editar un documento despues de guardarlo?"
-    Si. Mientras el documento este en estado **"En edicion"** o **"Rechazado"**, se puede editar libremente: cambiar la referencia, el contenido, los firmantes y los expedientes vinculados.
+??? question "Puedo editar un documento después de guardarlo?"
+    Sí. Mientras el documento esté en estado **"En edición"** o **"Rechazado"**, se puede editar libremente: cambiar la referencia, el contenido, los firmantes y los expedientes vinculados.
 
-??? question "Puedo cambiar el tipo de documento despues de crearlo?"
-    No. El tipo de documento se define al momento de la creacion y no se puede cambiar despues.
+??? question "Puedo cambiar el tipo de documento después de crearlo?"
+    No. El tipo de documento se define al momento de la creación y no se puede cambiar después.
 
-??? question "Que pasa si el numerador no tiene rango suficiente?"
-    Al previsualizar se muestra una advertencia. No se podra iniciar el proceso de firma hasta que se cambie el numerador por uno con el rango adecuado.
+??? question "Qué pasa si el numerador no tiene rango suficiente?"
+    Al previsualizar se muestra una advertencia. No se podrá iniciar el proceso de firma hasta que se cambie el numerador por uno con el rango adecuado.
 
-??? question "Puedo vincular un documento a mas de un expediente?"
-    Si. Se pueden proponer vinculaciones a multiples expedientes desde esta pantalla.
+??? question "Puedo vincular un documento a más de un expediente?"
+    Sí. Se pueden proponer vinculaciones a múltiples expedientes desde esta pantalla.
 
-??? question "Que pasa si rechazo un documento en proceso de firma?"
-    El documento vuelve al estado **"Rechazado"** y se puede editar nuevamente. Esto permite corregir errores y volver a enviarlo a firma (ciclo de subsanacion).
+??? question "Qué pasa si rechazo un documento en proceso de firma?"
+    El documento vuelve al estado **"Rechazado"** y se puede editar nuevamente. Esto permite corregir errores y volver a enviarlo a firma (ciclo de subsanación).
 
-??? question "Quien puede firmar un documento?"
-    Solo los usuarios que fueron agregados como firmantes. El orden de firma es: primero los firmantes regulares (en el orden de la lista) y ultimo el numerador.
+??? question "Quién puede firmar un documento?"
+    Solo los usuarios que fueron agregados como firmantes. El orden de firma es: primero los firmantes regulares (en el orden de la lista) y último el numerador.

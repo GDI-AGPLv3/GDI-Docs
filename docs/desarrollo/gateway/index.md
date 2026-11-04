@@ -5,23 +5,23 @@ hide:
 
 # Gateway API
 
-**Interfaz publica para integrar sistemas externos con el Sistema de Gestion Documental Inteligente (GDI).**
+**Interfaz pública para integrar sistemas externos con el Sistema de Gestión Documental Inteligente (GDI).**
 
 | Propiedad | Valor |
 |-----------|-------|
 | Puerto | `:8005` (desarrollo), `:8080` (Docker interno) |
 | Framework | FastAPI (ASGI), Python 3.12 |
-| Auth MCP | OAuth 2.0 via Auth0 (JWT) |
+| Auth MCP | OAuth 2.0 vía Auth0 (JWT) |
 | Auth REST | API Key + X-User-ID |
 | Deploy | Docker |
 
 ---
 
-## Que es el Gateway
+## Qué es el Gateway
 
-El Gateway es el punto de entrada para que **sistemas externos** interactuen con GDI sin acceder directamente al Backend. Cualquier municipio que necesite conectar su sistema de tramites, tableros de control, scripts de automatizacion o agentes de inteligencia artificial puede hacerlo a traves de esta API.
+El Gateway es el punto de entrada para que **sistemas externos** interactuen con GDI sin acceder directamente al Backend. Cualquier municipio que necesite conectar su sistema de trámites, tableros de control, scripts de automatización o agentes de inteligencia artificial puede hacerlo a través de esta API.
 
-El Gateway expone **dos interfaces** segun el tipo de cliente:
+El Gateway expone **dos interfaces** según el tipo de cliente:
 
 <div class="grid cards" markdown>
 
@@ -29,7 +29,7 @@ El Gateway expone **dos interfaces** segun el tipo de cliente:
 
     ---
 
-    Protocolo estandar para **agentes de inteligencia artificial** (Claude, ChatGPT, Gemini). Autenticacion automatica via OAuth 2.0. El agente se conecta, se autentica con su cuenta de usuario y opera con los mismos permisos que tendria en la interfaz web.
+    Protocolo estándar para **agentes de inteligencia artificial** (Claude, ChatGPT, Gemini). Autenticación automática vía OAuth 2.0. El agente se conecta, se autentica con su cuenta de usuario y opera con los mismos permisos que tendría en la interfaz web.
 
     **42 tools** (lectura y escritura).
 
@@ -39,7 +39,7 @@ El Gateway expone **dos interfaces** segun el tipo de cliente:
 
     ---
 
-    Endpoints HTTP clasicos para **scripts, bots, sistemas de tramites y aplicaciones externas**. Autenticacion por API Key + User ID. Ideal para integraciones programaticas donde no se necesita un agente IA.
+    Endpoints HTTP clásicos para **scripts, bots, sistemas de trámites y aplicaciones externas**. Autenticación por API Key + User ID. Ideal para integraciones programáticas donde no se necesita un agente IA.
 
     **80+ endpoints** organizados por dominio.
 
@@ -77,8 +77,8 @@ flowchart LR
     TOOLS --> R2
 ```
 
-!!! info "Misma logica, distinta interfaz"
-    Ambas interfaces (MCP y REST) comparten la misma capa de tools internamente. Un `search_cases` por MCP ejecuta exactamente el mismo codigo que `GET /api/v1/cases/search` por REST. La unica diferencia es el metodo de autenticacion y el formato de entrada/salida.
+!!! info "Misma lógica, distinta interfaz"
+    Ambas interfaces (MCP y REST) comparten la misma capa de tools internamente. Un `search_cases` por MCP ejecuta exactamente el mismo código que `GET /api/v1/cases/search` por REST. La única diferencia es el método de autenticación y el formato de entrada/salida.
 
 ---
 
@@ -88,14 +88,14 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
 ### Expedientes
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Buscar expedientes | `search_cases` | `GET /api/v1/cases/search` |
 | Detalle de expediente | `get_case` | `GET /api/v1/cases/{id}` |
 | Historial de movimientos | `get_case_history` | `GET /api/v1/cases/{id}/history` |
 | Documentos del expediente | `get_case_documents` | `GET /api/v1/cases/{id}/documents` |
 | Permisos del usuario | `get_case_permissions` | `GET /api/v1/cases/{id}/permissions` |
-| Buscar por numero | `get_case_by_number` | `GET /api/v1/cases/number/{number}` |
+| Buscar por número | `get_case_by_number` | `GET /api/v1/cases/number/{number}` |
 | Preparar pase | `prepare_assignment` | `GET /api/v1/cases/{id}/prepare-assignment` |
 | Ejecutar pase | `assign_case` | `POST /api/v1/cases/{id}/assign` |
 | Cerrar pase | - | `POST /api/v1/cases/{id}/close-assign` |
@@ -112,14 +112,14 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
 ### Documentos
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Buscar documentos | `search_documents` | `GET /api/v1/documents/search` |
 | Detalle de documento | `get_document` | `GET /api/v1/documents/{id}` |
 | Contenido HTML | `get_document_content` | `GET /api/v1/documents/{id}/content` |
 | URL temporal PDF | - | `GET /api/v1/documents/{id}/url` |
 | Firmas pendientes | `get_pending_signatures` | `GET /api/v1/documents/pending-signatures` |
-| Buscar por numero oficial | `search_document_by_number` | `GET /api/v1/documents/search-official/{num}` |
+| Buscar por número oficial | `search_document_by_number` | `GET /api/v1/documents/search-official/{num}` |
 | Detalles de firma | `get_signature_details` | `GET /api/v1/documents/{id}/signature-details` |
 | Verificar permisos firma | - | `GET /api/v1/documents/check-signer-permissions` |
 | Crear documento | `create_document` | `POST /api/v1/documents/` |
@@ -135,9 +135,9 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 | Aceptar propuesta | - | `POST /api/v1/cases/{id}/documents/accept-proposal` |
 | Rechazar propuesta | `reject_proposal` | `POST /api/v1/cases/{id}/documents/reject-proposal` |
 
-### Sistema y Catalogos
+### Sistema y Catálogos
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Tipos de documentos | `get_document_types` | `GET /api/v1/system/document-types` |
 | Estados de documentos | `get_document_states` | `GET /api/v1/system/document-states` |
@@ -149,7 +149,7 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
 ### Notas
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Notas recibidas | `get_notes` | `GET /api/v1/notes/received` |
 | Notas enviadas | `get_sent_notes` | `GET /api/v1/notes/sent` |
@@ -159,7 +159,7 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
 ### Memos
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Memos recibidos | `get_memos` | `GET /api/v1/memos/received` |
 | Memos enviados | `get_sent_memos` | `GET /api/v1/memos/sent` |
@@ -168,7 +168,7 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 
 ### Legajos (RLM)
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
 | Buscar legajos | `search_records` | `GET /api/v1/records/search` |
 | Detalle de legajo | `get_record` | `GET /api/v1/records/{id}` |
@@ -189,21 +189,21 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 | Vincular documento | - | `POST /api/v1/records/{id}/documents` |
 | Desvincular documento | - | `DELETE /api/v1/records/{id}/documents/{link_id}` |
 
-### Busqueda Semantica
+### Búsqueda Semántica
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
-| Busqueda semantica IA | `semantic_search` | `GET /api/v1/search/semantic` |
+| Búsqueda semántica IA | `semantic_search` | `GET /api/v1/search/semantic` |
 
 ### Backup / Sync
 
-| Operacion | MCP Tool | REST Endpoint |
+| Operación | MCP Tool | REST Endpoint |
 |-----------|----------|---------------|
-| Catalogo de tablas | - | `GET /api/v1/sync/schema` |
+| Catálogo de tablas | - | `GET /api/v1/sync/schema` |
 | Datos incrementales | - | `GET /api/v1/sync/data` |
 | PDFs firmados | - | `GET /api/v1/sync/documents` |
 
-!!! note "Autenticacion especial para Backup/Sync"
+!!! note "Autenticación especial para Backup/Sync"
     Los endpoints `/api/v1/sync/*` usan **Backup API Keys** (`key_type='backup'`) en lugar de las API Keys normales. No requieren `X-User-ID` pero validan IP de origen y aplican rate limiting estricto.
 
 ---
@@ -211,14 +211,14 @@ El Gateway organiza sus operaciones en **4 dominios funcionales**:
 ## Tu primera llamada en 5 minutos
 
 !!! tip "Prerequisito"
-    Necesitas una **API Key** y un **User ID** que te proporcionara el administrador de tu municipio. Si no los tienes, contacta al area de sistemas de tu organizacion.
+    Necesitás una **API Key** y un **User ID** que te proporcionará el administrador de tu municipio. Si no los tenés, contacta al área de sistemas de tu organización.
 
 ### 1. Obtener credenciales
 
 Solicita al administrador de GDI de tu municipio:
 
 - **API Key**: cadena con formato `sk-gdi-xxx` (se genera desde el BackOffice)
-- **User ID**: UUID del usuario con el que operaras (ej: `550e8400-e29b-41d4-a716-446655440000`)
+- **User ID**: UUID del usuario con el que operarás (ej: `550e8400-e29b-41d4-a716-446655440000`)
 
 ### 2. Hacer tu primera consulta
 
@@ -232,7 +232,7 @@ curl -H "X-API-Key: tu-api-key" \
 
 ### 3. Verificar la respuesta
 
-Si todo esta correcto, recibiras un JSON con los expedientes accesibles para ese usuario:
+Si todo está correcto, recibirás un JSON con los expedientes accesibles para ese usuario:
 
 ```json
 {
@@ -256,38 +256,38 @@ Si todo esta correcto, recibiras un JSON con los expedientes accesibles para ese
 
 !!! warning "Permisos"
     El usuario asociado a la API Key solo vera los expedientes y documentos a los
-    que tiene acceso segun su sector y rol dentro de GDI. Los mismos permisos que
+    que tiene acceso según su sector y rol dentro de GDI. Los mismos permisos que
     aplican en la interfaz web aplican en la API.
 
-    **La busqueda por numero exacto es la excepcion, y depende de un permiso del
+    **La búsqueda por número exacto es la excepción, y depende de un permiso del
     usuario.** Si su ficha tiene activado `can_global_search_cases` (o
-    `can_global_search_documents`), puede recuperar por **numero exacto** un
+    `can_global_search_documents`), puede recuperar por **número exacto** un
     expediente o documento de otro sector, aunque no aparezca en su listado. Es
     un permiso deliberado, viene **desactivado** por defecto y se administra por
     usuario desde el BackOffice. Los expedientes **reservados** quedan fuera
     siempre, incluso con el permiso activo.
 
-    Ver [Visibilidad y busqueda global](rest-api/expedientes.md#visibilidad-y-busqueda-global).
+    Ver [Visibilidad y búsqueda global](rest-api/expedientes.md#visibilidad-y-busqueda-global).
 
 ---
 
-## Secciones de esta guia
+## Secciones de esta guía
 
 <div class="grid cards" markdown>
 
--   :material-key:{ .lg .middle } **Autenticacion**
+-   :material-key:{ .lg .middle } **Autenticación**
 
     ---
 
     Como autenticarse por REST (API Key) y por MCP (OAuth 2.0). Tablas de BD, errores comunes y flujo completo.
 
-    [:octicons-arrow-right-24: Autenticacion](autenticacion.md)
+    [:octicons-arrow-right-24: Autenticación](autenticacion.md)
 
 -   :material-robot:{ .lg .middle } **MCP Server**
 
     ---
 
-    Referencia completa de los 42 tools MCP, parametros, respuestas y flujos recomendados para agentes IA.
+    Referencia completa de los 42 tools MCP, parámetros, respuestas y flujos recomendados para agentes IA.
 
     [:octicons-arrow-right-24: MCP Server](mcp-server.md)
 
@@ -311,7 +311,7 @@ Si todo esta correcto, recibiras un JSON con los expedientes accesibles para ese
 
     ---
 
-    Catalogo completo de errores HTTP, codigos, mensajes y como resolverlos.
+    Catálogo completo de errores HTTP, códigos, mensajes y como resolverlos.
 
     [:octicons-arrow-right-24: Errores](errores.md)
 

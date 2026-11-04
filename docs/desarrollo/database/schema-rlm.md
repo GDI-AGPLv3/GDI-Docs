@@ -1,10 +1,10 @@
 # Schema RLM (Registros)
 
-El modulo RLM (Registro Legajo Multiproposito) usa **8 tablas** distribuidas entre el schema `public` (1 tabla global) y el schema del municipio (7 tablas per-tenant). Grupo I del schema municipio.
+El módulo RLM (Registro Legajo Multipropósito) usa **8 tablas** distribuidas entre el schema `public` (1 tabla global) y el schema del municipio (7 tablas per-tenant). Grupo I del schema municipio.
 
 ## Resumen de Tablas
 
-| # | Tabla | Schema | Descripcion |
+| # | Tabla | Schema | Descripción |
 |---|-------|--------|-------------|
 | 1 | `global_registry_families` | `public` | Familias de registros globales (template) |
 | 2 | `registry_families` | municipio | Familias de registros del municipio |
@@ -12,8 +12,8 @@ El modulo RLM (Registro Legajo Multiproposito) usa **8 tablas** distribuidas ent
 | 4 | `records` | municipio | Legajos individuales |
 | 5 | `record_history` | municipio | Historial de cambios |
 | 6 | `record_relations` | municipio | Relaciones entre legajos |
-| 7 | `record_case_links` | municipio | Vinculos legajo-expediente |
-| 8 | `record_document_links` | municipio | Vinculos legajo-documento |
+| 7 | `record_case_links` | municipio | Vínculos legajo-expediente |
+| 8 | `record_document_links` | municipio | Vínculos legajo-documento |
 
 ## Diagrama ER
 
@@ -41,17 +41,17 @@ Familias de registros globales con esquema de datos y estados por defecto. Cada 
 
 **Schema:** `public`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `code` | VARCHAR(10) | NO | - | Codigo unico (ARQ, LUM, ORD) |
+| `code` | VARCHAR(10) | NO | - | Código único (ARQ, LUM, ORD) |
 | `name` | VARCHAR(200) | NO | - | Nombre de la familia |
-| `description` | TEXT | SI | - | Descripcion |
+| `description` | TEXT | SI | - | Descripción |
 | `default_data_schema` | JSONB | SI | `'{}'` | Schema de campos por defecto |
 | `default_states` | JSONB | SI | `'["Activo","Inactivo","Suspendido","Archivado"]'` | Estados por defecto |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activa |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `is_active` | BOOLEAN | NO | `true` | Si está activa |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -68,18 +68,18 @@ Familias de registros del municipio. Copiadas y personalizadas desde `global_reg
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `global_registry_family_id` | UUID | SI | - | FK a `public.global_registry_families` |
-| `code` | VARCHAR(10) | NO | - | Codigo unico en el municipio |
+| `code` | VARCHAR(10) | NO | - | Código único en el municipio |
 | `name` | VARCHAR(200) | NO | - | Nombre |
-| `description` | TEXT | SI | - | Descripcion |
+| `description` | TEXT | SI | - | Descripción |
 | `data_schema` | JSONB | SI | `'{}'` | Schema de campos del registro |
 | `states` | JSONB | SI | `'["Activo","Inactivo","Suspendido","Archivado"]'` | Estados posibles |
-| `is_active` | BOOLEAN | NO | `true` | Si esta activa |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `is_active` | BOOLEAN | NO | `true` | Si está activa |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -117,7 +117,7 @@ El campo `data_schema` define los campos enriquecidos de los legajos. Cada key e
 
 **Propiedades de cada campo:**
 
-| Propiedad | Tipo | Descripcion |
+| Propiedad | Tipo | Descripción |
 |-----------|------|-------------|
 | `label` | string | Etiqueta para mostrar en UI |
 | `type` | string | Tipo: `text`, `number`, `date`, `select`, `boolean`, `file`, `textarea` |
@@ -141,11 +141,11 @@ El primer elemento es el estado por defecto al crear un legajo.
 
 ## TABLA 3: registry_family_permissions (municipio)
 
-Permisos de sectores sobre familias de registros. Cada fila define que puede hacer un sector sobre una familia.
+Permisos de sectores sobre familias de registros. Cada fila define qué puede hacer un sector sobre una familia.
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `registry_family_id` | UUID | NO | - | FK a `registry_families` |
@@ -154,8 +154,8 @@ Permisos de sectores sobre familias de registros. Cada fila define que puede hac
 | `can_edit` | BOOLEAN | NO | `false` | Puede editar legajos y campos |
 | `can_view` | BOOLEAN | NO | `true` | Puede ver legajos |
 | `can_verify` | BOOLEAN | NO | `false` | Puede verificar campos |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -164,31 +164,31 @@ Permisos de sectores sobre familias de registros. Cada fila define que puede hac
 - FK: `rfp_sector_fkey` (`sector_id`) -> `sectors(id)`
 - UNIQUE: `rfp_unique` (`registry_family_id`, `sector_id`)
 
-!!! note "Logica OR multi-sector"
-    Un usuario puede pertenecer a multiples sectores (principal + adicionales via `user_sector_permissions`). Los permisos se resuelven con logica OR: si CUALQUIER sector del usuario tiene el permiso, el usuario lo tiene.
+!!! note "Lógica OR multi-sector"
+    Un usuario puede pertenecer a múltiples sectores (principal + adicionales vía `user_sector_permissions`). Los permisos se resuelven con lógica OR: si CUALQUIER sector del usuario tiene el permiso, el usuario lo tiene.
 
 ---
 
 ## TABLA 4: records (municipio)
 
-Legajos individuales con datos JSONB segun el schema de la familia.
+Legajos individuales con datos JSONB según el schema de la familia.
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `record_number` | VARCHAR(50) | NO | - | Numero unico (RLM-2026-00000001-SMG-ARQ) |
+| `record_number` | VARCHAR(50) | NO | - | Número único (RLM-2026-00000001-SMG-ARQ) |
 | `display_name` | VARCHAR(200) | NO | - | Nombre identificador del legajo |
 | `registry_family_id` | UUID | NO | - | FK a `registry_families` |
 | `data` | JSONB | SI | `'{}'` | Campos enriquecidos del legajo |
 | `state` | VARCHAR(50) | SI | `'Activo'` | Estado actual |
-| `next_expiration` | DATE | SI | - | Proxima fecha de vencimiento |
+| `next_expiration` | DATE | SI | - | Próxima fecha de vencimiento |
 | `created_by_user_id` | UUID | NO | - | FK a `users` (creador) |
 | `created_by_sector_id` | UUID | NO | - | FK a `sectors` (sector del creador) |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
 | `resume` | TEXT | SI | - | Resumen generado por IA |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -206,7 +206,7 @@ RLM-{ANIO}-{SECUENCIA:08d}-{MUNICIPIO}-{CODIGO_FAMILIA}
 
 Ejemplo: `RLM-2026-00000001-SMG-ARQ`
 
-La generacion usa `pg_advisory_xact_lock(777777)` para evitar race conditions.
+La generación usa `pg_advisory_xact_lock(777777)` para evitar race conditions.
 
 ### Estructura del data (JSONB)
 
@@ -237,11 +237,11 @@ Los campos enriquecidos se almacenan como objetos con metadatos:
 
 ### Campo next_expiration
 
-Calculado automaticamente recorriendo todos los campos con `has_expiration` en el `data_schema`. Almacena la fecha de vencimiento mas proxima. Se recalcula en cada operacion de `update_field()` y `verify_field()`.
+Calculado automáticamente recorriendo todos los campos con `has_expiration` en el `data_schema`. Almacena la fecha de vencimiento más próxima. Se recalcula en cada operación de `update_field()` y `verify_field()`.
 
-**Indices:**
+**Índices:**
 
-| Indice | Columna(s) | Tipo |
+| Índice | Columna(s) | Tipo |
 |--------|-----------|------|
 | `idx_{SCHEMA}_records_family` | `registry_family_id` | B-tree |
 | `idx_{SCHEMA}_records_state` | `state` | B-tree |
@@ -249,8 +249,8 @@ Calculado automaticamente recorriendo todos los campos con `has_expiration` en e
 | `idx_{SCHEMA}_records_data` | `data` | GIN |
 | `idx_{SCHEMA}_records_expiration` | `next_expiration` | B-tree parcial (`WHERE next_expiration IS NOT NULL`) |
 
-!!! info "Indice GIN en data"
-    El indice GIN sobre `data` permite busquedas eficientes dentro del JSONB. Se usa en combinacion con `data::text ILIKE %patron%` en la busqueda general de legajos.
+!!! info "Índice GIN en data"
+    El índice GIN sobre `data` permite búsquedas eficientes dentro del JSONB. Se usa en combinación con `data::text ILIKE %patron%` en la búsqueda general de legajos.
 
 ---
 
@@ -260,18 +260,18 @@ Historial de cambios en legajos. Almacena valores antes/despues como JSONB.
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
-| `action` | VARCHAR(50) | NO | - | Tipo de accion |
+| `action` | VARCHAR(50) | NO | - | Tipo de acción |
 | `field_name` | VARCHAR(100) | SI | - | Campo afectado (para field_updated, field_verified) |
 | `before_value` | JSONB | SI | - | Valor anterior |
 | `after_value` | JSONB | SI | - | Valor posterior |
 | `user_id` | UUID | NO | - | FK a `users` (quien hizo el cambio) |
 | `sector_id` | UUID | NO | - | FK a `sectors` (sector del usuario) |
 | `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha del cambio |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -280,7 +280,7 @@ Historial de cambios en legajos. Almacena valores antes/despues como JSONB.
 - FK: `record_history_user_fkey` (`user_id`) -> `users(id)`
 - FK: `record_history_sector_fkey` (`sector_id`) -> `sectors(id)`
 
-### Tipos de accion
+### Tipos de acción
 
 | Action | field_name | before_value | after_value |
 |--------|-----------|--------------|-------------|
@@ -298,9 +298,9 @@ Historial de cambios en legajos. Almacena valores antes/despues como JSONB.
 | `case_unlinked` | null | null | `{"link_id": "uuid"}` |
 | `ifrlm_generated` | null | null | `{"document_id": "uuid", "official_number": "...", ...}` |
 
-**Indice:**
+**Índice:**
 
-| Indice | Columna(s) | Tipo |
+| Índice | Columna(s) | Tipo |
 |--------|-----------|------|
 | `idx_{SCHEMA}_record_history_record` | `record_id` | B-tree |
 
@@ -312,16 +312,16 @@ Relaciones entre legajos. Las relaciones son direccionales (source -> target) pe
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `source_record_id` | UUID | NO | - | FK a `records` (legajo origen) |
 | `target_record_id` | UUID | NO | - | FK a `records` (legajo destino) |
-| `relation_type` | `public.relation_type` | NO | `'related'` | Tipo de relacion (enum) |
-| `notes` | TEXT | SI | - | Notas sobre la relacion |
+| `relation_type` | `public.relation_type` | NO | `'related'` | Tipo de relación (enum) |
+| `notes` | TEXT | SI | - | Notas sobre la relación |
 | `created_by_user_id` | UUID | NO | - | FK a `users` |
-| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `created_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de creación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -344,18 +344,18 @@ CREATE TYPE "public"."relation_type" AS ENUM (
 );
 ```
 
-| Valor | Descripcion |
+| Valor | Descripción |
 |-------|-------------|
 | `parent` | Legajo origen es padre del destino |
 | `child` | Legajo origen es hijo del destino |
-| `related` | Relacion generica |
+| `related` | Relación genérica |
 | `replaces` | Legajo origen reemplaza al destino |
 | `sibling` | Legajos hermanos |
 | `cousin` | Legajos primos |
 
-**Indices:**
+**Índices:**
 
-| Indice | Columna(s) | Tipo |
+| Índice | Columna(s) | Tipo |
 |--------|-----------|------|
 | `idx_{SCHEMA}_record_relations_source` | `source_record_id` | B-tree |
 | `idx_{SCHEMA}_record_relations_target` | `target_record_id` | B-tree |
@@ -364,19 +364,19 @@ CREATE TYPE "public"."relation_type" AS ENUM (
 
 ## TABLA 7: record_case_links (municipio)
 
-Vinculos entre legajos y expedientes. Permite asociar un legajo con uno o mas expedientes.
+Vínculos entre legajos y expedientes. Permite asociar un legajo con uno o más expedientes.
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
 | `case_id` | UUID | NO | - | FK a `cases` |
-| `notes` | TEXT | SI | - | Notas sobre la vinculacion |
-| `linked_by_user_id` | UUID | NO | - | FK a `users` (quien creo el vinculo) |
-| `linked_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `notes` | TEXT | SI | - | Notas sobre la vinculación |
+| `linked_by_user_id` | UUID | NO | - | FK a `users` (quien creó el vínculo) |
+| `linked_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -386,9 +386,9 @@ Vinculos entre legajos y expedientes. Permite asociar un legajo con uno o mas ex
 - FK: `record_case_links_user_fkey` (`linked_by_user_id`) -> `users(id)`
 - UNIQUE: `record_case_links_unique` (`record_id`, `case_id`)
 
-**Indice:**
+**Índice:**
 
-| Indice | Columna(s) | Tipo |
+| Índice | Columna(s) | Tipo |
 |--------|-----------|------|
 | `idx_{SCHEMA}_record_case_links_record` | `record_id` | B-tree |
 
@@ -396,20 +396,20 @@ Vinculos entre legajos y expedientes. Permite asociar un legajo con uno o mas ex
 
 ## TABLA 8: record_document_links (municipio)
 
-Vinculos entre legajos y documentos. Permite asociar un legajo con documentos oficiales, opcionalmente vinculados a un campo especifico del legajo.
+Vínculos entre legajos y documentos. Permite asociar un legajo con documentos oficiales, opcionalmente vinculados a un campo específico del legajo.
 
 **Schema:** `{SCHEMA_NAME}`
 
-| Columna | Tipo | Nullable | Default | Descripcion |
+| Columna | Tipo | Nullable | Default | Descripción |
 |---------|------|----------|---------|-------------|
 | `id` | UUID | NO | `gen_random_uuid()` | PK |
 | `record_id` | UUID | NO | - | FK a `records` |
 | `document_id` | UUID | NO | - | ID del documento (draft u oficial) |
 | `field_name` | VARCHAR(100) | SI | - | Campo del legajo al que se asocia |
-| `notes` | TEXT | SI | - | Notas sobre la vinculacion |
-| `linked_by_user_id` | UUID | NO | - | FK a `users` (quien creo el vinculo) |
-| `linked_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculacion |
-| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualizacion |
+| `notes` | TEXT | SI | - | Notas sobre la vinculación |
+| `linked_by_user_id` | UUID | NO | - | FK a `users` (quien creó el vínculo) |
+| `linked_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de vinculación |
+| `updated_at` | TIMESTAMPTZ | NO | `NOW()` | Fecha de actualización |
 
 **Constraints:**
 
@@ -419,11 +419,11 @@ Vinculos entre legajos y documentos. Permite asociar un legajo con documentos of
 - UNIQUE: `record_document_links_unique` (`record_id`, `document_id`)
 
 !!! note "Sin FK a documentos"
-    La columna `document_id` no tiene FK declarada a `document_draft` ni `official_documents`. Esto es intencional porque un documento puede ser draft u oficial, y la validacion se hace a nivel de servicio (via `check_document_exists()`).
+    La columna `document_id` no tiene FK declarada a `document_draft` ni `official_documents`. Esto es intencional porque un documento puede ser draft u oficial, y la validación se hace a nivel de servicio (vía `check_document_exists()`).
 
-**Indice:**
+**Índice:**
 
-| Indice | Columna(s) | Tipo |
+| Índice | Columna(s) | Tipo |
 |--------|-----------|------|
 | `idx_{SCHEMA}_record_doc_links_record` | `record_id` | B-tree |
 
@@ -431,12 +431,12 @@ Vinculos entre legajos y documentos. Permite asociar un legajo con documentos of
 
 ## Advisory Lock
 
-El modulo RLM usa un advisory lock para la generacion atomica de numeros de legajo:
+El módulo RLM usa un advisory lock para la generación atómica de números de legajo:
 
-| Lock ID | Modulo | Uso |
+| Lock ID | Módulo | Uso |
 |---------|--------|-----|
-| `777777` | RLM | Numeracion de legajos (`record_number`) |
-| `888888` | Documentos | Numeracion de documentos oficiales |
+| `777777` | RLM | Numeración de legajos (`record_number`) |
+| `888888` | Documentos | Numeración de documentos oficiales |
 
 ```sql
 SELECT pg_advisory_xact_lock(777777);
@@ -444,18 +444,18 @@ SELECT pg_advisory_xact_lock(777777);
 -- Lock se libera automaticamente al COMMIT/ROLLBACK
 ```
 
-Se usa `pg_advisory_xact_lock` (no `pg_advisory_lock`) para que el lock se libere automaticamente con la transaccion. Esto garantiza que no queden locks huerfanos si la transaccion falla.
+Se usa `pg_advisory_xact_lock` (no `pg_advisory_lock`) para que el lock se libere automáticamente con la transacción. Esto garantiza que no queden locks huerfanos si la transacción falla.
 
 ---
 
-## Resumen de Indices
+## Resumen de Índices
 
-| Tabla | Indice | Columna(s) | Tipo | Notas |
+| Tabla | Índice | Columna(s) | Tipo | Notas |
 |-------|--------|-----------|------|-------|
 | records | `idx_records_family` | registry_family_id | B-tree | |
 | records | `idx_records_state` | state | B-tree | |
 | records | `idx_records_created_by` | created_by_user_id | B-tree | |
-| records | `idx_records_data` | data | GIN | Busqueda en JSONB |
+| records | `idx_records_data` | data | GIN | Búsqueda en JSONB |
 | records | `idx_records_expiration` | next_expiration | B-tree | Parcial: `WHERE NOT NULL` |
 | record_history | `idx_record_history_record` | record_id | B-tree | |
 | record_relations | `idx_record_relations_source` | source_record_id | B-tree | |
@@ -465,8 +465,8 @@ Se usa `pg_advisory_xact_lock` (no `pg_advisory_lock`) para que el lock se liber
 
 ---
 
-## SQL de Creacion
+## SQL de Creación
 
-Archivo fuente: `GDI-BD/sql/03-create-municipio.sql` (tablas 27-33, indices Grupo I)
+Archivo fuente: `GDI-BD/sql/03-create-municipio.sql` (tablas 27-33, índices Grupo I)
 
 Tabla global: `GDI-BD/sql/01-install.sql` (tabla 9: global_registry_families)
