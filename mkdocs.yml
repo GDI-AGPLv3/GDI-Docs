@@ -115,6 +115,7 @@ extra_javascript:
 
 nav:
   - Inicio: index.md
+  - Novedades: novedades.md
 
   - Usuarios:
       - usuarios/index.md

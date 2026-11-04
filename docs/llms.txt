@@ -12,6 +12,7 @@ GDI (Gestión Documental Inteligente) es un sistema completo de documentos, expe
 - Administradores (https://docs.gdilatam.com/administradores/): organigrama, roles y sellos, tipos de documentos y expedientes, certificados, backups (GDI Sync).
 - Desarrollo (https://docs.gdilatam.com/desarrollo/): Gateway API (REST + MCP Server), arquitectura multi-tenant, base de datos, deploy.
 - Glosario (https://docs.gdilatam.com/glosario/).
+- Novedades (https://docs.gdilatam.com/novedades/): lo nuevo en GDI mes por mes, espejo del blog https://gdilatam.com/novedades.
 
 ## Links
 
