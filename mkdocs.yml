@@ -1,0 +1,227 @@
+site_name: GDI Docs
+site_description: Documentación unificada del Sistema de Gestión Documental Inteligente para gobiernos LATAM
+site_author: GDI Latam
+site_url: https://docs.gdilatam.com/
+
+repo_name: GDI-AGPLv3/GDI-Docs
+repo_url: https://github.com/GDI-AGPLv3/GDI-Docs
+edit_uri: edit/prd/docs/
+
+theme:
+  name: material
+  language: es
+  logo: assets/logo-white.png
+  favicon: assets/favicon.png
+
+  font:
+    text: Montserrat
+    code: Roboto Mono
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang: es
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.keys
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - toc:
+      permalink: true
+      title: En esta página
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/GestionDocumentalInteligente
+      name: GDI en GitHub
+
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/external-links.js
+
+nav:
+  - Inicio: index.md
+  - Novedades: novedades.md
+
+  - Usuarios:
+      - usuarios/index.md
+      - Inicio:
+          - usuarios/inicio/index.md
+      - Catálogos:
+          - usuarios/catalogos/index.md
+          - Tipos de Documento: usuarios/catalogos/tipos-de-documento.md
+          - Tipos de Expediente: usuarios/catalogos/tipos-de-expediente.md
+      - Documentos:
+          - usuarios/documentos/index.md
+          - Crear y Editar Documento: usuarios/documentos/crear-editar-documento.md
+          - Documento Importado (PDF): usuarios/documentos/documento-importado.md
+          - Documento tipo NOTA: usuarios/documentos/documento-nota.md
+          - Documento FFCC (Formulario Controlado): usuarios/documentos/documento-ffcc.md
+          - Previsualizar Documento: usuarios/documentos/previsualizar-documento.md
+          - Proceso de Firma: usuarios/documentos/proceso-de-firma.md
+          - Firmar con Token (FirmadorGDI): usuarios/documentos/firmar-con-token.md
+          - Rechazar y Subsanar: usuarios/documentos/rechazar-y-subsanar.md
+      - Expedientes:
+          - usuarios/expedientes/index.md
+          - Detalle del Expediente: usuarios/expedientes/detalle-expediente.md
+          - Panel del Expediente: usuarios/expedientes/panel.md
+          - Historial y Comentarios: usuarios/expedientes/movimientos.md
+          - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
+          - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
+          - Expedientes Reservados: usuarios/expedientes/reservados.md
+      - Legajos:
+          - usuarios/legajos/index.md
+          - Crear y Gestionar: usuarios/legajos/crear-legajo.md
+          - Verificación: usuarios/legajos/verificacion.md
+          - Relaciones y Vínculos: usuarios/legajos/relaciones.md
+      - Notas:
+          - usuarios/notas/index.md
+          - Nota Enviada: usuarios/notas/nota-enviada.md
+          - Nota Recibida: usuarios/notas/nota-recibida.md
+      - Memos:
+          - usuarios/memos/index.md
+          - Memo Enviado: usuarios/memos/memo-enviado.md
+          - Memo Recibido: usuarios/memos/memo-recibido.md
+      - Búsqueda:
+          - usuarios/busqueda/buscador-general.md
+      - Asistente AI:
+          - usuarios/asistente-ai/index.md
+
+  - Administradores:
+      - administradores/index.md
+      - Información General: administradores/informacion-general.md
+      - Roles y Sellos: administradores/roles-y-sellos.md
+      - Organigrama: administradores/organigrama.md
+      - Tipos de Documentos: administradores/tipos-de-documentos.md
+      - Tipos de Expedientes: administradores/tipos-de-expedientes.md
+      - Expedientes y Documentos Reservados: administradores/reservados.md
+      - Documentos y Legajos Públicos: administradores/documentos-publicos.md
+      - Digesto Normativo Público: administradores/digesto-normativo.md
+      - Familias de Registro: administradores/familias-registro.md
+      - Usuarios: administradores/usuarios.md
+      - Administración: administradores/administracion.md
+      - Operar con IA (API):
+          - administradores/operar-por-api.md
+          - Referencia de Endpoints: administradores/operar-por-api-referencia.md
+      - Certificados: administradores/certificados.md
+      - Backups (GDI Sync): administradores/backups.md
+      - LOGs del Sistema: administradores/logs.md
+      - Instalación OnPremise:
+          - administradores/onpremise/index.md
+          - Manual de instalación: administradores/onpremise/manual.md
+          - Copias de seguridad: administradores/onpremise/backups.md
+          - Copia minuto a minuto: administradores/onpremise/copia-minuto-a-minuto.md
+      - Implementación GDI:
+          - administradores/implementacion/index.md
+          - Marco Normativo: administradores/implementacion/marco-normativo.md
+          - Hoja de Ruta Normativa: administradores/implementacion/hoja-de-ruta.md
+          - Modelos de Normas:
+              - administradores/implementacion/modelos/index.md
+              - Ordenanza de Adhesión a Firma Digital: administradores/implementacion/modelos/ordenanza-adhesion-firma-digital.md
+              - Decreto de Implementación GDI: administradores/implementacion/modelos/decreto-reglamentario.md
+              - Resolución de Puesta en Marcha: administradores/implementacion/modelos/resolucion-etapas.md
+              - Plan de Evolución Tecnológica (adicional): administradores/implementacion/modelos/plan-evolucion-tecnologica.md
+              - Protocolo de Digitalización (adicional): administradores/implementacion/modelos/protocolo-digitalizacion.md
+              - Documentos Complementarios: administradores/implementacion/modelos/complementarios.md
+
+  - Integrar con GDI:
+      - desarrollo/index.md
+      - Gateway API:
+          - desarrollo/gateway/index.md
+          - Autenticación: desarrollo/gateway/autenticacion.md
+          - MCP Server: desarrollo/gateway/mcp-server.md
+          - REST API:
+              - desarrollo/gateway/rest-api/index.md
+              - Expedientes: desarrollo/gateway/rest-api/expedientes.md
+              - Documentos: desarrollo/gateway/rest-api/documentos.md
+              - Sistema y Catálogos: desarrollo/gateway/rest-api/sistema.md
+              - Notas: desarrollo/gateway/rest-api/notas.md
+              - Legajos (RLM): desarrollo/gateway/rest-api/legajos.md
+              - TAD Ciudadano:
+                  - desarrollo/gateway/rest-api/tad/index.md
+                  - Conectar el Portal de Trámites: desarrollo/gateway/rest-api/tad/conectar-portal.md
+                  - Ciudadanos: desarrollo/gateway/rest-api/tad/ciudadanos.md
+                  - Documentos: desarrollo/gateway/rest-api/tad/documentos.md
+                  - Expedientes: desarrollo/gateway/rest-api/tad/expedientes.md
+                  - Webhook de Notificaciones: desarrollo/gateway/rest-api/tad/webhook.md
+          - Flujos Completos: desarrollo/gateway/flujos.md
+          - Errores y Códigos: desarrollo/gateway/errores.md
+          - Cambios de la API: desarrollo/gateway/changelog.md
+
+  - Glosario: glosario.md
+
+copyright: Copyright &copy; 2026 GDI Latam - Documentación Unificada

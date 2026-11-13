@@ -1,0 +1,51 @@
+name: Deploy MkDocs to GitHub Pages
+
+on:
+  # El sitio (docs.gdilatam.com) se publica SOLO desde `prd`.
+  # Flujo: feature -> dev -> hml -> prd (igual que el resto de los repos GDI).
+  # `hml` no tiene sitio propio: es el sello de "revisado, listo para publicar".
+  # Antes publicaba desde `main`, asi que CUALQUIER merge salia al aire al
+  # instante y no habia forma de tener doc escrita esperando a que el codigo
+  # que describe llegue a PRD. `main` se elimino: una sola rama publica.
+  push:
+    branches:
+      - prd
+
+permissions:
+  contents: write
+
+jobs:
+  # Corre ANTES del deploy: si encuentra datos que no deben publicarse, el
+  # sitio no se republica. Ver scripts/check_publishable.py.
+  guarda:
+    uses: ./.github/workflows/check-publishable.yml
+
+  deploy:
+    needs: guarda
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cache pip
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: 'pip install --require-hashes --only-binary :all: -r requirements.lock'
+
+      # Las skills descargables (docs/descargas/*.zip) se arman aca desde
+      # skills/: no se versionan, asi el ZIP publicado nunca queda viejo.
+      - name: Empaquetar skills descargables
+        run: python scripts/build_skill_zips.py
+
+      - name: Build and deploy
+        run: mkdocs gh-deploy --force

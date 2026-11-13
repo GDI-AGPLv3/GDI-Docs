@@ -1,0 +1,32 @@
+name: Guarda de publicacion
+
+# Este repositorio NO tiene version privada: todo lo que entra se publica en
+# docs.gdilatam.com. Por eso el control corre antes del deploy y lo bloquea.
+#
+# Corre en cada push y en cada PR a las tres ramas. En `prd` es ademas la
+# condicion previa del deploy: si falla, el sitio no se republica.
+
+on:
+  push:
+    branches: [dev, hml, prd]
+  pull_request:
+    branches: [dev, hml, prd]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Buscar datos que no deben publicarse
+        run: python scripts/check_publishable.py

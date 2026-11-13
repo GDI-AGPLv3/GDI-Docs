@@ -1,0 +1,452 @@
+# Documentos
+
+Creación y **firma electrónica**: el documento nace y se firma con el sello del ciudadano, para quedar numerado oficialmente. No hay borradores por API.
+
+!!! info "La firma es asincrónica"
+    El alta responde **`202 Accepted`** y la firma se procesa a continuación. El número
+    oficial **no viene en esa respuesta**: llega por **webhook** (`documents.signed`). El
+    link al PDF se pide después con
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
+
+    Antes el pedido se quedaba esperando a que la firma terminará, lo que bajo carga
+    podía superar los 30 segundos y hacer que el portal cortará por timeout un
+    documento que en realidad se estaba firmando bien.
+
+!!! tip "Cuánto tarda el alta"
+    El `202` sale en **1 o 2 segundos**, también en frío: el armado del
+    PDF ya no ocurre dentro del pedido, lo hace el worker. (Medido contra el almacenamiento S3 real: 1,77 s
+    en la primera llamada del día y 0,83 s en la siguiente; el `official_number` aparecio
+    a los 4,5 s del alta.)
+
+!!! note "Igual manda siempre `Idempotency-Key`"
+    Aunque el alta ahora sea rápida, un timeout de red o un reintento automático de tu
+    infraestructura siguen siendo posibles, y **un timeout nunca significa que el documento
+    no se creó**. La [clave](#reintentos-seguros-idempotency-key) es lo que hace que
+    reintentar sea seguro.
+
+Numeración: `{ACRONIMO}-{ANIO}-{NUMERO}-{MUNI}-TAD` (el sufijo `TAD` identifica los documentos firmados por ciudadanos).
+
+---
+
+## Catálogo de tipos habilitados
+
+```
+GET /api/v1/tad/document-types
+```
+
+Devuelve los tipos que el administrador habilitó para firma ciudadana ("Firmable por TAD" en BackOffice). Solo pueden habilitarse tipos `HTML` (incluye formularios controlados FFCC) e `Importado`.
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "document_types": [
+    {"id": 16, "name": "Constancia de Pago", "acronym": "PAGO", "description": "Constancia de pago", "has_fields": true},
+    {"id": 6, "name": "Informe Grafico Importado", "acronym": "IFGRA", "description": "...", "has_fields": false},
+    {"id": 3, "name": "Providencia", "acronym": "PROV", "description": "...", "has_fields": false}
+  ]
+}
+```
+
+`has_fields: true` indica que el tipo es un **formulario controlado (FFCC)**: antes de crear el documento hay que consultar sus campos.
+
+!!! tip "Esquema descargable"
+    Desde BackOffice, en el detalle de cada tipo de documento, el botón **"Descargar esquema para API"** genera el JSON con el contrato exacto de ese tipo, listo para compartir con el equipo del portal.
+
+---
+
+## Formularios controlados (FFCC)
+
+**FFCC = Formulario Controlado.** Es un tipo de documento en el que el municipio, en vez de dejar escribir texto libre, define de antemano **que campos tiene el documento** (nombre, tipo de dato, si es obligatorio, que valores acepta). El portal no manda HTML: manda **los valores**, y GDI arma el PDF con la plantilla oficial, renderizando los campos como una tabla de dos columnas (etiqueta | valor).
+
+Por que importa:
+
+- **El municipio controla la forma del documento**, no el portal. Si mañana cambia el formulario, el PDF cambia solo.
+- **GDI valida los datos** antes de firmar: un campo obligatorio vacío o un monto que no es número se rechazan con `400`, no llegan a firmarse.
+- El documento guarda un **snapshot** `{schema, data}`: queda registrado con que definición de formulario se firmó, aunque después el municipio la modifique.
+
+Un tipo es FFCC cuando `GET /tad/document-types` lo devuelve con `has_fields: true`. En ese caso, antes de crear el documento hay que pedir su definición:
+
+```
+GET /api/v1/tad/document-types/{id}/fields
+```
+
+!!! note "Acá va el `id`, no el acrónimo"
+    Este es el único endpoint del bloque que se pide por `id` numérico (el que devuelve el catálogo). El `POST /tad/documents` en cambio usa `document_type_acronym`.
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "document_type_id": 16,
+  "field_definitions": [
+    {"name": "monto", "type": "number", "label": "Monto", "required": true, "min": 0},
+    {"name": "fecha_pago", "type": "date", "label": "Fecha de pago", "required": true},
+    {"name": "medio", "type": "select", "label": "Medio de pago", "required": true,
+     "options": ["Efectivo", "Transferencia", "Debito"]},
+    {"name": "observaciones", "type": "textarea", "label": "Observaciones",
+     "required": false, "max_length": 500},
+    {"name": "comprobante", "type": "file", "label": "Comprobante", "required": false}
+  ]
+}
+```
+
+`404` si el tipo no existe, no está habilitado para TAD o no tiene formulario.
+
+### Tipos de campo
+
+Los campos los define el municipio; el portal tiene que saber leerlos todos. `label` es el texto que se muestra (y el que aparece en los mensajes de error); `name` es la clave que va en `form_data`.
+
+| `type` | Que mandar en `form_data` | Restricciones opcionales del campo |
+|---|---|---|
+| `text` | string | `max_length` |
+| `textarea` | string (varias líneas) | `max_length` |
+| `email` | string con formato de email válido | `max_length` |
+| `number` | número JSON (`15300.50`). También se tolera el string `"15300.50"`. **`true`/`false` no cuentan como número** | `min`, `max` |
+| `date` | string `"YYYY-MM-DD"` | — |
+| `select` | uno de los valores de `options`, exacto | `options` (obligatorio en la definición) |
+| `boolean` | `true` o `false` (JSON, no `"true"`) | — |
+| `file` | **no disponible por API**: enviar `null` u omitir | — |
+
+Si el campo no declara sus propios límites, igual rigen topes de cordura: los `number` deben ser finitos y de magnitud razonable (hasta ±1 000 000 000 000), los textos tienen tope de 20 000 caracteres y las fechas deben ser reales y con año entre 1900 y 2200. Si el campo si declara `min`/`max`/`max_length`, mandan esos.
+
+Un campo opcional se omite del `form_data` o se manda en `null`: no se valida su tipo.
+
+---
+
+## Crear y firmar documento
+
+```
+POST /api/v1/tad/documents
+```
+
+Requiere `X-Citizen-ID` de un ciudadano **validado**.
+
+**Body común:**
+
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| `document_type_acronym` | string | Sí | Acrónimo del tipo (ej. `PROV`) |
+| `reference` | string | Sí | Referencia / motivo del documento |
+
+Según el tipo, el contenido va en **uno solo** de estos tres campos (son mutuamente excluyentes):
+
+| Tipo | Campo de contenido | Regla |
+|------|--------------------|-------|
+| HTML común (`has_fields: false`) | `content_html` | Opcional: si se omite, el PDF muestra la `reference` |
+| FFCC (`has_fields: true`) | `form_data` | **Requerido**: dict plano `{campo: valor}` |
+| Importado | `pdf_base64` | **Requerido**: PDF en base64, máximo 20 MB |
+
+**Respuesta `202 Accepted`** (igual para las tres variantes):
+
+```json
+{
+  "success": true,
+  "message": "Documento recibido — la firma se está procesando",
+  "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
+  "session_id": "9f2b1c40-5d3e-4a71-9c88-2b0a5e6d1f34",
+  "status": "queued",
+  "expires_at": "2026-07-24T18:41:09Z"
+}
+```
+
+El `session_id` identifica esta firma: sirve para trazar el caso con soporte si algo
+no llega.
+
+!!! warning "El número oficial NO viene acá"
+    Llega por webhook, en el evento **`documents.signed`**, junto con el `document_id`.
+    El aviso no trae el PDF: el link se pide con
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
+    Si la firma falla definitivamente, llega **`documents.signature_failed`** — el
+    portal nunca se queda esperando un aviso que no va a existir.
+
+    **Guardar el `document_id`** es lo que permite reconocer después ese webhook: es el
+    único dato que ata la solicitud con su desenlace.
+
+    Si el portal prefiere (o necesita) preguntar en vez de esperar, esta
+    [`GET /tad/documents/{id}`](#consultar-el-estado-de-un-documento).
+
+    Ver [Webhook de notificaciones](webhook.md) y
+    [como saber el número oficial](conectar-portal.md#paso-5-saber-el-numero-oficial).
+
+### Reintentos seguros: `Idempotency-Key`
+
+Cada `POST /tad/documents` crea un documento **nuevo**. Sin ninguna precaución, un portal que reintenta por un timeout de red — cuando la primera llamada en realidad si había llegado — termina con **dos documentos firmados y numerados** para el mismo trámite. Un timeout **no significa que el documento no se creó**.
+
+Para eso está el header opcional `Idempotency-Key`: un identificador que el portal elige (un UUID, o el id del trámite en su propia base) y **repite en cada reintento del mismo envío**.
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
+  -H "X-API-Key: tu-api-key-tad" \
+  -H "X-Citizen-ID: 27333444556" \
+  -H "Idempotency-Key: tramite-4711" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+| Situación | Respuesta |
+|---|---|
+| Primera vez con esa clave | `202` normal: se crea el documento |
+| Reintento, el alta anterior ya terminó | `202` con **el mismo cuerpo** que la primera vez + header `Idempotent-Replay: true`. No se crea nada |
+| Reintento mientras el primero todavía se procesa | `409` — reintentar en unos segundos |
+| Misma clave con **otro contenido** | `409` — es una clave reciclada por error; cada solicitud distinta necesita la suya |
+| El alta falla (`400`/`403`) | La clave **queda libre**: se puede corregir el cuerpo y reintentar con la misma |
+
+!!! danger "Rehacer un documento después de `documents.signature_failed` necesita una clave NUEVA"
+    La clave protege **el pedido de alta**, no el desenlace de la firma. Si el alta se
+    acepto (`202`) y la firma fallo después, para GDI esa clave **ya cumplió** y quedó
+    consumida por 24 horas.
+
+    Entonces, cuando llega `documents.signature_failed` y volvés a dar de alta el documento:
+
+    - con la **misma** clave → recibis el `202` viejo con `Idempotent-Replay: true` y el
+      `document_id` de siempre. **No se crea nada**, y te quedás esperando un webhook que
+      ya ocurrió y fracasó.
+    - con una clave **nueva** → se crea el documento nuevo, que es lo que querías.
+
+    Es la única excepción a la regla de "una clave por trámite": un re-alta después de un
+    fracaso de firma es, a estos efectos, un pedido distinto.
+
+- **Una clave por trámite, no por reintento**: si el portal genera una clave nueva en cada intento, no protege de nada.
+- La clave vale **24 horas** y su alcance es la API Key (el municipio). Máximo 255 caracteres.
+- **No se deduplica por contenido**: dos solicitudes idénticas del mismo vecino pueden ser dos trámites reales. El único que sabe si son "el mismo" es el portal, por eso lo declara con la clave.
+- El header es **opcional**: sin él, el comportamiento es el de siempre y la protección contra duplicados queda enteramente del lado del portal. Ver [Reintentos](conectar-portal.md#4-reintentos-manda-siempre-una-idempotency-key).
+
+---
+
+## Consultar el estado de un documento
+
+```
+GET /api/v1/tad/documents/{document_id}
+```
+
+Requiere `X-Citizen-ID`: el documento tiene que ser de ese ciudadano (si no, `404` genérico, igual que si no existiera).
+
+Contesta si la firma sigue en cola, si ya terminó — con el número oficial y un link fresco al PDF — o si fallo:
+
+```json
+{
+  "document_id": "007a5613-f796-4280-8f3a-ddf60e6c6743",
+  "status": "signed",
+  "official_number": "PROV-2026-00003039-MDEV-TAD",
+  "pdf_url": "https://...presignado...",
+  "signed_at": "2026-07-24T18:12:29Z",
+  "reference": "Solicitud de poda de arbol",
+  "document_type_acronym": "PROV",
+  "created_at": "2026-07-24T18:11:09Z",
+  "failure_reason": null
+}
+```
+
+| `status` | Que significa | Que hace el portal |
+|---|---|---|
+| `queued` | La firma está en cola o procesándose | Esperar. Trae además `session_id` y `expires_at` |
+| `signed` | Firmado y numerado | Guardar `official_number`, descargar el `pdf_url` |
+| `failed` | No se va a firmar solo | Mirar `failure_reason` y volver a dar de alta el documento |
+
+Tres detalles del cuerpo, para que el portal no se rompa con ellos:
+
+- Con `status: "signed"` el `pdf_url` puede venir en `null` si el link presignado no se pudo
+  armar en ese momento. **El `official_number` sigue siendo válido**: se vuelve a pedir el
+  estado y listo.
+- **Este es el endpoint para pedir el PDF de un documento firmado**: su `pdf_url` viene armado y
+  recién firmado en cada consulta. El webhook `documents.signed` ya no trae link (vencía antes
+  de los reintentos), y el detalle del expediente (`GET /tad/cases/{id}`) devuelve
+  `pdf_source` y tiene
+  [endpoint propio para la URL](expedientes.md#obtener-la-url-de-un-documento).
+- `failure_reason: "signing_never_enqueued"` significa que el documento se creó pero su firma
+  nunca llegó a encolarse: hay que volver a darlo de alta.
+- **Podés ver `queued` durante unos instantes después de recibir `documents.signed`.** La
+  firma y la escritura del documento oficial no son el mismo instante; mientras tanto el
+  endpoint contesta `queued` a propósito, porque todavía no hay número para mostrar. No es
+  un error ni una vuelta atrás: el número que ya te llego por webhook es válido.
+
+### Qué hacer con cada `failure_reason`
+
+`failure_reason` es un **código para soporte**, no un texto para mostrarle al vecino. No es
+una lista cerrada —pueden aparecer códigos nuevos— así que trata cualquier valor desconocido
+como el caso general: **rehacer el alta con una `Idempotency-Key` nueva**, y si se repite,
+escalarlo con el `session_id`.
+
+!!! tip "Compara por PREFIJO, no por valor exacto"
+    La lista se afina con el tiempo y **no es idéntica en todos los ambientes**: una misma
+    falla puede llegarte como `unknown` en uno y como `unknown:TimeoutError` en otro, o
+    como `notary_503` en vez de `notary_5xx`. Un portal que compare por igualdad
+    (`reason == "unknown"`) se rompe cuando la lista cambie.
+
+    Regla práctica: todo lo que empieza con **`notary_`** o con **`unknown`** es
+    transitorio y se reintenta.
+
+| `failure_reason` | Que pasó | Que hacer |
+|---|---|---|
+| `notary_timeout` · `notary_connect_error` · `notary_5xx` · `notary_<codigo>` | El servicio de firma no respondio o fallo momentáneamente | **Reintentar**: suele salir al segundo intento |
+| `notary_circuit_open` | El servicio de firma quedo protegido tras fallas repetidas | Esperar un minuto y reintentar. Si sigue, avisar al municipio |
+| `unknown` · `unknown:<Clase>` | El carril de firma no dejo una causa clasificada. Se vio en arranques en frío, y el reintento salio bien sin cambiar nada | **Reintentar una vez.** Si vuelve a pasar, escalar con el `session_id`: no es un error del portal |
+| `db_error` | Falla momentánea de base de datos | Reintentar |
+| `signing_never_enqueued` | El documento se creó pero su firma nunca llegó a encolarse | Rehacer el alta |
+| `notary_business_error` · `notary_fullpage` | El servicio de firma **rechazo el documento por su contenido** (por ejemplo, no queda lugar para la hoja de firma) | **No reintentar igual**: revisar el contenido. Si es correcto, escalar |
+| `pdf_too_large` | El PDF supera el límite permitido | Reducir el archivo; reintentar tal cual no sirve |
+| `pdf_integrity_failed` | El PDF firmado no coincide con el que se envió | **No reintentar en loop**: escalar con el `session_id` |
+| `preoficial_not_provisioned` | Al municipio le falta provisionar almacenamiento | No es un problema del portal: avisar al equipo GDI |
+| `document_rejected_while_in_queue` | El documento fue rechazado mientras esperaba en la cola | No reintentar: es una decisión, no una falla |
+| `certified_pdf_with_attachments` · `embed_certified_pdf` | Importado **certificado de origen** con `embedded_files`. Un certificado de origen no admite adjuntos | Rehacer el alta sin `embedded_files`. Los archivos van como documento aparte |
+| `import_certification_broken` | La firma de certificación del PDF está rota, o el PDF se modificó después de firmarse | Pedirle al vecino el archivo original, sin comprimir ni editar |
+| `import_certification_inconsistent` · `pdf_certification_inconsistent` | El PDF dice venir certificado, pero ninguna firma respalda esa certificación | Volver a exportar el PDF desde su origen |
+| `import_pdf_encrypted_password` · `pdf_encrypted_password` | El PDF tiene contraseña de apertura | Mandar una copia sin contraseña |
+| `import_signatures_unreadable` · `pdf_signatures_unreadable` | El PDF trae firmas digitales que no se pudieron leer | Volver a exportar el PDF desde su origen |
+| `pdf_certified` | El servicio de firma recibió un PDF certificado que no se podía firmar | **No reintentar igual**: escalar con el `session_id` |
+| `certified_hash_mismatch` | El PDF certificado cambió entre la verificación y la numeración | Rehacer el alta; si se repite, escalar |
+| `certified_check_retry` | GDI no pudo comprobar el PDF certificado en ese momento | Reintentar |
+| cualquier otro | — | Reintentar una vez; escalar si se repite |
+
+!!! warning "Un `failed` no siempre es culpa del contenido"
+    Antes de mostrarle un error al vecino o de marcar el trámite como rechazado, reintenta
+    al menos una vez. Varios de estos motivos son transitorios y el mismo documento, tal
+    cual, se firma bien en el segundo intento.
+
+!!! warning "Esto no reemplaza al webhook"
+    El webhook avisa **cuando pasa algo**; esto contesta **cuando preguntan**. Un portal
+    que sondee en loop cerrado se va a comer el rate limit de la key (30 req/min) y va a
+    tardar más en enterarse que si escuchará. Usalo para desarrollo (mientras tu endpoint
+    no sea alcanzable desde GDI), para reconciliar trámites que quedaron sin aviso, y como
+    respaldo — no como mecanismo principal.
+
+    El `pdf_url` es un link presignado de **3 minutos** (180 s): se puede volver a pedir
+    cuantas veces haga falta. Es **el** camino para obtener el PDF después del webhook
+    `documents.signed`, que trae el `document_id` pero no el link.
+
+---
+
+### Variante HTML
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
+  -H "X-API-Key: tu-api-key-tad" \
+  -H "X-Citizen-ID: 27333444556" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document_type_acronym": "PROV",
+    "reference": "Solicitud de poda de arbol",
+    "content_html": "<h1>Solicitud</h1><p>Solicito la poda del arbol frente a mi domicilio.</p>"
+  }'
+```
+
+El HTML se **sanitiza** (es contenido que viene de afuera) y se renderiza dentro de la plantilla oficial del municipio: encabezado, pie, numeración y hoja de firma los pone GDI. El portal manda solo el cuerpo.
+
+#### Qué HTML sobrevive a la sanitización
+
+Todo lo que no esté en esta lista se descarta en silencio: no da error, simplemente no aparece en el PDF. Conviene probar el tipo de documento antes de salir a producción.
+
+| | Permitido |
+|---|---|
+| **Etiquetas** | `p` `br` `hr` `div` `span` `blockquote` `pre` · `h1`–`h6` · `strong` `b` `em` `i` `u` `s` `sub` `sup` `mark` · `ul` `ol` `li` · `table` `thead` `tbody` `tfoot` `tr` `th` `td` `caption` `colgroup` `col` · `img` `a` · `figure` `figcaption` `details` `summary` |
+| **Atributos** | `class` (en cualquier etiqueta) · `a`: `href` `title` `target` · `img`: `src` `alt` `title` `width` `height` · `td`/`th`: `colspan` `rowspan` · `col`/`colgroup`: `span` · `table`: `border` `cellpadding` `cellspacing` |
+| **URLs** | solo `http`, `https` y `mailto` |
+
+Lo que **no** pasa, y suele sorprender:
+
+- **`style` inline y `<style>`**: no están permitidos. El formato lo da la plantilla del municipio; para variantes visuales, usar `class`.
+- **`src="data:image/png;base64,..."`**: el esquema `data:` no está en la lista, así que **las imágenes embebidas en base64 se pierden**. Un `<img>` tiene que apuntar a una URL `https` accesible desde el servidor que genera el PDF. Para adjuntar archivos, usar [`embedded_files`](#adjuntos-embebidos-embedded_files).
+- **`id`**: se elimina a propósito (evita colisiones con el visor del sistema).
+- `script`, `iframe`, `form`, `input`, `object` y los manejadores `on*`: se descartan enteros.
+- A los `<a>` se les agrega `rel="noopener noreferrer"` automáticamente.
+
+### Variante FFCC (formulario controlado)
+
+Ver [Formularios controlados (FFCC)](#formularios-controlados-ffcc) para que es y como leer su definición. El `form_data` es un **dict plano** `{name: valor}` con los `name` de `field_definitions` — ni anidado, ni con los `label`.
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
+  -H "X-API-Key: tu-api-key-tad" \
+  -H "X-Citizen-ID: 27333444556" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document_type_acronym": "PAGO",
+    "reference": "Pago de tasa municipal",
+    "form_data": {
+      "monto": 15300.50,
+      "fecha_pago": "2026-07-24",
+      "medio": "Transferencia",
+      "observaciones": "Cuota 3 de 12"
+    }
+  }'
+```
+
+`form_data` es **excluyente** con `content_html` y `pdf_base64`: mandar dos da `400`. Y es al revés también — mandar `form_data` a un tipo que no es FFCC también da `400`.
+
+Validaciones sobre `form_data`:
+
+- Campos `required: true` faltantes → `400` (`"El campo 'Monto' es requerido"`).
+- Tipo de dato incorrecto → `400` (`"El campo 'Monto' debe ser un numero"`; las fechas van en formato `YYYY-MM-DD`).
+- Campos no definidos en el esquema → `400` (`"Campos no definidos en el formulario: ['x']"`). Enviar exactamente los campos de `field_definitions`.
+- Controles de sanidad (aplican aunque el campo no declare límites): los `number` deben ser finitos y de magnitud razonable; los textos tienen un tope de largo; las fechas deben ser reales (`2026-13-45` se rechaza) y de un año plausible. Si el campo define `min`/`max`/`max_length` propios, mandan esos.
+- `select` con un valor fuera de `options` → `400` (`"El campo 'Medio de pago' debe ser uno de: Efectivo, Transferencia, Debito"`).
+- Campos `type: "file"`: **no se pueden completar por API** — enviar `null` u omitirlos (`400` si traen valor: `"El campo 'Comprobante' es de tipo archivo: no disponible via TAD"`). Un formulario con un campo `file` **obligatorio** no se puede firmar por API: hay que pedirle al municipio que lo haga opcional. Para hacer llegar el archivo: un documento aparte de tipo `Importado`, o [`embedded_files`](#adjuntos-embebidos-embedded_files) si el tipo lo admite.
+- El documento guarda un snapshot `{schema, data}` con la definición vigente del formulario al momento de la firma.
+
+### Variante Importado (PDF del portal)
+
+```bash
+curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
+  -H "X-API-Key: tu-api-key-tad" \
+  -H "X-Citizen-ID: 27333444556" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document_type_acronym": "IFGRA",
+    "reference": "Escritura digitalizada",
+    "pdf_base64": "JVBERi0xLjQK..."
+  }'
+```
+
+- Máximo **20 MB**; el contenido debe ser un PDF real (se validan los magic bytes, no solo el nombre).
+- GDI agrega la hoja de firma al final del PDF importado. Excepción: un **certificado de origen** (ver abajo).
+- Si el tipo tiene "Admite archivos embebidos", el Importado acepta [`embedded_files`](#adjuntos-embebidos-embedded_files): GDI los incrusta dentro del PDF importado antes de firmarlo. El PDF importado más sus adjuntos no puede pasar de **25 MB en total**.
+
+!!! info "PDF importado que ya viene firmado"
+    Si el PDF que manda el portal ya trae firmas digitales (por ejemplo, de un escribano), GDI agrega la hoja de firma y los adjuntos **sin tocar esas firmas**: los suma al final del archivo, sin reescribir lo anterior. Si no puede hacerlo sin invalidarlas, no firma: el documento termina con error en el [estado del documento](#consultar-el-estado-de-un-documento) en vez de `signed`. Un lector de PDF puede indicar que el documento tuvo cambios después de esas firmas: son la hoja de firma y los adjuntos de GDI.
+
+!!! info "PDF certificado de origen"
+    Si el PDF trae una **firma de certificación** (por ejemplo, de un escribano), GDI lo guarda
+    byte a byte, sin hoja de firma: cualquier agregado rompería esa certificación. El
+    ciudadano da su conformidad sin firmar el PDF, y GDI numera el documento sin imprimir el
+    número en el archivo. El número llega igual por webhook y por el
+    [estado del documento](#consultar-el-estado-de-un-documento).
+
+    Un certificado de origen **no admite `embedded_files`**: el alta termina en `failed` con
+    `failure_reason: "certified_pdf_with_attachments"`. Los archivos tienen que ir como
+    documento aparte.
+
+!!! note "Nombres repetidos"
+    Si el PDF importado ya trae un adjunto con el mismo nombre que uno de `embedded_files` (por ejemplo `factura.txt`), GDI le agrega un número al del portal (`factura (1).txt`) para que no se confundan al descargarlos.
+
+### Adjuntos embebidos (`embedded_files`)
+
+Para tipos con "Admite archivos embebidos" habilitado (HTML, FFCC o Importado), se pueden adjuntar archivos que viajan **dentro** del PDF final:
+
+```json
+{
+  "document_type_acronym": "IFPU",
+  "reference": "Informe con plano adjunto",
+  "content_html": "<p>Se adjunta plano del local.</p>",
+  "embedded_files": [
+    {"file_name": "plano.pdf", "content_base64": "JVBERi0xLjQK..."}
+  ]
+}
+```
+
+Límites: máximo **10 archivos**, hasta **20 MB** cada uno y **20 MB** entre todos. En un tipo Importado, además, el PDF importado más los adjuntos no puede pasar de **25 MB**. Extensiones permitidas: `csv, doc, docx, dxf, jpeg, jpg, ods, odt, pdf, png, txt, xls, xlsx`. Los PDF se validan por contenido (magic bytes).
+
+!!! tip "Tamaño del pedido"
+    `pdf_base64` y `content_base64` viajan en base64, que pesa un tercio más que el archivo: 25 MB de archivos son unos 34 MB de pedido.
+
+### Errores frecuentes
+
+| Código | Mensaje (ejemplo) | Causa |
+|--------|-------------------|-------|
+| `400` | `Tipo de documento 'X' no habilitado para firma ciudadana (TAD)` | Acrónimo inexistente o tipo sin "Firmable por TAD" (mensaje idéntico en ambos casos, anti-enumeracion) |
+| `400` | `El tipo de documento 'PROV' no es Importado: 'pdf_base64' no esta permitido` | Campo de contenido que no corresponde al tipo |
+| `400` | `'pdf_base64' no decodifica a un PDF valido` | Base64 corrupto o contenido que no es PDF |
+| `400` | `El PDF importado mas sus adjuntos supera el maximo permitido (25MB entre todo)` | Importado: el PDF más `embedded_files` pasan de 25 MB |
+| `400` | `El tipo de documento 'X' no admite archivos adjuntos embebidos ('accepts_embedded_files' = false)` | Vino `embedded_files` y el tipo no tiene "Admite archivos embebidos" |
+| `403` | `El ciudadano debe estar 'validado' para esta operacion (estado actual: pendiente)` | Ciudadano sin validar |
+| `403` | Ciudadano bloqueado | Estado `bloqueado` |

@@ -1,0 +1,1 @@
+--8<-- "skills/gdi-backoffice-admin/reference/endpoints.md"
