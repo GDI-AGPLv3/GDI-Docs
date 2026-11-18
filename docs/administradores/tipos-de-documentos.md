@@ -172,6 +172,10 @@ El diálogo **Agregar Campo** define cada campo del formulario.
 | **Largo máximo (caracteres)** | No | Límite de caracteres del campo |
 | **Placeholder** | No | Texto de ayuda que se muestra dentro del campo |
 
+### Plantilla del documento
+
+Por defecto, un FFCC sale como una lista: un campo debajo del otro. Debajo de los campos está el bloque **Plantilla del documento**: ahí cargás un texto en HTML con marcadores (`{{cuit}}`) y el documento sale redactado con los datos del formulario. Cómo se arma y qué se permite: [Plantilla de un FFCC](plantilla-ffcc.md).
+
 ??? question "Cómo creo un tipo FFCC de punta a punta?"
     1. Click en **Nuevo tipo propio**.
     2. Carga *Nombre*, *Acrónimo* (≤6, inmutable) y *Descripción*.
