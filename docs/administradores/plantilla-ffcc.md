@@ -117,7 +117,7 @@ La plantilla maneja **solo el cuerpo** del documento. El número, la fecha y el 
 | `border` y sus variantes | Hasta 5 cm de ancho |
 | `padding`, `margin` y sus variantes | Sin negativos, hasta 5 cm |
 | `width` | Hasta 100 % (o 17 cm) |
-| `line-height` | 1 o más, sin unidad |
+| `line-height` | Entre 1 y 3, sin unidad |
 
 Unidades: `pt`, `px`, `mm` y `cm`. El `%` va solo en `width`.
 
@@ -133,7 +133,8 @@ Unidades: `pt`, `px`, `mm` y `cm`. El `%` va solo en `width`.
 - Las clases que no son del editor, como `MsoNormal`.
 - Los comentarios `<!-- -->` y `<!DOCTYPE>`.
 - Una etiqueta abierta y sin cerrar.
-- En `style`: otras propiedades (`position`, `display`, `float`, `height`, `opacity`, `background`…), valores fuera de límite, unidades `em`, `rem`, `vw` o `vh`, `url(`, `calc(` y cualquier otra función que no sea `rgb(` o `rgba(`.
+- En `style`: otras propiedades (`position`, `display`, `float`, `height`, `opacity`, `background`…), valores fuera de límite, unidades `em`, `rem`, `vw` o `vh`, `url(`, `calc(` y cualquier otra función que no sea `rgb(` o `rgba(`, la barra invertida `\`, los comentarios `/* */`, `!important` y un `;` entre comillas.
+- En las tablas, los atributos `border`, `cellpadding` y `cellspacing` con más de 189 (5 cm), o `colspan` y `rowspan` con más de 50.
 - Un `{{` sin su `}}`, o un marcador cortado por una etiqueta (`{{cu<b>it}}`).
 - Las llaves escritas como código de HTML (`&#123;`, `&lcub;`).
 - El texto `end-text`: el sistema lo usa para ubicar la firma.
