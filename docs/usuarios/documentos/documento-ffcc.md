@@ -1,6 +1,6 @@
 # Documento FFCC (Formulario Controlado)
 
-Un documento **FFCC** (Formulario Controlado) reemplaza el editor de texto libre por un **formulario de campos** que el usuario completa. En vez de redactar el contenido a mano, se cargan valores en campos predefinidos (texto, fecha, número, si/no, etc.) y el sistema arma el documento oficial con formato `campo: valor`.
+Un documento **FFCC** (Formulario Controlado) reemplaza el editor de texto libre por un **formulario de campos** que el usuario completa. En vez de redactar el contenido a mano, se cargan valores en campos predefinidos (texto, fecha, número, si/no, etc.) y el sistema arma el documento oficial con formato `campo: valor`. Si el administrador le cargó una [plantilla](../../administradores/plantilla-ffcc.md) al tipo, el documento sale como un texto redactado con esos valores.
 
 Sirve para trámites que siempre tienen la misma estructura de datos: fichas de inspección, constancias, formularios de relevamiento, etc. Los campos los define el administrador del organismo en el tipo de documento (ver [Tipos de Documentos](../../administradores/tipos-de-documentos.md#formularios-controlados-ffcc)).
 
