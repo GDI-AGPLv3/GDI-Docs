@@ -57,7 +57,7 @@ Lo que escribe el empleado sale siempre como texto. Si escribe `<b>hola</b>`, el
 ## Cargar la plantilla
 
 1. En **Tipos de Documentos**, abrí el detalle del tipo FFCC.
-2. Debajo de **Campos del Formulario** está el bloque **Plantilla del documento**. Tocá **Editar**.
+2. Debajo de **Campos del Formulario** está el bloque **Plantilla del documento**. Tocá **Cargar plantilla** (o **Editar plantilla**, si ya tiene una).
 3. Pegá el HTML en el cuadro, o tocá **Cargar desde archivo** y elegí un archivo `.html`. El archivo tiene que estar guardado en UTF-8 para que las tildes y la ñ lleguen bien.
 4. Para sumar un marcador, tocá su nombre en la lista de marcadores: se copia y lo pegás donde va.
 5. Tocá **Guardar**.
