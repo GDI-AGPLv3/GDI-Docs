@@ -20,7 +20,8 @@ Referencia completa de los códigos HTTP, mensajes de error y guía de troublesh
 | 403 | Forbidden | Sin permisos para la operación |
 | 404 | Not Found | Recurso no encontrado |
 | 409 | Conflict | Estado inválido (ej: firmar documento ya firmado) |
-| 422 | Unprocessable Entity | Validación fallida |
+| 413 | Payload Too Large | El pedido pasa el tope de tamaño: 30 MB al importar, reemplazar un PDF o adjuntar; 36 MB en Trámites a Distancia; 10 MB en el resto |
+| 422 | Unprocessable Entity | Validación fallida. En la firma, `"code": "FULLPAGE"` = la firma no entra en la página |
 | 429 | Too Many Requests | Rate limit de la API Key, o cola de firma saturada. Trae `Retry-After` (ver abajo) |
 | 500 | Internal Server Error | Error del servidor |
 | 503 | Service Unavailable | Servidor ocupado o una verificación que no se pudo hacer. Trae `Retry-After` |
@@ -110,6 +111,7 @@ Estos errores ocurren cuando se intenta realizar una operación incompatible con
 |---------|-------|
 | `Documento no puede editarse en su estado actual` | Se intentó editar un documento que ya no está en estado `draft` |
 | `Documento no puede firmarse en su estado actual` | Se intentó firmar un documento que no está en estado `sent_to_sign` |
+| `... ya está siendo firmado ...` | Otro pedido de firma del mismo documento está en curso. Esperar unos segundos y consultar el estado del documento |
 | `Documento no puede rechazarse en su estado actual` | Se intentó rechazar un documento que no está en un estado que permita rechazo |
 | `Solo se pueden eliminar documentos en estado draft o rejected` | Se intentó eliminar un documento en un estado no permitido |
 | `Solo se puede reemplazar PDF en documentos draft o rejected` | Se intentó reemplazar el PDF de un documento importado que está en firma o ya es oficial |
@@ -159,6 +161,7 @@ Estas respuestas traen la cabecera `Retry-After` con los segundos que hay que es
 | Código | Mensaje (ejemplo) | Qué hacer |
 |--------|-------------------|-----------|
 | `429` | Rate limit de la API Key | Esperar `Retry-After` y bajar el ritmo de pedidos |
+| `429` (`"code": "tope_busquedas"`) | Tope de búsquedas por persona y por municipio (por minuto y por día) | Esperar `Retry-After`. Mandar el mismo `query_id` en los pedidos de una misma búsqueda para que cuenten una sola vez |
 | `429` | `El sistema de firma está temporalmente saturado. Reintentá en ~30 segundos.` | Esperar `Retry-After` y reintentar una vez |
 | `429` sin `Retry-After` | `El sistema de firma no puede procesar esta cola en este momento y necesita intervención manual. Contactá a soporte.` | No reintentar: avisar al municipio |
 | `503` | `Servidor ocupado, reintente en unos segundos` | Esperar `Retry-After` y reintentar |

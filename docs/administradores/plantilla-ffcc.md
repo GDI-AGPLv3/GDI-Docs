@@ -47,8 +47,11 @@ Un **marcador** es el **nombre del campo** entre llaves dobles: `{{cuit}}`.
 | Sí / No | «Sí» o «No» |
 | Selección (lista) | La opción elegida |
 | Texto largo | Con sus saltos de línea |
-| Documento adjunto | El número oficial del documento adjunto |
+| Documento adjunto | El número oficial del documento adjunto, solo si la persona que arma el documento puede ver ese documento. Si no lo puede ver, o si todavía no tiene número, sale ` -- N/A -- ` |
 | Campo sin completar | ` -- N/A -- ` |
+
+!!! info "Resumen automático y búsqueda"
+    Cuando el tipo tiene plantilla, el resumen automático del documento y la búsqueda inteligente leen los campos **y también el texto de la plantilla**. Así el resumen dice qué hace el documento (por ejemplo, «se otorga», «se intima»), y no solo los datos cargados.
 
 Lo que escribe el empleado sale siempre como texto. Si escribe `<b>hola</b>`, el documento muestra `<b>hola</b>`, sin negrita.
 

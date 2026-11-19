@@ -25,7 +25,14 @@ Desde la sección **Documentos**, hacer click en el botón **"+ Crear"** en la e
 | **Obligatorio** | Sí |
 | **Búsqueda** | Se puede escribir para filtrar por nombre, sigla o descripción |
 
-Se muestra la lista de tipos disponibles en formato `(SIGLA) Nombre -- Descripcion`. La lista de tipos habilitados depende de la configuración de la organización. Los tipos se muestran en orden alfabético.
+Cada fila de la lista dice `SIGLA - Nombre - Detalle`: la sigla y el nombre en negro, y el detalle en gris (si es largo, se corta con «…»). A la derecha, un ícono indica la clase del tipo (por ejemplo, texto, importado o nota); al pasar el mouse por el ícono aparece su nombre. Ejemplo:
+
+```
+DECRE - Decreto - Decreto del Departamento Ejecutivo...      [ícono: Texto]
+INFOR - Informe importado - PDF que se sube ya hecho...       [ícono: Importado]
+```
+
+La misma lista aparece en **+ Crear expediente**. La lista de tipos habilitados depende de la configuración de la organización. Los tipos se muestran en orden alfabético.
 
 ![Dialogo de creacion - Referencia](../capturas/crear-documento-dialogo.png)
 

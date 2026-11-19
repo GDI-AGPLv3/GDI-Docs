@@ -135,6 +135,9 @@ GDI genera automáticamente el CSR (Certificate Signing Request) usando los dato
 
 Si los datos no están completos, el sistema avisa antes de continuar.
 
+!!! warning "Sin tildes ni ñ"
+    En el nombre de la aplicación, el organismo y el área, escribí todo **sin tildes, sin ñ y sin caracteres especiales**. Si hay uno, el campo se pone en rojo y abajo dice cuál sacar (por ejemplo, *«Sin tildes, ñ ni caracteres especiales. Sacá: í»*). El botón **Generar CSR** queda apagado hasta que lo corrijas. GDI no lo cambia solo: lo corregís vos, para que el nombre que va a ONTI sea el que escribiste. Ejemplo: «Secretaria de Gobierno», no «Secretaría de Gobierno».
+
 ### Paso 2 — Descargar y presentar ante ONTI
 
 GDI genera dos archivos que hay que conservar:
