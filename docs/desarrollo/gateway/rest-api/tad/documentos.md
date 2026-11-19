@@ -112,6 +112,66 @@ Si el campo no declara sus propios límites, igual rigen topes de cordura: los `
 
 Un campo opcional se omite del `form_data` o se manda en `null`: no se valida su tipo.
 
+### Grupos que se repiten
+
+Un formulario puede tener un **grupo**: un conjunto de campos que el vecino carga varias veces (por ejemplo, las personas de un acta). Cada repetición es un **bloque**. En `GET /tad/document-types/{id}/fields`, el grupo viene como un campo más, con `type: "group"`:
+
+```json
+{
+  "name": "personas",
+  "label": "Personas",
+  "type": "group",
+  "item_label": "Persona",
+  "min_items": 1,
+  "max_items": 50,
+  "fields": [
+    {"name": "nombre",   "label": "Nombre",   "type": "text", "required": true},
+    {"name": "apellido", "label": "Apellido", "type": "text", "required": true},
+    {"name": "dni",      "label": "DNI",      "type": "text", "required": true}
+  ]
+}
+```
+
+| Atributo | Qué es |
+|---|---|
+| `fields` | Los campos de cada bloque. Usan los mismos tipos de la tabla de arriba, menos `group` y menos `file` |
+| `item_label` | Cómo se llama cada bloque. Sirve para mostrar «Persona 1», «Persona 2» y «+ Agregar persona» |
+| `min_items` | Cantidad mínima de bloques (de 1 a 50) |
+| `max_items` | Cantidad máxima de bloques (de `min_items` a 50) |
+
+En `form_data`, el grupo va como una **lista de objetos**: un objeto por bloque, con los `name` de `fields`. Los campos sueltos siguen igual.
+
+```json
+"form_data": {
+  "fecha": "2026-08-22",
+  "personas": [
+    {"nombre": "Juana",  "apellido": "Pérez", "dni": "20111111"},
+    {"nombre": "Carlos", "apellido": "Gómez", "dni": "30222222"}
+  ]
+}
+```
+
+Reglas:
+
+- Cada bloque se valida con los campos de `fields`. Un campo `required: true` se pide en **cada** bloque.
+- Un bloque solo lleva los `name` de `fields`. Una clave de más se rechaza.
+- La cantidad de bloques va de `min_items` a `max_items`.
+- El `form_data` completo, pasado a JSON, no puede pasar de **1 MB**.
+
+Errores (`400`, con la etiqueta del grupo y el número de bloque, contando desde 1):
+
+| Mensaje (ejemplo) | Causa |
+|---|---|
+| `Personas: mínimo 1` | Vinieron menos bloques que `min_items` |
+| `Personas: máximo 50 bloques` | Vinieron más bloques que `max_items` |
+| `Personas, bloque 2: DNI es obligatorio` | Falta un campo `required` en el bloque 2 |
+| `Personas, bloque 1: campo inexistente 'color'` | El bloque 1 trae una clave que no está en `fields` |
+| `Personas: debe ser una lista de bloques` | El grupo no vino como lista |
+| `El contenido del formulario supera el máximo de 1 MB` | El `form_data` pasa de 1 MB |
+
+!!! note "El municipio te avisa antes"
+    Cuando un municipio agrega un grupo a un tipo que se firma desde el portal, el sistema le avisa que el portal tiene que estar preparado. Si tu portal todavía no lee `type: "group"`, ese tipo no se va a poder mandar.
+
 ---
 
 ## Crear y firmar documento
@@ -134,7 +194,7 @@ Según el tipo, el contenido va en **uno solo** de estos tres campos (son mutuam
 | Tipo | Campo de contenido | Regla |
 |------|--------------------|-------|
 | HTML común (`has_fields: false`) | `content_html` | Opcional: si se omite, el PDF muestra la `reference` |
-| FFCC (`has_fields: true`) | `form_data` | **Requerido**: dict plano `{campo: valor}` |
+| FFCC (`has_fields: true`) | `form_data` | **Requerido**: dict `{campo: valor}` (un grupo va como lista de objetos) |
 | Importado | `pdf_base64` | **Requerido**: PDF en base64, máximo 20 MB |
 
 **Respuesta `202 Accepted`** (igual para las tres variantes):
@@ -353,7 +413,7 @@ Lo que **no** pasa, y suele sorprender:
 
 ### Variante FFCC (formulario controlado)
 
-Ver [Formularios controlados (FFCC)](#formularios-controlados-ffcc) para que es y como leer su definición. El `form_data` es un **dict plano** `{name: valor}` con los `name` de `field_definitions` — ni anidado, ni con los `label`.
+Ver [Formularios controlados (FFCC)](#formularios-controlados-ffcc) para que es y como leer su definición. El `form_data` es un **dict plano** `{name: valor}` con los `name` de `field_definitions` — ni anidado, ni con los `label`. La única excepción son los [grupos](#grupos-que-se-repiten): su valor es una lista de objetos.
 
 ```bash
 curl -X POST "https://gateway.your-domain.com/api/v1/tad/documents" \
