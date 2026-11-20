@@ -170,6 +170,12 @@ Si el usuario es titular de un departamento, se muestra aquí.
 
 Lista de sectores adicionales a los que el usuario tiene acceso, además de su sector principal.
 
+- **Ver siempre está incluido.** Si sumás a una persona a un sector adicional, puede ver lo de ese sector. No se puede sumar a alguien sin «ver».
+- **Editar** es el único interruptor de cada sector adicional. Apagado, la persona solo ve. Prendido, además puede trabajar con lo de ese sector (por ejemplo, crear, editar y verificar legajos).
+
+!!! tip "Buscar un sector por su sigla"
+    En los buscadores de sector (agregar sector adicional, sector principal, alta de usuario, familias de legajos, sectores habilitados de un tipo de documento y radicación de un tipo de expediente) podés escribir la sigla completa `DPTO#SECTOR`, por ejemplo `SOP#MESA`. También encuentra por el nombre de la repartición o por una sola de las siglas, sin importar mayúsculas ni tildes («secretaria» encuentra «Secretaría»).
+
 ### Firma / Sello
 
 | Campo | Descripción |

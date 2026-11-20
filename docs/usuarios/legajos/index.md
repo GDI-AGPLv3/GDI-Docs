@@ -94,18 +94,25 @@ El acceso a los legajos se gestiona con permisos granulares por familia de regis
 !!! warning "Editar no es verificar"
     Un usuario que puede editar no necesariamente puede verificar. La verificación es un paso separado que requiere su propio permiso. Ver [Verificación](verificacion.md) para más detalle.
 
+!!! info "Sector adicional solo para ver"
+    Si el administrador te sumó a un sector adicional solo para **ver** (con **Editar** apagado), ves los legajos que ve ese sector, pero por ese sector no los creás, no los editás ni los verificás. Para eso, el administrador tiene que prenderte **Editar** en ese sector adicional.
+
+    Ejemplo en la Municipalidad del Futuro: Laura es de Compras y la sumaron a Personal solo para ver. Laura abre los legajos de empleados que ve Personal, pero no les cambia un dato ni el estado.
+
 ---
 
-## Pestañas del detalle de legajo
+## Solapas del detalle de legajo
 
-Al abrir un legajo, la vista de detalle tiene cuatro pestañas:
+Al abrir un legajo, la vista de detalle tiene cuatro solapas:
 
-| Pestaña | Contenido |
+| Solapa | Contenido |
 |---------|-----------|
-| **Datos** | Campos del legajo, documentos vinculados, expedientes vinculados, relaciones con otros legajos |
-| **Mapa** | Próximamente disponible |
-| **Movimientos** | Historial completo de cambios (estados, ediciones, verificaciones, vinculaciones) |
-| **Asistente** | Próximamente disponible |
+| **Datos** | Los campos del legajo, el resumen (si tiene) y, debajo, la caja **Estado** |
+| **Docs. Vinculados** | Los documentos vinculados, con su buscador, el paginador y el botón **+ Vincular** |
+| **Exp Vinculados** | Los expedientes vinculados y el botón para vincular uno |
+| **Legajos Vinculados** | Los legajos relacionados con este y el botón para relacionar otro |
+
+La caja **Estado** muestra el estado actual del legajo. Si tenés permiso para editar, también tiene la lista **Nuevo estado** y el botón **Cambiar estado**. Ver [Cambiar el estado de un legajo](crear-legajo.md#cambiar-el-estado-de-un-legajo).
 
 ---
 

@@ -10,6 +10,22 @@ funciona. Lo más nuevo arriba. La fecha es el día en que el cambio llegó a pr
 
 ---
 
+## Próxima versión (Backend/Gateway 5.10.0) — Firma con 409 y 422, topes de tamaño y de búsquedas
+
+**Afecta a:** `POST /api/v1/documents/{document_id}/sign`, los pedidos que suben archivos (importar, reemplazar el PDF, adjuntos y Trámites a Distancia) y las búsquedas (REST y MCP).
+**Versión del Backend/Gateway:** 5.10.0. La fecha se completa el día que llega a producción.
+
+| Situación | Antes | Ahora |
+|---|---|---|
+| Se pide firmar un documento que ya se está firmando | `500` | `409` con el motivo |
+| La firma no entra en la página | `500` | `422` `{"error": "<motivo>", "code": "FULLPAGE"}` |
+| Pedido de importar, reemplazar o adjuntar de más de 30 MB | Rechazo por encima de 25 MB | `413` |
+| Pedido de Trámites a Distancia de más de 36 MB | Sin tope propio | `413` |
+| PDF de más de 250 páginas al importar o al firmar | Se aceptaba | `422` `PDF_DEMASIADAS_PAGINAS` |
+| Muchas búsquedas seguidas de la misma persona | Sin tope | `429` `"code": "tope_busquedas"` con `Retry-After`. Parámetro opcional `query_id` (UUID) para contar una búsqueda una sola vez |
+
+---
+
 ## 04/11/2026 — Rechazar un documento Importado ya no le borra el PDF
 
 **Afecta a:** `POST /api/v1/documents/{document_id}/reject`, `PUT /api/v1/documents/{document_id}/imported-pdf` y la tool MCP `reject_document`.

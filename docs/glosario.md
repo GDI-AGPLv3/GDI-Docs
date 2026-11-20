@@ -78,6 +78,9 @@ Términos y conceptos utilizados en el sistema GDI, organizados por audiencia.
 **Sector**
 :   Unidad organizativa dentro de un departamento. Los usuarios pertenecen a un sector (ej: PRIV = Privada, MESA = Mesa de Entradas). Los sectores son los destinatarios de las NOTAS.
 
+**Etiqueta de sector**
+:   Cartelito que identifica a un sector en todo GDI (expedientes, documentos, notas, legajos, Inicio). Muestra la sigla `DPTO#SECTOR` con el color del sector, con el texto en blanco o negro según cuál se lea mejor. Al pasar el mouse aparece «Repartición - DPTO#SECTOR» (ej: «Secretaría de Obras Públicas - SOP#MESA»).
+
 **Sello**
 :   Firma visual que se estampa en el PDF del documento. Cada usuario tiene un sello asignado con su nombre, cargo y sector.
 

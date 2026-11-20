@@ -123,3 +123,9 @@ El buscador encuentra coincidencias en múltiples campos:
 
 ??? question "Qué pasa si la búsqueda inteligente tarda en responder?"
     El sistema puede tardar unos segundos en activarse si estuvo inactivo. En ese caso, los resultados de texto aparecen de inmediato y los resultados semánticos se suman cuando el sistema termina de conectarse. No es necesario volver a buscar.
+
+??? question "Qué significa el aviso «La IA no está disponible en este momento.»?"
+    Que la parte inteligente de la búsqueda no puede responder ahora. La búsqueda sigue andando: ves los resultados por número y por referencia. La solapa **Semántica** vuelve cuando la IA vuelve a estar disponible.
+
+??? question "Qué significa el aviso «Hiciste muchas búsquedas seguidas.»?"
+    Cada persona tiene un tope de búsquedas por minuto y por día. Si lo pasás, aparece el aviso *«Hiciste muchas búsquedas seguidas. Esperá un momento y volvé a probar.»*. Esperá unos segundos y buscá de nuevo.

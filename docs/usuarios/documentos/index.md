@@ -59,6 +59,10 @@ En la parte superior central hay un campo de búsqueda con placeholder *"Que est
 
 En la esquina superior derecha, el botón **"+ Crear"** abre el diálogo para crear un nuevo documento. Ver [Crear y Editar Documento](crear-editar-documento.md).
 
+## Ver el PDF desde el celular
+
+En la versión para celular, al tocar **Ver PDF** el documento se abre en una pestaña nueva con la dirección de GDI de tu municipio (por ejemplo, `https://mundev.gdilatam.com/api/documents/...`). El PDF pasa por GDI, que controla en ese momento que puedas verlo.
+
 ## Páginas de esta sección
 
 | Página | Descripción |

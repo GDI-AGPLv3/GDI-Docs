@@ -437,7 +437,7 @@ Para tipos con "Admite archivos embebidos" habilitado (HTML, FFCC o Importado), 
 Límites: máximo **10 archivos**, hasta **20 MB** cada uno y **20 MB** entre todos. En un tipo Importado, además, el PDF importado más los adjuntos no puede pasar de **25 MB**. Extensiones permitidas: `csv, doc, docx, dxf, jpeg, jpg, ods, odt, pdf, png, txt, xls, xlsx`. Los PDF se validan por contenido (magic bytes).
 
 !!! tip "Tamaño del pedido"
-    `pdf_base64` y `content_base64` viajan en base64, que pesa un tercio más que el archivo: 25 MB de archivos son unos 34 MB de pedido.
+    `pdf_base64` y `content_base64` viajan en base64, que pesa un tercio más que el archivo: 25 MB de archivos son unos 34 MB de pedido. Un pedido de más de **36 MB** se rechaza con `413` antes de llegar a GDI. Un PDF de más de **250 páginas** se rechaza con `422` (`PDF_DEMASIADAS_PAGINAS`).
 
 ### Errores frecuentes
 

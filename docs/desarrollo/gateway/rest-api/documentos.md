@@ -495,7 +495,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/import" \
 |--------|-------------|
 | `400` | Archivo no es PDF válido o campos requeridos faltantes |
 | `400` | El PDF trae una firma de certificación que GDI no puede conservar (ver abajo) |
+| `413` | El pedido pesa más de **30 MB** (importar, reemplazar el PDF o adjuntar) |
 | `422` | Archivo excede el tamaño máximo permitido |
+| `422` | El PDF tiene más de **250 páginas** (`error_code: PDF_DEMASIADAS_PAGINAS`): `El PDF tiene más de 250 páginas. Partilo en varios documentos.` |
 
 !!! info "PDF que ya viene certificado"
     Si el PDF trae una firma de certificación válida, GDI lo guarda **byte a byte** como
@@ -761,7 +763,9 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 | `403` | El numerador no tiene el rango que pide el tipo. El texto dice cuál falta: `Sin permiso de rango para numerar '<tipo>'...` |
 | `404` | Documento no encontrado |
 | `409` | Certificado de origen cuyo PDF cambió desde que se importó: `El PDF cambió desde que se verificó como certificado de origen...` |
+| `409` | El documento ya se está firmando (otro pedido de firma del mismo documento está en curso). Esperar unos segundos y consultar su estado con `GET /documents/{id}` |
 | `422` | El documento requiere firma con token físico |
+| `422` | La firma no entra en la página: `{"error": "<motivo>", "code": "FULLPAGE"}`. Pasa con documentos con muchos firmantes. No reintentar sin cambiar el documento |
 | `429` | La cola de firma está saturada. Con `Retry-After`, reintentar después de esos segundos. Sin `Retry-After`, avisar al municipio: reintentar no sirve |
 | `503` | Espera pasajera (por ejemplo, `"code": "CERTIFIED_CHECK_RETRY"` en un certificado de origen). Reintentar después de `Retry-After` |
 
