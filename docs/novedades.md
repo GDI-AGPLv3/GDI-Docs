@@ -10,6 +10,10 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
+## Noviembre de 2026: Formularios con grupos que se repiten
+
+- **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. En la plantilla, el texto del grupo se escribe una vez y sale una vez por cada bloque. [Ver la guía](administradores/tipos-de-documentos.md#grupos-de-campos-que-se-repiten)
+
 ## 27 de octubre de 2026: Cada uno ve lo de su sector, y los documentos llevan imágenes
 
 Octubre 2026: filtro por sector para todo GDI, imágenes en Notas y Memos, buscador dentro de los legajos y alta del vecino desde el expediente. [Leer la nota en el blog](https://gdilatam.com/novedades/2026-10-filtro-por-sector-imagenes-en-notas).

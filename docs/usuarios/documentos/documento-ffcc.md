@@ -37,6 +37,24 @@ En lugar del editor de texto, el panel central muestra los campos del tipo. Cada
 
 Los campos marcados con asterisco (**\***) son **obligatorios**: hay que completarlos antes de poder firmar.
 
+### Grupos que se repiten
+
+Algunos formularios tienen un **grupo**: un conjunto de campos que se carga varias veces. Por ejemplo, en el *Acta de Inspección* de la «Municipalidad del Futuro», el grupo **Personas** tiene Nombre, Apellido y DNI.
+
+Cada repetición se llama **bloque** y lleva un título con su número:
+
+```
+Persona 1   Nombre [Juana ]  Apellido [Pérez ]  DNI [20111111]  ✕
+Persona 2   Nombre [Carlos]  Apellido [Gómez ]  DNI [30222222]  ✕
+            [+ Agregar persona]
+```
+
+- Con **«+ Agregar persona»** sumás un bloque vacío con los mismos campos.
+- Con la **«✕»** de un bloque, lo quitás.
+- El formulario arranca con la cantidad mínima de bloques que fijó el administrador.
+- Cuando llegás al máximo, el «+» se apaga. Cuando estás en el mínimo, la «✕» se apaga.
+- Si un campo del grupo es obligatorio, hay que completarlo en cada bloque. El aviso marca el campo del bloque que falta.
+
 !!! note "El resto del documento es igual"
     Las secciones **Firmantes** y **Proponer vinculación** (con la opción de [vinculación automática al firmar](../expedientes/vincular-documentos.md)) funcionan igual que en cualquier otro documento. Solo cambia la forma de cargar el contenido.
 
@@ -47,6 +65,26 @@ Los campos marcados con asterisco (**\***) son **obligatorios**: hay que complet
 Al previsualizar o firmar, el sistema genera el PDF oficial con el membrete del organismo y una **tabla de campos y valores**: cada fila muestra la etiqueta del campo y el valor cargado.
 
 ![PDF generado de un documento FFCC](../capturas/documento-ffcc-pdf.png)
+
+Si el formulario tiene un grupo y el tipo no tiene plantilla, cada bloque sale con su título y debajo sus campos:
+
+> **Fecha:** 22/08/2026
+>
+> **Persona 1**
+>
+> **Nombre:** Juana
+>
+> **Apellido:** Pérez
+>
+> **DNI:** 20111111
+>
+> **Persona 2**
+>
+> **Nombre:** Carlos
+>
+> …
+
+Si el tipo tiene plantilla, el texto del grupo sale una vez por cada bloque, como lo armó el administrador.
 
 A partir de ahí, el documento sigue el flujo habitual: se firma, se numera y puede vincularse a un expediente como cualquier otro documento.
 
