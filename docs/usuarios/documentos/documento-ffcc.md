@@ -54,6 +54,7 @@ Persona 2   Nombre [Carlos]  Apellido [Gómez ]  DNI [30222222]  ✕
 - El formulario arranca con la cantidad mínima de bloques que fijó el administrador.
 - Cuando llegás al máximo, el «+» se apaga. Cuando estás en el mínimo, la «✕» se apaga.
 - Si un campo del grupo es obligatorio, hay que completarlo en cada bloque. El aviso marca el campo del bloque que falta.
+- Si el grupo no tiene campos obligatorios y no lo tocás, los bloques iniciales se guardan igual (vacíos). Podés previsualizar y firmar sin que aparezca un aviso de «mínimo de bloques».
 
 !!! note "El resto del documento es igual"
     Las secciones **Firmantes** y **Proponer vinculación** (con la opción de [vinculación automática al firmar](../expedientes/vincular-documentos.md)) funcionan igual que en cualquier otro documento. Solo cambia la forma de cargar el contenido.

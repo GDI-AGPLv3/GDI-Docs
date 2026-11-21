@@ -189,6 +189,11 @@ Cada sector recibe una combinación de los siguientes permisos:
 | **can_edit** | Puede editar los datos de legajos existentes | No |
 | **can_verify** | Puede verificar campos que requieren verificación | No |
 
+!!! info "Crear, editar o verificar obligan a ver"
+    Un sector que puede **crear**, **editar** o **verificar** legajos tiene que poder **verlos**. Si marcás cualquiera de esas tres casillas, GDI marca también **ver**. Y mientras alguna de las tres esté marcada, no podés desmarcar **ver**. Antes se podía guardar, por ejemplo, «crear sin ver»: el sector creaba un legajo y después no lo encontraba.
+
+    Cada casilla se guarda sola al tocarla, sin recargar la pantalla. Si el guardado falla, la casilla vuelve a como estaba.
+
 ### Editar permisos de un sector
 
 1. Busca el sector en la tabla de permisos

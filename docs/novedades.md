@@ -10,9 +10,13 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
-## Noviembre de 2026: Formularios con grupos que se repiten
+## Noviembre de 2026: Formularios con grupos que se repiten y borradores compartidos
 
 - **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. En la plantilla, el texto del grupo se escribe una vez y sale una vez por cada bloque. [Ver la guía](administradores/tipos-de-documentos.md#grupos-de-campos-que-se-repiten)
+- **Borradores compartidos, una persona escribe por vez** (Nueva funcionalidad). Compartís un borrador desde la caja «Compartir» y otra persona lo edita y lo puede mandar a firma. Uno escribe y los demás miran: «Tomar edición» y «Soltar» pasan el turno. El editor también suma tablas. [Ver la guía](usuarios/documentos/crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos)
+- **Proponer un documento a un expediente que no es tuyo** (Nueva funcionalidad). Si solo ves el expediente, igual podés proponerle un documento firmado. El área responsable lo acepta o lo rechaza. [Ver la guía](usuarios/expedientes/vincular-documentos.md)
+- **Adjuntos dentro de Notas y Memos** (Mejora). Una nota o un memo lleva sus adjuntos dentro del PDF firmado, y los destinatarios los ven y los descargan. [Ver la guía](usuarios/notas/index.md#archivos-adjuntos-en-la-nota)
+- **Cuentagotas para el color institucional** (Administración). En el BackOffice tomás el color del logo con un clic. [Ver la guía](administradores/informacion-general.md#tomar-el-color-del-logo-con-el-cuentagotas)
 
 ## 27 de octubre de 2026: Cada uno ve lo de su sector, y los documentos llevan imágenes
 
