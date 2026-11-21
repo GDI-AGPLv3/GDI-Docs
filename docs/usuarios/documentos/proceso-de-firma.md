@@ -189,6 +189,17 @@ Para una descripción detallada del formato, consultar [Crear y Editar Documento
 
 ---
 
+## Cómo queda la firma en el PDF
+
+Cada firma se estampa como un **sello** en la hoja de firmas, al final del documento.
+
+- **Todos los sellos llevan letra del mismo tamaño.** Si una línea del sello es larga (por ejemplo, el nombre de un sector como *Departamento de Administración de Expedientes*), esa línea se parte en dos renglones. El sello no se achica, y las firmas quedan alineadas.
+- **Un importado que ya trae firmas de afuera se firma igual.** Puede traer muchas firmas digitales de otro sistema. La firma de GDI va primera en la hoja de firmas, y las firmas de origen siguen válidas.
+
+Si aun así la firma no entra, la pantalla muestra *"La firma no entra en el documento. Avisá a soporte: no hace falta que lo vuelvas a intentar."* No hace falta reintentar: avisá a soporte.
+
+---
+
 ## Avisos cuando el PDF no se puede firmar
 
 Algunos documentos importados traen un PDF que GDI no puede firmar. En ese caso la firma se frena y el panel lateral muestra el motivo:

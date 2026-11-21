@@ -87,6 +87,12 @@ Si el formulario tiene un grupo y el tipo no tiene plantilla, cada bloque sale c
 
 Si el tipo tiene plantilla, el texto del grupo sale una vez por cada bloque, como lo armó el administrador.
 
+### El resumen de IA de un FFCC con plantilla
+
+GDI arma un resumen automático de cada documento. En un FFCC con plantilla, el resumen lee los campos y también el texto de la plantilla. Los datos salen de los campos. El texto fijo le dice qué hace el documento: por ejemplo, si *otorga*, *deniega* o *intima*. Así el resumen dice qué resolvió el acto, no solo los valores cargados.
+
+Vale para los documentos que se resumen desde ahora. Los que ya tenían resumen no cambian.
+
 A partir de ahí, el documento sigue el flujo habitual: se firma, se numera y puede vincularse a un expediente como cualquier otro documento.
 
 ---
