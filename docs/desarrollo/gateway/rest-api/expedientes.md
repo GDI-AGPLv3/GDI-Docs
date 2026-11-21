@@ -25,7 +25,12 @@ Busca expedientes con filtros opcionales. Soporta paginación.
 | `search` | string | - | Busca por `case_number` o `reference`. `%` y `_` cuentan como letras, no como comodines |
 | `status` | string | - | Filtrar por estado: `active`, `inactive`, `archived` |
 | `date_filter` | string | - | Filtrar por fecha: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | - | Rango propio: fecha desde, incluida (`YYYY-MM-DD`). Formato mal escrito: **400** |
+| `date_to` | string | - | Rango propio: fecha hasta, incluida (`YYYY-MM-DD`). Se combina con `date_from`. Si también mandás `date_filter`, manda `date_filter` |
 | `sector_filter` | string | - | Filtrar por UN sector: acrónimo exacto (ej. `HAC`), `DEPT#SECTOR` (ej. `HAC#PRIV`) o UUID. Si no resuelve a un sector activo, o trae comas, responde **400** (desde el 06/10/2026, ver [Cambios de la API](../changelog.md)) |
+
+!!! info "Rango de fechas propio"
+    Antes, `date_from` y `date_to` se ignoraban sin aviso: el pedido devolvía todo. Ahora filtran de verdad. Ejemplo: `?date_from=2026-11-01&date_to=2026-11-15` trae los expedientes de la primera quincena de noviembre.
 
 **Ejemplo:**
 
@@ -402,6 +407,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
   "can_assign": true,
   "can_archive": true,
   "can_link_documents": true,
+  "can_propose_documents": true,
   "can_create_movements": true,
   "can_subsanar": true,
   "ownership_level": "owner",
@@ -415,7 +421,8 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
 | `can_transfer` | `POST /cases/{id}/transfer` |
 | `can_assign` | Asignar el expediente a un sector o usuario |
 | `can_archive` | Archivar el expediente |
-| `can_link_documents` | `POST /cases/{id}/documents/link` y `.../propose` |
+| `can_link_documents` | `POST /cases/{id}/documents/link` |
+| `can_propose_documents` | `POST /cases/{id}/documents/propose`: proponer un documento para que el responsable lo acepte o lo rechace. Alcanza con ver el expediente y que esté activo. Proponer un documento que ya está propuesto o vinculado, o proponer a un expediente archivado, da `409` |
 | `can_create_movements` | Generar movimientos (pases) |
 | `can_subsanar` | Subsanar un documento del expediente |
 | `ownership_level` | `owner`, `participant` o `creator`: de donde sale el acceso |
@@ -425,6 +432,7 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
 
 | Código | Descripción |
 |--------|-------------|
+| `403` | `Sin permisos para ver este expediente` (por ejemplo, un expediente de otra área). Antes daba `500` |
 | `404` | Expediente no encontrado |
 
 !!! warning "Los seis permisos de escritura se apagan mientras el expediente se crea"

@@ -298,6 +298,13 @@ Crea un nuevo legajo en un registro específico.
 | `registry_code` | string | Sí | Código del registro (`ARQ`, `LUM`, `ORD`) |
 | `display_name` | string | Sí | Nombre descriptivo del legajo |
 | `data` | object | No | Campos enriquecidos del legajo |
+| `document_id` | string | No | UUID de un documento para vincular al legajo **en el mismo paso**. Si la vinculación falla, no se crea el legajo (no quedan legajos vacíos) |
+
+**Headers opcionales:**
+
+| Header | Descripción |
+|--------|-------------|
+| `Idempotency-Key` | Clave que elegís vos, una por alta (hasta 255 caracteres). Con ella, reintentar el mismo pedido no crea un segundo legajo. Ver [Reintentos seguros](#reintentos-seguros-idempotency-key) |
 
 **Ejemplo:**
 
@@ -305,6 +312,7 @@ Crea un nuevo legajo en un registro específico.
 curl -X POST "https://gateway.your-domain.com/api/v1/records" \
   -H "X-API-Key: tu-api-key" \
   -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000" \
+  -H "Idempotency-Key: alta-obra-2026-0042" \
   -H "Content-Type: application/json" \
   -d '{
     "registry_code": "ARQ",
@@ -331,9 +339,27 @@ curl -X POST "https://gateway.your-domain.com/api/v1/records" \
 
 | Código | Descripción |
 |--------|-------------|
-| `400` | `registry_code` o `display_name` faltantes, o datos inválidos |
+| `400` | `registry_code` o `display_name` faltantes, datos inválidos, `document_id` que no es UUID o `Idempotency-Key` vacía |
 | `404` | Registro no encontrado |
 | `403` | Sin permisos para crear legajos |
+| `409` | Ya hay un pedido en curso con la misma `Idempotency-Key`. Reintentá en unos segundos con la misma clave |
+| `422` | La `Idempotency-Key` ya se usó para otro pedido (otro cuerpo u otro endpoint) |
+
+### Reintentos seguros (`Idempotency-Key`)
+
+Si el pedido se corta (timeout, caída de red) no sabés si el legajo se creó. Reintentar sin clave puede dejar **dos legajos iguales**. Con `Idempotency-Key`, el reintento es seguro:
+
+| Situación | Qué responde el Gateway |
+|-----------|-------------------------|
+| Sin el header | Lo de siempre: cada pedido crea un legajo |
+| Misma clave y mismo pedido | La **respuesta original** (mismo código y mismo cuerpo) con el header `Idempotent-Replay: true`. No crea nada nuevo |
+| Misma clave y otro pedido | `422`: cada operación distinta necesita su propia clave |
+| Misma clave mientras el primero sigue en curso | `409`: esperá unos segundos y reintentá con la misma clave |
+| El primer pedido falló (4xx o 5xx) | La clave queda libre: corregís y reintentás con la misma |
+
+- La clave vale **24 horas** y es por API key.
+- Usá **una clave por alta** (por ejemplo, el número de trámite de tu sistema), no una por intento.
+- El mismo header sirve en [Vincular documento al legajo](#vincular-documento-al-legajo) y en `POST /api/v1/documents/import` (ver [Documentos](documentos.md)).
 
 ---
 
@@ -658,13 +684,29 @@ Vincula un documento existente al legajo, opcionalmente asociándolo a un campo 
 | `field_name` | string | No | Campo del legajo al que asociar el documento |
 | `notes` | string | No | Notas sobre la vinculación |
 
+Acepta el header opcional `Idempotency-Key`, igual que [Crear legajo](#reintentos-seguros-idempotency-key).
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "record_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "document_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+  "already_linked": false
+}
+```
+
+Si el documento **ya estaba vinculado a este legajo**, responde `200` con `"already_linked": true` (antes daba `409`). Así, un reintento después de un corte no da error ni repite el historial.
+
 **Errores:**
 
 | Código | Descripción |
 |--------|-------------|
 | `400` | `document_id` faltante |
+| `403` | Sin permiso de edición en la familia del legajo |
 | `404` | Legajo o documento no encontrado |
-| `409` | El documento ya está vinculado al legajo |
+| `409` | Hay un pedido en curso con la misma `Idempotency-Key` |
+| `422` | La `Idempotency-Key` ya se usó para otro pedido |
 
 ---
 

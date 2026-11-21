@@ -203,7 +203,19 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
 GET /api/v1/system/users/list
 ```
 
-Devuelve la lista completa de usuarios del tenant.
+Devuelve los usuarios activos del municipio. Sin parámetros trae **la lista entera**, como siempre. Si pedís una tanda con `page` o `page_size`, trae solo esa tanda.
+
+**Parámetros query (opcionales):**
+
+| Parámetro | Tipo | Default | Descripción |
+|-----------|------|---------|-------------|
+| `page` | int | `1` | Número de página (desde `1`) |
+| `page_size` | int | `20` | Usuarios por página (de `1` a `100`) |
+
+Con alguno de los dos, la respuesta suma `page`, `page_size`, `count` (cuántos vinieron en esta tanda) y `has_more` (`true` si hay otra página). `total` sigue contando todos los usuarios activos. Una página que no existe (por ejemplo `page=999`) da `200` con la lista vacía. Valores inválidos (`page=0`, `page_size=500`, letras) dan `400`.
+
+!!! info "Antes se ignoraban"
+    Hasta la versión 5.11.0, `page` y `page_size` se ignoraban: el Gateway devolvía todos los usuarios igual. Si tu integración mandaba esos parámetros esperando la lista completa, ahora va a recibir solo una tanda.
 
 **Ejemplo:**
 
