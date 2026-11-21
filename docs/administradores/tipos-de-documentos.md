@@ -64,7 +64,7 @@ Los dos interruptores se cambian con el lápiz de *Información General*.
 **Archivos Embebidos** (*Permite adjuntar archivos embebidos*). Habilita el panel para adjuntar archivos que viajan **incrustados dentro del PDF firmado**. Ejemplo: un plano o una planilla que acompana a una resolución y queda dentro del mismo PDF.
 
 - Se puede activar también en tipos **Importado**, firmables por TAD o no.
-- Los tipos NOTA y MEMO **no** soportan archivos embebidos. Si se activa en uno de ellos, la pantalla avisa: *"Los tipos NOTA y MEMO no soportan archivos embebidos en esta versión: el backend va a rechazar la subida de adjuntos."*
+- También se puede activar en **NOTA** y **MEMO** (y sus variantes de formulario). Los adjuntos quedan dentro del PDF de la nota o el memo, y los destinatarios de PARA y CC los ven aunque sean de otro sector. Antes estos tipos no aceptaban adjuntos y la pantalla mostraba un aviso: ese aviso ya no aparece.
 
 **Firmable por ciudadanos (TAD)** (*Habilita firma vía API TAD (Trámites a Distancia)*). Permite que un ciudadano (sin usuario GDI) cree y firme este tipo de documento desde el portal TAD del municipio.
 

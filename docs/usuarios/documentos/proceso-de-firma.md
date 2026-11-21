@@ -63,7 +63,11 @@ El sistema genera automáticamente un resumen del documento utilizando inteligen
 
 ### Enviado por
 
-Muestra el nombre y avatar del usuario que inició el proceso de firma (el creador del documento).
+La línea **«Envía:»** muestra el nombre y la foto de quien mandó el documento a firma. Si el borrador era compartido y lo mandó otra persona, figura esa persona, no quien lo creó. Lo mismo se ve en el Inicio, en la bandeja y en el celular («te lo envió»). El progreso de las firmas aparece en la misma caja de Firmantes.
+
+### Editores
+
+Si el borrador se [compartió](crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos), aparece la caja **«Editores»**, cerrada. Al desplegarla ves quién creó el documento y quiénes lo editaron.
 
 ### Firmantes y estados
 
@@ -199,6 +203,19 @@ Algunos documentos importados traen un PDF que GDI no puede firmar. En ese caso 
 | *"El PDF cambió desde que se verificó como certificado de origen, así que no se numeró. Reintentá la firma; si se repite, rechazá el documento, borralo e importalo de nuevo."* | Firmar de nuevo. Si se repite, rechazar, borrar e importar de nuevo |
 
 Para rechazar, ver [Rechazar y Subsanar](rechazar-y-subsanar.md).
+
+---
+
+## Firma conjunta: la tanda se pausa si el sistema está saturado
+
+Cuando firmás varios documentos juntos (**«Firmar todo junto»**) y el sistema tiene mucha demanda, la tanda **se pausa** en lugar de marcar todo como fallido. Aparece un aviso amarillo, por ejemplo:
+
+> *"Se pausó la tanda: el sistema está saturado. Sigue sola en 0:30. Quedan 3 documentos pendientes: no fallaron, todavía no se mandaron."*
+
+- Los documentos que faltan quedan **pendientes**, no fallidos: no hace falta rearmar la tanda.
+- Si la espera es corta, la tanda **sigue sola** cuando termina la cuenta regresiva.
+- Si la espera es larga, o es la tercera pausa seguida, el aviso dice *"Podés seguir en…"* y la tanda sigue cuando tocás **«Seguir»**.
+- Mientras está en pausa podés tocar **«Cancelar la tanda»**. Lo que ya se firmó queda firmado.
 
 ---
 

@@ -20,7 +20,13 @@ Hay dos formas de abrir el mismo modal:
 - Desde la pestaña **Documentos** del detalle del expediente, con el botón **"Vincular Documento"** ubicado en la parte inferior de la lista de documentos.
 - Desde el menú **Acciones** del encabezado del expediente, con la opción **"Vincular Documentos"**.
 
-En ambos casos el sistema primero verifica los permisos (muestra *"Verificando permisos..."* un instante). Si el usuario no tiene permiso de edición en los sectores asociados al expediente, en lugar del modal aparece el aviso **"Sin permisos para actuar sobre este expediente"**.
+En ambos casos el sistema primero verifica los permisos (muestra *"Verificando permisos..."* un instante):
+
+| Tu permiso en el expediente | Qué ves |
+|-----------------------------|---------|
+| Podés vincular (administrador o sector asignado) | El modal completo, con **«Vincular»** y **«Proponer al expediente»** |
+| Solo podés ver el expediente | El modal en modo «solo proponer»: arriba, la franja *"No podés vincular en este expediente: lo que elijas queda como propuesta."* No aparece la pestaña Nuevo Documento |
+| No ves el expediente | El aviso **"Sin permisos para actuar sobre este expediente"** |
 
 Se abre el modal **"Vincular Documento — <numero>"**, que tiene dos pestañas:
 
@@ -90,13 +96,21 @@ Al presionar **"Continuar"** el modal cambia de paso (no se abre una ventana nue
 
 ### Botones del paso de confirmación
 
+Los botones están apilados en el panel derecho:
+
 | Botón | Acción |
 |-------|--------|
-| **Volver** | Regresa al buscador sin vincular |
-| **Vincular** | Confirma la vinculación del documento al expediente |
+| **Vincular** | Incorpora el documento al expediente como documento oficial. Solo aparece si podés vincular |
+| **Proponer al expediente** | Deja el documento como **propuesta**: *"Queda pendiente hasta que un responsable lo acepte o rechace."* Si no podés vincular, es el único botón |
+| **‹ Volver** | Regresa al buscador sin vincular ni proponer |
 
-!!! info "Vinculación como propuesta"
-    Si el usuario que vincula no es el administrador del expediente, el documento queda como **propuesta de vinculación** pendiente de aceptación. Si el usuario es el administrador, el documento se incorpora directamente como documento oficial. La decisión la toma el sistema al confirmar: el modal es el mismo en los dos casos.
+Después de proponer aparece el aviso *"Documento propuesto. Lo va a ver el responsable en Documentos propuestos."* y el modal se cierra.
+
+!!! info "Cuándo conviene proponer"
+    Proponer sirve cuando el documento tiene que entrar al expediente pero lo tiene que aprobar el área responsable. Ejemplo: en la Municipalidad del Futuro, Legal ve un expediente de Obras Públicas y propone su dictamen; Obras Públicas lo acepta o lo rechaza desde **Vinculaciones Propuestas**.
+
+!!! warning "Cuándo no se puede proponer"
+    GDI no deja proponer un documento que **ya está propuesto** a ese expediente y espera respuesta, uno que **ya está vinculado**, ni proponer a un expediente **archivado**. En esos casos muestra el motivo.
 
 ---
 
@@ -148,7 +162,7 @@ Al firmar, aparece la confirmación **"Documento firmado y numerado — El docum
 El documento queda **directamente como documento oficial** del expediente, sin pasar por la sección "DOCUMENTOS PROPUESTOS" ni requerir aceptación manual.
 
 !!! note "Diferencia clave con la vinculación clásica"
-    Con la **vinculación automática** el documento se incorpora solo al firmarse. El flujo clásico —queda como propuesta que el administrador del expediente acepta o rechaza— es el que se da cuando el documento se crea por fuera del expediente y se destilda el checkbox, o cuando se vincula un documento existente sin ser administrador.
+    Con la **vinculación automática** el documento se incorpora solo al firmarse. El flujo clásico —queda como propuesta que el administrador del expediente acepta o rechaza— es el que se da cuando el documento se crea por fuera del expediente y se destilda el checkbox, o cuando se elige **«Proponer al expediente»** sobre un documento existente.
 
 ---
 

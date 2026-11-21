@@ -79,7 +79,8 @@ Podés buscar memos por número oficial, asunto o contenido. También filtrar po
     - Selecciona usuarios para **Para** (mínimo 1)
     - Opcionalmente agrega usuarios en **CC** y **CCO**
 5. Asigna firmantes (generalmente vos mismo)
-6. Inicia el proceso de firma
+6. Si el tipo MEMO tiene adjuntos habilitados, sumá los archivos en la sección **"Archivos adjuntos"** del panel lateral. Al firmarse quedan dentro del PDF del memo, y los destinatarios los ven y los descargan (ver [Archivos adjuntos en la nota](../notas/index.md#archivos-adjuntos-en-la-nota), que funciona igual)
+7. Inicia el proceso de firma
 
 !!! tip "Los destinatarios se validan al firmar"
     Al iniciar la firma, el sistema verifica que todos los destinatarios sigan activos en el sistema. Si algún usuario fue desactivado, se muestra un error.
