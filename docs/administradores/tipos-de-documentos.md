@@ -200,13 +200,28 @@ A veces un formulario tiene que nombrar a varias personas, varios vehículos o v
 
 Reglas del grupo:
 
-- Adentro de un grupo va cualquier tipo de campo, **menos otro grupo y menos «Documento adjunto»**.
+- Adentro de un grupo va cualquier tipo de campo, **menos «Documento adjunto»**. También puede ir **otro grupo** (un subgrupo): ver [Grupo dentro de grupo](#grupo-dentro-de-grupo).
 - Un formulario puede tener varios grupos.
 - El **Nombre del campo** no se repite en todo el formulario. Un campo de adentro no puede llamarse igual que un campo suelto, que un campo de otro grupo ni que un grupo. La **Etiqueta** sí se puede repetir: «Nombre» en *Personas* y en *Testigos*.
 - Ningún **Nombre del campo** puede empezar con `#` ni con `/`. Esos caracteres son del marcador de repetir de la plantilla.
 - Si un campo de adentro es requerido, se pide en cada bloque.
 - El mínimo y los campos requeridos se controlan al firmar. El máximo se controla siempre, también en el borrador.
 - Todo lo que se carga en un formulario no puede pasar de 1 MB.
+
+### Grupo dentro de grupo
+
+Un grupo puede tener un **subgrupo** adentro: por ejemplo, el grupo *Personas* con el subgrupo *Actividades*. El usuario carga cada persona y, dentro de ella, sus actividades.
+
+Se arma igual que un grupo: abrí el grupo de arriba y, adentro, tocá **Agregar grupo**.
+
+| Regla | Valor |
+|---|---|
+| Niveles | **2**: grupo y subgrupo. Adentro de un subgrupo no va otro grupo ni un «Documento adjunto» |
+| Bloques del subgrupo por cada bloque de arriba | Mínimo de **0** a **20**; máximo hasta **20**. Si no los cambiás, quedan en 1 y 20 |
+| Bloques del subgrupo en todo el documento | **200** como máximo, sumando todos los bloques de arriba |
+| Subgrupos por grupo | Puede haber más de uno (por ejemplo, *Actividades* y *Viáticos* dentro de *Personas*) |
+
+El **mínimo** del subgrupo lo elegís vos en cada formulario. Con mínimo **0**, el subgrupo es optativo: se puede firmar una persona sin actividades. Con mínimo 1 o más, al firmar se pide. Si falta, el aviso dice dónde: *«Personas, bloque 1, Actividades: mínimo 1»*.
 
 ### Repetir texto en la plantilla
 
@@ -232,11 +247,12 @@ Si el usuario cargó dos personas, el documento sale así:
 Reglas del marcador (si no se cumplen, la plantilla no se guarda y el aviso dice qué grupo falla):
 
 - Cada grupo se abre **una sola vez** y cada `{{#grupo}}` tiene su `{{/grupo}}`.
-- Un grupo **no va adentro de otro**.
+- Un subgrupo se abre **solo adentro de su grupo** y se cierra antes de que cierre el grupo: `{{#personas}} … {{#actividades}} … {{/actividades}} … {{/personas}}`. No hay un tercer nivel.
+- Dentro del subgrupo se pueden usar los campos del subgrupo y también los de su grupo (por ejemplo, repetir el nombre de la persona en cada actividad).
 - La apertura y el cierre van **dentro de las mismas etiquetas**. Sirve abrir y cerrar en párrafos sueltos, como en el ejemplo. No sirve abrir en una celda de una tabla y cerrar en un párrafo de afuera.
 - Los campos del grupo (`{{nombre}}`, `{{dni}}`) van **solo adentro** de su `{{#personas}}`. Afuera van solo los campos sueltos.
 
-En el editor de la plantilla, la lista de marcadores muestra los del grupo: `{{#personas}}`, `{{nombre}}`, `{{/personas}}`.
+En el editor de la plantilla, la lista de marcadores muestra los del grupo: `{{#personas}}`, `{{nombre}}`, `{{/personas}}`. Los del subgrupo salen con sangría, debajo de los de su grupo: `{{#actividades}}`, sus campos y `{{/actividades}}`.
 
 !!! warning "Tipos que se firman desde el portal del ciudadano"
     Si el tipo tiene **Firmable por TAD** y le agregás un grupo, al guardar aparece un aviso: *«Este tipo se usa en el portal del ciudadano. El portal tiene que estar preparado para grupos; si no, los vecinos no van a poder mandarlo. ¿Guardar igual?»*. No bloquea: vos decidís. Antes de guardar, confirmá con quien mantiene el portal que ya lee grupos. Cómo se leen: [guía del portal](../desarrollo/gateway/rest-api/tad/documentos.md#grupos-que-se-repiten).
@@ -267,3 +283,6 @@ Botón **Catálogo Global** muestra todos los tipos disponibles para adoptar en 
 | **Tipo** | HTML o Importado |
 | **Firma** | Obligatoria u Opcional |
 | **Agregar** | Botón para habilitar el tipo en la organización |
+
+!!! info "Propuestas al catálogo global"
+    El administrador del municipio puede **proponer** un tipo para el catálogo global. Ve solo las propuestas de su municipio. **Aprobar o rechazar** una propuesta lo hace GDI: el administrador del municipio no puede hacerlo.

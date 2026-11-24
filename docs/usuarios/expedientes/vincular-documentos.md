@@ -139,6 +139,8 @@ Más abajo se configuran los **Firmantes** y, cuando todo está listo, se presio
 
 En el modal **"Firmar — <numero>"**, antes de confirmar la firma, el sistema avisa el destino de la vinculación automática con el texto: *"Al numerarse será vinculado a: <numero> <titulo del expediente>"*.
 
+Si el documento es un [PDF certificado de origen](../documentos/documento-importado.md#pdf-certificado-de-origen), al terminar la firma aparece el mismo aviso que en la bandeja de firma: GDI no firmó el PDF y quedó registrada tu conformidad. Pasa también cuando la firma se completa unos segundos después (firma diferida).
+
 ### 4. Resultado: documento firmado y vinculado
 
 ![Resultado vinculacion automatica](../capturas/vincular-automatico-resultado.png)
@@ -216,6 +218,7 @@ El documento se elimina de la lista de propuestos. No se incorpora al expediente
     6. Un mismo documento puede ser propuesto para vinculación en **múltiples expedientes**
     7. Con la **vinculación automática** (checkbox tildado al crear el documento), al firmarse el documento se incorpora directo como oficial, sin pasar por "Vinculaciones Propuestas" ni requerir aceptación manual
     8. Desde el modal solo se pueden vincular documentos **firmados**; para traer uno de otro sector hay que buscarlo por su **número oficial**
+    9. Solo se puede **proponer** un documento a un expediente que **ves**. Si no ves el expediente, GDI rechaza la propuesta, también cuando se hace por la API o por el asistente
 
 ---
 

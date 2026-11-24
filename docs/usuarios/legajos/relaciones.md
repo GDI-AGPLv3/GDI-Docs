@@ -16,6 +16,9 @@ Podés asociar documentos oficiales del sistema a un legajo para respaldar la in
 4. Busca el documento por número o referencia
 5. Confirma la vinculación
 
+!!! note "Solo documentos que podés ver"
+    Para vincular un documento a un legajo, o crear un legajo a partir de un documento, tenés que poder **ver** ese documento. Si no lo ves (por ejemplo, un documento reservado), GDI responde como si no existiera y no vincula nada.
+
 !!! example "Ejemplos de documentos vinculados"
     - Resolución de habilitación vinculada al legajo del comercio
     - Plano aprobado vinculado al legajo de la obra

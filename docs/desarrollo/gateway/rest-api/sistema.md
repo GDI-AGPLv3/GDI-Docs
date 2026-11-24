@@ -203,7 +203,26 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
 GET /api/v1/system/users/list
 ```
 
-Devuelve la lista completa de usuarios del tenant.
+Devuelve los usuarios del tenant **por páginas**: 50 por defecto y 200 como máximo. Para traer todos, pedí la página siguiente mientras `has_more` sea `true`.
+
+**Parámetros query:**
+
+| Parámetro | Tipo | Default | Descripción |
+|-----------|------|---------|-------------|
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `50` | Usuarios por página. Máximo `200`; más de 200 da `400` |
+
+**Campos de paginación de la respuesta:**
+
+| Campo | Descripción |
+|-------|-------------|
+| `page` | Página devuelta |
+| `page_size` | Tamaño de página usado |
+| `count` | Usuarios en esta página |
+| `has_more` | `true` si hay más usuarios en la página siguiente |
+
+!!! warning "Cambio para integraciones existentes"
+    Antes, sin parámetros, la ruta devolvía la lista completa. Ahora devuelve solo los primeros 50. Si tu integración necesita todos los usuarios, recorré las páginas con `page` hasta que `has_more` sea `false`.
 
 **Ejemplo:**
 
@@ -234,7 +253,11 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/users/list" \
       "role": "empleado",
       "is_active": true
     }
-  ]
+  ],
+  "page": 1,
+  "page_size": 50,
+  "count": 2,
+  "has_more": false
 }
 ```
 

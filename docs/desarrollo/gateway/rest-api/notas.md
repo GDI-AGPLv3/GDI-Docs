@@ -10,6 +10,15 @@ Las notas son comunicaciones internas entre usuarios del sistema. Funcionan como
 
 ## Lectura
 
+!!! tip "Filtro por fecha, también en memos"
+    Los 6 listados (notas y memos recibidos, enviados y archivados: `/notes/received`, `/notes/sent`, `/notes/archived`, `/memos/received`, `/memos/sent`, `/memos/archived`) aceptan `date_filter`, `date_from` y `date_to`. Lo mismo vale para las tools MCP de notas y memos. Sin esos parámetros, el listado sale como siempre.
+
+    ```bash
+    curl -X GET "https://gateway.your-domain.com/api/v1/notes/archived?date_from=2026-10-01&date_to=2026-10-31" \
+      -H "X-API-Key: tu-api-key" \
+      -H "X-User-ID: 550e8400-e29b-41d4-a716-446655440000"
+    ```
+
 ### Notas recibidas
 
 ```
@@ -26,6 +35,9 @@ Devuelve las notas recibidas por el usuario actual. Soporta paginación.
 | `page_size` | int | `20` | Resultados por página (max `100`) |
 | `unread_only` | bool | `false` | Mostrar solo notas no leídas |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
+| `date_filter` | string | - | Por fecha de firma: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | - | Desde esta fecha de firma, inclusive (`YYYY-MM-DD`) |
+| `date_to` | string | - | Hasta esta fecha de firma, inclusive (`YYYY-MM-DD`) |
 
 **Ejemplo:**
 
@@ -75,6 +87,9 @@ Devuelve las notas enviadas por el usuario actual. Soporta paginación.
 | `page` | int | `1` | Número de página |
 | `page_size` | int | `20` | Resultados por página (max `100`) |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
+| `date_filter` | string | - | Por fecha de firma: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | - | Desde esta fecha de firma, inclusive (`YYYY-MM-DD`) |
+| `date_to` | string | - | Hasta esta fecha de firma, inclusive (`YYYY-MM-DD`) |
 
 **Ejemplo:**
 
@@ -126,6 +141,9 @@ Devuelve las notas que el usuario ha archivado. Soporta paginación.
 | `page` | int | `1` | Número de página |
 | `page_size` | int | `20` | Resultados por página (max `100`) |
 | `search` | string | - | Buscar en el contenido o asunto de las notas |
+| `date_filter` | string | - | Por fecha de firma: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | - | Desde esta fecha de firma, inclusive (`YYYY-MM-DD`) |
+| `date_to` | string | - | Hasta esta fecha de firma, inclusive (`YYYY-MM-DD`) |
 
 **Ejemplo:**
 
