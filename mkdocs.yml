@@ -140,6 +140,7 @@ nav:
           - Detalle del Expediente: usuarios/expedientes/detalle-expediente.md
           - Panel del Expediente: usuarios/expedientes/panel.md
           - Historial y Comentarios: usuarios/expedientes/movimientos.md
+          - Atributos del Expediente: usuarios/expedientes/atributos.md
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
           - Expedientes Reservados: usuarios/expedientes/reservados.md
