@@ -117,6 +117,9 @@ Las tres primeras suman al contador rojo; las dos últimas, marcadas como **Info
 
 Resumen de contexto del usuario: **organización** (municipio activo), **sello** por defecto asignado y **sector** al que pertenece.
 
+!!! info "Cerrar sesión"
+    Al tocar **Cerrar sesión**, GDI cierra tu sesión y te lleva a la página de inicio de GDI. No aparece ninguna pantalla de confirmación.
+
 ---
 
 ## Cómo se comporta la pantalla

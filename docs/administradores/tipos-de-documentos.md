@@ -176,6 +176,71 @@ El diálogo **Agregar Campo** define cada campo del formulario.
 
 Por defecto, un FFCC sale como una lista: un campo debajo del otro. Debajo de los campos está el bloque **Plantilla del documento**: ahí cargás un texto en HTML con marcadores (`{{cuit}}`) y el documento sale redactado con los datos del formulario. Cómo se arma y qué se permite: [Plantilla de un FFCC](plantilla-ffcc.md).
 
+### Grupos de campos que se repiten
+
+A veces un formulario tiene que nombrar a varias personas, varios vehículos o varios bienes, y no sabés de antemano cuántos. Para eso está el **grupo**: un conjunto de campos que el usuario repite con un botón **«+»**.
+
+**Ejemplo.** La «Municipalidad del Futuro» arma el tipo *Acta de Inspección* así:
+
+| Campo | ¿Se repite? |
+|-------|-------------|
+| Fecha | No: va una sola vez |
+| Lugar | No: va una sola vez |
+| **Grupo «Personas»**: Nombre, Apellido, DNI | **Sí**: el usuario ve «+ Agregar persona» |
+| **Grupo «Vehículos»**: Patente, Marca | **Sí**: el usuario ve «+ Agregar vehículo» |
+| Observaciones | No: va una sola vez |
+
+**Cómo se arma un grupo:**
+
+1. En **Campos del Formulario**, tocá **Agregar grupo**.
+2. Completá el **Nombre del campo** (ej: *personas*) y la **Etiqueta** (ej: *Personas*).
+3. En **Nombre de cada bloque**, escribí cómo se llama cada repetición (ej: *Persona*). El usuario ve «Persona 1», «Persona 2» y el botón «+ Agregar persona».
+4. Fijá el **Mínimo** y el **Máximo** de bloques. Los dos van de 1 a 50. Si no los cambiás, quedan en 1 y 50.
+5. Dentro del grupo, agregá los campos como siempre: agregar, ordenar y quitar.
+
+Reglas del grupo:
+
+- Adentro de un grupo va cualquier tipo de campo, **menos otro grupo y menos «Documento adjunto»**.
+- Un formulario puede tener varios grupos.
+- El **Nombre del campo** no se repite en todo el formulario. Un campo de adentro no puede llamarse igual que un campo suelto, que un campo de otro grupo ni que un grupo. La **Etiqueta** sí se puede repetir: «Nombre» en *Personas* y en *Testigos*.
+- Ningún **Nombre del campo** puede empezar con `#` ni con `/`. Esos caracteres son del marcador de repetir de la plantilla.
+- Si un campo de adentro es requerido, se pide en cada bloque.
+- El mínimo y los campos requeridos se controlan al firmar. El máximo se controla siempre, también en el borrador.
+- Todo lo que se carga en un formulario no puede pasar de 1 MB.
+
+### Repetir texto en la plantilla
+
+Si el tipo tiene [plantilla](plantilla-ffcc.md), el grupo se escribe con un **marcador de repetir**: `{{#personas}}` abre y `{{/personas}}` cierra. Lo que está en el medio se escribe una vez y sale una vez por cada bloque.
+
+Ejemplo con el *Acta de Inspección*:
+
+```html
+<p>Comparecen las siguientes personas:</p>
+{{#personas}}
+<p>{{nombre}} {{apellido}}, DNI {{dni}}</p>
+{{/personas}}
+```
+
+Si el usuario cargó dos personas, el documento sale así:
+
+> Comparecen las siguientes personas:
+>
+> Juana Pérez, DNI 20111111
+>
+> Carlos Gómez, DNI 30222222
+
+Reglas del marcador (si no se cumplen, la plantilla no se guarda y el aviso dice qué grupo falla):
+
+- Cada grupo se abre **una sola vez** y cada `{{#grupo}}` tiene su `{{/grupo}}`.
+- Un grupo **no va adentro de otro**.
+- La apertura y el cierre van **dentro de las mismas etiquetas**. Sirve abrir y cerrar en párrafos sueltos, como en el ejemplo. No sirve abrir en una celda de una tabla y cerrar en un párrafo de afuera.
+- Los campos del grupo (`{{nombre}}`, `{{dni}}`) van **solo adentro** de su `{{#personas}}`. Afuera van solo los campos sueltos.
+
+En el editor de la plantilla, la lista de marcadores muestra los del grupo: `{{#personas}}`, `{{nombre}}`, `{{/personas}}`.
+
+!!! warning "Tipos que se firman desde el portal del ciudadano"
+    Si el tipo tiene **Firmable por TAD** y le agregás un grupo, al guardar aparece un aviso: *«Este tipo se usa en el portal del ciudadano. El portal tiene que estar preparado para grupos; si no, los vecinos no van a poder mandarlo. ¿Guardar igual?»*. No bloquea: vos decidís. Antes de guardar, confirmá con quien mantiene el portal que ya lee grupos. Cómo se leen: [guía del portal](../desarrollo/gateway/rest-api/tad/documentos.md#grupos-que-se-repiten).
+
 ??? question "Cómo creo un tipo FFCC de punta a punta?"
     1. Click en **Nuevo tipo propio**.
     2. Carga *Nombre*, *Acrónimo* (≤6, inmutable) y *Descripción*.

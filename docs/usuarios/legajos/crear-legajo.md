@@ -60,18 +60,21 @@ Para modificar los datos de un legajo existente:
 !!! info "Campos verificados"
     Si un campo ya fue verificado por un verificador, al editarlo se pierde la verificación y el campo vuelve a estado **pendiente de verificación**. Ver [Verificación](verificacion.md).
 
-Todos los cambios quedan registrados en la pestaña **Movimientos** del legajo con fecha, usuario y valor anterior.
+Todos los cambios quedan registrados con fecha, usuario y valor anterior.
 
 ---
 
 ## Cambiar el estado de un legajo
 
-Desde la vista de detalle del legajo, hace click en el botón **"Acciones"** (arriba a la derecha) y selecciona **"Cambiar Estado"**.
+En la solapa **Datos** del legajo, debajo de los datos, está la caja **Estado**:
 
-Los estados disponibles dependen de la familia de registro. Podés cambiar de cualquier estado a cualquier otro sin restricciones. El sistema registra cada cambio en el historial con fecha, usuario y motivo.
+1. En **Nuevo estado**, elegí el estado al que pasa el legajo.
+2. Hacé click en **Cambiar estado**. El botón queda apagado mientras no elijas un estado distinto del actual.
 
-!!! tip "Motivo del cambio"
-    Al cambiar de estado podés agregar un motivo opcional. Es recomendable hacerlo para mantener la trazabilidad del legajo.
+Los estados disponibles dependen de la familia de registro. Podés pasar de cualquier estado a cualquier otro. El sistema registra cada cambio con fecha y usuario.
+
+!!! info "Sin permiso para editar"
+    Si no podés editar el legajo, la caja **Estado** solo muestra el estado actual, sin la lista ni el botón.
 
 ---
 
