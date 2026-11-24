@@ -188,6 +188,12 @@ Lista de sectores adicionales a los que el usuario tiene acceso, además de su s
 |---------|-------------|
 | **Búsqueda Global por Número Documento** | Puede buscar documentos oficiales de cualquier sector |
 | **Búsqueda Global por Número Expediente** | Puede buscar expedientes de cualquier sector |
+| **Archivo** | Puede entrar al [Archivo](../usuarios/expedientes/archivo.md): ve **todos** los expedientes cerrados del municipio, de cualquier secretaría, los lee y los puede reabrir |
+
+Sin el permiso **Archivo**, nadie ve un expediente cerrado: ni el sector que lo administraba ni quienes trabajaron en él, tampoco por número. Dáselo a quien tenga que consultar o reabrir expedientes terminados (por ejemplo, la persona a cargo del archivo de Mesa de Entradas). Si se lo sacás, deja de ver los cerrados desde ese mismo momento.
+
+!!! warning "Reservados cerrados"
+    Un expediente [reservado](reservados.md) cerrado lo ve solo quien tiene el permiso **Archivo** y además es **titular de la repartición que lo cerró**. Un titular sin este permiso no encuentra los reservados que cerró su repartición. Y alguien con el permiso que no es el titular, tampoco.
 
 ### Roles
 

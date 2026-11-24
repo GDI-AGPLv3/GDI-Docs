@@ -144,6 +144,7 @@ nav:
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
           - Expedientes Reservados: usuarios/expedientes/reservados.md
+          - Archivo: usuarios/expedientes/archivo.md
       - Legajos:
           - usuarios/legajos/index.md
           - Crear y Gestionar: usuarios/legajos/crear-legajo.md
