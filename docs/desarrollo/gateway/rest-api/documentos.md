@@ -240,6 +240,9 @@ Ejemplo de la Municipalidad del Futuro, formulario «Adicionales» (personas fic
 }
 ```
 
+!!! warning "`data` trae todos los campos, aunque la plantilla no los imprima"
+    Si el tipo de documento tiene plantilla, el HTML (y el PDF) muestran solo los campos que la plantilla nombra. `data` trae **todos** los valores que se cargaron en el formulario. Por ejemplo: si la plantilla de un formulario de la Municipalidad del Futuro no imprime el DNI, el DNI igual sale en `data`. Solo recibe `data` quien tiene permiso para ver el documento.
+
 !!! info "Campos de tipo `file`"
     En `data`, un campo de tipo `file` trae el id del documento adjunto (o un objeto con `document_id`). Para leer ese documento, pedí su propio `/content`: se vuelve a controlar el permiso.
 
