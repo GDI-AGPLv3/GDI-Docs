@@ -27,7 +27,7 @@ Arriba a la derecha de la página hay tres botones:
 
 | Botón | Que hace |
 |-------|----------|
-| **Exportar** | Exporta la estructura del organigrama |
+| **Exportar** | Descarga un Excel con la estructura del organigrama y sus usuarios. Por cada usuario trae, entre otras, las columnas **Ver todos los documentos**, **Ver todos los expedientes** y **Archivo**, con los permisos que tiene |
 | **Audit** | Abre la auditoría legible de organigrama y permisos (ver [Auditoría de organigrama](#auditoria-de-organigrama-audit)) |
 | **Nueva repartición** | Crea una nueva repartición |
 

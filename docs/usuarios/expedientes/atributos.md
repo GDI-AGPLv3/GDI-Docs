@@ -2,8 +2,8 @@
 
 La pestaña **Atributos e Historial** junta dos cosas en una sola pantalla:
 
-- a la izquierda, el [Historial](movimientos.md) de siempre, con la línea de tiempo y el chat de comentarios;
-- a la derecha, el **panel de atributos**, con datos del expediente que no son documentos.
+- a la izquierda, el **panel de atributos**, con datos del expediente que no son documentos;
+- a la derecha, el [Historial](movimientos.md) de siempre, con la línea de tiempo y el chat de comentarios.
 
 El panel se puede ocultar con el botón **Ocultar atributos** y volver a mostrar con **Mostrar atributos**. Ocultarlo no cambia nada del expediente: solo deja más lugar para el Historial.
 
@@ -33,19 +33,18 @@ Por ejemplo, en la **Municipalidad del Futuro**, el tipo *Habilitación Comercia
 
 ## Estado
 
-La tarjeta **Estado** muestra en qué momento está el expediente. La misma etiqueta se ve en el encabezado, al lado del número.
+La tarjeta **Estado** muestra en qué momento está el expediente. La misma etiqueta se ve en la barra superior del expediente. Si la tocás, se abre la solapa **Atributos e Historial**.
 
-### Los 5 estados
+### Los estados
 
 | Estado | Qué significa | Qué se puede hacer |
 |--------|---------------|--------------------|
 | **En creación** | El expediente todavía no tiene carátula | Nada. Espera a que se vincule la carátula. Lo pone el sistema solo |
 | **En trámite** | Se está trabajando | Todo: pases, asignaciones, tareas, comentarios y documentos |
-| **Paralizado** | Se espera algo del vecino (por ejemplo, que traiga un papel) | Todo, igual que En trámite |
-| **Suspendido** | Se espera a otro organismo o a otro expediente | Todo, igual que En trámite |
+| **Paralizado** | Se espera que actúe un tercero: el vecino, otro organismo u otro expediente | Todo, igual que En trámite |
 | **Cerrado** | El trámite terminó | Nada, salvo vincular un legajo. Va al [Archivo](archivo.md) |
 
-Paralizado y Suspendido no frenan nada. Sirven para que se vea por qué el expediente está quieto. Sigue en los listados, en Inicio y en los contadores, y se puede pasar, asignar y comentar como siempre.
+Paralizado no frena nada. Sirve para que se vea por qué el expediente está quieto. Sigue en los listados, en Inicio y en los contadores, y se puede pasar, asignar y comentar como siempre.
 
 ### Quién cambia el estado
 
@@ -110,8 +109,11 @@ Lo ve todo el que puede ver el expediente. El objetivo no se edita desde el expe
 ??? question "Cerré un expediente por error. ¿Cómo lo vuelvo atrás?"
     Pedile a alguien con permiso de Archivo que lo reabra. Ver [Reabrir un expediente](archivo.md#reabrir-un-expediente).
 
-??? question "¿Paralizado y Suspendido frenan el expediente?"
-    No. Indican por qué está quieto. Se sigue trabajando igual que En trámite.
+??? question "¿Paralizado frena el expediente?"
+    No. Indica por qué está quieto. Se sigue trabajando igual que En trámite.
+
+??? question "¿Dónde quedó el estado Suspendido?"
+    Ya no existe: se unificó con **Paralizado**. Los expedientes que estaban en Suspendido pasaron solos a Paralizado y conservan su motivo. En el Historial queda la línea del cambio automático.
 
 ??? question "¿El objetivo tiene valor legal?"
     No. Es una guía de trabajo. Lo oficial del expediente son sus documentos, en la pestaña **Documentos**.

@@ -129,6 +129,7 @@ nav:
           - usuarios/documentos/index.md
           - Crear y Editar Documento: usuarios/documentos/crear-editar-documento.md
           - Documento Importado (PDF): usuarios/documentos/documento-importado.md
+          - Impresora GDI: usuarios/documentos/impresora-gdi.md
           - Documento tipo NOTA: usuarios/documentos/documento-nota.md
           - Documento FFCC (Formulario Controlado): usuarios/documentos/documento-ffcc.md
           - Previsualizar Documento: usuarios/documentos/previsualizar-documento.md

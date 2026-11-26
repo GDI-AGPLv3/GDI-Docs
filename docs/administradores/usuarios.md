@@ -55,6 +55,8 @@ Al presionar **Nuevo usuario** se abre un **modal** con el formulario de creaci�
 | **Método de acceso** | Como va a iniciar sesión el usuario (ver abajo) |
 | **Sector** | Sector principal al que se asigna |
 
+El modal es ancho. **Repartición · Sector principal** ocupa una fila entera, así se lee completo. El **DNI** va al lado del **Sello de firma**.
+
 ### Método de acceso
 
 Al crear un usuario se elige cómo va a iniciar sesión:
@@ -116,8 +118,9 @@ El archivo CSV debe contener las siguientes columnas:
 | **nombre** | Sí | Nombre completo |
 | **sello** | Sí | Nombre del sello de firma a asignar |
 | **sector** | Sí | Código o nombre del sector a asignar (formato: `Nombre # CODIGO`) |
-| **busqueda_docs** | No | Búsqueda global de documentos: `1` para habilitar, `0` o vacío para no |
-| **busqueda_exps** | No | Búsqueda global de expedientes: `1` para habilitar, `0` o vacío para no |
+| **busqueda_docs** | No | **Ver todos los documentos**: `1` para habilitar, `0` o vacío para no |
+| **busqueda_exps** | No | **Ver todos los expedientes**: `1` para habilitar, `0` o vacío para no |
+| **archivo** | No | Permiso **Archivo**: `1` para habilitar, `0` o vacío para no. Si lo usás, también tenés que completar las 2 columnas anteriores |
 | **sectores_adicionales** | No | Sectores adicionales separados por punto y coma |
 | **auth_method** | No | Método de acceso: `social` o `database`. Si no se especifica, se usa `social` por defecto |
 
@@ -182,13 +185,16 @@ Lista de sectores adicionales a los que el usuario tiene acceso, además de su s
 |-------|-------------|
 | **Sello actual** | Nombre y descripción del sello de firma asignado (ej: *Director - Sello de Director*) |
 
-### Permisos de Búsqueda
+### Permisos para ver
 
 | Permiso | Descripción |
 |---------|-------------|
-| **Búsqueda Global por Número Documento** | Puede buscar documentos oficiales de cualquier sector |
-| **Búsqueda Global por Número Expediente** | Puede buscar expedientes de cualquier sector |
+| **Ver todos los documentos** | Puede **abrir** cualquier documento del municipio, aunque no sea de su sector. No incluye los reservados |
+| **Ver todos los expedientes** | Puede **abrir** cualquier expediente del municipio, aunque no sea de su sector. No incluye los reservados ni los cerrados. En la lista de expedientes, los de otros sectores aparecen cuando se busca por número |
 | **Archivo** | Puede entrar al [Archivo](../usuarios/expedientes/archivo.md): ve **todos** los expedientes cerrados del municipio, de cualquier secretaría, los lee y los puede reabrir |
+
+!!! info "Antes se llamaban «Búsqueda global»"
+    Son los mismos permisos de siempre, con otro nombre. El nombre nuevo dice lo que hacen: no solo dejan encontrar, también dejan abrir.
 
 Sin el permiso **Archivo**, nadie ve un expediente cerrado: ni el sector que lo administraba ni quienes trabajaron en él, tampoco por número. Dáselo a quien tenga que consultar o reabrir expedientes terminados (por ejemplo, la persona a cargo del archivo de Mesa de Entradas). Si se lo sacás, deja de ver los cerrados desde ese mismo momento.
 

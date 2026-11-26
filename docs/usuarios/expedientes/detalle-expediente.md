@@ -30,6 +30,8 @@ Debajo del título se muestra un resumen de los datos del expediente en una sola
 | **Admin** | Sector administrador actual (badge de color) con el avatar del responsable administrador inline | `CONT#PRIV` |
 | **Act** | Sector actuante con las iniciales de la persona asignada. Si no hay actuante, aparece el badge **"Sin asignar"** | `LEGAL#PRIV` o badge "Sin asignar" |
 
+Entre el tipo y el sector administrador está la **etiqueta del estado** (por ejemplo, *En trámite* o *Paralizado*). Si la tocás, se abre la pestaña **Atributos e Historial**. Ver [Estado](atributos.md#estado).
+
 ### Opciones del menú "Acciones"
 
 | Opción | Descripción |
@@ -48,12 +50,12 @@ La pantalla se organiza en cuatro pestañas:
 | Pestaña | Descripción |
 |---------|-------------|
 | **Panel** | Vista de gestión del expediente: sector administrador, responsables, resumen IA y sectores actuantes (pestaña por defecto) |
-| **Documentos** | Lista de documentos oficiales y propuestos del expediente |
-| **Historial** | Historial de actividad y acciones realizadas sobre el expediente. Ver [Historial](movimientos.md) |
+| **Docs Oficiales** | Lista de documentos oficiales y propuestos del expediente |
+| **Atributos e Historial** | A la izquierda, los [atributos](atributos.md) (objetivo y estado). A la derecha, el [Historial](movimientos.md) de actividad |
 | **Tu Asistente** | Asistente de inteligencia artificial para consultas sobre el expediente. Ver [Tu Asistente](../asistente-ai/index.md) |
 
 !!! info "Panel es la pestaña por defecto"
-    Al abrir un expediente, la pestaña **Panel** se muestra activa. La antigua pestaña "Movimientos" ahora se llama **Historial**.
+    Al abrir un expediente, la pestaña **Panel** se muestra activa. La antigua pestaña "Movimientos" ahora se llama **Atributos e Historial**.
 
 ---
 
@@ -161,9 +163,9 @@ Cada documento propuesto muestra:
 
 ---
 
-## Pestaña Historial
+## Pestaña Atributos e Historial
 
-La pestaña **Historial** (antes "Movimientos") muestra la línea de tiempo de actividad del expediente: que documentos se vincularon, que acciones se realizaron, quien las ejecuto y cuando. Tiene su propia página: ver [Historial](movimientos.md).
+La pestaña **Atributos e Historial** junta el panel de [atributos](atributos.md), a la izquierda, y el Historial, a la derecha. El Historial (antes "Movimientos") muestra la línea de tiempo de actividad del expediente: que documentos se vincularon, que acciones se realizaron, quien las ejecuto y cuando. Tiene su propia página: ver [Historial](movimientos.md).
 
 ---
 

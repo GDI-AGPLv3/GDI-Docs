@@ -18,6 +18,9 @@ Desde el **menú lateral izquierdo**, hacer click en **Documentos**. Se muestra 
 | **Documentos mi sector** | Documentos creados por cualquier usuario del sector al que pertenece el usuario |
 | **Documentos favoritos** | Documentos marcados como favorito por el usuario |
 
+!!! info "Los documentos que arma el sistema no aparecen acá"
+    La carátula, el pase y el documento de cierre (`CIEX`) los genera el sistema solo. No aparecen en **Mis Documentos**, ni en **Documentos mi sector**, ni en **A mi firma**, aunque salgan a tu nombre. Los encontrás en el expediente, en **Docs Oficiales**.
+
 ### Filtros adicionales
 
 En la parte superior derecha del listado se encuentran tres selectores:
