@@ -1,6 +1,6 @@
 # Historial
 
-La pestaña **Historial y Atributos** muestra la actividad del expediente como una **línea de tiempo** de eventos (caratulación, vinculaciones, pases, asignaciones, propuestas, resúmenes de IA) y, al pie, un **chat de comentarios** con menciones para anotar y comunicarse de forma informal con el equipo. A la derecha está el panel de atributos, que se puede ocultar: ver [Atributos del expediente](atributos.md).
+La pestaña **Atributos e Historial** muestra la actividad del expediente como una **línea de tiempo** de eventos (caratulación, vinculaciones, pases, asignaciones, propuestas, resúmenes de IA) y, al pie, un **chat de comentarios** con menciones para anotar y comunicarse de forma informal con el equipo. A la derecha está el panel de atributos, que se puede ocultar: ver [Atributos del expediente](atributos.md).
 
 !!! warning "Información no oficial"
     Arriba de la pestaña hay un banner que aclara: *"Todo lo reflejado aquí es informal y no tiene valor legal, para ver el expediente oficial vaya a Documentos."* El historial y el chat sirven como apoyo de trabajo y trazabilidad, pero **no constituyen un registro legal** del expediente.

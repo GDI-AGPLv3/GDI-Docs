@@ -1,6 +1,6 @@
 # Atributos del expediente
 
-La pestaña **Historial y Atributos** junta dos cosas en una sola pantalla:
+La pestaña **Atributos e Historial** junta dos cosas en una sola pantalla:
 
 - a la izquierda, el [Historial](movimientos.md) de siempre, con la línea de tiempo y el chat de comentarios;
 - a la derecha, el **panel de atributos**, con datos del expediente que no son documentos.
@@ -99,7 +99,7 @@ Lo ve todo el que puede ver el expediente. El objetivo no se edita desde el expe
 ## Preguntas frecuentes
 
 ??? question "¿Dónde quedó la pestaña Historial?"
-    Es la misma, ahora se llama **Historial y Atributos**. La línea de tiempo y el chat de comentarios funcionan igual que antes.
+    Es la misma, ahora se llama **Atributos e Historial**. La línea de tiempo y el chat de comentarios funcionan igual que antes.
 
 ??? question "La tarjeta dice "Sin objetivo". ¿Hice algo mal?"
     No. Ese tipo de expediente no tiene objetivo cargado. Si te sirve tenerlo, pedíselo al administrador de tu municipio.

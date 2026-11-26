@@ -42,7 +42,7 @@ Un expediente del Archivo se abre y se lee completo, sin reabrirlo:
 
 - **Panel**, con los datos del expediente;
 - **Docs Oficiales**, con todos sus documentos, incluido el "Cierre de Expediente" (`CIEX`);
-- **Historial y Atributos**, con la línea de tiempo, los comentarios y los atributos.
+- **Atributos e Historial**, con la línea de tiempo, los comentarios y los atributos.
 
 **Tu Asistente** también funciona: le podés preguntar, por ejemplo, *"¿por qué se cerró este expediente?"* o *"¿qué dijo el informe de Bromatología?"*.
 
