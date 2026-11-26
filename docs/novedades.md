@@ -10,6 +10,17 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
+## Noviembre de 2026: Estado y cierre del expediente, Asistente de Búsqueda e Impresora GDI
+
+- **Estado del expediente y cierre** (Nueva funcionalidad). El sector administrador marca si el expediente está En trámite o Paralizado, siempre con un motivo. Para cerrarlo elige cómo terminó y el sistema genera el documento de cierre (`CIEX`). [Ver la guía](usuarios/expedientes/atributos.md#estado)
+- **Archivo: los expedientes cerrados, en un solo lugar** (Nueva funcionalidad). Quien tiene el permiso Archivo ve todos los cerrados del municipio, los lee sin reabrirlos y, si hace falta, los reabre mandándolos a un sector. [Ver la guía](usuarios/expedientes/archivo.md)
+- **Asistente de Búsqueda: una sola lista y un chat que te ayuda** (Nueva funcionalidad). Escribís un número, un tema o una persona y ves primero lo más probable, con filtros en una fila. De un expediente que no podés abrir ves una ficha con candado que te dice qué sector lo tiene. Si no lo encontrás, tocás «Ayudame a buscar». [Ver la guía](usuarios/busqueda/buscador-general.md)
+- **Impresora GDI: de cualquier programa al expediente, firmado** (Nueva funcionalidad). Imprimís en la impresora «GDI - <usuario>» desde cualquier programa, aunque solo sepa imprimir. Se abre GDI con el PDF: elegís el tipo, la referencia y el expediente, y tocás «Firmar y vincular». [Ver la guía](usuarios/documentos/impresora-gdi.md)
+- **El editor de un documento compartido puede cancelar la firma** (Mejora). Si te compartieron el documento como editor, ves «Cancelar Firma» igual que quien lo creó. [Ver la guía](usuarios/documentos/rechazar-y-subsanar.md)
+- **Íconos de clase y de firma en la lista de tipos** (Mejora). Cada tipo de documento muestra si es texto, formulario, nota, memo o importado, y qué firma lleva. [Ver la guía](usuarios/documentos/crear-editar-documento.md)
+- **Movimientos finalizados con los cambios de estado** (Mejora). En el Panel del expediente, la línea de tiempo también muestra cada cambio de estado, el cierre y la reapertura. [Ver la guía](usuarios/expedientes/panel.md#movimientos-finalizados)
+- **Permisos para ver, con nombres claros** (Administración). En el BackOffice, «Búsqueda global» pasa a llamarse «Ver todos los documentos» y «Ver todos los expedientes». El Excel del organigrama trae esas columnas y la de Archivo. [Ver la guía](administradores/usuarios.md#permisos-para-ver)
+
 ## Noviembre de 2026: Formularios con grupos que se repiten
 
 - **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. En la plantilla, el texto del grupo se escribe una vez y sale una vez por cada bloque. [Ver la guía](administradores/tipos-de-documentos.md#grupos-de-campos-que-se-repiten)

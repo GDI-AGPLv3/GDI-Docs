@@ -160,7 +160,7 @@ nav:
           - Memo Enviado: usuarios/memos/memo-enviado.md
           - Memo Recibido: usuarios/memos/memo-recibido.md
       - Búsqueda:
-          - usuarios/busqueda/buscador-general.md
+          - Asistente de Búsqueda: usuarios/busqueda/buscador-general.md
       - Asistente AI:
           - usuarios/asistente-ai/index.md
 
