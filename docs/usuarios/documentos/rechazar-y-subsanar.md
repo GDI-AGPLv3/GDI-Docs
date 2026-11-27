@@ -15,6 +15,9 @@ Cuando un documento en proceso de firma contiene errores o necesita correcciones
 
 Desde la pantalla de [Proceso de Firma](proceso-de-firma.md), hacer click en el botón **"Cancelar Firma"** (texto rojo en la parte inferior del panel lateral). Se abre un diálogo modal de confirmación.
 
+!!! tip "En un documento compartido, el editor también puede cancelar"
+    Si te compartieron el documento como **editor**, ves **Cancelar Firma** igual que quien lo creó. Por ejemplo, en la **Municipalidad del Futuro**, Ana Pérez crea una nota y la comparte con Juan Gómez como editor. Juan la manda a firmar y después ve un error. Juan toca **Cancelar Firma**, escribe el motivo y la nota vuelve a edición. Si alguien ya había firmado, esa firma se borra.
+
 ---
 
 ## Diálogo de rechazo

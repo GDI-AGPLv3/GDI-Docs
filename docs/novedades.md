@@ -10,12 +10,32 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
+## 27 de noviembre de 2026: Estado y cierre del expediente, Asistente de Búsqueda e Impresora GDI
+
+Noviembre 2026: estado y cierre del expediente con su Archivo, un Asistente de Búsqueda con chat, la Impresora GDI para mandar a GDI desde cualquier programa y el panel de atributos del expediente.
+
+- **Estado del expediente y cierre** (Nueva funcionalidad). El sector administrador marca si el expediente está En trámite o Paralizado, siempre con un motivo. Para cerrarlo elige cómo terminó y el sistema genera el documento de cierre (`CIEX`). [Ver la guía](usuarios/expedientes/atributos.md#estado)
+- **Archivo: los expedientes cerrados, en un solo lugar** (Nueva funcionalidad). Quien tiene el permiso Archivo ve todos los cerrados del municipio, los lee sin reabrirlos y, si hace falta, los reabre mandándolos a un sector. [Ver la guía](usuarios/expedientes/archivo.md)
+- **Asistente de Búsqueda: una sola lista y un chat que te ayuda** (Nueva funcionalidad). Escribís un número, un tema o una persona y ves primero lo más probable, con filtros en una fila. De un expediente que no podés abrir ves una ficha con candado que te dice qué sector lo tiene. Si no lo encontrás, tocás «Ayudame a buscar». [Ver la guía](usuarios/busqueda/buscador-general.md)
+- **Impresora GDI: de cualquier programa al expediente, firmado** (Nueva funcionalidad). Imprimís en la impresora «GDI - <usuario>» desde cualquier programa, aunque solo sepa imprimir. Se abre GDI con el PDF: elegís el tipo, la referencia y el expediente, y tocás «Firmar y vincular». [Ver la guía](usuarios/documentos/impresora-gdi.md)
+- **El editor de un documento compartido puede cancelar la firma** (Mejora). Si te compartieron el documento como editor, ves «Cancelar Firma» igual que quien lo creó. [Ver la guía](usuarios/documentos/rechazar-y-subsanar.md)
+- **Íconos de clase y de firma en la lista de tipos** (Mejora). Cada tipo de documento muestra si es texto, formulario, nota, memo o importado, y qué firma lleva. [Ver la guía](usuarios/documentos/crear-editar-documento.md)
+- **Movimientos finalizados con los cambios de estado** (Mejora). En el Panel del expediente, la línea de tiempo también muestra cada cambio de estado, el cierre y la reapertura. [Ver la guía](usuarios/expedientes/panel.md#movimientos-finalizados)
+- **Permisos para ver, con nombres claros** (Administración). En el BackOffice, «Búsqueda global» pasa a llamarse «Ver todos los documentos» y «Ver todos los expedientes». El Excel del organigrama trae esas columnas y la de Archivo. [Ver la guía](administradores/usuarios.md#permisos-para-ver)
+- **Panel de atributos y objetivo del expediente** (Nueva funcionalidad). Cada tipo de expediente puede tener un objetivo, y el expediente muestra sus atributos en un panel propio. [Ver la guía](usuarios/expedientes/atributos.md)
+- **Documentos: solapas con ícono y punto rojo** (Mejora). Las solapas de Documentos llevan ícono y texto, y un punto rojo te avisa dónde hay algo nuevo. [Ver la guía](usuarios/documentos/index.md#punto-rojo)
+- **Crear un documento desde el expediente y dejarlo propuesto** (Mejora). En Vincular › Nuevo Documento podés destildar «Vincular automáticamente cuando se firme»: al firmarse, queda en Documentos propuestos. [Ver la guía](usuarios/expedientes/vincular-documentos.md#4-bis-resultado-con-el-checkbox-destildado-documento-firmado-y-propuesto)
+- **Aviso de documento ya vinculado** (Mejora). Si el documento ya está en el expediente, GDI te avisa en vez de dar un error. [Ver la guía](usuarios/expedientes/vincular-documentos.md#reglas-de-negocio)
+- **Adjuntos del PDF importado, en el documento oficial** (Mejora). Si el PDF que importás ya trae archivos adjuntos, aparecen en el documento firmado. [Ver la guía](usuarios/documentos/documento-importado.md#pdf-que-ya-trae-adjuntos)
+- **Formularios controlados con grupos dentro de grupos** (Mejora). Un grupo que se repite puede tener adentro otro grupo. [Ver la guía](usuarios/documentos/documento-ffcc.md#grupos-que-se-repiten)
+- **Contenido de un formulario por API** (Integraciones). `/content` de un formulario controlado trae los campos y los datos cargados. [Ver la guía](desarrollo/gateway/rest-api/documentos.md#contenido-del-documento)
+
 ## 20 de noviembre de 2026: Borradores que se escriben entre dos y formularios con grupos que se repiten
 
 Noviembre 2026: borradores compartidos por turnos, formularios controlados con grupos de campos que se repiten, documentos firmados propuestos a un expediente y adjuntos dentro del PDF de Notas y Memos. [Leer la nota en el blog](https://gdilatam.com/novedades/2026-11-borradores-compartidos-formularios-grupos).
 
 - **Borradores compartidos, una persona escribe por vez** (Nueva funcionalidad). Compartís un borrador desde la caja «Compartir» y otra persona lo edita y lo puede mandar a firma. Uno escribe y los demás miran: «Tomar edición» y «Soltar» pasan el turno. El editor también suma tablas. [Ver la guía](usuarios/documentos/crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos)
-- **Lo que editaste, en Mis Documentos** (Mejora). Cuando se firma un borrador que editaste, el documento aparece en tu lista de Mis Documentos y lo encontrás por referencia. [Ver la guía](usuarios/documentos/index.md#pestanas-de-filtrado)
+- **Lo que editaste, en Mis Documentos** (Mejora). Cuando se firma un borrador que editaste, el documento aparece en tu lista de Mis Documentos y lo encontrás por referencia. [Ver la guía](usuarios/documentos/index.md#solapas)
 - **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. Si el grupo no tiene campos obligatorios y no lo tocás, el documento se firma igual. [Ver la guía](usuarios/documentos/documento-ffcc.md#grupos-que-se-repiten)
 - **Formularios controlados con texto redactado** (Nueva funcionalidad). El administrador carga una plantilla y el documento sale como un texto redactado con los datos del formulario. El resumen de IA lee también ese texto, así dice qué resolvió el acto. [Ver la guía](administradores/plantilla-ffcc.md)
 - **Proponer un documento a un expediente que ves** (Nueva funcionalidad). Si ves el expediente pero no podés vincular, igual le proponés un documento firmado. El área responsable lo acepta o lo rechaza. [Ver la guía](usuarios/expedientes/vincular-documentos.md)

@@ -10,18 +10,37 @@ Desde el **menú lateral izquierdo**, hacer click en **Documentos**. Se muestra 
 
 ## Pantalla principal: Listado de documentos
 
-### Pestañas de filtrado
+### Solapas
 
-| Pestaña | Que muestra |
-|---------|-------------|
-| **Mis Documentos** | Documentos creados por el usuario actual |
-| **Documentos mi sector** | Documentos creados por cualquier usuario del sector al que pertenece el usuario |
-| **Documentos favoritos** | Documentos marcados como favorito por el usuario |
+Arriba del listado hay 4 solapas. Cada una tiene un ícono y su nombre, estés en ella o no. Al pasar el mouse se ve qué muestra.
+
+| Solapa | Ícono | Qué muestra |
+|---------|-------|-------------|
+| **A mi firma** | Lapicera | Los documentos que podés firmar ahora: sos firmante, todavía no firmaste y te toca el turno. Incluye los que piden token |
+| **Mis Documentos** | Hoja | Los documentos que creaste o en los que sos firmante o numerador |
+| **Compartidos conmigo** | Dos personas | Los documentos que otra persona te compartió para que los edites |
+| **Documentos de mi sector** | Papeles apilados | Los documentos de otros usuarios de tus sectores (el principal y los adicionales), en proceso de firma o firmados |
+
+### Punto rojo
+
+Un **punto rojo** (sin número) arriba del ícono avisa que hay algo para mirar:
+
+| Dónde | Cuándo aparece | Cuándo se apaga |
+|-------|----------------|-----------------|
+| Solapa **A mi firma** | Hay al menos un documento para firmar | Cuando ya no queda nada para firmar. Entrar a la solapa no lo apaga |
+| Solapa **Compartidos conmigo** | Hay al menos un documento compartido que todavía no abriste | Al abrir cada documento, como un mail sin leer. Entrar a la solapa no alcanza |
+| **Documentos**, en el menú de la izquierda | Hay algo para firmar o algo compartido sin abrir | Cuando se apagan los dos de arriba |
+| **CCOO**, en el menú de la izquierda | Hay memos sin leer o notas del sector sin leer | Al leerlos |
+
+Ejemplo: en la Municipalidad del Futuro, Juana Pérez le comparte a Carlos Gómez un borrador de nota. Carlos ve el punto rojo en **Documentos** y en **Compartidos conmigo**. Cuando abre el borrador, el punto se apaga.
 
 !!! info "Lo que editaste en un borrador compartido"
     Cuando un borrador que te compartieron se firma, el documento aparece en **Mis Documentos** de cada persona que lo editó. Lo encontrás con el buscador, por referencia, como cualquier otro tuyo. Ejemplo: en la Municipalidad del Futuro, Lucía Fernández arma un informe y lo comparte con Castor Gómez. Castor lo termina y lo manda a firma. Una vez firmado, el informe está en Mis Documentos de Lucía y también en el de Castor.
 
     Mientras el borrador está en curso, lo ves en **Compartidos**. Al firmarse, sale de Compartidos. Ver [Compartir un borrador](crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos).
+
+!!! info "Los documentos que arma el sistema no aparecen acá"
+    La carátula, el pase y el documento de cierre (`CIEX`) los genera el sistema solo. No aparecen en **Mis Documentos**, ni en **Documentos mi sector**, ni en **A mi firma**, aunque salgan a tu nombre. Los encontrás en el expediente, en **Docs Oficiales**.
 
 ### Filtros adicionales
 
