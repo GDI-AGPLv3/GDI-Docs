@@ -8,7 +8,7 @@ La pestaña **Historial y Atributos** muestra la actividad del expediente como u
 !!! video "Video tutorial"
     **GDI — Comentar y mencionar en el Historial del expediente**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ZDhj1pVCldg?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Comentar y mencionar en el Historial del expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/hdVMudd0zNQ?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Comentar y mencionar en el Historial del expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 

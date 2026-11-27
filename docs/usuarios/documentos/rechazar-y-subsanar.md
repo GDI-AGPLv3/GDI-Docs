@@ -5,7 +5,7 @@ Cuando un documento en proceso de firma contiene errores o necesita correcciones
 !!! video "Video tutorial"
     **GDI Latam #4 — Rechazar, corregir y reenviar documentos**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ESaWZA2BzeE?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #4 — Rechazar, corregir y reenviar documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/5AcmTur5B5s?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI Latam #4 — Rechazar, corregir y reenviar documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ![Dialogo de rechazo](../capturas/rechazar-firma.png)
 
