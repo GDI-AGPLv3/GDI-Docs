@@ -91,6 +91,9 @@ La sección colapsable **"DOCUMENTOS OFICIALES (N)"** muestra un contador con la
 
 Al hacer click en un documento de la lista, se muestra una **vista previa del PDF** en el panel derecho.
 
+!!! info "Los pases (PV) ocupan una sola línea"
+    Los **PV** (pases del expediente) muestran solo el **número** y la **fecha**. La referencia aparece al tocarlos, como en cualquier otro documento. Ejemplo: en un expediente de la Municipalidad del Futuro, `PV-2026-00000012-MUNDEV-MESA` se ve en una línea. Así la lista queda más corta y los otros documentos se encuentran más rápido.
+
 !!! info "Primer documento: Carátula (CAEX)"
     El documento número 001 de todo expediente es siempre la **carátula** (tipo CAEX), generada automáticamente por el sistema al crear el expediente. Contiene los datos básicos: tipo, número, motivo y repartición iniciadora.
 
@@ -99,6 +102,8 @@ El botón **"Vincular Documento"** abre el flujo de vinculación. Ver [Vincular 
 ### Archivos embebidos en documentos oficiales
 
 Cuando un documento oficial se creó con archivos adjuntos (por ejemplo, planillas, imágenes o PDFs complementarios), esos archivos quedan **embebidos dentro del PDF firmado**. Se llaman **archivos embebidos** porque viajan adentro del documento oficial, no como piezas sueltas del expediente.
+
+Un [documento importado](../documentos/documento-importado.md#pdf-que-ya-trae-adjuntos) cuyo PDF ya traía adjuntos también los muestra acá, igual que los subidos en GDI.
 
 #### Cómo saber si un documento tiene embebidos
 
