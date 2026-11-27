@@ -1,8 +1,6 @@
-# Buscador General
+# Asistente de Búsqueda
 
-El buscador general permite encontrar **documentos y expedientes** en todo el sistema desde una única barra de búsqueda. Tiene dos modos: resultados rápidos en tiempo real y búsqueda inteligente completa.
-
-![Buscador general](../capturas/buscador-general.png)
+El **Asistente de Búsqueda** reemplaza a la búsqueda de antes. Escribís un número, un tema o una persona y te arma **una sola lista**, con lo más probable primero. Si no encontrás lo que buscabas, al costado tenés un chat que te ayuda a afinar.
 
 !!! video "Video tutorial"
     **GDI — Búsqueda semántica con IA: encontrá en lenguaje natural**
@@ -14,118 +12,145 @@ El buscador general permite encontrar **documentos y expedientes** en todo el si
     <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/16BAVkXXU4I?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Buscar y filtrar expedientes y documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
+---
+
+## Dónde está
+
+El campo de búsqueda está en la pantalla de **Inicio**. Escribís y apretás **Enter**: se abre la pantalla del Asistente con los resultados.
+
+Arriba de los resultados está el mismo campo, con el texto *«Buscá un número, un tema o una persona»*. Podés cambiar la búsqueda desde ahí, sin volver al Inicio.
+
+!!! info "Si tenías guardado el link de la búsqueda vieja"
+    Sigue andando. Te lleva solo al Asistente de Búsqueda, con lo que habías escrito.
 
 ---
 
-## Dónde encontrar el buscador
+## Cómo busca
 
-El buscador se encuentra en la **pantalla Home** (Inicio), debajo de la tarjeta de bienvenida con los datos del usuario.
+El Asistente busca de varias formas a la vez y te va mostrando lo que encuentra:
 
----
+1. **Por número y por referencia.** Es lo primero que aparece, casi al instante. Mientras tanto ves *«Buscando por número y referencia…»*.
+2. **Por contenido.** Encuentra documentos que hablan del tema, aunque no usen esas palabras. Tarda unos segundos más y se suma abajo. Mientras tanto ves *«Buscando por contenido…»*.
+3. **En el texto completo.** Busca las palabras adentro de los documentos. Llega último y entra en el lugar que le corresponde. Mientras tanto ves *«Buscando en el texto completo…»*.
 
-## Cómo buscar
+La lista puede moverse un poco mientras llegan los resultados. Lo nuevo se acomoda donde corresponde.
 
-### Resultados rápidos (mientras escribís)
+Por ejemplo, en la **Municipalidad del Futuro** escribís `EE-2026-000414-MUNDEV-HABI` y el expediente aparece primero. Si escribís *«habilitación panadería»*, aparecen primero los que tienen esas palabras en la referencia. Después, los documentos que hablan del tema.
 
-1. Escribir al menos **2 caracteres** en el campo de búsqueda.
-2. Los resultados aparecen automáticamente debajo del campo, divididos en dos secciones: **Documentos** y **Expedientes**.
-3. Se muestran hasta **5 resultados** por sección.
-4. Para limpiar la búsqueda, hacer click en el icono **X** a la derecha del campo.
-
-### Búsqueda inteligente completa (Enter)
-
-Al presionar **Enter** (o hacer click en el hint <kbd>↵</kbd> búsqueda inteligente que aparece en el campo), el sistema abre la pantalla de búsqueda completa donde combina:
-
-- **Búsqueda por texto**: documentos y expedientes cuyo **número o referencia** coincidan con las palabras escritas.
-- **Búsqueda semántica**: documentos cuyo contenido tenga relación con el significado de la consulta, aunque no contengan exactamente esas palabras.
-
-Los resultados se organizan en tres pestañas: **Semántica**, **Docs** y **Expedientes**. Se pueden ver hasta **50 resultados** por sección.
-
-!!! tip "Búsqueda sin acentos"
-    El buscador ignora acentos y tildes. Buscar *"trámite"* encuentra resultados que contengan *"trámite"*, y viceversa.
-
-!!! info "Números exactos"
-    Si escribís el número completo de un documento (ej: `NOTA-2026-00000149-TXST-HAC`) o de un expediente (ej: `EE-2026-000007-TXST-HAC`), el sistema lo busca directamente por número exacto, sin búsqueda semántica.
+!!! tip "Si algo se encontró de dos formas, sale una sola vez"
+    Cada resultado aparece en una sola fila. La tarjeta dice por qué apareció, por ejemplo *«por número»* o *«por referencia»*.
 
 ---
 
-## Resultados de Documentos
+## Filtros
 
-Los documentos encontrados se muestran en una tabla con las siguientes columnas:
+Arriba de la lista hay **una sola fila** de filtros:
 
-| Columna | Descripción |
-|---------|-------------|
-| **Tipo** | Sigla del tipo de documento (ej: NOTA, IF, PREPL) |
-| **Referencia** | Título descriptivo del documento |
-| **Número** | Número oficial asignado al firmar (ej: `NOTA-2026-00000149-TXST-HAC`) |
-| **Estado** | Estado actual del documento (Firmado, En edición, etc.) |
+| Filtro | Qué hace |
+|--------|----------|
+| **Todo** / **Documentos** / **Expedientes** | Muestra todo o solo un tipo |
+| **Legajos** | Aparece solo si la búsqueda encontró legajos |
+| **Desde** y **Hasta** | Acotan por fecha |
+| **Sin IA** | Busca solo por número y por texto. No busca por contenido ni usa el chat |
 
-Hacer click en un resultado para abrir el documento.
+En el celular, la fila se desliza de costado.
 
----
-
-## Resultados de Expedientes
-
-Los expedientes encontrados se muestran en una tabla con las siguientes columnas:
-
-| Columna | Descripción |
-|---------|-------------|
-| **Trata** | Tipo de expediente (ej: COMP, HABI) |
-| **Motivo** | Descripción del trámite |
-| **Número** | Número oficial del expediente (ej: `EE-2026-000007-TXST-HAC`) |
-| **Sector** | Sector actual donde se encuentra el expediente (ej: `OOPU#PRIV`) |
-
-Hacer click en un resultado para abrir el expediente.
+Si una fecha no sirve, ves el aviso *«Ese filtro no se puede usar. Probá con otras fechas.»*.
 
 ---
 
-## Qué se puede buscar
+## Las tarjetas de resultados
 
-El buscador encuentra coincidencias en múltiples campos:
+Cada resultado es una tarjeta. Tiene una etiqueta que dice qué es: **Documento**, **Expediente**, **Legajo** o **Ficha**. Además muestra el número, la referencia y un resumen corto de hasta 2 líneas.
 
-| Criterio de búsqueda | Ejemplo |
-|----------------------|---------|
-| Por referencia o motivo | Escribir *"panadería"* encuentra expedientes con esa palabra en el motivo |
-| Por número de documento | Escribir *"NOTA-2026"* encuentra documentos con ese prefijo |
-| Por número de expediente | Escribir *"EE-2026-000007"* encuentra el expediente exacto |
-| Por tipo | Escribir *"PREPL"* encuentra documentos de tipo Pre-Pliego |
-| Por significado (búsqueda inteligente) | Escribir *"habilitación de local comercial"* + Enter encuentra documentos que hablen de eso, **aunque esas palabras no estén en el número ni en la referencia** |
+Si un documento está dentro de un expediente, la tarjeta lo dice: *«en el expediente EE-…»*.
 
-!!! warning "La búsqueda por texto NO entra al cuerpo del documento"
-    Escribir *"presupuesto"* encuentra los documentos que tengan esa palabra en el
-    **número o en la referencia**, no los que la tengan adentro. Para buscar por lo que
-    el documento *dice*, está la **búsqueda inteligente**: se escribe la consulta y se
-    aprieta **Enter**.
+### Desplegar y abrir
 
-    Hasta septiembre de 2026 la búsqueda por texto si escaneaba el cuerpo. Se sacó a
-    propósito: esa consulta se llevaba dos tercios del tiempo de la base de datos y hacia
-    lento **todo** el sistema, incluso para los que no estaban buscando. Sacándola, la
-    búsqueda paso de tardar segundos a responder al instante.
+- **Un clic en la tarjeta la despliega.** No salís de la lista.
+- **Para entrar**, desplegala y tocá la franja de abajo: **«Abrir el documento»**, **«Abrir el expediente»** o **«Abrir el legajo»**.
+- **Un clic en «en el expediente EE-…»** abre ese expediente, no el documento. En la computadora se abre en una pestaña nueva.
 
-!!! info "Buscar por nombre de firmante no está disponible"
-    Escribir el nombre de una persona no encuentra los documentos que esa persona firmo.
-    La búsqueda inteligente tampoco lo cubre: un nombre es un dato, no un tema.
-    Para llegar a un documento firmado por alguien, hay que entrar por su número, por su
-    referencia o por el expediente donde está vinculado.
+Qué ves al desplegar:
+
+| Tarjeta | Qué muestra desplegada |
+|---------|------------------------|
+| **Documento** | El resumen largo |
+| **Expediente** | El estado, con su color; el **Trámite** (tipo de expediente); el **Administrador**; los sectores **Con actuación** y el resumen largo |
+| **Legajo** | El resumen del legajo |
+| **Ficha** | El Trámite, el Administrador, los sectores Con actuación y el resumen corto. No se abre |
+
+---
+
+## Ficha: lo que no podés abrir
+
+A veces buscás un expediente que existe, pero no podés abrir porque no es de tu sector. En vez de no mostrarte nada, el Asistente te muestra una **ficha**. Es una tarjeta gris con un candado y la leyenda *«Solo ficha: no tenés acceso a este expediente»*.
+
+La ficha te dice qué sector lo administra y qué sectores tienen actuación. Así sabés a quién pedírselo.
+
+Por ejemplo, Lucía, de Mesa de Entradas de la Municipalidad del Futuro, busca `EE-2026-000414-MUNDEV-HABI`. El expediente ahora lo tiene Bromatología. Lucía ve la ficha con el candado y sabe que se lo tiene que pedir a ese sector.
+
+Reglas de la ficha:
+
+- **Se encuentra solo por número o por referencia del expediente.** Nunca por lo que dicen sus documentos.
+- **Es solo para expedientes.** Un documento o un legajo que no podés ver no aparece.
+- **Un expediente reservado** que no podés ver **no aparece nunca**, tampoco como ficha.
+- **Un expediente cerrado** sale como ficha si no tenés el permiso **Archivo** (ver [Archivo](../expedientes/archivo.md)).
+- **Hay topes:** hasta 10 fichas por búsqueda y un tope por persona por día.
+- Si tenés el permiso **Ver todos los expedientes**, no ves fichas: abrís todos los expedientes, salvo los reservados y los cerrados.
+
+!!! info "Busco solo en lo que podés ver"
+    Fuera de las fichas, el Asistente te muestra solo lo que podés abrir. Los permisos los controla el sistema, no el chat.
+
+---
+
+## Chat «Ayudame a buscar»
+
+En la computadora, el chat del **Asistente** está a la derecha de la lista. En el celular, arriba.
+
+- Tocá **«Ayudame a buscar»** cuando no encontraste lo que buscabas.
+- También podés escribirle en el campo *«Contame qué buscás»*.
+- A veces arranca solo, cuando hace falta afinar la búsqueda.
+
+Qué hace el chat:
+
+- te dice en una línea qué entendió que buscás;
+- si hace falta, te repregunta con botones (por ejemplo, si es un documento o un expediente, o de qué año);
+- con lo que respondés, **filtra la lista**;
+- te puede proponer buscar con otra palabra parecida;
+- si no hay resultados, te sugiere qué probar;
+- si le preguntás cómo se hace algo en GDI, te da el link a esta ayuda.
+
+El chat **no inventa resultados**: solo nombra lo que está en la lista. No te dice que existe algo que no podés ver. Y no cambia nada: solo busca.
+
+Abajo del chat siempre está el aviso *«Busco solo en lo que podés ver»*.
+
+---
+
+## Topes y avisos
+
+| Aviso | Qué significa | Qué hacer |
+|-------|---------------|-----------|
+| *«Hiciste muchas búsquedas seguidas. Esperá un momento y volvé a probar.»* | Pasaste el tope de búsquedas | Esperá unos segundos y buscá de nuevo |
+| *«La IA no está disponible en este momento.»* | La parte inteligente no puede responder ahora | Nada. La búsqueda sigue andando por número y por texto |
+| *«El chat no pudo responder. La lista sigue andando.»* | Falló el chat | Seguí con la lista o probá de nuevo |
+| *«Una parte de la búsqueda tardó demasiado: puede haber más resultados.»* | Una de las formas de buscar no llegó a tiempo | Volvé a buscar o usá un filtro |
+| *«Hay más resultados: probá con un filtro para achicar la lista.»* | La lista es muy larga | Usá los filtros, o tocá **Ver más** si aparece |
+
+**El chat tiene un tope diario por persona.** Cuando lo pasás, el chat sigue andando para lo simple: un número completo, un número suelto o una búsqueda sin resultados. Para el resto, no usa IA hasta el día siguiente. La lista de resultados no se corta.
 
 ---
 
 ## Preguntas frecuentes
 
-??? question "El buscador muestra todos los resultados del sistema?"
-    El buscador muestra los resultados visibles para el usuario según sus permisos. Solo se encuentran documentos y expedientes a los que el usuario tiene acceso.
+??? question "¿El Asistente me muestra todo el municipio?"
+    Te muestra lo que podés abrir. De los expedientes que no podés abrir, te muestra solo la ficha, si los buscás por número o por referencia.
 
-??? question "Puedo buscar desde otra pantalla que no sea Home?"
-    El buscador general está ubicado en la pantalla Home. Cada sección (Documentos, Expedientes) tiene su propio buscador interno para filtrar dentro de esa sección.
+??? question "Busqué por el número y me salió una ficha con candado. ¿Qué hago?"
+    La ficha te dice qué sector lo administra. Pedíselo a ese sector.
 
-??? question "La búsqueda distingue mayúsculas y minúsculas?"
-    No. La búsqueda no distingue entre mayúsculas y minúsculas. Escribir *"nota"*, *"NOTA"* o *"Nota"* produce los mismos resultados.
+??? question "¿Puedo buscar sin IA?"
+    Sí. Prendé **Sin IA** en la fila de filtros. Busca solo por número y por texto.
 
-??? question "Qué pasa si la búsqueda inteligente tarda en responder?"
-    El sistema puede tardar unos segundos en activarse si estuvo inactivo. En ese caso, los resultados de texto aparecen de inmediato y los resultados semánticos se suman cuando el sistema termina de conectarse. No es necesario volver a buscar.
-
-??? question "Qué significa el aviso «La IA no está disponible en este momento.»?"
-    Que la parte inteligente de la búsqueda no puede responder ahora. La búsqueda sigue andando: ves los resultados por número y por referencia. La solapa **Semántica** vuelve cuando la IA vuelve a estar disponible.
-
-??? question "Qué significa el aviso «Hiciste muchas búsquedas seguidas.»?"
-    Cada persona tiene un tope de búsquedas por minuto y por día. Si lo pasás, aparece el aviso *«Hiciste muchas búsquedas seguidas. Esperá un momento y volvé a probar.»*. Esperá unos segundos y buscá de nuevo.
+??? question "No encontré lo que buscaba. ¿Puedo avisar?"
+    Sí. Al final de la lista está el botón **«Reportalo así podemos mejorar»**.

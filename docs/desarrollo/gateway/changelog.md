@@ -10,10 +10,23 @@ funciona. Lo más nuevo arriba. La fecha es el día en que el cambio llegó a pr
 
 ---
 
-## Próxima versión (Backend/Gateway 5.11.0) — Alta de legajo sin duplicar, usuarios por tandas y rango de fechas
+## 27/11/2026 — Usuarios por páginas, fechas en notas y memos, 403 y 404 en expedientes
+
+**Afecta a:** `GET /api/v1/system/users/list`, los listados de notas y memos, `GET /api/v1/cases/{case_id}/permissions`, `GET /api/v1/cases/{case_id}/movements` y `POST /api/v1/cases/{case_id}/documents/propose` (REST y MCP).
+**Versión del Backend/Gateway:** 5.12.0.
+
+| Situación | Antes | Ahora |
+|---|---|---|
+| `GET /system/users/list` sin parámetros | La lista completa | Los primeros 50. Máximo `page_size=200` (más da `400`). La respuesta trae `page`, `page_size`, `count` y `has_more` |
+| Filtro de fechas en notas y memos | Se ignoraba sin avisar | `date_filter`, `date_from` y `date_to` en los 6 listados (recibidos, enviados y archivados) |
+| Permisos o movimientos de un expediente que no existe | `403` o `500` | `404` |
+| Permisos o movimientos de un expediente que el usuario no ve | `500` o `404` | `403` |
+| Proponer un documento a un expediente que el usuario no ve | Se aceptaba | `403` |
+
+## 20/11/2026 — Alta de legajo sin duplicar, usuarios por tandas y rango de fechas
 
 **Afecta a:** `POST /api/v1/records`, `POST /api/v1/records/{record_id}/documents`, `POST /api/v1/documents/import`, `GET /api/v1/system/users/list`, `GET /api/v1/cases/search`, `GET /api/v1/documents/search`, `POST /api/v1/documents/{document_id}/reject`, `GET /api/v1/cases/{case_id}`, `GET /api/v1/cases/{case_id}/permissions`, `POST /api/v1/cases/{case_id}/documents/propose` y las tools MCP `search_cases`, `search_documents`, `reject_document` y `propose_document`.
-**Versión del Backend/Gateway:** 5.11.0. La fecha se completa el día que llega a producción.
+**Versión del Backend/Gateway:** 5.11.0.
 
 | Situación | Antes | Ahora |
 |---|---|---|
@@ -36,10 +49,10 @@ funciona. Lo más nuevo arriba. La fecha es el día en que el cambio llegó a pr
 
 ---
 
-## Próxima versión (Backend/Gateway 5.10.0) — Firma con 409 y 422, topes de tamaño y de búsquedas
+## 20/11/2026 — Firma con 409 y 422, topes de tamaño y de búsquedas
 
 **Afecta a:** `POST /api/v1/documents/{document_id}/sign`, los pedidos que suben archivos (importar, reemplazar el PDF, adjuntos y Trámites a Distancia) y las búsquedas (REST y MCP).
-**Versión del Backend/Gateway:** 5.10.0. La fecha se completa el día que llega a producción.
+**Versión del Backend/Gateway:** 5.10.0.
 
 | Situación | Antes | Ahora |
 |---|---|---|

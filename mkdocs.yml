@@ -130,6 +130,7 @@ nav:
           - usuarios/documentos/index.md
           - Crear y Editar Documento: usuarios/documentos/crear-editar-documento.md
           - Documento Importado (PDF): usuarios/documentos/documento-importado.md
+          - Impresora GDI: usuarios/documentos/impresora-gdi.md
           - Documento tipo NOTA: usuarios/documentos/documento-nota.md
           - Documento FFCC (Formulario Controlado): usuarios/documentos/documento-ffcc.md
           - Previsualizar Documento: usuarios/documentos/previsualizar-documento.md
@@ -145,6 +146,7 @@ nav:
           - Vincular Documentos: usuarios/expedientes/vincular-documentos.md
           - Subsanar en Expediente: usuarios/expedientes/subsanar-expediente.md
           - Expedientes Reservados: usuarios/expedientes/reservados.md
+          - Archivo: usuarios/expedientes/archivo.md
       - Legajos:
           - usuarios/legajos/index.md
           - Crear y Gestionar: usuarios/legajos/crear-legajo.md
@@ -159,7 +161,7 @@ nav:
           - Memo Enviado: usuarios/memos/memo-enviado.md
           - Memo Recibido: usuarios/memos/memo-recibido.md
       - Búsqueda:
-          - usuarios/busqueda/buscador-general.md
+          - Asistente de Búsqueda: usuarios/busqueda/buscador-general.md
       - Asistente AI:
           - usuarios/asistente-ai/index.md
 

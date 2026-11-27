@@ -75,7 +75,7 @@ Número, carátula, estado, tipo de expediente, sector y quien lo creó.
 
 ### Últimos accesos
 
-Nombre, mail, sector y **último acceso** de cada usuario.
+Nombre, mail, sector y **último acceso** de cada usuario. La tabla respeta el [rango de fechas](#rango-de-fechas): si elegís octubre, muestra los accesos de octubre.
 
 Es la tabla que se usa para detectar usuarios que nunca entraron: si alguien figura sin fecha de último acceso, probablemente nunca completó su primer login y hay que reinvitarlo desde [Usuarios](usuarios.md).
 

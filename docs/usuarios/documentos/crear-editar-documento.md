@@ -25,11 +25,30 @@ Desde la sección **Documentos**, hacer click en el botón **"+ Crear"** en la e
 | **Obligatorio** | Sí |
 | **Búsqueda** | Se puede escribir para filtrar por nombre, sigla o descripción |
 
-Cada fila de la lista dice `SIGLA - Nombre - Detalle`: la sigla y el nombre en negro, y el detalle en gris (si es largo, se corta con «…»). A la derecha, un ícono indica la clase del tipo (por ejemplo, texto, importado o nota); al pasar el mouse por el ícono aparece su nombre. Ejemplo:
+Cada fila de la lista dice `SIGLA - Nombre - Detalle`: la sigla y el nombre en negro, y el detalle en gris (si es largo, se corta con «…»). A la derecha, unos íconos indican la clase del tipo y el tipo de firma. Al pasar el mouse por cada ícono aparece su nombre.
+
+| Ícono | Al pasar el mouse | Qué significa |
+|-------|-------------------|---------------|
+| Hoja | Texto | Documento de texto libre |
+| Planilla | Formulario | Formulario controlado (FFCC): campos para completar |
+| Sobre | Nota | Además, es una Nota. Va al lado del ícono de Texto o Formulario |
+| Sobre con tilde | Memo | Además, es un Memo. Va al lado del ícono de Texto o Formulario |
+| Archivo con flecha | Importado (PDF) | Se sube un PDF ya hecho |
+
+El último ícono de la fila, un poco separado, dice qué firma lleva:
+
+| Ícono | Al pasar el mouse |
+|-------|-------------------|
+| Lapicera | Firma electrónica |
+| Llave redonda | Firma digital (con token) para todos |
+| Llave | Firma digital solo para quien numera |
+
+Los mismos íconos se ven al lado del tipo elegido y en **Vincular documento › Nuevo Documento**. Ejemplo:
 
 ```
-DECRE - Decreto - Decreto del Departamento Ejecutivo...      [ícono: Texto]
-INFOR - Informe importado - PDF que se sube ya hecho...       [ícono: Importado]
+DECRE - Decreto - Decreto del Departamento Ejecutivo...      [Texto] [Firma digital para todos]
+ACTHAB - Acta de Inspección - Acta de la inspección...      [Formulario] [Firma electrónica]
+NOTA - Nota - Comunicación entre sectores...                 [Texto] [Nota] [Firma electrónica]
 ```
 
 La misma lista aparece en **+ Crear expediente**. La lista de tipos habilitados depende de la configuración de la organización. Los tipos se muestran en orden alfabético.
