@@ -120,6 +120,14 @@ GDI lista solo estos formatos: **PDF, Word (DOC, DOCX), Excel (XLS, XLSX) e imá
 
 ---
 
+### PDF con un campo de firma vacío
+
+Algunos programas dejan en el PDF un **campo de firma vacío** (un recuadro para firmar, sin firma). Si ese campo tiene el nombre que usa GDI para sus firmas, GDI **no firma** el PDF: la firma podría quedar invisible en la hoja. La firma da error y el documento no avanza.
+
+Si te pasa: rechazá el documento, volvé a exportar el PDF sin campos de firma e importalo de nuevo.
+
+---
+
 ## PDF certificado de origen
 
 Algunos PDF llegan ya certificados por el organismo que los emitió. Por ejemplo: un título universitario, un certificado bancario o una escritura de un escribano. Esa **firma de certificación** cierra el archivo: cualquier cambio la rompe.
