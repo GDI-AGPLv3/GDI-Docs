@@ -164,6 +164,7 @@ EXTS = {".md", ".markdown", ".mdown", ".mkdn", ".mkd", ".yml", ".yaml", ".txt", 
 DOCS_CARPETAS_PERMITIDAS = (
     "usuarios/", "administradores/", "desarrollo/gateway/",
     "assets/", "stylesheets/", "javascripts/", "descargas/",
+    "empezar/",  # páginas «Empezá acá» de la portada, una por perfil (27/11/2026)
 )
 DOCS_ARCHIVOS_PERMITIDOS = {
     "index.md", "glosario.md", "novedades.md", "llms.txt", "robots.txt", "cname",
