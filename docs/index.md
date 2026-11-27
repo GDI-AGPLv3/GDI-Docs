@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-<div class="gdi-hero" markdown>
+<div class="gdi-hero gdi-hero-corto" markdown>
 <span class="gdi-wordmark"><span class="dot"></span> GDI LATAM</span>
 
 # Hola. ¿Qué querés hacer hoy?
@@ -34,7 +34,7 @@ hide:
 
 -   :material-power-plug-outline:{ .gdi-perfil-icono }
 
-    ### Quiero conectar otro sistema o una IA
+    ### Conecto otro sistema o una IA
 
     Integro GDI con otro sistema del municipio, o con Claude o ChatGPT.
 
