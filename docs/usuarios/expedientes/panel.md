@@ -86,12 +86,13 @@ Debajo de las tarjetas hay una caja punteada **"Nueva Tarea / Asignación — As
 !!! info "El Panel es la fuente de verdad"
     Las **caritas** (avatares) que se ven en el encabezado del expediente y en el listado de expedientes son un espejo de lo que muestra el Panel: los responsables administradores más las personas a cargo de las **tareas abiertas** de los sectores actuantes. Si una carita no aparece donde esperabas, lo que vale es lo que dice el Panel.
 
-### Finalizados
+### Movimientos finalizados
 
-Cuando un sector actuante se cierra, su tarjeta **no desaparece**: baja a la línea de tiempo **"Finalizados"**, al pie de la columna. Esa línea de tiempo reune, en orden cronológico:
+Cuando un sector actuante se cierra, su tarjeta **no desaparece**: baja a la línea de tiempo **"Movimientos finalizados"**, al pie de la columna. Esa línea de tiempo reúne, en orden cronológico:
 
 - los **sectores actuantes cerrados** (con el nombre de la repartición y las caras de las personas que actuaron),
 - las **transferencias** de control entre sectores,
+- los **cambios de estado**: «Cambio de estado», «Cierre del expediente» o «Reapertura», con el texto (por ejemplo, *Cambió el estado: de En trámite a Paralizado*), el motivo, quién lo hizo y la fecha. El cierre muestra su documento de cierre (`CIEX`), con su número cuando está listo,
 - y la **creación del expediente** como primer hito.
 
 Es de solo consulta: sirve para reconstruir de un vistazo por donde paso el expediente y quien actuó en cada etapa.

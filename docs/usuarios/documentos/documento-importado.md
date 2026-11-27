@@ -20,6 +20,9 @@ Un documento importado permite subir un archivo PDF externo al sistema para que 
 !!! info "El flujo de firma es idéntico"
     Una vez cargado el PDF, el documento importado sigue exactamente el mismo circuito de previsualización, firma y numeración que un documento HTML. La única diferencia es como se genera el contenido.
 
+!!! tip "Desde un programa que solo imprime"
+    Si el PDF sale de un programa de la PC que solo imprime (por ejemplo, el sistema contable), usá la [Impresora GDI](impresora-gdi.md): imprimís, elegís tipo y expediente, y firmás en una sola pantalla.
+
 !!! tip "PDF que ya viene certificado"
     Si el PDF ya trae una firma de certificación de otro organismo (por ejemplo, un título universitario o una escritura de un escribano), GDI no lo modifica. Lo numera sin firmarlo encima. Ver [PDF certificado de origen](#pdf-certificado-de-origen).
 

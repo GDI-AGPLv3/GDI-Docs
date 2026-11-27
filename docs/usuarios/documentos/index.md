@@ -39,6 +39,9 @@ Ejemplo: en la Municipalidad del Futuro, Juana Pérez le comparte a Carlos Góme
 
     Mientras el borrador está en curso, lo ves en **Compartidos**. Al firmarse, sale de Compartidos. Ver [Compartir un borrador](crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos).
 
+!!! info "Los documentos que arma el sistema no aparecen acá"
+    La carátula, el pase y el documento de cierre (`CIEX`) los genera el sistema solo. No aparecen en **Mis Documentos**, ni en **Documentos mi sector**, ni en **A mi firma**, aunque salgan a tu nombre. Los encontrás en el expediente, en **Docs Oficiales**.
+
 ### Filtros adicionales
 
 En la parte superior derecha del listado se encuentran tres selectores:
