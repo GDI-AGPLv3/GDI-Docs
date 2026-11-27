@@ -1,6 +1,6 @@
 # Vincular Documentos
 
-Vincular un documento a un expediente significa incorporarlo como parte oficial del trámite. Solo los documentos firmados pueden quedar vinculados de forma definitiva. Esta página describe el proceso completo: vincular un documento ya existente o crear uno nuevo que se vincule automáticamente al firmarse, confirmar la vinculación, y gestionar las propuestas pendientes.
+Vincular un documento a un expediente significa incorporarlo como parte oficial del trámite. Solo los documentos firmados pueden quedar vinculados de forma definitiva. Esta página describe el proceso completo: vincular un documento ya existente o crear uno nuevo que se vincule al firmarse (o quede propuesto), confirmar la vinculación, y gestionar las propuestas pendientes.
 
 !!! video "Video tutorial"
     **GDI — Vincular un documento existente a un expediente**
@@ -31,7 +31,7 @@ En ambos casos el sistema primero verifica los permisos (muestra *"Verificando p
 Se abre el modal **"Vincular Documento — <numero>"**, que tiene dos pestañas:
 
 - **Documentos Existentes**: el flujo clásico de buscar y seleccionar un documento ya firmado para vincularlo.
-- **Nuevo Documento**: crear un documento nuevo y vincularlo a este expediente al firmarse (vinculación automática).
+- **Nuevo Documento**: crear un documento nuevo que, al firmarse, se vincula a este expediente (vinculación automática) o queda propuesto.
 
 !!! info "Dos formas de vincular"
     Usa **Documentos Existentes** cuando el documento ya está creado (y normalmente firmado). Usa **Nuevo Documento** cuando todavía no existe y querés que se incorpore solo al expediente en el momento en que se firme.
@@ -112,11 +112,17 @@ Después de proponer aparece el aviso *"Documento propuesto. Lo va a ver el resp
 !!! warning "Cuándo no se puede proponer"
     GDI no deja proponer un documento que **ya está propuesto** a ese expediente y espera respuesta, uno que **ya está vinculado**, ni proponer a un expediente **archivado**. En esos casos muestra el motivo.
 
+!!! info "Un documento que ya está vinculado"
+    Si elegís **Vincular** con un documento que ya está vinculado a ese expediente, GDI no lo vincula de nuevo y avisa que ya está vinculado. El documento sigue una sola vez en **Docs Oficiales**.
+
 ---
 
 ## Crear y vincular un documento nuevo (vinculación automática)
 
-Además de vincular documentos ya existentes, podés crear un documento nuevo directamente desde el expediente y dejarlo configurado para que **se vincule solo en el momento en que se firme**, sin tener que esperar la aceptación manual de una propuesta.
+Además de vincular documentos ya existentes, podés crear un documento nuevo directamente desde el expediente. Al firmarse, el documento hace una de estas dos cosas:
+
+- **Se vincula solo** al expediente (opción por defecto), sin esperar que nadie acepte una propuesta.
+- **Queda propuesto** al expediente, si destildás la casilla **"Vincular automáticamente cuando se firme"**. El responsable lo ve en **Documentos propuestos** y decide si lo acepta.
 
 ### 1. Pestaña "Nuevo Documento" del modal
 
@@ -140,18 +146,33 @@ En el editor (título **"Crear Documento: TIPO - Nombre"**), además de redactar
 - **Expedientes vinculados: <numero>** — el expediente desde el que se inició la creación.
 - Un checkbox **"Vincular automáticamente cuando se firme"**, **tildado**, con la nota: *"Al firmarse el documento, se vinculará solo a los expedientes propuestos, sin esperar aceptación manual."*
 
+El checkbox arranca tildado y **se puede destildar**:
+
+| Checkbox | Qué pasa al firmarse el documento |
+|----------|-----------------------------------|
+| **Tildado** (por defecto) | El documento se vincula solo al expediente y queda en **Docs Oficiales** |
+| **Destildado** | El documento queda **propuesto** al expediente. Aparece en **Documentos propuestos** y el responsable decide si lo acepta o lo rechaza |
+
+Lo que elegís se guarda con el borrador. Si cerrás el borrador y lo volvés a abrir, el checkbox sigue como lo dejaste.
+
 Más abajo se configuran los **Firmantes** y, cuando todo está listo, se presiona **"Comenzar Proceso de Firma"**.
 
-!!! warning "En este flujo la vinculación automática no se puede desactivar"
-    Cuando el documento se crea **desde el expediente** (pestaña "Nuevo Documento"), el panel de vinculación queda **bloqueado**: el expediente de origen no se puede quitar ni se pueden agregar otros, y el checkbox **"Vincular automáticamente cuando se firme"** queda fijo en tildado. Es lógico: la finalidad de este flujo es justamente que el documento se incorpore al expediente al firmarse.
+!!! example "Ejemplo"
+    En la Municipalidad del Futuro, Ana Pérez (Mesa de Entradas) está en el expediente `EX-2026-00000012-MUNDEV`. Toca **Vincular › Nuevo Documento** y escribe un informe. Quiere que el área responsable lo revise antes de sumarlo, así que destilda el checkbox. Al firmarse, el informe aparece en **Documentos propuestos** del expediente, y el área responsable lo acepta.
 
-    Para elegir entre vinculación automática y propuesta pendiente hay que crear el documento por el camino normal (**Documentos › Crear documento**): ahí la sección "Proponer vinculación" es editable y el checkbox se puede destildar. Destildado, al firmarse el documento queda como **propuesta de vinculación** que el administrador del expediente debe aceptar.
+!!! warning "El expediente de origen no se puede quitar"
+    Cuando el documento se crea **desde el expediente** (pestaña "Nuevo Documento"), el expediente de origen queda fijo en la lista: no se puede quitar ni se pueden agregar otros. Lo único que se puede cambiar es el checkbox.
 
 ### 3. Confirmación en el paso de firma
 
 ![Firma con vinculacion automatica](../capturas/firmar-vinculacion-automatica.png)
 
-En el modal **"Firmar — <numero>"**, antes de confirmar la firma, el sistema avisa el destino de la vinculación automática con el texto: *"Al numerarse será vinculado a: <numero> <titulo del expediente>"*.
+En el modal **"Firmar — <numero>"**, antes de confirmar la firma, el sistema avisa qué va a pasar con el documento:
+
+| Checkbox | Texto del aviso |
+|----------|-----------------|
+| Tildado | *"Al numerarse será vinculado a: <numero> <titulo del expediente>"* |
+| Destildado | *"Al numerarse quedará propuesto a: <numero> <titulo del expediente>"* |
 
 ### 4. Resultado: documento firmado y vinculado
 
@@ -161,8 +182,14 @@ Al firmar, aparece la confirmación **"Documento firmado y numerado — El docum
 
 El documento queda **directamente como documento oficial** del expediente, sin pasar por la sección "DOCUMENTOS PROPUESTOS" ni requerir aceptación manual.
 
+### 4 bis. Resultado con el checkbox destildado: documento firmado y propuesto
+
+Si destildaste el checkbox, al firmar aparece el cartel **"Documento firmado y propuesto"**: *"Lo va a ver el responsable en Documentos propuestos."* El documento no entra a **Docs Oficiales** hasta que el responsable lo acepta. Ver [Aceptar vinculación](#aceptar-vinculacion).
+
+Si vos no numerás el documento (por ejemplo, firma otra persona después), el cartel dice **"Se inició el proceso de firmas"**: *"Al numerarse, el documento quedará propuesto al expediente. Lo va a ver el responsable en Documentos propuestos."*
+
 !!! note "Diferencia clave con la vinculación clásica"
-    Con la **vinculación automática** el documento se incorpora solo al firmarse. El flujo clásico —queda como propuesta que el administrador del expediente acepta o rechaza— es el que se da cuando el documento se crea por fuera del expediente y se destilda el checkbox, o cuando se elige **«Proponer al expediente»** sobre un documento existente.
+    Con la **vinculación automática** el documento se incorpora solo al firmarse. El flujo clásico —queda como propuesta que el administrador del expediente acepta o rechaza— es el que se da cuando se destilda el checkbox (desde el expediente o desde **Documentos › Crear documento**), o cuando se elige **«Proponer al expediente»** sobre un documento existente.
 
 ---
 
@@ -230,6 +257,7 @@ El documento se elimina de la lista de propuestos. No se incorpora al expediente
     6. Un mismo documento puede ser propuesto para vinculación en **múltiples expedientes**
     7. Con la **vinculación automática** (checkbox tildado al crear el documento), al firmarse el documento se incorpora directo como oficial, sin pasar por "Vinculaciones Propuestas" ni requerir aceptación manual
     8. Desde el modal solo se pueden vincular documentos **firmados**; para traer uno de otro sector hay que buscarlo por su **número oficial**
+    9. Un documento **ya vinculado** a un expediente no se vincula de nuevo: GDI avisa que ya está vinculado
 
 ---
 
@@ -241,8 +269,8 @@ El documento se elimina de la lista de propuestos. No se incorpora al expediente
 ??? question "Qué significa el checkbox 'Vincular automáticamente cuando se firme'?"
     Tildado, el documento se incorpora solo al expediente en el momento de firmarse, sin esperar la aceptación de una propuesta. Destildado, el documento queda como propuesta de vinculación que el administrador del expediente debe aceptar manualmente.
 
-??? question "Por qué no puedo destildar el checkbox de vinculación automática?"
-    Porque el documento se está creando **desde el expediente**: en ese flujo el destino ya está definido y el panel de vinculación queda bloqueado. Si necesitás dejarlo como propuesta pendiente, crea el documento desde **Documentos › Crear documento** y elegí ahí el expediente.
+??? question "Puedo crear el documento desde el expediente y que quede propuesto, sin vincularse solo?"
+    Sí. En **Vincular › Nuevo Documento**, destildá el checkbox **"Vincular automáticamente cuando se firme"** en el editor. Al firmarse, el documento queda en **Documentos propuestos** y el responsable del expediente decide si lo acepta.
 
 ??? question "Si uso la vinculación automática, el documento queda en 'Vinculaciones Propuestas'?"
     No. Con el checkbox tildado, al firmarse el documento queda directamente como documento oficial del expediente. Solo aparece en "Vinculaciones Propuestas" si se deja la vinculación como propuesta pendiente.

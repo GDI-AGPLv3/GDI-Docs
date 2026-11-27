@@ -73,6 +73,9 @@ Ejemplos de preguntas que se pueden hacer:
 ??? question "Pregunte por un documento recién creado y no aparece su contenido"
     Cuando un documento se acaba de crear, su contenido puede tardar un momento en quedar indexado para el asistente. En ese caso el asistente lo aclara. Si esperás unos instantes y volvés a preguntar, ya debería poder leerlo.
 
+??? question "El asistente no puede leer un documento escaneado"
+    Para leer un documento, GDI primero lo pasa a texto (transcripción). Un escaneo muy pesado puede hacer fallar ese paso. GDI lo intenta hasta **3 veces**. Si falla las 3, el documento queda marcado como **"transcripción fallada"** y GDI no lo vuelve a intentar solo. El documento sigue firmado y válido en el expediente; lo que falta es su texto para el asistente y el resumen. Si necesitás que el asistente lo lea, avisá a soporte.
+
 ??? question "Puedo usar el asistente del expediente sin conexión?"
     No. El asistente requiere conexión a internet para funcionar, ya que procesa las consultas en tiempo real.
 

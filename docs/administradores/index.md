@@ -149,6 +149,8 @@ El sidebar izquierdo del BackOffice contiene las siguientes secciones:
 | **API Key** | Claves de API | No disponible |
 | **Auditorías** | Registros de auditoría | No disponible |
 
+Si la ventana del navegador es baja (por ejemplo, en una notebook), el menú se desplaza por dentro. El pie del menú, con tu usuario, queda siempre a la vista.
+
 ## Acceso al BackOffice
 
 El BackOffice tiene su propia dirección y requiere credenciales de administrador. Solo usuarios con permisos de administración pueden acceder a estas funcionalidades.
