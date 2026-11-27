@@ -5,8 +5,6 @@ hide:
 ---
 
 <div class="gdi-hero gdi-hero-corto" markdown>
-<span class="gdi-wordmark"><span class="dot"></span> GDI LATAM</span>
-
 # Hola. ¿Qué querés hacer hoy?
 
 <p class="gdi-lede">Acá aprendés a usar GDI, el sistema de expedientes y documentos de tu municipio. Elegí lo tuyo y te llevamos paso a paso.</p>
