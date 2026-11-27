@@ -7,63 +7,75 @@ hide:
 <div class="gdi-hero" markdown>
 <span class="gdi-wordmark"><span class="dot"></span> GDI LATAM</span>
 
-# Documentación de GDI Latam
+# Hola. ¿Qué querés hacer hoy?
 
-<p class="gdi-lede">Todo lo que necesitás para usar, administrar e integrar la plataforma de <strong>Gestión Documental Inteligente</strong> para gobiernos de América Latina.</p>
-
-<div class="gdi-hero-actions">
-<a class="md-button" href="https://notebooklm.google.com/notebook/56b820d3-ef1d-403f-bbd2-aa2710e5bdd4" target="_blank" rel="noopener">Aprender con IA · NotebookLM</a>
-<a class="md-button gdi-ghost" href="usuarios/">Manual de usuario</a>
-<a class="md-button gdi-ghost" href="desarrollo/gateway/">Integrar con la API</a>
-<a class="md-button gdi-ghost" href="novedades/">Novedades</a>
-</div>
+<p class="gdi-lede">Acá aprendés a usar GDI, el sistema de expedientes y documentos de tu municipio. Elegí lo tuyo y te llevamos paso a paso.</p>
 </div>
 
-<span class="gdi-section-eyebrow">Elegí tu sección</span>
-## Por dónde empezar
+<span class="gdi-section-eyebrow">1 · Contanos quién sos</span>
 
-<div class="grid cards" markdown>
+<div class="grid cards gdi-perfiles" markdown>
 
--   :material-account:{ .lg .middle } **Usuarios**
+-   :material-account-outline:{ .gdi-perfil-icono }
 
-    ---
+    ### Trabajo en el municipio
 
-    Cómo crear documentos, gestionar expedientes, enviar notas y memos, firmar con token y usar el asistente AI.
+    Firmo documentos, armo expedientes, mando notas y memos.
 
-    [:octicons-arrow-right-24: Ir al manual de usuario](usuarios/index.md)
+    [Empezar :octicons-arrow-right-24:](empezar/municipio.md)
 
--   :material-shield-account:{ .lg .middle } **Administradores**
+-   :material-cog-outline:{ .gdi-perfil-icono }
 
-    ---
+    ### Soy administrador
 
-    Panel de administración (BackOffice): organizaciones, usuarios, permisos, sectores, tipos de documento y configuración.
+    Cargo usuarios, sectores y tipos de documento en el BackOffice.
 
-    [:octicons-arrow-right-24: Ir a administración](administradores/index.md)
+    [Empezar :octicons-arrow-right-24:](empezar/administrador.md)
 
--   :material-api:{ .lg .middle } **Gateway API**
+-   :material-power-plug-outline:{ .gdi-perfil-icono }
 
-    ---
+    ### Quiero conectar otro sistema o una IA
 
-    Integración con GDI: MCP Server para agentes IA y REST API para sistemas externos. 45 endpoints documentados.
+    Integro GDI con otro sistema del municipio, o con Claude o ChatGPT.
 
-    [:octicons-arrow-right-24: Ir a Gateway API](desarrollo/gateway/index.md)
+    [Empezar :octicons-arrow-right-24:](empezar/conectar.md)
 
 </div>
 
-!!! info "Sobre esta documentación"
-    Está organizada por audiencia: cada perfil tiene su propia sección. Usá el buscador (arriba a la derecha) para encontrar cualquier término en toda la documentación.
+<span class="gdi-section-eyebrow">2 · ¿Cómo te gusta aprender?</span>
 
----
+<div class="grid cards gdi-formas" markdown>
 
-<span class="gdi-section-eyebrow">Referencia técnica</span>
-## Stack y servicios
+-   :material-play-circle-outline:{ .gdi-forma-icono } **Viendo videos**
 
-??? abstract "Stack tecnológico"
+    Tutoriales cortos, de menos de un minuto, sin leer nada.
 
-    | Capa | Tecnologías |
-    |------|-------------|
-    | **Frontend** | Next.js 15, React 18, TypeScript, Tailwind CSS, shadcn/ui |
-    | **Backend** | FastAPI, Python 3.12, OIDC/OAuth 2.0, PostgreSQL 17 |
-    | **Gateway API** | MCP Server (42 tools) + REST API (45 endpoints) |
-    | **Microservicios** | Notary (pyHanko), AgenteLANG (LangGraph) |
-    | **Infraestructura** | Docker, almacenamiento S3 compatible |
+    [Ver los videos](empezar/municipio.md#videos)
+
+-   :material-chat-question-outline:{ .gdi-forma-icono } **Preguntándole a una IA**
+
+    Escribís tu duda como se la dirías a un compañero. La IA contesta con esta documentación.
+
+    [Preguntarle a la IA](https://notebooklm.google.com/notebook/56b820d3-ef1d-403f-bbd2-aa2710e5bdd4){ target="_blank" rel="noopener" }
+
+-   :material-book-open-variant:{ .gdi-forma-icono } **Leyendo paso a paso**
+
+    El manual completo, pantalla por pantalla.
+
+    [Abrir el manual](usuarios/index.md)
+
+</div>
+
+<span class="gdi-section-eyebrow">Lo que más se busca</span>
+
+<div class="gdi-atajos" markdown>
+[:material-draw-pen: Cómo firmo un documento](usuarios/documentos/proceso-de-firma.md)
+[:material-folder-plus-outline: Cómo armo un expediente](usuarios/expedientes/index.md)
+[:material-email-outline: Cómo mando una nota](usuarios/notas/nota-enviada.md)
+[:material-swap-horizontal: Cómo paso un expediente a otra oficina](usuarios/expedientes/panel.md)
+[:material-magnify: Cómo busco un expediente](usuarios/busqueda/buscador-general.md)
+</div>
+
+<div class="gdi-novedad" markdown>
+:material-star-four-points-outline: **Lo nuevo de noviembre:** borradores que se escriben entre dos y formularios con grupos que se repiten. [Ver las novedades](novedades.md)
+</div>

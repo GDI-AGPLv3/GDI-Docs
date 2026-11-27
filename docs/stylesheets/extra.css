@@ -424,3 +424,95 @@ body, input,
   max-width: none;
   border: 0;
 }
+
+/* ======================================================================
+   PORTADA AMIGABLE · perfiles, formas de aprender, atajos (27/11/2026)
+   ====================================================================== */
+/* Tarjetas de perfil: grandes y clickeables enteras */
+.md-typeset .gdi-perfiles > ul > li {
+  position: relative;
+  padding: 1.6rem 1.5rem 1.4rem;
+  text-align: center;
+}
+.md-typeset .gdi-perfiles h3 {
+  margin: 0.4rem 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+.md-typeset .gdi-perfiles p { margin: 0.3rem 0; color: var(--gdi-neutral-700); }
+[data-md-color-scheme="slate"] .md-typeset .gdi-perfiles p { color: var(--gdi-neutral-200); }
+.md-typeset .gdi-perfiles .gdi-perfil-icono svg {
+  width: 3.2rem;
+  height: 3.2rem;
+  fill: var(--gdi-primary);
+}
+[data-md-color-scheme="slate"] .md-typeset .gdi-perfiles .gdi-perfil-icono svg { fill: var(--gdi-sky); }
+.md-typeset .gdi-perfiles a {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  background: var(--gdi-primary);
+  color: #fff;
+  font-weight: 700;
+}
+.md-typeset .gdi-perfiles a::after {   /* toda la tarjeta es el link */
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Formas de aprender */
+.md-typeset .gdi-formas > ul > li { position: relative; }
+.md-typeset .gdi-formas .gdi-forma-icono svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: var(--gdi-sky);
+  vertical-align: -0.35rem;
+  margin-right: 0.3rem;
+}
+.md-typeset .gdi-formas a { font-weight: 700; }
+.md-typeset .gdi-formas a::after { content: ""; position: absolute; inset: 0; }
+
+/* Atajos a lo más buscado */
+.md-typeset .gdi-atajos p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.md-typeset .gdi-atajos a {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--gdi-primary-200);
+  background: var(--gdi-primary-50);
+  font-weight: 600;
+}
+[data-md-color-scheme="slate"] .md-typeset .gdi-atajos a {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.15);
+}
+.md-typeset .gdi-atajos a:hover { border-color: var(--gdi-primary); }
+
+/* Línea de novedades */
+.md-typeset .gdi-novedad {
+  margin-top: 2rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--gdi-radius-md);
+  background: var(--gdi-primary-50);
+  border-left: 4px solid var(--gdi-amber);
+}
+[data-md-color-scheme="slate"] .md-typeset .gdi-novedad { background: rgba(255,255,255,0.05); }
+
+/* Grilla de videos en las páginas «Empezá acá» */
+.md-typeset .gdi-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1.2rem;
+}
+.md-typeset .gdi-videos figure { margin: 0; }
+.md-typeset .gdi-videos figcaption {
+  margin-top: 0.3rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: left;
+}

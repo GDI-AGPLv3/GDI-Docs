@@ -119,6 +119,7 @@ nav:
 
   - Usuarios:
       - usuarios/index.md
+      - Empezá acá: empezar/municipio.md
       - Inicio:
           - usuarios/inicio/index.md
       - Catálogos:
@@ -163,6 +164,7 @@ nav:
 
   - Administradores:
       - administradores/index.md
+      - Empezá acá: empezar/administrador.md
       - Información General: administradores/informacion-general.md
       - Roles y Sellos: administradores/roles-y-sellos.md
       - Organigrama: administradores/organigrama.md
@@ -201,6 +203,7 @@ nav:
 
   - Integrar con GDI:
       - desarrollo/index.md
+      - Empezá acá: empezar/conectar.md
       - Gateway API:
           - desarrollo/gateway/index.md
           - Autenticación: desarrollo/gateway/autenticacion.md
