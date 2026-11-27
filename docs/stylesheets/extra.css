@@ -516,16 +516,26 @@ body, input,
 }
 [data-md-color-scheme="slate"] .md-typeset .gdi-novedad { background: rgba(255,255,255,0.05); }
 
-/* Grilla de videos en las páginas «Empezá acá» */
+/* Videos en las páginas «Empezá acá»: uno abajo del otro, grandes,
+   con el título arriba (Santiago, 27/11/2026) */
 .md-typeset .gdi-videos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-  gap: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
 }
-.md-typeset .gdi-videos figure { margin: 0; }
+.md-typeset .gdi-videos figure {
+  display: flex;
+  flex-direction: column-reverse;   /* el título va arriba del video */
+  align-items: stretch;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+}
 .md-typeset .gdi-videos figcaption {
-  margin-top: 0.3rem;
-  font-weight: 600;
-  font-size: 0.85rem;
+  margin: 0 0 0.4rem;
+  max-width: none;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.05rem;
   text-align: left;
 }
