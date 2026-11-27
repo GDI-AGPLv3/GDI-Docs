@@ -7,7 +7,7 @@ Esta pantalla muestra el detalle de una nota desde la perspectiva del **remitent
 !!! video "Video tutorial"
     **GDI — Crear y firmar una Nota: paso a paso**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/O6Mwu0ulf50?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar una Nota: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/kNeby5kBpdc?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar una Nota: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 

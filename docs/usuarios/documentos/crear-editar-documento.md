@@ -5,7 +5,7 @@ Esta pantalla permite crear un nuevo documento oficial o editar uno existente en
 !!! video "Video tutorial"
     **GDI — Crear y firmar un Informe: paso a paso**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/R9A6j3uHEFM?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar un Informe: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/61pPIwHILb8?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar un Informe: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 

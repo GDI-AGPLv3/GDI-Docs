@@ -7,11 +7,11 @@ El buscador general permite encontrar **documentos y expedientes** en todo el si
 !!! video "Video tutorial"
     **GDI — Búsqueda semántica con IA: encontrá en lenguaje natural**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/OaiucbGan9Y?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Busqueda semantica con IA: encontra en lenguaje natural" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/L9yAzTem78o?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Busqueda semantica con IA: encontra en lenguaje natural" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
     **GDI — Buscar y filtrar expedientes y documentos**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/U351ZpdSYm0?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Buscar y filtrar expedientes y documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/16BAVkXXU4I?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Buscar y filtrar expedientes y documentos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 
