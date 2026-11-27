@@ -10,6 +10,22 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
+## 27 de noviembre de 2026: Los expedientes se cierran, se archivan y se buscan con un asistente
+
+Noviembre 2026: cierre y reapertura de expedientes, Archivo, Asistente de Búsqueda con chat de IA, Impresora GDI, formularios con grupo dentro de grupo y datos de formularios firmados por API y MCP. [Leer la nota en el blog](https://gdilatam.com/novedades/2026-11-cierre-de-expedientes-archivo-asistente-de-busqueda).
+
+- **El expediente muestra su estado y se cierra con un documento** (Nueva funcionalidad). Cada expediente muestra si está En trámite o Paralizado. Para cerrarlo se firma un documento de cierre (CIEX) y, si hay que retomarlo, se reabre mandándolo a un sector. [Ver la guía](usuarios/expedientes/detalle-expediente.md)
+- **Archivo: ver y buscar los expedientes cerrados** (Nueva funcionalidad). Quien tiene el permiso Archivo ve y busca los expedientes cerrados. [Ver la guía](usuarios/expedientes/index.md)
+- **Asistente de Búsqueda: palabras, números y un chat con IA** (Inteligencia Artificial). Reemplaza al buscador. Si algo existe pero no podés abrirlo, ves una ficha con lo básico. Al lado tenés el chat con IA. [Ver la guía](usuarios/busqueda/buscador-general.md)
+- **Impresora GDI: imprimís desde tu PC y llega a GDI** (Nueva funcionalidad). El PDF que imprime el programa de la PC llega a la pantalla Importando desde PC. [Ver la guía](usuarios/documentos/documento-importado.md)
+- **Formularios con un grupo adentro de otro** (Nueva funcionalidad). Por ejemplo, una persona y, adentro, sus actividades. El resumen de IA muestra un renglón por bloque. [Ver la guía](usuarios/documentos/documento-ffcc.md)
+- **Un punto rojo en lo que te compartieron y no abriste** (Mejora). Las solapas de Documentos tienen ícono y texto, y Compartidos conmigo pasó al segundo lugar. [Ver la guía](usuarios/documentos/index.md#pestanas-de-filtrado)
+- **El editor de un documento compartido puede cancelar la firma** (Firma). Además, cada tipo de documento muestra su clase y su tipo de firma con un ícono. [Ver la guía](usuarios/documentos/proceso-de-firma.md)
+- **El tipo de expediente tiene un objetivo que usa el resumen de IA** (Inteligencia Artificial). El administrador lo escribe en el tipo de expediente. [Ver la guía](administradores/tipos-de-expedientes.md)
+- **Vincular automáticamente, ahora con casilla** (Mejora). Si la destildás, el documento firmado queda propuesto y decide el responsable. [Ver la guía](usuarios/expedientes/vincular-documentos.md)
+- **Formularios firmados con sus datos, por API y MCP** (Integración). El sistema externo recibe los valores cargados y la lista de campos. [Ver la guía](desarrollo/gateway/rest-api/expedientes.md)
+- **Firmas completas y avisos claros** (Mejora). Una hoja con 14 firmantes o más muestra todas las firmas, los adjuntos de un PDF importado aparecen en el documento oficial y los avisos normales ya no salen como Error 500 o 502. [Ver la guía](usuarios/documentos/proceso-de-firma.md)
+
 ## 20 de noviembre de 2026: Borradores que se escriben entre dos y formularios con grupos que se repiten
 
 Noviembre 2026: borradores compartidos por turnos, formularios controlados con grupos de campos que se repiten, documentos firmados propuestos a un expediente y adjuntos dentro del PDF de Notas y Memos. [Leer la nota en el blog](https://gdilatam.com/novedades/2026-11-borradores-compartidos-formularios-grupos).
