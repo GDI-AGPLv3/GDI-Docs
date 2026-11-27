@@ -10,6 +10,32 @@ funciona. Lo más nuevo arriba. La fecha es el día en que el cambio llegó a pr
 
 ---
 
+## Próxima versión (Backend/Gateway 5.11.0) — Alta de legajo sin duplicar, usuarios por tandas y rango de fechas
+
+**Afecta a:** `POST /api/v1/records`, `POST /api/v1/records/{record_id}/documents`, `POST /api/v1/documents/import`, `GET /api/v1/system/users/list`, `GET /api/v1/cases/search`, `GET /api/v1/documents/search`, `POST /api/v1/documents/{document_id}/reject`, `GET /api/v1/cases/{case_id}`, `GET /api/v1/cases/{case_id}/permissions`, `POST /api/v1/cases/{case_id}/documents/propose` y las tools MCP `search_cases`, `search_documents`, `reject_document` y `propose_document`.
+**Versión del Backend/Gateway:** 5.11.0. La fecha se completa el día que llega a producción.
+
+| Situación | Antes | Ahora |
+|---|---|---|
+| Se reintenta el alta de un legajo después de un corte | Quedaba un legajo duplicado | Con el header `Idempotency-Key`, el reintento devuelve la respuesta original (`Idempotent-Replay: true`) y no crea otro. Ver [Legajos](rest-api/legajos.md#reintentos-seguros-idempotency-key) |
+| Alta de legajo con `document_id` | Había que crear y vincular en dos pedidos | Un solo pedido: si la vinculación falla, no queda el legajo vacío |
+| Se vincula un documento que ya estaba vinculado al mismo legajo | `409` | `200` con `"already_linked": true` |
+| Se importa un PDF dos veces por un reintento | Quedaban dos documentos | Con `Idempotency-Key`, uno solo |
+| `page` y `page_size` en la lista de usuarios | Se ignoraban: venían todos | Se respetan. Sin esos parámetros, la lista entera como siempre. Ver [Sistema](rest-api/sistema.md) |
+| `date_from` y `date_to` en la búsqueda de expedientes y documentos (REST y MCP) | Se ignoraban sin aviso: venía todo | Filtran de verdad. Formato `YYYY-MM-DD` |
+| Motivo de rechazo de menos de 5 caracteres | Se aceptaba (solo se frenaba el vacío) | `422`: `El motivo debe tener al menos 5 caracteres`. Igual que la pantalla |
+| Se pide un expediente que no existe | `403` «Sin permisos» | `404` «Expediente no encontrado». Uno que existe pero es de otra área sigue en `403` |
+| Se piden los permisos de un expediente de otra área | `500` | `403` |
+| Se propone un documento ya propuesto o ya vinculado, o a un expediente archivado | Se aceptaba (propuesta duplicada) | `409` con el motivo. Los permisos traen `can_propose_documents` |
+
+### Qué tenés que revisar
+
+- Si tu integración manda `page` o `page_size` a `GET /system/users/list` y espera la lista entera, sacalos o recorré las páginas hasta `has_more: false`.
+- Si tu integración trataba el `409` de «documento ya vinculado al legajo» como éxito, ahora llega `200`.
+- Si mandás `date_from`/`date_to`, los resultados ahora vienen filtrados.
+
+---
+
 ## Próxima versión (Backend/Gateway 5.10.0) — Firma con 409 y 422, topes de tamaño y de búsquedas
 
 **Afecta a:** `POST /api/v1/documents/{document_id}/sign`, los pedidos que suben archivos (importar, reemplazar el PDF, adjuntos y Trámites a Distancia) y las búsquedas (REST y MCP).

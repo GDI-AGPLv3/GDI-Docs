@@ -165,6 +165,7 @@ Al importar, GDI revisa las firmas que trae el PDF. Si encuentra un problema, no
 | *"El PDF trae firmas digitales que no se pudieron leer. No se importó para no romperlas: volvé a generar o exportar el PDF desde su origen."* | Pedir el PDF de nuevo al organismo emisor, o exportarlo otra vez |
 | *"El PDF está protegido con contraseña para abrirse. No se importó: importá una copia sin contraseña de apertura."* | Guardar una copia sin contraseña de apertura e importarla |
 | *"El PDF tiene más de 250 páginas. Partilo en varios documentos."* | Partir el PDF en varios archivos de hasta 250 páginas e importar cada uno como un documento. El mismo aviso sale al firmar un importado de más de 250 páginas |
+| *"El pedido es demasiado grande: el máximo para esta operación es N MB. Achicá el archivo o partilo en varios."* | El archivo pasa el tope de esa operación (el aviso dice cuál es). Partir el PDF en varios documentos, o achicar un archivo que todavía no tiene firmas. Vale también para los adjuntos |
 
 ---
 

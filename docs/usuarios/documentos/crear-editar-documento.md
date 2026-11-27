@@ -109,8 +109,28 @@ Se carga con el valor ingresado en el diálogo de creación. Se puede modificar 
 | Lista con puntos | Lista con puntos |
 | Alineación | Alinear el párrafo a la izquierda, al centro, a la derecha o justificado |
 | Ícono de imagen | Insertar una imagen. Ver [Insertar una imagen](#insertar-una-imagen) |
+| Ícono de tabla | Insertar una tabla. Ver [Insertar una tabla](#insertar-una-tabla) |
 
 El editor soporta copiar y pegar texto desde procesadores de texto (Word, Google Docs) manteniendo formato básico.
+
+#### Insertar una tabla
+
+1. Ubicar el cursor donde va la tabla.
+2. Hacer click en **«Insertar tabla»** en la barra. Se abre una grilla.
+3. Pasar el mouse por la grilla para elegir filas y columnas (hasta 20 filas por 10 columnas) y hacer click.
+
+Con el cursor dentro de una tabla aparecen los botones para cambiarla:
+
+| Botón | Qué hace |
+|-------|----------|
+| **Insertar fila arriba** / **Insertar fila abajo** | Suma una fila |
+| **Insertar columna a la izquierda** / **a la derecha** | Suma una columna |
+| **Eliminar fila** / **Eliminar columna** | Quita la fila o la columna donde está el cursor |
+| **Eliminar tabla** | Quita la tabla entera |
+
+- También podés **pegar una tabla** copiada de Word o Google Docs.
+- En el PDF firmado la tabla sale con bordes, y una fila no se corta entre dos páginas.
+- No hay fila de encabezado especial ni celdas combinadas.
 
 #### Insertar una imagen
 
@@ -140,6 +160,40 @@ Para cambiar la imagen antes de insertarla, hacer click en *"Elegir otra imagen"
 
 !!! info "Documentos importados (PDF)"
     Para tipos de documento marcados como "Importado" (ej: Informe Gráfico Importado, Contrato, Plano), en lugar del editor de texto se muestra una **zona de carga de PDF**. Se puede arrastrar un archivo o hacer click para seleccionarlo.
+
+---
+
+## Compartir un borrador y editarlo por turnos
+
+Un borrador se puede compartir con otras personas del municipio para que lo editen. **Escribe una persona por vez**: los demás miran los cambios mientras se guardan.
+
+### Caja «Compartir»
+
+La caja **«Compartir»** está en el panel derecho, arriba de Firmantes. Se despliega en el lugar, sin ventana aparte.
+
+- **Quien creó el borrador** busca personas por nombre (por ejemplo, *"Cast"*), las suma y las quita. Cada persona aparece con su foto, su sector (DPTO#SECTOR con su color) y su cargo.
+- **Quien recibió el borrador compartido** ve quién se lo compartió y puede tocar **«Quitarme»** en su propia fila para dejar de editarlo.
+- Las personas sumadas pueden editarlo y **enviarlo a firma**. Borrar el borrador sigue siendo solo de quien lo creó.
+- Los documentos **reservados no se comparten**: la caja lo avisa (*"Los reservados no se comparten"*).
+- Los borradores que te compartieron aparecen en la pestaña **«Compartidos conmigo»** de Documentos.
+
+### Quién escribe ahora: «Tomar edición» y «Soltar»
+
+En la caja hay una línea que siempre dice quién tiene la edición:
+
+| Lo que ves | Qué significa | Qué podés hacer |
+|------------|---------------|-----------------|
+| *"Estás escribiendo vos. Los demás ven tus cambios."* | Tenés la edición | Tocar **«Soltar»** para que otra persona pueda tomarla |
+| *"Lucía Gómez está escribiendo"* | Otra persona tiene la edición | Mirar el documento en modo lectura. Los cambios aparecen solos cada unos segundos |
+| *"Nadie está escribiendo. Tomá la edición para cambiarlo."* | La edición está libre | Tocar **«Tomar edición»** |
+
+- El primero que abre el borrador toma la edición.
+- La edición se suelta sola al cerrar el documento, al enviarlo a firma, al rechazarlo o al borrarlo. Si alguien deja la pestaña abierta sin usarla, se libera sola a los pocos minutos.
+- Si intentás guardar sin tener la edición, aparece: *"No se guardó: ahora no tenés la edición de este documento. Tocá «Tomar edición» arriba y probá de nuevo."*
+- Si perdiste la edición mientras escribías, GDI te ofrece **«Copiar mi texto»** o **«Recargar la última»** versión: no se pierde trabajo.
+
+!!! example "Ejemplo"
+    En la Municipalidad del Futuro, Lucía Gómez (Hacienda) crea un informe y lo comparte con Martín Ruiz (Legal). Lucía escribe la primera parte y toca **«Soltar»**. Martín toca **«Tomar edición»**, completa la parte legal y lo envía a firma. En la pantalla de firma, la línea «Envía:» dice Martín Ruiz.
 
 ---
 

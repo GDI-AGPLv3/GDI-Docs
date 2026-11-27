@@ -54,6 +54,7 @@ Persona 2   Nombre [Carlos]  Apellido [Gómez ]  DNI [30222222]  ✕
 - El formulario arranca con la cantidad mínima de bloques que fijó el administrador.
 - Cuando llegás al máximo, el «+» se apaga. Cuando estás en el mínimo, la «✕» se apaga.
 - Si un campo del grupo es obligatorio, hay que completarlo en cada bloque. El aviso marca el campo del bloque que falta.
+- Si el grupo no tiene campos obligatorios y no lo tocás, los bloques iniciales se guardan igual (vacíos). Podés previsualizar y firmar sin que aparezca un aviso de «mínimo de bloques».
 
 !!! note "El resto del documento es igual"
     Las secciones **Firmantes** y **Proponer vinculación** (con la opción de [vinculación automática al firmar](../expedientes/vincular-documentos.md)) funcionan igual que en cualquier otro documento. Solo cambia la forma de cargar el contenido.
@@ -85,6 +86,12 @@ Si el formulario tiene un grupo y el tipo no tiene plantilla, cada bloque sale c
 > …
 
 Si el tipo tiene plantilla, el texto del grupo sale una vez por cada bloque, como lo armó el administrador.
+
+### El resumen de IA de un FFCC con plantilla
+
+GDI arma un resumen automático de cada documento. En un FFCC con plantilla, el resumen lee los campos y también el texto de la plantilla. Los datos salen de los campos. El texto fijo le dice qué hace el documento: por ejemplo, si *otorga*, *deniega* o *intima*. Así el resumen dice qué resolvió el acto, no solo los valores cargados.
+
+Vale para los documentos que se resumen desde ahora. Los que ya tenían resumen no cambian.
 
 A partir de ahí, el documento sigue el flujo habitual: se firma, se numera y puede vincularse a un expediente como cualquier otro documento.
 

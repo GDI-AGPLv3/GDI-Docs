@@ -63,7 +63,11 @@ El sistema genera automáticamente un resumen del documento utilizando inteligen
 
 ### Enviado por
 
-Muestra el nombre y avatar del usuario que inició el proceso de firma (el creador del documento).
+La línea **«Envía:»** muestra el nombre y la foto de quien mandó el documento a firma. Si el borrador era compartido y lo mandó otra persona, figura esa persona, no quien lo creó. Lo mismo se ve en el Inicio, en la bandeja y en el celular («te lo envió»). El progreso de las firmas aparece en la misma caja de Firmantes.
+
+### Editores
+
+Si el borrador se [compartió](crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos), aparece la caja **«Editores»**, cerrada. Al desplegarla ves quién creó el documento y quiénes lo editaron.
 
 ### Firmantes y estados
 
@@ -185,6 +189,17 @@ Para una descripción detallada del formato, consultar [Crear y Editar Documento
 
 ---
 
+## Cómo queda la firma en el PDF
+
+Cada firma se estampa como un **sello** en la hoja de firmas, al final del documento.
+
+- **Todos los sellos llevan letra del mismo tamaño.** Si una línea del sello es larga (por ejemplo, el nombre de un sector como *Departamento de Administración de Expedientes*), esa línea se parte en dos renglones. El sello no se achica, y las firmas quedan alineadas.
+- **Un importado que ya trae firmas de afuera se firma igual.** Puede traer muchas firmas digitales de otro sistema. La firma de GDI va primera en la hoja de firmas, y las firmas de origen siguen válidas.
+
+Si aun así la firma no entra, la pantalla muestra *"La firma no entra en el documento. Avisá a soporte: no hace falta que lo vuelvas a intentar."* No hace falta reintentar: avisá a soporte.
+
+---
+
 ## Avisos cuando el PDF no se puede firmar
 
 Algunos documentos importados traen un PDF que GDI no puede firmar. En ese caso la firma se frena y el panel lateral muestra el motivo:
@@ -199,6 +214,19 @@ Algunos documentos importados traen un PDF que GDI no puede firmar. En ese caso 
 | *"El PDF cambió desde que se verificó como certificado de origen, así que no se numeró. Reintentá la firma; si se repite, rechazá el documento, borralo e importalo de nuevo."* | Firmar de nuevo. Si se repite, rechazar, borrar e importar de nuevo |
 
 Para rechazar, ver [Rechazar y Subsanar](rechazar-y-subsanar.md).
+
+---
+
+## Firma conjunta: la tanda se pausa si el sistema está saturado
+
+Cuando firmás varios documentos juntos (**«Firmar todo junto»**) y el sistema tiene mucha demanda, la tanda **se pausa** en lugar de marcar todo como fallido. Aparece un aviso amarillo, por ejemplo:
+
+> *"Se pausó la tanda: el sistema está saturado. Sigue sola en 0:30. Quedan 3 documentos pendientes: no fallaron, todavía no se mandaron."*
+
+- Los documentos que faltan quedan **pendientes**, no fallidos: no hace falta rearmar la tanda.
+- Si la espera es corta, la tanda **sigue sola** cuando termina la cuenta regresiva.
+- Si la espera es larga, o es la tercera pausa seguida, el aviso dice *"Podés seguir en…"* y la tanda sigue cuando tocás **«Seguir»**.
+- Mientras está en pausa podés tocar **«Cancelar la tanda»**. Lo que ya se firmó queda firmado.
 
 ---
 

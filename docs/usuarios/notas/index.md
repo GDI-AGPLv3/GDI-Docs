@@ -80,6 +80,16 @@ Para crear una nota, se utiliza el flujo de creación de documentos seleccionand
 
 El cuerpo de la nota admite imágenes. Se insertan con el botón de imagen de la barra del editor. Ver [Insertar una imagen](../documentos/crear-editar-documento.md#insertar-una-imagen).
 
+### Archivos adjuntos en la nota
+
+Si el administrador habilitó adjuntos en el tipo NOTA, el panel lateral del editor muestra la sección **"Archivos adjuntos"**. Ahí sumás planillas, fotos, planos u otros PDF. Al firmarse, los adjuntos quedan **dentro del PDF de la nota**, en un solo archivo.
+
+- Los destinatarios de **PARA** y **CC** ven y descargan los adjuntos aunque sean de otro sector.
+- Quien no es remitente ni destinatario, y no tiene otro permiso sobre la nota, no los ve.
+- Las notas enviadas antes de este cambio no cambian.
+
+Después de la firma, los adjuntos se ven en la sección **"Archivos adjuntos"** de la nota, en la web y en el celular. Ver también [Archivos embebidos en documentos oficiales](../expedientes/detalle-expediente.md#archivos-embebidos-en-documentos-oficiales).
+
 ---
 
 ## Secciones de esta guía
