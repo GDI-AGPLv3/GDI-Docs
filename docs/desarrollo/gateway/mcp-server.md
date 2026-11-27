@@ -52,6 +52,8 @@ Busca expedientes por texto en contenido completo.
 | `page_size` | int | 20 | Ítems por página (max 100) |
 | `status` | string | null | `active`, `inactive`, `archived` |
 | `date_filter` | string | null | `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | null | Rango propio: fecha desde, incluida (`YYYY-MM-DD`) |
+| `date_to` | string | null | Rango propio: fecha hasta, incluida (`YYYY-MM-DD`). Si también mandás `date_filter`, manda `date_filter` |
 | `sector_filter` | string | null | UN sector: acrónimo exacto, `DEPT#SECTOR` o UUID. Si no resuelve, la tool devuelve error (no la lista completa). Ver [Cambios de la API](changelog.md) |
 
 **Respuesta:**
@@ -155,6 +157,8 @@ Busca en el contenido completo de documentos.
 | `status` | string | null | `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
 | `document_type` | string | null | Acrónimo del tipo: `INF`, `DICT`, `RES`, etc. |
 | `case_id` | string | null | Filtrar por expediente específico |
+| `date_from` | string | null | Rango propio: fecha desde, incluida (`YYYY-MM-DD`) |
+| `date_to` | string | null | Rango propio: fecha hasta, incluida (`YYYY-MM-DD`) |
 
 **Respuesta:**
 
@@ -478,7 +482,7 @@ Rechaza un documento en proceso de firma. Disponible para cualquier firmante asi
 | Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
 | `document_id` | string | *requerido* | UUID del documento |
-| `reason` | string | *requerido* | Motivo del rechazo |
+| `reason` | string | *requerido* | Motivo del rechazo, **mínimo 5 caracteres** (sin contar espacios de los bordes). Si es más corto, la tool devuelve error |
 
 #### 33. `search_document_by_number`
 

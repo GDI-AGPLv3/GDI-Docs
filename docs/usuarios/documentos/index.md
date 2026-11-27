@@ -18,6 +18,11 @@ Desde el **menú lateral izquierdo**, hacer click en **Documentos**. Se muestra 
 | **Documentos mi sector** | Documentos creados por cualquier usuario del sector al que pertenece el usuario |
 | **Documentos favoritos** | Documentos marcados como favorito por el usuario |
 
+!!! info "Lo que editaste en un borrador compartido"
+    Cuando un borrador que te compartieron se firma, el documento aparece en **Mis Documentos** de cada persona que lo editó. Lo encontrás con el buscador, por referencia, como cualquier otro tuyo. Ejemplo: en la Municipalidad del Futuro, Lucía Fernández arma un informe y lo comparte con Castor Gómez. Castor lo termina y lo manda a firma. Una vez firmado, el informe está en Mis Documentos de Lucía y también en el de Castor.
+
+    Mientras el borrador está en curso, lo ves en **Compartidos**. Al firmarse, sale de Compartidos. Ver [Compartir un borrador](crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos).
+
 ### Filtros adicionales
 
 En la parte superior derecha del listado se encuentran tres selectores:

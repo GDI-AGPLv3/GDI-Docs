@@ -5,7 +5,7 @@ Cuando abrís un memo que vos enviaste, ves la vista de remitente con informaci�
 !!! video "Video tutorial"
     **GDI — Crear y firmar un Memo: paso a paso**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Da2d4DIA2kY?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar un Memo: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MCx4_fklYH8?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear y firmar un Memo: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 

@@ -10,9 +10,24 @@ description: Novedades de GDI, mes por mes, con el link a la guía de cada funci
 
 Lo nuevo en GDI, mes por mes. Cada entrega tiene su nota completa en el [blog de Novedades](https://gdilatam.com/novedades) y cada novedad, el link a la guía que explica cómo se usa.
 
-## Noviembre de 2026: Formularios con grupos que se repiten
+## 20 de noviembre de 2026: Borradores que se escriben entre dos y formularios con grupos que se repiten
 
-- **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. En la plantilla, el texto del grupo se escribe una vez y sale una vez por cada bloque. [Ver la guía](administradores/tipos-de-documentos.md#grupos-de-campos-que-se-repiten)
+Noviembre 2026: borradores compartidos por turnos, formularios controlados con grupos de campos que se repiten, documentos firmados propuestos a un expediente y adjuntos dentro del PDF de Notas y Memos. [Leer la nota en el blog](https://gdilatam.com/novedades/2026-11-borradores-compartidos-formularios-grupos).
+
+- **Borradores compartidos, una persona escribe por vez** (Nueva funcionalidad). Compartís un borrador desde la caja «Compartir» y otra persona lo edita y lo puede mandar a firma. Uno escribe y los demás miran: «Tomar edición» y «Soltar» pasan el turno. El editor también suma tablas. [Ver la guía](usuarios/documentos/crear-editar-documento.md#compartir-un-borrador-y-editarlo-por-turnos)
+- **Lo que editaste, en Mis Documentos** (Mejora). Cuando se firma un borrador que editaste, el documento aparece en tu lista de Mis Documentos y lo encontrás por referencia. [Ver la guía](usuarios/documentos/index.md#pestanas-de-filtrado)
+- **Formularios controlados con grupos que se repiten** (Nueva funcionalidad). El administrador arma un grupo de campos (por ejemplo, Nombre, Apellido y DNI) y el usuario lo repite con «+ Agregar persona», sin saber de antemano cuántas personas van. Si el grupo no tiene campos obligatorios y no lo tocás, el documento se firma igual. [Ver la guía](usuarios/documentos/documento-ffcc.md#grupos-que-se-repiten)
+- **Formularios controlados con texto redactado** (Nueva funcionalidad). El administrador carga una plantilla y el documento sale como un texto redactado con los datos del formulario. El resumen de IA lee también ese texto, así dice qué resolvió el acto. [Ver la guía](administradores/plantilla-ffcc.md)
+- **Proponer un documento a un expediente que ves** (Nueva funcionalidad). Si ves el expediente pero no podés vincular, igual le proponés un documento firmado. El área responsable lo acepta o lo rechaza. [Ver la guía](usuarios/expedientes/vincular-documentos.md)
+- **Adjuntos dentro de Notas y Memos** (Mejora). Una nota o un memo lleva sus adjuntos dentro del PDF firmado, y los destinatarios los ven y los descargan. [Ver la guía](usuarios/notas/index.md#archivos-adjuntos-en-la-nota)
+- **El legajo, ordenado en solapas** (Mejora). El detalle del legajo se divide en solapas, y el estado se cambia desde la caja Estado de la solapa Datos. [Ver la guía](usuarios/legajos/index.md#solapas-del-detalle-de-legajo)
+- **Etiquetas de sector que se leen siempre** (Mejora). Toda etiqueta de sector lleva el color del sector de fondo y un texto que se lee sobre cualquier color. Al pasar el mouse dice la repartición y el sector. [Ver la guía](usuarios/expedientes/index.md#etiquetas-de-sector)
+- **El PDF se abre bien en el celular** (Mejora). En el celular, «Ver PDF» abre el documento en una pestaña nueva con la dirección de GDI de tu municipio. [Ver la guía](usuarios/documentos/index.md#ver-el-pdf-desde-el-celular)
+- **Sellos de firma parejos** (Firma). Todos los sellos llevan letra del mismo tamaño: una línea larga se parte en dos renglones. [Ver la guía](usuarios/documentos/proceso-de-firma.md#como-queda-la-firma-en-el-pdf)
+- **Se firma un importado con muchas firmas de afuera** (Firma). Un PDF que ya trae muchas firmas de otro sistema se firma en GDI, y sus firmas de origen siguen válidas. [Ver la guía](usuarios/documentos/proceso-de-firma.md#como-queda-la-firma-en-el-pdf)
+- **Aviso claro cuando un archivo es demasiado grande** (Mejora). Si un archivo pasa el tope, GDI dice cuál es el máximo y qué hacer. [Ver la guía](usuarios/documentos/documento-importado.md#avisos-al-importar-un-pdf)
+- **Cuentagotas para el color institucional** (Administración). En el BackOffice tomás el color del logo con un clic. [Ver la guía](administradores/informacion-general.md#tomar-el-color-del-logo-con-el-cuentagotas)
+- **Alta de legajo sin duplicados por API** (Integraciones). Si un sistema reintenta el alta de un legajo, GDI no crea uno repetido. [Ver la guía](desarrollo/gateway/rest-api/legajos.md#reintentos-seguros-idempotency-key)
 
 ## 27 de octubre de 2026: Cada uno ve lo de su sector, y los documentos llevan imágenes
 

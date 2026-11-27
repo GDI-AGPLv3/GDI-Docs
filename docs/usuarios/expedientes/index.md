@@ -5,7 +5,7 @@ Un **expediente electrónico** es una carpeta digital que agrupa documentos ofic
 !!! video "Video tutorial"
     **GDI — Crear un expediente: paso a paso**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/j2Svh6K2L2k?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear un expediente: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/evMXbrtbaGY?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Crear un expediente: paso a paso" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 ---
 
@@ -124,6 +124,17 @@ En la parte superior del listado hay cinco solapas para filtrar la vista:
 | **Favoritos** | Expedientes que el usuario marcó con la estrella de favorito |
 
 Cada solapa muestra un contador con la cantidad de expedientes correspondientes (excepto "Todo", que muestra todos).
+
+---
+
+## Etiquetas de sector
+
+En todo GDI, un sector se muestra con una **etiqueta**: la sigla del sector sobre su color. Por ejemplo, `INNO#PRIV`. La ves en el Inicio, en los expedientes, en los legajos, en los firmantes y en el PortaFirma.
+
+- El fondo de la etiqueta es el color del sector, lleno. El administrador elige ese color en el [organigrama](../../administradores/organigrama.md).
+- El texto sale blanco o negro, el que se lea mejor sobre ese color. Un sector amarillo o celeste se lee igual que uno azul oscuro.
+- Al pasar el mouse por la etiqueta aparece un cartelito con la repartición y el sector, siempre con el mismo formato: *«Repartición - DPTO#SECTOR»*.
+- En el celular, tocás la etiqueta y el cartelito aparece unos segundos. Tocar la etiqueta no abre la tarjeta.
 
 ---
 

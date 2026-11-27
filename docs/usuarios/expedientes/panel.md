@@ -10,23 +10,23 @@ La pestaña **Panel** es la vista de gestión del expediente y la **pestaña por
 !!! video "Video tutorial"
     **GDI — Asignar responsable a un expediente**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/xQ_BP0zBcI0?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Asignar responsable a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/WT7geiZmMbM?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Asignar responsable a un expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
     **GDI — Solicitar una actuación a otro sector**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/UqAhKlIrjOI?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/CVFG87m5Tww?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
     **GDI — Solicitar una actuación a una persona**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MURbMmn_r60?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a una persona" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/pJsLTpX7Jjo?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Solicitar una actuacion a una persona" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
     **GDI — Transferir un expediente a otro sector**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/1uHUB-X70xU?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Transferir un expediente a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/0zC2eBqQtXE?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Transferir un expediente a otro sector" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
     **GDI — Finalizar una actuación en el expediente**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3a68UvifAW4?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Finalizar una actuacion en el expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/k1PeyGXcGOo?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Finalizar una actuacion en el expediente" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 

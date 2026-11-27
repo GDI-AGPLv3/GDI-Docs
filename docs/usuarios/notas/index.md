@@ -5,7 +5,7 @@ Las **Notas** son un tipo especial de documento que funciona como memorandos o c
 !!! video "Video tutorial"
     **GDI — Panel CCOO: gestión de Notas y Memos**
 
-    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/lWYjNqkUO78?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Panel CCOO: gestion de Notas y Memos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ZztH6b83sQA?list=PLRIZqApsdJ12JCSzhUxaZ73AheVHUEpDq" title="GDI — Panel CCOO: gestion de Notas y Memos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 
 
@@ -79,6 +79,16 @@ Remitente puede ver tracking de aperturas
 Para crear una nota, se utiliza el flujo de creación de documentos seleccionando el tipo **NOTA**. Consultar la guía completa en [Crear y Editar Documento](../documentos/crear-editar-documento.md), prestando especial atención a la sección **Destinatarios (solo para tipo NOTA)**.
 
 El cuerpo de la nota admite imágenes. Se insertan con el botón de imagen de la barra del editor. Ver [Insertar una imagen](../documentos/crear-editar-documento.md#insertar-una-imagen).
+
+### Archivos adjuntos en la nota
+
+Si el administrador habilitó adjuntos en el tipo NOTA, el panel lateral del editor muestra la sección **"Archivos adjuntos"**. Ahí sumás planillas, fotos, planos u otros PDF. Al firmarse, los adjuntos quedan **dentro del PDF de la nota**, en un solo archivo.
+
+- Los destinatarios de **PARA** y **CC** ven y descargan los adjuntos aunque sean de otro sector.
+- Quien no es remitente ni destinatario, y no tiene otro permiso sobre la nota, no los ve.
+- Las notas enviadas antes de este cambio no cambian.
+
+Después de la firma, los adjuntos se ven en la sección **"Archivos adjuntos"** de la nota, en la web y en el celular. Ver también [Archivos embebidos en documentos oficiales](../expedientes/detalle-expediente.md#archivos-embebidos-en-documentos-oficiales).
 
 ---
 

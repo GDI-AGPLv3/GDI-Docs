@@ -26,6 +26,9 @@ Busca documentos con filtros opcionales. Soporta paginación.
 | `status` | string | - | Filtrar por estado visual: `"En edición"`, `"Firmar ahora"`, `"En proceso de firma"`, `"Firmado"` |
 | `document_type` | string | - | Filtrar por acrónimo del tipo: `INF`, `DICT`, etc. |
 | `case_id` | string | - | Filtrar por expediente |
+| `date_filter` | string | - | Filtrar por fecha: `hoy`, `ayer`, `ultimos_7_dias`, `ultimos_30_dias` |
+| `date_from` | string | - | Rango propio: fecha desde, incluida (`YYYY-MM-DD`) |
+| `date_to` | string | - | Rango propio: fecha hasta, incluida (`YYYY-MM-DD`). Si también mandás `date_filter`, manda `date_filter` |
 
 **Ejemplo:**
 
@@ -516,6 +519,8 @@ Importa un archivo PDF externo como documento en el sistema.
 | `reference` | string | Sí | Descripción del documento |
 | `pdf_file` | file | Sí | Archivo PDF a importar |
 
+**Header opcional `Idempotency-Key`:** con una clave por documento, reintentar el mismo pedido después de un corte no importa el PDF dos veces. El pedido se reconoce por tipo, referencia y contenido del PDF. Las reglas (respuesta repetida con `Idempotent-Replay: true`, `409` si el primero sigue en curso, `422` si la clave ya se usó para otro pedido, 24 horas de vigencia) son las mismas que en [Crear legajo](legajos.md#reintentos-seguros-idempotency-key).
+
 **Ejemplo:**
 
 ```bash
@@ -840,7 +845,7 @@ Rechaza un documento que se encuentra en proceso de firma. El documento vuelve a
 
 | Campo | Tipo | Requerido | Descripción |
 |-------|------|-----------|-------------|
-| `reason` | string | Sí | Motivo del rechazo |
+| `reason` | string | Sí | Motivo del rechazo. **Mínimo 5 caracteres** (sin contar espacios de los bordes), igual que en la pantalla |
 
 **Ejemplo:**
 
@@ -898,6 +903,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/documents/f6a7b8c9-d0e1-234
 | `403` | El usuario no es firmante de este documento |
 | `404` | Documento no encontrado |
 | `409` | El documento ya estaba rechazado, ya es oficial, o se firmó mientras se lo rechazaba. Consultar su estado con `GET /documents/{id}` |
+| `422` | `El motivo debe tener al menos 5 caracteres` |
 
 ---
 
