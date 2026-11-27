@@ -1018,7 +1018,7 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 | Código | Descripción |
 |--------|-------------|
 | `400` | El documento no está en estado borrador, o `case_id` / `document_draft_id` no es un UUID |
-| `403` | Sin permisos para proponer documentos a este expediente |
+| `403` | El usuario no ve el expediente o no tiene permiso para proponerle documentos. Es el mismo control que en el sistema web y en la tool MCP `propose_document` |
 | `409` | El expediente todavía se está **creando** (falta su carátula): es transitorio, reintentar en unos segundos (GDI-436) |
 | `404` | Expediente o documento no encontrado |
 

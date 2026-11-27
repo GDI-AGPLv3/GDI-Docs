@@ -137,7 +137,7 @@ En la parte inferior del panel lateral se encuentran los botones de acción. Los
 | Propiedad | Valor |
 |-----------|-------|
 | **Estilo** | Texto rojo (sin fondo) |
-| **Visible cuando** | El usuario es el creador o un firmante del documento |
+| **Visible cuando** | El usuario es el creador, un firmante o un **editor** del documento compartido, y el documento todavía no está firmado por todos |
 | **Acción** | Abre el diálogo de rechazo. Ver [Rechazar y Subsanar](rechazar-y-subsanar.md) |
 
 ### Botón: Cerrar

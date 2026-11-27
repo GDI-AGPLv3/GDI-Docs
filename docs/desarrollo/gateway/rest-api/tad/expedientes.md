@@ -137,6 +137,7 @@ Devuelve los expedientes **compartidos con el ciudadano** de `X-Citizen-ID` (inc
       "case_number": "EE-2026-000227-MDEV-INNO",
       "reference": "Habilitacion comercial local Calle Falsa 123",
       "status": "active",
+      "status_label": "En trámite",
       "template_name": "Habilitacion Comercial",
       "template_acronym": "HABCOM",
       "shared_at": "2026-07-24T18:04:36Z"
@@ -144,6 +145,17 @@ Devuelve los expedientes **compartidos con el ciudadano** de `X-Citizen-ID` (inc
   ]
 }
 ```
+
+### `status` y `status_label`
+
+| Campo | Para qué sirve | Valores |
+|---|---|---|
+| `status` | Lógica del portal y **polling**. No cambió | `inactive`, `active` o `archived` |
+| `status_label` | **Mostrarle al vecino** el estado del expediente | El nombre que definió el municipio, por ejemplo `"En trámite"`, `"Paralizado"` o `"Cerrado"` |
+
+- Para saber si el expediente terminó de crearse, seguí usando `status == "active"`. Nunca compares contra `status_label`: el municipio puede cambiar los nombres.
+- `status: "archived"` quiere decir que el expediente **está cerrado**. El nombre para mostrar está en `status_label` (por ejemplo `"Cerrado"`).
+- Si el expediente no tiene un estado con nombre, `status_label` trae el mismo valor que `status`.
 
 ---
 
@@ -163,6 +175,7 @@ Solo si el expediente está compartido con el ciudadano; si no, `404` genérico 
   "case_number": "EE-2026-000227-MDEV-INNO",
   "reference": "Habilitacion comercial local Calle Falsa 123",
   "status": "active",
+  "status_label": "En trámite",
   "template_name": "Habilitacion Comercial",
   "template_acronym": "HABCOM",
   "documents": [

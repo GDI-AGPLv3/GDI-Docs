@@ -203,19 +203,26 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/case-templates" \
 GET /api/v1/system/users/list
 ```
 
-Devuelve los usuarios activos del municipio. Sin parámetros trae **la lista entera**, como siempre. Si pedís una tanda con `page` o `page_size`, trae solo esa tanda.
+Devuelve los usuarios del tenant **por páginas**: 50 por defecto y 200 como máximo. Para traer todos, pedí la página siguiente mientras `has_more` sea `true`.
 
-**Parámetros query (opcionales):**
+**Parámetros query:**
 
 | Parámetro | Tipo | Default | Descripción |
 |-----------|------|---------|-------------|
-| `page` | int | `1` | Número de página (desde `1`) |
-| `page_size` | int | `20` | Usuarios por página (de `1` a `100`) |
+| `page` | int | `1` | Número de página |
+| `page_size` | int | `50` | Usuarios por página. Máximo `200`; más de 200 da `400` |
 
-Con alguno de los dos, la respuesta suma `page`, `page_size`, `count` (cuántos vinieron en esta tanda) y `has_more` (`true` si hay otra página). `total` sigue contando todos los usuarios activos. Una página que no existe (por ejemplo `page=999`) da `200` con la lista vacía. Valores inválidos (`page=0`, `page_size=500`, letras) dan `400`.
+**Campos de paginación de la respuesta:**
 
-!!! info "Antes se ignoraban"
-    Hasta la versión 5.11.0, `page` y `page_size` se ignoraban: el Gateway devolvía todos los usuarios igual. Si tu integración mandaba esos parámetros esperando la lista completa, ahora va a recibir solo una tanda.
+| Campo | Descripción |
+|-------|-------------|
+| `page` | Página devuelta |
+| `page_size` | Tamaño de página usado |
+| `count` | Usuarios en esta página |
+| `has_more` | `true` si hay más usuarios en la página siguiente |
+
+!!! warning "Cambio para integraciones existentes"
+    Antes, sin parámetros, la ruta devolvía la lista completa. Ahora devuelve solo los primeros 50. Si tu integración necesita todos los usuarios, recorré las páginas con `page` hasta que `has_more` sea `false`.
 
 **Ejemplo:**
 
@@ -246,7 +253,11 @@ curl -X GET "https://gateway.your-domain.com/api/v1/system/users/list" \
       "role": "empleado",
       "is_active": true
     }
-  ]
+  ],
+  "page": 1,
+  "page_size": 50,
+  "count": 2,
+  "has_more": false
 }
 ```
 

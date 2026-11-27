@@ -432,8 +432,8 @@ curl -X GET "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-abc
 
 | Código | Descripción |
 |--------|-------------|
-| `403` | `Sin permisos para ver este expediente` (por ejemplo, un expediente de otra área). Antes daba `500` |
-| `404` | Expediente no encontrado |
+| `403` | El expediente existe, pero el usuario no lo ve |
+| `404` | El expediente no existe (o el ID no es un UUID) |
 
 !!! warning "Los seis permisos de escritura se apagan mientras el expediente se crea"
     Si `is_creating` es `true`, los seis `can_*` de escritura vienen en `false`
@@ -1001,4 +1001,5 @@ Lista plana de movimientos de un expediente. A diferencia de `/history`, no incl
 | Código | Descripción |
 |--------|-------------|
 | `401` | Usuario inválido o inactivo en el schema |
-| `404` | Expediente no encontrado o sin permisos |
+| `403` | El expediente existe, pero el usuario no lo ve |
+| `404` | El expediente no existe (o el ID no es un UUID) |

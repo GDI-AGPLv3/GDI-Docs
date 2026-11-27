@@ -51,7 +51,7 @@ El **objetivo** es el instructivo del trámite: para qué sirve, qué documentos
 
 Dónde se usa:
 
-- Se ve en cada expediente de este tipo, en la tarjeta **Objetivo** del panel de atributos (pestaña **Historial y Atributos**). Lo ven todos los que pueden ver el expediente.
+- Se ve en cada expediente de este tipo, en la tarjeta **Objetivo** del panel de atributos (pestaña **Atributos e Historial**). Lo ven todos los que pueden ver el expediente.
 - Lo leen **Tu Asistente** y el **resumen del expediente** hecho por IA, para saber qué trámite es y qué documentos le faltan.
 
 Cómo cargarlo:

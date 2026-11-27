@@ -27,7 +27,7 @@ Arriba a la derecha de la página hay tres botones:
 
 | Botón | Que hace |
 |-------|----------|
-| **Exportar** | Exporta la estructura del organigrama |
+| **Exportar** | Descarga un Excel con la estructura del organigrama y sus usuarios. Por cada usuario trae, entre otras, las columnas **Ver todos los documentos**, **Ver todos los expedientes** y **Archivo**, con los permisos que tiene |
 | **Audit** | Abre la auditoría legible de organigrama y permisos (ver [Auditoría de organigrama](#auditoria-de-organigrama-audit)) |
 | **Nueva repartición** | Crea una nueva repartición |
 
@@ -211,6 +211,9 @@ Al editar el detalle de una repartición se puede modificar su **color primario*
 ---
 
 ## Preguntas frecuentes
+
+??? question "¿Por qué no puedo borrar una repartición?"
+    Una repartición no se borra si todavía tiene sectores activos, o tipos de expediente **activos** que radican en ella o la tienen como repartición permitida. Los tipos de expediente **desactivados** no traban el borrado. Para reactivar después uno de esos tipos, su repartición y su sector de radicación tienen que seguir activos.
 
 ??? question "¿Cuántos usuarios puede tener un sector?"
     Varios. Un sector tiene un único usuario **Principal** (responsable del sector) y puede tener otros usuarios con permiso **Ver + Editar**. Se suman con **Asignar usuario**.

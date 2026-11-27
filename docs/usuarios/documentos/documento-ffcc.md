@@ -56,6 +56,27 @@ Persona 2   Nombre [Carlos]  Apellido [Gómez ]  DNI [30222222]  ✕
 - Si un campo del grupo es obligatorio, hay que completarlo en cada bloque. El aviso marca el campo del bloque que falta.
 - Si el grupo no tiene campos obligatorios y no lo tocás, los bloques iniciales se guardan igual (vacíos). Podés previsualizar y firmar sin que aparezca un aviso de «mínimo de bloques».
 
+### Grupo dentro de grupo
+
+Un grupo puede tener **otro grupo adentro** (un **subgrupo**). Por ejemplo, en el formulario *Adicionales* de la «Municipalidad del Futuro», cada **Persona** tiene sus **Actividades**:
+
+```
+Persona 1   Apellido y nombre [Pérez, Juana ]  DNI [20111111]           ✕
+   │ Actividad 1   Detalle [Guardia de fin de semana]  Monto [60.000,00]  ✕
+   │ Actividad 2   Detalle [Taller de verano]          Monto [170.000,00] ✕
+   │               [+ Agregar actividad]
+Persona 2   Apellido y nombre [Gómez, Carlos]  DNI [30222222]           ✕
+   │ Actividad 1   ...
+   │               [+ Agregar actividad]
+            [+ Agregar persona]
+```
+
+- Cada persona tiene su propio botón **«+ Agregar actividad»**. La numeración de las actividades empieza de nuevo en cada persona.
+- Una persona nueva ya viene con la cantidad mínima de actividades.
+- Hay **2 niveles** como máximo: grupo y subgrupo. Un subgrupo no tiene otro grupo adentro.
+- Cada persona puede tener hasta **20** actividades, y todo el documento hasta **200**.
+- El **mínimo** de actividades lo fija el administrador en cada formulario. Con mínimo 0, se puede firmar una persona sin actividades. Con mínimo 1 o más, el borrador se guarda igual, pero al firmar aparece un aviso que dice dónde falta, por ejemplo: *«Personas, bloque 1, Actividades: mínimo 1»*.
+
 !!! note "El resto del documento es igual"
     Las secciones **Firmantes** y **Proponer vinculación** (con la opción de [vinculación automática al firmar](../expedientes/vincular-documentos.md)) funcionan igual que en cualquier otro documento. Solo cambia la forma de cargar el contenido.
 
@@ -85,7 +106,12 @@ Si el formulario tiene un grupo y el tipo no tiene plantilla, cada bloque sale c
 >
 > …
 
-Si el tipo tiene plantilla, el texto del grupo sale una vez por cada bloque, como lo armó el administrador.
+Si hay un subgrupo, cada actividad sale con su título («Actividad 1», «Actividad 2») debajo de su persona.
+
+Si el tipo tiene plantilla, el texto del grupo sale una vez por cada bloque, como lo armó el administrador. El del subgrupo sale una vez por cada actividad, dentro de su persona.
+
+!!! info "Resumen automático"
+    En el resumen automático del documento, cada bloque sale en **un solo renglón**, con su subgrupo adentro. Por ejemplo: *«Persona 1 — Apellido y nombre: Pérez, Juana; DNI: 20111111; Actividades: …»*.
 
 ### El resumen de IA de un FFCC con plantilla
 

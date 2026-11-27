@@ -20,6 +20,9 @@ Un documento importado permite subir un archivo PDF externo al sistema para que 
 !!! info "El flujo de firma es idéntico"
     Una vez cargado el PDF, el documento importado sigue exactamente el mismo circuito de previsualización, firma y numeración que un documento HTML. La única diferencia es como se genera el contenido.
 
+!!! tip "Desde un programa que solo imprime"
+    Si el PDF sale de un programa de la PC que solo imprime (por ejemplo, el sistema contable), usá la [Impresora GDI](impresora-gdi.md): imprimís, elegís tipo y expediente, y firmás en una sola pantalla.
+
 !!! tip "PDF que ya viene certificado"
     Si el PDF ya trae una firma de certificación de otro organismo (por ejemplo, un título universitario o una escritura de un escribano), GDI no lo modifica. Lo numera sin firmarlo encima. Ver [PDF certificado de origen](#pdf-certificado-de-origen).
 
@@ -117,6 +120,14 @@ Algunos PDF ya traen archivos adjuntos adentro, puestos por el programa que los 
 - se ven y se descargan igual que los otros. Ver [Archivos embebidos en documentos oficiales](../expedientes/detalle-expediente.md#archivos-embebidos-en-documentos-oficiales).
 
 GDI lista solo estos formatos: **PDF, Word (DOC, DOCX), Excel (XLS, XLSX) e imágenes (PNG, JPG, JPEG)**. Un adjunto de otro formato (por ejemplo, CSV o TXT) no aparece en la lista, pero sigue dentro del PDF: se saca descargando el PDF.
+
+---
+
+### PDF con un campo de firma vacío
+
+Algunos programas dejan en el PDF un **campo de firma vacío** (un recuadro para firmar, sin firma). Si ese campo tiene el nombre que usa GDI para sus firmas, GDI **no firma** el PDF: la firma podría quedar invisible en la hoja. La firma da error y el documento no avanza.
+
+Si te pasa: rechazá el documento, volvé a exportar el PDF sin campos de firma e importalo de nuevo.
 
 ---
 
