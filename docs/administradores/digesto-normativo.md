@@ -68,6 +68,9 @@ Por cada documento firmado de un tipo publico, el sistema hace automáticamente:
 !!! tip "No hay nada que configurar"
     La transcripción, el resumen y la base vectorial **vienen de fábrica**: no hay que activar ni configurar nada. Subir y firmar el documento alcanza; unos minutos después el contenido ya es buscable por significado (por ejemplo, buscar *"habilitación de comercios gastronómicos"* encuentra normas que no usan esas palabras exactas).
 
+!!! warning "Escaneos que no se pueden transcribir"
+    GDI intenta transcribir cada documento hasta **3 veces**. Si falla las 3 (por ejemplo, un escaneo muy pesado), el documento queda marcado como **"transcripción fallada"** y GDI no lo vuelve a intentar solo. Esa norma sigue publicada, pero no tiene texto, resumen ni búsqueda por significado. Avisá a soporte para revisarla.
+
 !!! info "Cargas masivas del acervo histórico"
     Para digitalizar anos de normativa acumulada (miles de PDFs), GDI acompana el proceso con un pipeline de carga masiva que sube, firma, transcribe y crea los legajos en tandas. Consultar al equipo de GDI antes de encarar una carga histórica a mano.
 

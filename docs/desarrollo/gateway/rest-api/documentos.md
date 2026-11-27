@@ -955,10 +955,14 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 | Código | Descripción |
 |--------|-------------|
-| `400` | El documento no es oficial o ya está vinculado |
+| `400` | El documento no es oficial, `case_id` u `official_document_id` no es un UUID, o el cuerpo no es un objeto JSON |
 | `403` | Sin permisos sobre el expediente |
-| `409` | El expediente todavía se está **creando** (falta su carátula): es transitorio, reintentar en unos segundos (GDI-436) |
-| `404` | Expediente o documento no encontrado |
+| `404` | Expediente o documento no encontrado (el mensaje dice cuál falta) |
+| `409` | El documento **ya está vinculado** a este expediente (*"El documento X ya está vinculado a este expediente"*): no reintentar. También sale `409` si el expediente está cerrado o todavía se está **creando** (falta su carátula; en ese caso es transitorio, reintentar en unos segundos, GDI-436) |
+| `503` | Falla transitoria: reintentar |
+
+!!! note "Antes, «ya vinculado» daba 500"
+    Hasta esta versión, vincular un documento que ya estaba vinculado respondía `500` (error del servidor). Ahora responde `409` con el motivo. Si tu integración reintentaba ante ese `500`, ya no hace falta.
 
 ---
 
