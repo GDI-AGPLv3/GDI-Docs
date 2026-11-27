@@ -162,13 +162,13 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 
 ---
 
-### Contenido HTML
+### Contenido del documento
 
 ```
 GET /api/v1/documents/{document_id}/content
 ```
 
-Devuelve el contenido HTML de un documento oficial firmado.
+Devuelve el contenido de un documento oficial firmado: siempre el HTML y, si el documento es un formulario controlado (FFCC), también los datos cargados en JSON.
 
 **Parámetros path:**
 
@@ -192,10 +192,64 @@ curl -X GET "https://gateway.your-domain.com/api/v1/documents/c3d4e5f6-a7b8-9012
 ```json
 {
   "document_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-  "document_number": "IF-2025-00012-SMG-ADGEN",
-  "content": "<html><body><h1>Informe Tecnico</h1><p>Se procede a informar...</p></body></html>"
+  "official_number": "IF-2026-00000012-TST-ADGEN",
+  "reference": "Informe técnico de obra",
+  "content": {
+    "html": "<h1>Informe técnico</h1><p>Se procede a informar...</p>",
+    "format": "html"
+  },
+  "document_type": {"name": "Informe", "acronym": "IF"},
+  "signed_at": "2026-11-20T14:05:00+00:00"
 }
 ```
+
+**Respuesta de un formulario controlado (FFCC):** además de `html` y `format`, `content` trae:
+
+| Campo | Qué es |
+|-------|--------|
+| `content.field_definitions` | La definición de los campos del formulario: nombre, tipo, etiqueta y, en los grupos, sus campos internos |
+| `content.data` | Los valores que cargó el usuario, con la misma forma que la definición (los grupos son listas) |
+
+Ejemplo de la Municipalidad del Futuro, formulario «Adicionales» (personas ficticias):
+
+```json
+{
+  "document_id": "d4e5f6a7-b8c9-0123-def0-234567890123",
+  "official_number": "ADIC-2026-00000001-TST-RRHH",
+  "reference": "Adicionales octubre 2026",
+  "content": {
+    "html": "<p>Corresponden al Mes/Año: Octubre 2026</p><table>...</table>",
+    "format": "html",
+    "field_definitions": [
+      {"name": "mes", "type": "select", "label": "Mes"},
+      {"name": "personas", "type": "group", "label": "Personas", "fields": [
+        {"name": "apellido_nombre", "type": "text", "label": "Apellido y nombre"},
+        {"name": "actividades", "type": "group", "label": "Actividades", "fields": [
+          {"name": "detalle_actividad", "type": "text", "label": "Detalle"},
+          {"name": "monto_actividad", "type": "text", "label": "Monto"}
+        ]}
+      ]}
+    ],
+    "data": {
+      "mes": "Octubre",
+      "personas": [
+        {"apellido_nombre": "Pérez, Juana",
+         "actividades": [{"detalle_actividad": "Taller de lectura", "monto_actividad": "60.000,00"}]}
+      ]
+    }
+  },
+  "document_type": {"name": "Adicionales", "acronym": "ADIC"},
+  "signed_at": "2026-11-20T14:05:00+00:00"
+}
+```
+
+!!! warning "`data` trae todos los campos, aunque la plantilla no los imprima"
+    Si el tipo de documento tiene plantilla, el HTML (y el PDF) muestran solo los campos que la plantilla nombra. `data` trae **todos** los valores que se cargaron en el formulario. Por ejemplo: si la plantilla de un formulario de la Municipalidad del Futuro no imprime el DNI, el DNI igual sale en `data`. Solo recibe `data` quien tiene permiso para ver el documento.
+
+!!! info "Campos de tipo `file`"
+    En `data`, un campo de tipo `file` trae el id del documento adjunto (o un objeto con `document_id`). Para leer ese documento, pedí su propio `/content`: se vuelve a controlar el permiso.
+
+Los documentos que no son FFCC no traen `field_definitions` ni `data`. La ruta pública del portal (`/api/v1/public/...`) devuelve solo el HTML, también para los FFCC.
 
 **Errores:**
 
@@ -904,10 +958,14 @@ curl -X POST "https://gateway.your-domain.com/api/v1/cases/a1b2c3d4-e5f6-7890-ab
 
 | Código | Descripción |
 |--------|-------------|
-| `400` | El documento no es oficial o ya está vinculado |
+| `400` | El documento no es oficial, `case_id` u `official_document_id` no es un UUID, o el cuerpo no es un objeto JSON |
 | `403` | Sin permisos sobre el expediente |
-| `409` | El expediente todavía se está **creando** (falta su carátula): es transitorio, reintentar en unos segundos (GDI-436) |
-| `404` | Expediente o documento no encontrado |
+| `404` | Expediente o documento no encontrado (el mensaje dice cuál falta) |
+| `409` | El documento **ya está vinculado** a este expediente (*"El documento X ya está vinculado a este expediente"*): no reintentar. También sale `409` si el expediente está cerrado o todavía se está **creando** (falta su carátula; en ese caso es transitorio, reintentar en unos segundos, GDI-436) |
+| `503` | Falla transitoria: reintentar |
+
+!!! note "Antes, «ya vinculado» daba 500"
+    Hasta esta versión, vincular un documento que ya estaba vinculado respondía `500` (error del servidor). Ahora responde `409` con el motivo. Si tu integración reintentaba ante ese `500`, ya no hace falta.
 
 ---
 

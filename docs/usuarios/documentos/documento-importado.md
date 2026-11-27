@@ -108,6 +108,16 @@ Después de la firma, los adjuntos se ven y se descargan desde el expediente. Ve
 !!! warning "Los adjuntos se cargan antes de firmar"
     Un documento firmado no admite adjuntos nuevos. Si falta un archivo, se carga como documento aparte en el mismo expediente.
 
+### PDF que ya trae adjuntos
+
+Algunos PDF ya traen archivos adjuntos adentro, puestos por el programa que los generó. Por ejemplo, un informe con su planilla de Excel. Cuando el documento importado recibe su número, GDI muestra esos adjuntos en el documento oficial, igual que los subidos en GDI:
+
+- aparecen en la barra **"📎 Archivos embebidos"** y en el clip de la lista del expediente;
+- figura como autor la persona que importó el PDF;
+- se ven y se descargan igual que los otros. Ver [Archivos embebidos en documentos oficiales](../expedientes/detalle-expediente.md#archivos-embebidos-en-documentos-oficiales).
+
+GDI lista solo estos formatos: **PDF, Word (DOC, DOCX), Excel (XLS, XLSX) e imágenes (PNG, JPG, JPEG)**. Un adjunto de otro formato (por ejemplo, CSV o TXT) no aparece en la lista, pero sigue dentro del PDF: se saca descargando el PDF.
+
 ---
 
 ## PDF certificado de origen
@@ -166,6 +176,17 @@ Al importar, GDI revisa las firmas que trae el PDF. Si encuentra un problema, no
 | *"El PDF está protegido con contraseña para abrirse. No se importó: importá una copia sin contraseña de apertura."* | Guardar una copia sin contraseña de apertura e importarla |
 | *"El PDF tiene más de 250 páginas. Partilo en varios documentos."* | Partir el PDF en varios archivos de hasta 250 páginas e importar cada uno como un documento. El mismo aviso sale al firmar un importado de más de 250 páginas |
 | *"El pedido es demasiado grande: el máximo para esta operación es N MB. Achicá el archivo o partilo en varios."* | El archivo pasa el tope de esa operación (el aviso dice cuál es). Partir el PDF en varios documentos, o achicar un archivo que todavía no tiene firmas. Vale también para los adjuntos |
+
+### Aviso al firmar: el PDF todavía no está disponible
+
+Si mandás a firmar un importado y GDI todavía no tiene su PDF, la firma no arranca. GDI muestra este aviso:
+
+*"El PDF todavía no está disponible. Si lo acabás de subir, esperá unos segundos y probá de nuevo; si no, volvé a subirlo."*
+
+El documento queda en borrador, sin perder nada. Qué hacer:
+
+1. Si acabás de subir el PDF, esperá unos segundos y tocá **Firmar** de nuevo.
+2. Si el aviso sigue, volvé a subir el PDF y firmá.
 
 ---
 

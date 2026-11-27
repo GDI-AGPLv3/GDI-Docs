@@ -45,6 +45,44 @@ Al hacer clic en un tipo se muestra su ficha completa:
 | **Estado** | Activo / Inactivo |
 | **Fecha de Creación** | Fecha en que se agregó a la organización |
 
+### Objetivo
+
+El **objetivo** es el instructivo del trámite: para qué sirve, qué documentos lleva y cuándo termina. Es **opcional**: un tipo de expediente sin objetivo se crea y se guarda sin problema.
+
+Dónde se usa:
+
+- Se ve en cada expediente de este tipo, en la tarjeta **Objetivo** del panel de atributos (pestaña **Historial y Atributos**). Lo ven todos los que pueden ver el expediente.
+- Lo leen **Tu Asistente** y el **resumen del expediente** hecho por IA, para saber qué trámite es y qué documentos le faltan.
+
+Cómo cargarlo:
+
+1. Abrí el tipo de expediente.
+2. En el bloque **Objetivo**, escribí el texto. El contador muestra cuántos caracteres llevás (hasta **4.000**).
+3. Tocá **Guardar**.
+
+Por ejemplo, para *Habilitación Comercial* en la **Municipalidad del Futuro**:
+
+```text
+Habilitar un local comercial en el municipio.
+
+Documentos que lleva:
+- Solicitud del titular
+- Plano aprobado
+- Informe de Bromatología
+- Pago de la tasa
+
+Termina con el certificado de habilitación.
+```
+
+!!! info "Texto plano, con formato Markdown"
+    El objetivo se escribe como texto. Podés usar formato **Markdown** sencillo: listas con `-`, **negrita** con `**texto**`. **No se admite HTML**: si el texto tiene etiquetas como `<b>` o `<script>`, el sistema no lo guarda y te avisa.
+
+!!! warning "Un cambio afecta a todos los expedientes del tipo"
+    El objetivo no tiene versiones. Si lo cambiás, el texto nuevo se ve enseguida en todos los expedientes de ese tipo, también en los que están en trámite.
+
+!!! tip "El objetivo no da permisos"
+    El asistente de IA lee el objetivo como información del trámite. No cambia sus reglas ni lo que cada persona puede hacer, aunque el texto lo pida.
+
 ### Origen Global
 
 Muestra los datos del tipo en el catálogo global (nombre, acrónimo y descripción global).
